@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb'
+import { Db, MongoClient } from 'mongodb'
 
 const { MONGODB_URI, MONGODB_DB } = process.env
 
@@ -14,15 +14,25 @@ if (!MONGODB_DB) {
   )
 }
 
+interface MongoClientDb {
+  client: MongoClient
+  db: Db
+}
+
+interface MongoCache {
+  conn: MongoClientDb | null
+  promise: Promise<MongoClientDb> | null
+}
+
 /**
  * Global is used here to maintain a cached connection across hot reloads
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
-let cached = global.mongo
+let cached: MongoCache = (global as any)?.mongo
 
 if (!cached) {
-  cached = global.mongo = { conn: null, promise: null }
+  cached = (global as any).mongo = { conn: null, promise: null }
 }
 
 export async function connectToDatabase() {
@@ -36,12 +46,14 @@ export async function connectToDatabase() {
       useUnifiedTopology: true,
     }
 
-    cached.promise = MongoClient.connect(MONGODB_URI, opts).then((client) => {
-      return {
-        client,
-        db: client.db(MONGODB_DB),
+    cached.promise = MongoClient.connect(MONGODB_URI!, opts).then(
+      (client): MongoClientDb => {
+        return {
+          client,
+          db: client.db(MONGODB_DB),
+        }
       }
-    })
+    )
   }
   cached.conn = await cached.promise
   return cached.conn
