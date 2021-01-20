@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import Container, { getServerSideCookie } from '../components/container'
+import Title from '../components/title'
 
 type Props = typeof defaultProps & {
   cookie: string
@@ -26,7 +27,7 @@ export default function HomePage({ cookie }: Props) {
   return (
     <Container cookie={cookie}>
       <main>
-        <h1>Freq</h1>
+        <Title animate={true} />
 
         <p>
           Type an existing game's name to join or just click{' '}
@@ -70,13 +71,6 @@ export default function HomePage({ cookie }: Props) {
           display: flex;
           justify-content: center;
           align-items: center;
-        }
-
-        h1 {
-          margin: 0;
-          line-height: 1.15;
-          font-size: var(--font-size-2x);
-          text-align: center;
         }
 
         form {
