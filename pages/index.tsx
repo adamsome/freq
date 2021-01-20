@@ -1,62 +1,61 @@
-import Head from 'next/head'
+import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import Container, { getServerSideCookie } from '../components/container'
 
-export default function Home() {
+type Props = typeof defaultProps & {
+  cookie: string
+}
+
+const defaultProps = {}
+
+export default function HomePage({ cookie }: Props) {
   const router = useRouter()
-  const [gameID, setName] = useState('')
+  const [roomID, setRoomID] = useState('')
+
+  const handleRoomIDChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setRoomID(e.currentTarget.value.toUpperCase())
+  }
 
   const handleStart = (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault()
-    router.push(`/${gameID}`)
+    router.push(`/${roomID}`)
   }
 
   return (
-    <div className="container">
-      <Head>
-        <title>Freq</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+    <Container cookie={cookie}>
       <main>
         <h1>Freq</h1>
 
         <p>
           Type an existing game's name to join or just click{' '}
-          <Link href={`/${encodeURIComponent(gameID)}`}>
+          <Link href={`/${encodeURIComponent(roomID)}`}>
             <a>Start</a>
           </Link>{' '}
           to create a new game.
         </p>
 
-        <form onSubmit={(e) => handleStart(e)}>
+        <form onSubmit={handleStart}>
           <input
             type="text"
             placeholder="Room Key"
-            value={gameID}
-            onChange={(e) => setName(e.target.value)}
+            value={roomID}
+            onChange={handleRoomIDChange}
           />
-          <Link href={`/${encodeURIComponent(gameID)}`}>
+          <Link href={`/${encodeURIComponent(roomID)}`}>
             <a>Start</a>
           </Link>
         </form>
       </main>
 
-      <footer>adamsome</footer>
+      <footer>
+        <p>adamsome</p>
+      </footer>
 
       <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
         main {
-          padding: 5rem 0;
+          padding: 5rem 1.5rem;
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -67,7 +66,7 @@ export default function Home() {
         footer {
           width: 100%;
           height: 100px;
-          border-top: 1px solid #151515;
+          border-top: 1px solid var(--border);
           display: flex;
           justify-content: center;
           align-items: center;
@@ -76,7 +75,7 @@ export default function Home() {
         h1 {
           margin: 0;
           line-height: 1.15;
-          font-size: 4rem;
+          font-size: var(--font-size-2x);
           text-align: center;
         }
 
@@ -89,29 +88,27 @@ export default function Home() {
         form input {
           height: 3rem;
           margin-right: 1rem;
-          width: 15rem;
+          flex: 1;
+          width: 100%;
+          max-width: 15rem;
         }
 
         form input,
         form a {
-          font-size: 1.5rem;
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
+          font-size: var(--font-size-xl);
         }
 
-        * {
-          box-sizing: border-box;
+        form a {
+          flex: 0 1 auto;
+          white-space: nowrap;
         }
       `}</style>
-    </div>
+    </Container>
   )
+}
+
+HomePage.defaultProps = defaultProps
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return getServerSideCookie(ctx)
 }

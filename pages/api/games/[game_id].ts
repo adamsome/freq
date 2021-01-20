@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Game } from '../../../types/game.model'
+import { Game } from '../../../types/game.types'
 import { connectToDatabase } from '../../../util/mongodb'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

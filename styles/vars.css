@@ -1,0 +1,54 @@
+:root {
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --font-family-mono: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+  --font-size-xs: 0.6rem;
+  --font-size-sm: 0.8rem;
+  --font-size-md: 18px;
+  --font-size-lg: 1.33rem;
+  --font-size-xl: 1.8rem;
+  --font-size-2x: 4rem;
+  --line-height: 1.6;
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+  --inset-xs: 0.25rem;
+  --inset-sm: 0.5rem;
+  --inset-md: 1rem;
+  --inset-lg: 1.5rem;
+  --inset-xl: 2.25rem;
+  --stack-xs: 0.25rem;
+  --stack-sm: 0.5rem;
+  --stack-md: 0.75rem;
+  --stack-lg: 1.25rem;
+  --stack-xl: 2rem;
+
+  --body: #151515;
+  --body-inverse: #e5e5e5;
+  --subtle: #757474;
+  --hint: #b1b1b1;
+  --primary: #0070f3;
+  --primary-lit: #015fca;
+  --bg: #ffffff;
+  --border: #e5e5e5;
+  --input-focus: #a7cbf577;
+  --input-bg: #ffffff;
+  --input-border: #d5d5d5;
+}
+
+html[style*='freq-color-mode:dark'],
+html[style*='freq-color-mode: dark'] {
+  --body: #e5e5e5;
+  --body-inverse: #151515;
+  --subtle: #727272;
+  --hint: #454545;
+  --primary: #0070f3;
+  --primary-lit: #1e85fc;
+  --bg: #000000;
+  --border: #151515;
+  --input-focus: #004fa879;
+  --input-bg: #151515;
+  --input-border: #151515;
+}
