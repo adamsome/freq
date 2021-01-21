@@ -1,8 +1,10 @@
 import { Db } from 'mongodb'
-import { Clue, Game, Player } from '../types/game.types'
+import { Game } from '../types/game.types'
 import { HasObjectID } from '../types/io.types'
+import { Player } from '../types/player.types'
 import { connectToDatabase } from '../util/mongodb'
 import { omit } from '../util/object'
+import { createClues } from './clue'
 
 const fromCollection = (db: Db) => db.collection<Game & HasObjectID>('games')
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -42,14 +44,13 @@ async function createGame(game_id: string, player_id: string): Promise<Game> {
   const color = team == 1 ? 'red' : 'blue'
   // Since new game, player gets made leader
   const player: Player = { player_id, leader: true, team, color }
-  const clue1: Clue = { left: 'TODO1', right: 'TODO2', gradient: 'TODO3' }
-  const clue2: Clue = { left: 'TODO4', right: 'TODO5', gradient: 'TODO6' }
+  const clues = createClues()
   const game_started_at = new Date().toISOString()
   const game: Game = {
     game_id,
     players: [player],
     psychic: player_id,
-    clues: [clue1, clue2],
+    clues,
     guesses: {},
     match_number: 1,
     round_number: 1,

@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import Container from '../components/container'
 import Title from '../components/title'
-import { getCookie } from '../util/io'
 
 type Props = typeof defaultProps & {
   cookie: string
@@ -107,7 +106,7 @@ HomePage.defaultProps = defaultProps
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   return {
     props: {
-      cookie: getCookie(req),
+      cookie: req.headers.cookie ?? '',
     },
   }
 }

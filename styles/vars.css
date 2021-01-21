@@ -32,10 +32,13 @@
   --primary: #0070f3;
   --primary-lit: #015fca;
   --bg: #ffffff;
+  --bg-1: #eeeeee;
   --border: #e5e5e5;
   --input-focus: #a7cbf577;
   --input-bg: #ffffff;
   --input-border: #d5d5d5;
+  --translucent: #00000033;
+  --translucent-inverse: #ffffff22;
 }
 
 html[style*='freq-color-mode:dark'],
@@ -47,8 +50,11 @@ html[style*='freq-color-mode: dark'] {
   --primary: #0070f3;
   --primary-lit: #1e85fc;
   --bg: #000000;
+  --bg-1: #111111;
   --border: #151515;
   --input-focus: #004fa879;
   --input-bg: #151515;
   --input-border: #151515;
+  --translucent: #ffffff22;
+  --translucent-inverse: #00000033;
 }

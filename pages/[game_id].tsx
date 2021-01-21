@@ -1,26 +1,25 @@
 import { GetServerSideProps } from 'next'
 import { v4 as uuidv4 } from 'uuid'
 import Container from '../components/container'
-import Meter from '../components/meter'
+import GameBoard from '../components/game-board'
 import { joinGame } from '../lib/game'
 import { Game } from '../types/game.types'
 import { head } from '../util/array'
-import { getCookie } from '../util/io'
 import { cookieStorageManager } from '../util/storage-manager'
 
 type Props = typeof defaultProps & {
   cookie: string
-  game: Game
   player_id: string
+  game: Game
 }
 
 const defaultProps = {}
 
-const GamePage = ({ cookie, game }: Props) => {
+const GamePage = ({ cookie, player_id, game }: Props) => {
   return (
     <Container title="Game" cookie={cookie} game={game}>
       <main>
-        <Meter game={game} />
+        <GameBoard player_id={player_id} game={game} />
       </main>
 
       <style jsx>{`
@@ -43,7 +42,7 @@ GamePage.defaultProps = defaultProps
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { params, req, res } = ctx
   const game_id = head(params?.game_id)
-  const cookie = getCookie(req)
+  const cookie = req.headers.cookie ?? ''
 
   if (!game_id) {
     throw new Error(`No 'game_id' param set in [game_id] SSR.`)

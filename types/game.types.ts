@@ -1,11 +1,5 @@
-export interface Player {
-  player_id: string
-  name?: string
-  team?: 1 | 2
-  color?: string
-  icon?: string
-  leader?: boolean
-}
+import { Player } from './player.types'
+
 export interface Clue {
   left: string
   right: string
@@ -24,7 +18,7 @@ const phases = [
 export type Phase = typeof phases[number]
 
 export interface Game {
-  /** TODO: Rename to home_key */
+  /** TODO: Rename to roomcode(?)*/
   game_id: string
   players: Player[]
   psychic?: string

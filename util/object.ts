@@ -3,6 +3,7 @@
 // Source: https://github.com/chakra-ui/chakra-ui/blob/develop/packages/utils/src/object.ts
 
 import { Dict, StringOrNumber } from '../types/object.model'
+import { randomItem } from './array'
 
 interface OmitFn {
   <T, K extends [...(keyof T)[]]>(obj: T, ...keys: K): {
@@ -23,27 +24,27 @@ export const omit: OmitFn = (obj, ...keys) => {
   return ret
 }
 
-export function pick<T extends Dict, K extends keyof T>(object: T, keys: K[]) {
+export function pick<T extends Dict, K extends keyof T>(obj: T, keys: K[]) {
   const result = {} as { [P in K]: T[P] }
 
   keys.forEach((key) => {
-    if (key in object) {
-      result[key] = object[key]
+    if (key in obj) {
+      result[key] = obj[key]
     }
   })
 
   return result
 }
 
-export function split<T extends Dict, K extends keyof T>(object: T, keys: K[]) {
+export function split<T extends Dict, K extends keyof T>(obj: T, keys: K[]) {
   const picked: Dict = {}
   const omitted: Dict = {}
 
-  Object.keys(object).forEach((key) => {
+  Object.keys(obj).forEach((key) => {
     if (keys.includes(key as T[K])) {
-      picked[key] = object[key]
+      picked[key] = obj[key]
     } else {
-      omitted[key] = object[key]
+      omitted[key] = obj[key]
     }
   })
 
@@ -101,11 +102,11 @@ export const memoize = (fn: Get) => {
       return map.get(path)
     }
 
-    const value = fn(obj, path, fallback, index)
+    const val = fn(obj, path, fallback, index)
 
-    map.set(path, value)
+    map.set(path, val)
 
-    return value
+    return val
   }
 
   return memoizedFn
@@ -124,20 +125,20 @@ export function getWithDefault(path: any, scale: any) {
   return memoizedGet(scale, path, path)
 }
 
-type FilterFn<T> = (value: any, key: string, object: T) => boolean
+type FilterFn<T> = (val: any, key: string, obj: T) => boolean
 
 /**
  * Returns the items of an object that meet the condition specified in a callback function.
  *
- * @param object the object to loop through
+ * @param obj the object to loop through
  * @param fn The filter function
  */
-export function objectFilter<T extends Dict>(object: T, fn: FilterFn<T>) {
+export function objectFilter<T extends Dict>(obj: T, fn: FilterFn<T>) {
   const result: Dict = {}
 
-  Object.keys(object).forEach((key) => {
-    const value = object[key]
-    const shouldPass = fn(value, key, object)
+  Object.keys(obj).forEach((key) => {
+    const value = obj[key]
+    const shouldPass = fn(value, key, obj)
     if (shouldPass) {
       result[key] = value
     }
@@ -146,8 +147,14 @@ export function objectFilter<T extends Dict>(object: T, fn: FilterFn<T>) {
   return result
 }
 
-export const filterUndefined = (object: Dict) =>
-  objectFilter(object, (val) => val !== null && val !== undefined)
+export const filterUndefined = (obj: Dict) =>
+  objectFilter(obj, (val) => val !== null && val !== undefined)
 
 export const objectKeys = <T extends Dict>(obj: T) =>
   (Object.keys(obj) as unknown) as (keyof T)[]
+
+export function randomProp<T>(obj: T) {
+  const keys = objectKeys(obj)
+  const key = randomItem(keys)
+  return obj[key]
+}
