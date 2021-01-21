@@ -16,11 +16,7 @@ type Props = typeof defaultProps & {
 
 const defaultProps = {}
 
-const GamePage = ({ cookie, game, player_id }: Props) => {
-  const store = cookieStorageManager(cookie)
-  const existing_player_id = store.get('freq-player-id')
-  if (player_id !== existing_player_id) {
-  }
+const GamePage = ({ cookie, game }: Props) => {
   return (
     <Container title="Game" cookie={cookie} game={game}>
       <main>

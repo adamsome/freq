@@ -4,8 +4,10 @@
 
 import { isFunction, __DEV__ } from './assertion'
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 export const noop = () => {}
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function once(fn?: Function | null) {
   let result: any
 

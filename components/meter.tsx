@@ -7,7 +7,6 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 const Meter = ({ game }: Props) => {
-  console.log('Meter', game)
   return (
     <>
       <div className="meter-bg"></div>

@@ -31,7 +31,7 @@ export default function HomePage({ cookie }: Props) {
         <Title animate={true} />
 
         <p>
-          Type an existing game's name to join or just click{' '}
+          Type an existing game&apos;s name to join or just click{' '}
           <Link href={`/${encodeURIComponent(roomID)}`}>
             <a>Start</a>
           </Link>{' '}

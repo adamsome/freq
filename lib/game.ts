@@ -5,6 +5,7 @@ import { connectToDatabase } from '../util/mongodb'
 import { omit } from '../util/object'
 
 const fromCollection = (db: Db) => db.collection<Game & HasObjectID>('games')
+// eslint-disable-next-line @typescript-eslint/ban-types
 const omitID = <T extends object>(obj?: (T & HasObjectID) | null) =>
   obj ? (omit(obj, '_id') as T) : null
 

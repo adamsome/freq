@@ -5,7 +5,7 @@
 import { Dict, StringOrNumber } from '../types/object.model'
 
 interface OmitFn {
-  <T extends object, K extends [...(keyof T)[]]>(obj: T, ...keys: K): {
+  <T, K extends [...(keyof T)[]]>(obj: T, ...keys: K): {
     [K2 in Exclude<keyof T, K[number]>]: T[K2]
   }
 }
@@ -58,6 +58,7 @@ export function split<T extends Dict, K extends keyof T>(object: T, keys: K[]) {
  * @param def  - the fallback value
  */
 export function get(
+  // eslint-disable-next-line @typescript-eslint/ban-types
   obj: object,
   path: string | number,
   fallback?: any,
@@ -75,6 +76,7 @@ export function get(
 }
 
 type Get = (
+  // eslint-disable-next-line @typescript-eslint/ban-types
   obj: Readonly<object>,
   path: string | number,
   fallback?: any,

@@ -2,6 +2,7 @@
 // License: https://github.com/chakra-ui/chakra-ui/blob/4478509039b4ed9df8a7710f49b12588e1202de2/LICENSE
 // Source: https://github.com/chakra-ui/chakra-ui/blob/4478509039b4ed9df8a7710f49b12588e1202de2/packages/utils/src/assertion.ts
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function isFunction(value: any): value is Function {
   return typeof value === 'function'
 }

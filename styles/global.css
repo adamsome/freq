@@ -69,7 +69,7 @@ input {
 
 input:hover,
 input:focus {
-  border-color:var(--primary);
+  border-color: var(--primary);
 }
 
 input:focus {

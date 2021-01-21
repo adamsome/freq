@@ -46,6 +46,7 @@ export async function connectToDatabase() {
       useUnifiedTopology: true,
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     cached.promise = MongoClient.connect(MONGODB_URI!, opts).then(
       (client): MongoClientDb => {
         return {

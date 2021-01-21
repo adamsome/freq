@@ -25,7 +25,7 @@ export const cx = (...classNames: (CxParam | CxParam[])[]): string => {
         if (c.toString !== Object.prototype.toString) {
           acc.push(c.toString())
         } else {
-          for (let prop in c) {
+          for (const prop in c) {
             if ({}.hasOwnProperty.call(c, prop) && c[prop]) {
               acc.push(prop)
             }
