@@ -16,7 +16,7 @@ function setScript(initialValue: Mode) {
   try {
     persistedPreference = localStorage.getItem('freq-color-mode') as Mode
   } catch (error) {
-    console.log(
+    console.warn(
       '`localStorage` is not available. ' +
         'Color mode persistence might not work as expected'
     )
@@ -46,7 +46,7 @@ interface ColorModeScriptProps {
  * Script to add to the root of your application when using localStorage,
  * to help prevent flash of color mode that can happen during page load.
  */
-export const ColorModeScript = (props: ColorModeScriptProps) => {
+export const ColorModeScript = (props: ColorModeScriptProps): JSX.Element => {
   const { initialColorMode = 'system' } = props
   const html = `(${String(setScript)})('${initialColorMode}')`
   return <script dangerouslySetInnerHTML={{ __html: html }} />

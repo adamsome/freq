@@ -1,4 +1,3 @@
-import { GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import useColorMode from '../hooks/use-color-mode'
@@ -79,15 +78,5 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
 }
 
 Container.defaultProps = defaultProps
-
-export const getServerSideCookie = ({ req }: GetServerSidePropsContext) => {
-  return {
-    props: {
-      // First time users will not have any cookies and you may not return
-      // undefined here, hence ?? is necessary
-      cookie: req.headers.cookie ?? '',
-    },
-  }
-}
 
 export default Container

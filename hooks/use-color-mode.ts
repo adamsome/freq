@@ -6,6 +6,8 @@ import {
   localStorageManager,
 } from '../util/storage-manager'
 
+const colorModeKey = 'freq-color-mode'
+
 export const root = {
   get: () =>
     document.documentElement.style.getPropertyValue(
@@ -21,8 +23,8 @@ export const root = {
 const useColorMode = (cookie?: string) => {
   const colorModeManager =
     typeof cookie === 'string'
-      ? cookieStorageManager(cookie)
-      : localStorageManager
+      ? cookieStorageManager<ColorMode>(cookie)
+      : localStorageManager<ColorMode>()
 
   /**
    * Only attempt to retrieve if we're on the server. Else this will result
@@ -31,7 +33,9 @@ const useColorMode = (cookie?: string) => {
    * Else fallback safely to `theme.config.initialColormode` (default light)
    */
   const [colorMode, rawSetColorMode] = useState(
-    colorModeManager.type === 'cookie' ? colorModeManager.get('dark') : 'dark'
+    colorModeManager.type === 'cookie'
+      ? colorModeManager.get(colorModeKey, 'dark')
+      : 'dark'
   )
 
   useEffect(() => {
@@ -44,7 +48,7 @@ const useColorMode = (cookie?: string) => {
      * - previously stored value
      */
     if (isBrowser && colorModeManager.type === 'localStorage') {
-      const _colorMode = root.get() || colorModeManager.get()
+      const _colorMode = root.get() || colorModeManager.get(colorModeKey)
 
       if (_colorMode) {
         rawSetColorMode(_colorMode)
@@ -58,7 +62,7 @@ const useColorMode = (cookie?: string) => {
 
   const setColorMode = useCallback(
     (value: ColorMode) => {
-      colorModeManager.set(value)
+      colorModeManager.set(colorModeKey, value)
       rawSetColorMode(value)
     },
     [colorModeManager]
