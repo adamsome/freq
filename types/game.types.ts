@@ -1,4 +1,4 @@
-import { Player } from './player.types'
+import { Player, PlayerGuess } from './player.types'
 
 export interface Clue {
   left: string
@@ -34,4 +34,9 @@ export interface Game {
   game_started_at: string
   game_finished_at?: string
   round_started_at: string
+}
+
+export interface GameView extends Game {
+  cluesToShow: Clue[]
+  playerGuesses: PlayerGuess[]
 }

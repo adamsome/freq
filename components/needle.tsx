@@ -22,15 +22,15 @@ const Needle = ({ player, size }: Props) => {
 
       <style jsx>{`
         .wrapper {
-          width: 32px;
+          width: 24px;
           height: 100%;
           display: flex;
           justify-content: center;
           align-items: center;
         }
 
-        .lg .wrapper {
-          width: 24px;
+        .wrapper.lg {
+          width: 32px;
         }
 
         .needle {

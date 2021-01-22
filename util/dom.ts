@@ -48,3 +48,6 @@ export function canUseDom() {
 }
 
 export const isBrowser = canUseDom()
+
+export const isLeftClick = (e: any) =>
+  typeof e.button !== 'number' || e.button === 0

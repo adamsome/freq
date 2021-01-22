@@ -3,14 +3,15 @@ import { v4 as uuidv4 } from 'uuid'
 import Container from '../components/container'
 import GameBoard from '../components/game-board'
 import { joinGame } from '../lib/game'
-import { Game } from '../types/game.types'
+import { createGameView } from '../lib/game-view'
+import { GameView } from '../types/game.types'
 import { head } from '../util/array'
 import { cookieStorageManager } from '../util/storage-manager'
 
 type Props = typeof defaultProps & {
   cookie: string
   player_id: string
-  game: Game
+  game: GameView
 }
 
 const defaultProps = {}
@@ -26,7 +27,7 @@ const GamePage = ({ cookie, player_id, game }: Props) => {
         main {
           width: 100%;
           max-width: 800px;
-          padding: var(--stack-lg) var(--inset-lg);
+          padding: var(--stack-lg) var(--inset-sm);
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -62,8 +63,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       cookie,
-      game,
       player_id,
+      game: createGameView(player_id, game),
     },
   }
 }
