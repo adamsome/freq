@@ -114,13 +114,16 @@ const Meter = ({ clue, players, onGuessChange }: Props) => {
         <div
           className="meter-bg"
           style={styleLinearGradient(gradientDict[clue.gradient] ?? [])}
-        ></div>
+        >
+          <div>{clue.left}</div>
+          <div>{clue.right}</div>
+        </div>
 
         {/* Teammate Needles */}
         {players.slice(1).map((p, i) => (
           <div
             key={i}
-            className="needle-wrapper"
+            className="needle-wrapper needle-teammate"
             style={{ transform: buildTeammateNeedleTranslate(p.guess) }}
           >
             <Needle player={p} />
@@ -146,8 +149,14 @@ const Meter = ({ clue, players, onGuessChange }: Props) => {
           bottom: var(--stack-xl);
           left: 16px;
           right: 16px;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          padding: var(--stack-xs) var(--inset-sm);
           background: var(--bg-1);
           background-size: 125%;
+          color: var(--body-dark);
+          font-weight: 700;
           border: 1px solid var(--translucent);
           border-radius: var(--border-radius-md);
           background-position: center;
@@ -157,6 +166,10 @@ const Meter = ({ clue, players, onGuessChange }: Props) => {
           position: absolute;
           top: 5px;
           height: calc(100% - 8px);
+        }
+
+        .needle-teammate {
+          transition: 180ms transform ease-in-out;
         }
 
         .wrapper,
