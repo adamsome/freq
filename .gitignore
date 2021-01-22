@@ -31,3 +31,6 @@ yarn-error.log*
 
 # versal
 .vercel
+
+# local notes
+*.local.*

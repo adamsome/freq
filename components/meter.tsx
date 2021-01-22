@@ -1,5 +1,6 @@
 import React, { CSSProperties, useEffect, useRef, useState } from 'react'
 import useSize from '../hooks/use-size'
+import { useThrottle } from '../hooks/use-throttle'
 import gradientDict from '../lib/gradient'
 import { Clue } from '../types/game.types'
 import { PlayerGuess } from '../types/player.types'
@@ -9,13 +10,16 @@ import Needle from './needle'
 type Props = typeof defaultProps & {
   clue: Clue
   players: PlayerGuess[]
+  onGuessChange: (guess: number) => void
 }
 
 const defaultProps = {}
 
 const NEEDLE_WIDTH = 32
+const NEEDLE_TEAMMATE_WIDTH = 24
+const CHANGE_FPS = 2
 
-const cssLinearGradient = (colors: string[]): CSSProperties => {
+const styleLinearGradient = (colors: string[]): CSSProperties => {
   const n = colors.length
   if (n === 0) {
     return {}
@@ -25,76 +29,105 @@ const cssLinearGradient = (colors: string[]): CSSProperties => {
   return { background, backgroundPosition: 'center', backgroundSize: '120%' }
 }
 
-const cssTransform = (player: PlayerGuess): CSSProperties => ({
-  left: `${player.guess * 100}%`,
-})
-
-const Meter = ({ clue, players }: Props) => {
-  const meterRef = useRef<any>(null)
+const Meter = ({ clue, players, onGuessChange }: Props) => {
+  const meterWrapperRef = useRef<any>(null)
   const needleRef = useRef<any>(null)
 
-  const [width] = useSize(meterRef)
-  const [centerX, setCenterX] = useState(0)
-  const [lastX, setLastX] = useState(0)
-  const [offsetX, setOffsetX] = useState(0)
-  const [dragging, setDragging] = useState(false)
+  const [meterWrapperWidth] = useSize(meterWrapperRef)
+  const meterWidth = meterWrapperWidth - NEEDLE_WIDTH
 
-  // Needle is positioned around the center of the meter
+  // How far the needle has been dragged from center position
+  const [needleOffsetX, setNeedleOffsetX] = useState(0)
+
+  const needleCenterX = meterWidth / 2
+  const actualNeedleX = needleCenterX + needleOffsetX
+  // Clamp needle X position to the bounds of the meter
+  const needleX = Math.max(0, Math.min(actualNeedleX, needleCenterX * 2))
+  // Update needle transform when its x position changes
   useEffect(() => {
-    // Adjust true center by half the width of the needle itself
-    setCenterX(width / 2 - NEEDLE_WIDTH / 2)
-  }, [width])
+    if (needleRef.current)
+      needleRef.current.style.transform = `translateX(${needleX}px)`
+  }, [needleX])
 
-  // When centerX or offsetX (dragged amount) change, update the x translation
+  const needleGuessPercent = needleX / meterWidth
+
+  // Throttle the guess change callback
+  const throttledGuessState = useThrottle<number | null>(null, CHANGE_FPS)
+  const [throttledGuess, setThrottledGuess] = throttledGuessState
+
   useEffect(() => {
-    if (needleRef.current) {
-      const x = centerX + offsetX
-      const clampedX = Math.max(0, Math.min(x, centerX * 2))
-      needleRef.current.style.transform = `translateX(${clampedX}px)`
-    }
-  }, [centerX, offsetX])
+    if (throttledGuess != null) onGuessChange(throttledGuess)
+  }, [throttledGuess])
 
-  const onDragStart = (x?: number) => {
-    setDragging(true)
-    if (x) setLastX(x)
+  // Handle mouse drag events
+
+  const [needleDragStartAt, setNeedleDragStartAt] = useState<Date | null>(null)
+  const [needleDragStartX, setNeedleDragStartX] = useState(0)
+
+  const handleNeedleDragStart = (mouseX?: number) => {
+    setNeedleDragStartAt(new Date())
+    if (mouseX) setNeedleDragStartX(mouseX)
   }
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!dragging) return
+  const handleNeedleDragMove = (mouseX: number) => {
+    if (!needleDragStartAt) return
     // Set x offset to the last offset + the drag movement (current x - last x)
-    setOffsetX(e.touches[0].pageX - lastX + offsetX)
-    setLastX(e.touches[0].pageX)
+    setNeedleOffsetX(mouseX - needleDragStartX + needleOffsetX)
+    setNeedleDragStartX(mouseX)
+    // Only set our output guess (which triggers callback event) after delay
+    const msSinceDragStart = new Date().getTime() - needleDragStartAt.getTime()
+    if (msSinceDragStart > 1000 * (1 / CHANGE_FPS)) {
+      setThrottledGuess(needleGuessPercent)
+    }
   }
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!dragging) return
-    // Set x offset to the last offset + the drag movement
-    setOffsetX(e.movementX + offsetX)
+  const handleNeedleDragEnd = () => {
+    setNeedleDragStartAt(null)
+    // Reset offset if the actual x is out of bounds of the meter
+    const actualX = needleCenterX + needleOffsetX
+    if (actualX < 0) {
+      setNeedleOffsetX(-needleCenterX)
+    } else if (actualX > needleCenterX * 2) {
+      setNeedleOffsetX(needleCenterX)
+    }
+    setThrottledGuess(needleGuessPercent)
+  }
+
+  const buildTeammateNeedleTranslate = (guess: number) => {
+    const needleTeammateWidthDiff = NEEDLE_WIDTH - NEEDLE_TEAMMATE_WIDTH
+    const x = meterWidth * guess + needleTeammateWidthDiff / 2
+    return `translateX(${x}px)`
   }
 
   return (
     <>
       <div
-        ref={meterRef}
+        ref={meterWrapperRef}
         className="wrapper"
-        onTouchStart={(e) => onDragStart(e.touches[0].pageX)}
-        onMouseDown={(e) => isLeftClick(e) && onDragStart()}
-        onTouchMove={handleTouchMove}
-        onMouseMove={handleMouseMove}
-        onTouchEnd={() => setDragging(false)}
-        onMouseUp={() => setDragging(false)}
+        onTouchStart={(e) => handleNeedleDragStart(e.touches[0].pageX)}
+        onMouseDown={(e) => isLeftClick(e) && handleNeedleDragStart(e.pageX)}
+        onTouchMove={(e) => handleNeedleDragMove(e.touches[0].pageX)}
+        onMouseMove={(e) => handleNeedleDragMove(e.pageX)}
+        onTouchEnd={handleNeedleDragEnd}
+        onMouseUp={handleNeedleDragEnd}
       >
         <div
           className="meter-bg"
-          style={cssLinearGradient(gradientDict[clue.gradient] ?? [])}
+          style={styleLinearGradient(gradientDict[clue.gradient] ?? [])}
         ></div>
 
+        {/* Teammate Needles */}
         {players.slice(1).map((p, i) => (
-          <div key={i} className="needle-wrapper" style={cssTransform(p)}>
+          <div
+            key={i}
+            className="needle-wrapper"
+            style={{ transform: buildTeammateNeedleTranslate(p.guess) }}
+          >
             <Needle player={p} />
           </div>
         ))}
 
+        {/* Player Needle */}
         <div ref={needleRef} className="needle-wrapper">
           <Needle player={players[0]} size="lg" />
         </div>

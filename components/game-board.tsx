@@ -1,4 +1,4 @@
-import { GameView } from '../types/game.types'
+import { Clue, GameView } from '../types/game.types'
 import Meter from './meter'
 
 type Props = typeof defaultProps & {
@@ -11,11 +11,20 @@ const defaultProps = {}
 const GameBoard = ({ game }: Props) => {
   const { cluesToShow, playerGuesses } = game
 
+  const handleGuessChange = (clue: Clue) => (guess: number) => {
+    // eslint-disable-next-line no-console
+    console.log('guess', guess, clue)
+  }
+
   return (
     <>
       {cluesToShow.map((clue, i) => (
         <div className="meter-wrapper" key={i}>
-          <Meter clue={clue} players={playerGuesses}></Meter>
+          <Meter
+            clue={clue}
+            players={playerGuesses}
+            onGuessChange={handleGuessChange(clue)}
+          ></Meter>
         </div>
       ))}
 
