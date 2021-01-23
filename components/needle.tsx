@@ -1,4 +1,5 @@
 import React from 'react'
+import colorDict from '../lib/color-dict'
 import { PlayerGuess } from '../types/player.types'
 import { cx } from '../util/dom'
 
@@ -12,13 +13,14 @@ const defaultProps = {
 
 const Needle = ({ player, size }: Props) => {
   const { color = 'yellow', icon = '😃' } = player
+  const hex = colorDict[color]?.hex
   return (
     <div className={cx('wrapper', size)}>
-      <div className="needle" style={{ background: color }}></div>
-      <div className="base" style={{ background: color }}>
+      <div className="needle" style={{ background: hex }}></div>
+      <div className="base" style={{ background: hex }}>
         <span>{icon}</span>
       </div>
-      <div className="connector" style={{ background: color }}></div>
+      <div className="connector" style={{ background: hex }}></div>
 
       <style jsx>{`
         .wrapper {

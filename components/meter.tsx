@@ -1,7 +1,7 @@
 import React, { CSSProperties, useEffect, useRef, useState } from 'react'
 import useSize from '../hooks/use-size'
 import { useThrottle } from '../hooks/use-throttle'
-import gradientDict from '../lib/gradient'
+import gradientDict from '../lib/gradient-dict'
 import { Clue } from '../types/game.types'
 import { PlayerGuess } from '../types/player.types'
 import { isLeftClick } from '../util/dom'

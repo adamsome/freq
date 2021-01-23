@@ -1,8 +1,6 @@
 import { Clue } from '../types/game.types'
-import { randomItem } from '../util/array'
 import { randomInt } from '../util/number'
-import { objectKeys } from '../util/object'
-import gradientDict from './gradient'
+import { randomGradient } from './gradient-dict'
 
 type Language = 'en'
 
@@ -42,11 +40,11 @@ const clues: Record<Language, string[][]> = {
 }
 
 function createClue(clues: string[]): Clue {
-  const gradient = randomItem(objectKeys(gradientDict))
+  const gradient = randomGradient()
   return { left: clues[0], right: clues[1], gradient }
 }
 
-export function createClues(language: Language = 'en'): Clue[] {
+export function randomClues(language: Language = 'en'): Clue[] {
   const i = randomInt(0, clues.en.length - 2)
   const c1 = createClue(clues[language][i])
   const c2 = createClue(clues[language][i + 1])

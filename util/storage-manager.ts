@@ -61,6 +61,7 @@ export const cookieStorageManager = <T extends string = string>(
     if (opts?.serverResponse) {
       setCookieOnServer(opts.serverResponse, key, value)
     } else {
+      console.warn('Setting cookie in browser.')
       document.cookie = `${key}=${value}; max-age=31536000; path=/`
     }
   },

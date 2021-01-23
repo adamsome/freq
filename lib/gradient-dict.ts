@@ -3,6 +3,12 @@
 // Source: https://github.com/ghosh/uiGradients/blob/master/gradients.json
 
 import { Dict } from '../types/object.model'
+import { randomItem } from '../util/array'
+import { objectKeys } from '../util/object'
+
+export function randomGradient() {
+  return randomItem(objectKeys(gradientDict))
+}
 
 /**
  * Also @see https://colorfulgradients.tumblr.com for more

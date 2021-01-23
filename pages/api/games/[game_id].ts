@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { fetchGame } from '../../../lib/game'
+import { fetchGame } from '../../../lib/game-store'
 import { head } from '../../../util/array'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

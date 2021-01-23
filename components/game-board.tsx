@@ -1,4 +1,5 @@
 import { Clue, GameView } from '../types/game.types'
+import { isBrowser } from '../util/dom'
 import Meter from './meter'
 
 type Props = typeof defaultProps & {
@@ -8,10 +9,17 @@ type Props = typeof defaultProps & {
 
 const defaultProps = {}
 
-const GameBoard = ({ game }: Props) => {
+const GameBoard = ({ game, player_id }: Props) => {
   const { cluesToShow, playerGuesses } = game
 
+  // TODO: Remove
+  if (isBrowser) {
+    // eslint-disable-next-line no-console
+    console.log('game', game)
+  }
+
   const handleGuessChange = (clue: Clue) => (guess: number) => {
+    // TODO: Implement /guess
     // eslint-disable-next-line no-console
     console.log('guess', guess, clue)
   }
@@ -28,13 +36,24 @@ const GameBoard = ({ game }: Props) => {
         </div>
       ))}
 
-      <p>Meter {`'${game.game_id} - ${game.game_started_at}`}</p>
+      <span>
+        {game.game_started_at.replace('T', ' ').slice(0, -5) + ' '}
+        {player_id.substr(0, 8)}
+        {' ('}
+        {game.players.findIndex((p) => p.player_id === player_id) + 1}
+        {`/${game.players.length})`}
+      </span>
 
       <style jsx>{`
         .meter-wrapper {
           width: 100%;
           height: 200px;
           margin-bottom: var(--stack-lg);
+        }
+
+        span {
+          font-family: var(--font-family-mono);k
+          margin: 0;
         }
       `}</style>
     </>
