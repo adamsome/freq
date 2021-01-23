@@ -20,7 +20,7 @@ const styleLinearGradient = (gradient: string): CSSProperties => {
   return { background, backgroundPosition: 'center', backgroundSize: '120%' }
 }
 
-const MeterBacking = ({ clue }: Props) => {
+const MeterBackboard = ({ clue }: Props) => {
   return (
     <div className={cx('meter-bg')} style={styleLinearGradient(clue.gradient)}>
       <div>{clue.left}</div>
@@ -50,6 +50,6 @@ const MeterBacking = ({ clue }: Props) => {
   )
 }
 
-MeterBacking.defaultProps = defaultProps
+MeterBackboard.defaultProps = defaultProps
 
-export default MeterBacking
+export default MeterBackboard

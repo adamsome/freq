@@ -4,7 +4,7 @@ import { useThrottle } from '../hooks/use-throttle'
 import { Clue } from '../types/game.types'
 import { PlayerGuess } from '../types/player.types'
 import { isLeftClick } from '../util/dom'
-import MeterBacking from './meter-backing'
+import MeterBackboard from './meter-backboard'
 import Needle from './needle'
 
 type Props = typeof defaultProps & {
@@ -101,7 +101,7 @@ const Meter = ({ clue, players, onGuessChange }: Props) => {
         onTouchEnd={handleNeedleDragEnd}
         onMouseUp={handleNeedleDragEnd}
       >
-        <MeterBacking clue={clue}></MeterBacking>
+        <MeterBackboard clue={clue}></MeterBackboard>
 
         {/* Teammate Needles */}
         {players.slice(1).map((p, i) => (
