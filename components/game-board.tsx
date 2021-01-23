@@ -36,13 +36,13 @@ const GameBoard = ({ game, player_id }: Props) => {
         </div>
       ))}
 
-      <span>
+      <pre>
         {game.game_started_at.replace('T', ' ').slice(0, -5) + ' '}
-        {player_id.substr(0, 8)}
+        {player_id?.substr(0, 8)}
         {' ('}
-        {game.players.findIndex((p) => p.player_id === player_id) + 1}
+        {game.players.findIndex((p) => p?.player_id === player_id) + 1}
         {`/${game.players.length})`}
-      </span>
+      </pre>
 
       <style jsx>{`
         .meter-wrapper {
@@ -51,8 +51,8 @@ const GameBoard = ({ game, player_id }: Props) => {
           margin-bottom: var(--stack-lg);
         }
 
-        span {
-          font-family: var(--font-family-mono);k
+        pre {
+          font-family: var(--font-family-mono);
           margin: 0;
         }
       `}</style>

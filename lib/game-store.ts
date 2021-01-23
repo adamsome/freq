@@ -10,27 +10,24 @@ const fromCollection = (db: Db) => db.collection<Game & HasObjectID>('games')
 const omitID = <T extends object>(obj?: (T & HasObjectID) | null) =>
   obj ? (omit(obj, '_id') as T) : null
 
-export async function fetchGame(game_id?: string): Promise<Game | null> {
+export async function fetchGame(room?: string): Promise<Game | null> {
   const { db } = await connectToDatabase()
-  if (!game_id) {
+  if (!room) {
     return null
   }
-  const game = await fromCollection(db).findOne({ game_id })
+  const game = await fromCollection(db).findOne({ room: room })
   return omitID(game)
 }
 
-export async function joinGame(
-  game_id: string,
-  player_id: string
-): Promise<Game> {
+export async function joinGame(room: string, player_id: string): Promise<Game> {
   const { db } = await connectToDatabase()
   const collection = fromCollection(db)
 
   // Find existing game if it exists
-  let game = await fetchGame(game_id)
+  let game = await fetchGame(room)
   if (!game) {
     // Create new game
-    game = createNewGame(game_id, player_id)
+    game = createNewGame(room, player_id)
 
     await collection.insertOne(game)
   } else {
@@ -38,7 +35,7 @@ export async function joinGame(
     if (!doesGameHavePlayer(game, player_id)) {
       game = addGamePlayer(game, player_id)
 
-      const filter = { game_id: game.game_id }
+      const filter = { room: game.room }
       const update = { players: game.players }
       await collection.updateOne(filter, { $set: update })
     }

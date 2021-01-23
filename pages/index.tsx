@@ -1,9 +1,10 @@
 import { GetServerSideProps } from 'next'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import Container from '../components/container'
+import LoginForm from '../components/login-form'
 import Title from '../components/title'
+import useUser from '../hooks/use-user'
+import fetchJson from '../util/fetch-json'
 
 type Props = typeof defaultProps & {
   cookie: string
@@ -11,17 +12,33 @@ type Props = typeof defaultProps & {
 
 const defaultProps = {}
 
-export default function HomePage({ cookie }: Props) {
-  const router = useRouter()
-  const [roomID, setRoomID] = useState('')
+export const HomePage = ({ cookie }: Props) => {
+  const [, mutateUser] = useUser({
+    redirectIfFound: true,
+    redirectTo: (user) => user.room ?? '/',
+  })
 
-  const handleRoomIDChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setRoomID(e.currentTarget.value.toUpperCase())
-  }
+  const [error, setError] = useState<string | null>(null)
 
-  const handleStart = (e: React.FormEvent | React.MouseEvent) => {
+  const handleStart = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    router.push(`/${roomID}`)
+
+    const body = {
+      room: e.currentTarget.room.value,
+    }
+
+    try {
+      await mutateUser(
+        fetchJson('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+      )
+    } catch (error) {
+      console.error('An unexpected error happened:', error)
+      setError(error.data.message)
+    }
   }
 
   return (
@@ -30,24 +47,11 @@ export default function HomePage({ cookie }: Props) {
         <Title animate={true} />
 
         <p>
-          Type an existing game&apos;s name to join or just click{' '}
-          <Link href={`/${encodeURIComponent(roomID)}`}>
-            <a>Start</a>
-          </Link>{' '}
-          to create a new game.
+          Type an existing game&apos;s name to join or just click Start to
+          create a new game.
         </p>
 
-        <form onSubmit={handleStart}>
-          <input
-            type="text"
-            placeholder="Room Key"
-            value={roomID}
-            onChange={handleRoomIDChange}
-          />
-          <Link href={`/${encodeURIComponent(roomID)}`}>
-            <a>Start</a>
-          </Link>
-        </form>
+        <LoginForm onSubmit={handleStart} error={error}></LoginForm>
       </main>
 
       <footer>
@@ -72,30 +76,6 @@ export default function HomePage({ cookie }: Props) {
           justify-content: center;
           align-items: center;
         }
-
-        form {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        form input {
-          height: 3rem;
-          margin-right: 1rem;
-          flex: 1;
-          width: 100%;
-          max-width: 15rem;
-        }
-
-        form input,
-        form a {
-          font-size: var(--font-size-xl);
-        }
-
-        form a {
-          flex: 0 1 auto;
-          white-space: nowrap;
-        }
       `}</style>
     </Container>
   )
@@ -110,3 +90,5 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     },
   }
 }
+
+export default HomePage

@@ -31,19 +31,43 @@ body {
   hyphens: auto;
 }
 
-a {
-  color: var(--primary);
+a,
+button {
+  position: relative;
+  background: transparent;
+  transition: 100ms background ease-in-out, 100ms color ease-in-out;
+
+  display: inline-block;
+  white-space: nowrap;
   text-decoration: none;
+  vertical-align: baseline;
+  text-align: center;
+
+  margin: 0;
+  min-width: 24px;
+  border-radius: var(--border-radius-md);
+
+  cursor: pointer;
+  outline: none;
+  border: none;
+  user-select: none;
+
+  color: var(--primary);
+  font-weight: 600;
+  line-height: 24px;
+  padding: 0 16px 0;
   border: 1px solid transparent;
-  transition: 100ms color ease-in-out;
 }
 
 a:hover,
-a:focus {
+a:focus,
+button:hover,
+button:focus {
   color: var(--primary-lit);
 }
 
-a:focus {
+a:focus,
+button:focus {
   border: 1px solid var(--primary);
   border-radius: var(--border-radius-sm);
   box-shadow: 0 0 0 3px var(--input-focus);
@@ -106,6 +130,8 @@ textarea {
   background: var(--primary);
 }
 
-code {
+code,
+pre {
   font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
 }

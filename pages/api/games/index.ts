@@ -8,7 +8,7 @@ export default async (_req: NextApiRequest, res: NextApiResponse) => {
   const games = await db
     .collection<Game>('games')
     .find({})
-    .sort({ game_id: -1 })
+    .sort({ room: -1 })
     .limit(20)
     .toArray()
 

@@ -18,8 +18,7 @@ const phases = [
 export type Phase = typeof phases[number]
 
 export interface Game {
-  /** TODO: Rename to roomcode(?)*/
-  game_id: string
+  room: string
   players: Player[]
   psychic?: string
   clues: Clue[]

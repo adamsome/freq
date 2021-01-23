@@ -2,7 +2,7 @@ import { Game } from '../types/game.types'
 import { randomClues } from './clue'
 import { createPlayer } from './player'
 
-export function createNewGame(game_id: string, player_id: string): Game {
+export function createNewGame(room: string, player_id: string): Game {
   // Assign player to random team
   const team = Math.random() < 0.5 ? 1 : 2
   // Since new game, player gets made leader
@@ -10,7 +10,7 @@ export function createNewGame(game_id: string, player_id: string): Game {
   const clues = randomClues()
   const game_started_at = new Date().toISOString()
   const game: Game = {
-    game_id,
+    room,
     players: [player],
     psychic: player_id,
     clues,
