@@ -9,7 +9,7 @@ type Props = typeof defaultProps & {
 
 const defaultProps = {}
 
-const GameBoard = ({ game, player_id }: Props) => {
+const GameBoard = ({ game }: Props) => {
   const { cluesToShow, playerGuesses } = game
 
   // TODO: Remove
@@ -35,14 +35,6 @@ const GameBoard = ({ game, player_id }: Props) => {
           ></Meter>
         </div>
       ))}
-
-      <pre>
-        {game.game_started_at.replace('T', ' ').slice(0, -5) + ' '}
-        {player_id?.substr(0, 8)}
-        {' ('}
-        {game.players.findIndex((p) => p?.player_id === player_id) + 1}
-        {`/${game.players.length})`}
-      </pre>
 
       <style jsx>{`
         .meter-wrapper {

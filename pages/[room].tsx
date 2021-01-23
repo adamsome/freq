@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next'
+import { useState } from 'react'
 import Container from '../components/container'
 import GameBoard from '../components/game-board'
 import { joinGame } from '../lib/game-store'
@@ -18,11 +19,23 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 const RoomPage = ({ cookie, user, game }: Props) => {
+  const [showDebug, setShowDebug] = useState(false)
   return (
     <Container title="Game" cookie={cookie} game={game}>
       <main>
-        {user?.connected && <pre>{JSON.stringify(user, null, 2)}</pre>}
         <GameBoard player_id={user.player_id} game={game} />
+
+        <pre onClick={() => setShowDebug(!showDebug)}>
+          {game.game_started_at.replace('T', ' ').slice(0, -5) + ' '}
+          {user?.player_id?.substr(0, 8)}
+          {' ('}
+          {game.players.findIndex((p) => p?.player_id === user?.player_id) + 1}
+          {`/${game.players.length})`}
+        </pre>
+        {showDebug && user?.connected && (
+          <pre>{JSON.stringify(user, null, 2)}</pre>
+        )}
+        {showDebug && <pre>{JSON.stringify(game, null, 2)}</pre>}
       </main>
 
       <style jsx>{`

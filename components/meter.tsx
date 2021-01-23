@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
-import useSize from '../hooks/use-size'
+import React, { useEffect, useRef } from 'react'
+import { useDrag1D } from '../hooks/use-drag-1d'
 import { useThrottle } from '../hooks/use-throttle'
 import { Clue } from '../types/game.types'
 import { PlayerGuess } from '../types/player.types'
-import { isLeftClick } from '../util/dom'
 import MeterBackboard from './meter-backboard'
 import Needle from './needle'
 
@@ -20,87 +19,40 @@ const NEEDLE_TEAMMATE_WIDTH = 24
 const CHANGE_FPS = 2
 
 const Meter = ({ clue, players, onGuessChange }: Props) => {
-  const meterWrapperRef = useRef<any>(null)
-  const needleRef = useRef<any>(null)
+  const meterWrapperRef = useRef<HTMLDivElement>(null)
+  const needleRef = useRef<HTMLDivElement>(null)
 
-  const [meterWrapperWidth] = useSize(meterWrapperRef)
-  const meterWidth = meterWrapperWidth - NEEDLE_WIDTH
+  // Throttle the guess change callback
+  const [guess, setGuess] = useThrottle<number | null>(null, CHANGE_FPS)
 
-  // How far the needle has been dragged from center position
-  const [needleOffsetX, setNeedleOffsetX] = useState(0)
+  useEffect(() => {
+    if (guess != null) onGuessChange(guess)
+  }, [guess])
 
-  const needleCenterX = meterWidth / 2
-  const actualNeedleX = needleCenterX + needleOffsetX
-  // Clamp needle X position to the bounds of the meter
-  const needleX = Math.max(0, Math.min(actualNeedleX, needleCenterX * 2))
+  // Track the width and drag position of the meter
+  const { position, length } = useDrag1D(meterWrapperRef, 'x', {
+    initialPosition: (w) => w / 2,
+    lengthOffset: NEEDLE_WIDTH,
+    delayMS: 1000 / CHANGE_FPS,
+    onMove: (width, x) => setGuess(x / width),
+    onEnd: (w, x) => setGuess(x / w),
+  })
+
   // Update needle transform when its x position changes
   useEffect(() => {
     if (needleRef.current)
-      needleRef.current.style.transform = `translateX(${needleX}px)`
-  }, [needleX])
+      needleRef.current.style.transform = `translateX(${position}px)`
+  }, [position])
 
-  const needleGuessPercent = needleX / meterWidth
-
-  // Throttle the guess change callback
-  const throttledGuessState = useThrottle<number | null>(null, CHANGE_FPS)
-  const [throttledGuess, setThrottledGuess] = throttledGuessState
-
-  useEffect(() => {
-    if (throttledGuess != null) onGuessChange(throttledGuess)
-  }, [throttledGuess])
-
-  // Handle mouse drag events
-
-  const [needleDragStartAt, setNeedleDragStartAt] = useState<Date | null>(null)
-  const [needleDragStartX, setNeedleDragStartX] = useState(0)
-
-  const handleNeedleDragStart = (mouseX?: number) => {
-    setNeedleDragStartAt(new Date())
-    if (mouseX) setNeedleDragStartX(mouseX)
-  }
-
-  const handleNeedleDragMove = (mouseX: number) => {
-    if (!needleDragStartAt) return
-    // Set x offset to the last offset + the drag movement (current x - last x)
-    setNeedleOffsetX(mouseX - needleDragStartX + needleOffsetX)
-    setNeedleDragStartX(mouseX)
-    // Only set our output guess (which triggers callback event) after delay
-    const msSinceDragStart = new Date().getTime() - needleDragStartAt.getTime()
-    if (msSinceDragStart > 1000 * (1 / CHANGE_FPS)) {
-      setThrottledGuess(needleGuessPercent)
-    }
-  }
-
-  const handleNeedleDragEnd = () => {
-    setNeedleDragStartAt(null)
-    // Reset offset if the actual x is out of bounds of the meter
-    const actualX = needleCenterX + needleOffsetX
-    if (actualX < 0) {
-      setNeedleOffsetX(-needleCenterX)
-    } else if (actualX > needleCenterX * 2) {
-      setNeedleOffsetX(needleCenterX)
-    }
-    setThrottledGuess(needleGuessPercent)
-  }
-
-  const buildTeammateNeedleTranslate = (guess: number) => {
+  const buildTeammateNeedleTranslate = (teammateGuess: number) => {
     const needleTeammateWidthDiff = NEEDLE_WIDTH - NEEDLE_TEAMMATE_WIDTH
-    const x = meterWidth * guess + needleTeammateWidthDiff / 2
+    const x = length * teammateGuess + needleTeammateWidthDiff / 2
     return `translateX(${x}px)`
   }
 
   return (
     <>
-      <div
-        ref={meterWrapperRef}
-        className="wrapper"
-        onTouchStart={(e) => handleNeedleDragStart(e.touches[0].pageX)}
-        onMouseDown={(e) => isLeftClick(e) && handleNeedleDragStart(e.pageX)}
-        onTouchMove={(e) => handleNeedleDragMove(e.touches[0].pageX)}
-        onMouseMove={(e) => handleNeedleDragMove(e.pageX)}
-        onTouchEnd={handleNeedleDragEnd}
-        onMouseUp={handleNeedleDragEnd}
-      >
+      <div ref={meterWrapperRef} className="wrapper">
         <MeterBackboard clue={clue}></MeterBackboard>
 
         {/* Teammate Needles */}
