@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 
 type Props = typeof defaultProps & {
-  roomcode?: string
+  room?: string
   error?: string | null
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
 }
 
 const defaultProps = {}
 
-const LoginForm = ({ error, onSubmit, roomcode: initRoomcode }: Props) => {
-  const [roomcode, setRoomcode] = useState(initRoomcode ?? '')
+const LoginForm = ({ error, onSubmit, room: initRoom }: Props) => {
+  const [room, setRoom] = useState(initRoom ?? '')
 
-  const handleRoomIDChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setRoomcode(e.currentTarget.value.toUpperCase().substr(0, 4))
+  const handleRoomChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setRoom(e.currentTarget.value.toUpperCase().substr(0, 4))
   }
 
   return (
@@ -22,8 +22,8 @@ const LoginForm = ({ error, onSubmit, roomcode: initRoomcode }: Props) => {
           type="text"
           name="room"
           placeholder="Room Code"
-          value={roomcode}
-          onChange={handleRoomIDChange}
+          value={room}
+          onChange={handleRoomChange}
           required
         />
 

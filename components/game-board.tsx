@@ -1,9 +1,9 @@
 import { Clue, GameView } from '../types/game.types'
 import { isBrowser } from '../util/dom'
 import Meter from './meter'
+import Scoreboard from './scoreboard'
 
 type Props = typeof defaultProps & {
-  player_id: string
   game: GameView
 }
 
@@ -35,6 +35,8 @@ const GameBoard = ({ game }: Props) => {
           ></Meter>
         </div>
       ))}
+
+      <Scoreboard game={game} />
 
       <style jsx>{`
         .meter-wrapper {

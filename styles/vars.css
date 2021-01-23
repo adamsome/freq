@@ -25,17 +25,21 @@
   --stack-lg: 1.25rem;
   --stack-xl: 2rem;
 
+  --body-light: #e5e5e5;
   --body-dark: #151515;
 
   --body: #151515;
   --body-inverse: #e5e5e5;
   --subtle: #757474;
   --hint: #b1b1b1;
-  --primary: #0070f3;
+  --primary: #020202;
   --primary-lit: #015fca;
   --bg: #ffffff;
   --bg-1: #eeeeee;
   --border: #e5e5e5;
+  --border-1: #b1b1b1;
+  --border-2: #757474;
+  --border-3: #151515;
   --input-focus: #a7cbf577;
   --input-bg: #ffffff;
   --input-border: #d5d5d5;
@@ -54,6 +58,9 @@ html[style*='freq-color-mode: dark'] {
   --bg: #000000;
   --bg-1: #111111;
   --border: #151515;
+  --border-1: #454545;
+  --border-2: #727272;
+  --border-3: #e5e5e5;
   --input-focus: #004fa879;
   --input-bg: #151515;
   --input-border: #151515;

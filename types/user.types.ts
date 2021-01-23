@@ -1,7 +1,7 @@
 export interface UserConnected {
   connected: true
   room: string
-  player_id: string
+  id: string
 }
 
 export interface UserDisconnected {

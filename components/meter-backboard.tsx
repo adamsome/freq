@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react'
-import gradientDict from '../lib/gradient-dict'
+import gradientDict, { gradientLightTextDict } from '../lib/gradient-dict'
 import { Clue } from '../types/game.types'
 import { cx } from '../util/dom'
 
@@ -22,9 +22,17 @@ const styleLinearGradient = (gradient: string): CSSProperties => {
 
 const MeterBackboard = ({ clue }: Props) => {
   return (
-    <div className={cx('meter-bg')} style={styleLinearGradient(clue.gradient)}>
-      <div>{clue.left}</div>
-      <div>{clue.right}</div>
+    <div className="meter-bg" style={styleLinearGradient(clue.gradient)}>
+      <div
+        className={cx({ invert: gradientLightTextDict[clue.gradient]?.[0] })}
+      >
+        {clue.left}
+      </div>
+      <div
+        className={cx({ invert: gradientLightTextDict[clue.gradient]?.[1] })}
+      >
+        {clue.right}
+      </div>
 
       <style jsx>{`
         .meter-bg {
@@ -44,6 +52,10 @@ const MeterBackboard = ({ clue }: Props) => {
           border: 1px solid var(--translucent);
           border-radius: var(--border-radius-md);
           background-position: center;
+        }
+
+        .invert {
+          color: var(--body-light);
         }
       `}</style>
     </div>

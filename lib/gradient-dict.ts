@@ -10,6 +10,11 @@ export function randomGradient() {
   return randomItem(objectKeys(gradientDict))
 }
 
+export const gradientLightTextDict: Dict<boolean[]> = {
+  Omolon: [true],
+  Argon: [true],
+}
+
 /**
  * Also @see https://colorfulgradients.tumblr.com for more
  */

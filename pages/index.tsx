@@ -23,8 +23,15 @@ export const HomePage = ({ cookie }: Props) => {
   const handleStart = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const body = {
-      room: e.currentTarget.room.value,
+    const handleError = (error: any) => {
+      console.error('An unexpected error happened:', error)
+      setError(error.data?.message ?? error.message ?? 'Unexpected Error')
+    }
+
+    const room = e.currentTarget?.room?.value?.toLowerCase()
+
+    if (!room) {
+      handleError(new Error('No room found on login.'))
     }
 
     try {
@@ -32,12 +39,11 @@ export const HomePage = ({ cookie }: Props) => {
         fetchJson('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
+          body: JSON.stringify({ room }),
         })
       )
     } catch (error) {
-      console.error('An unexpected error happened:', error)
-      setError(error.data.message)
+      handleError(error)
     }
   }
 

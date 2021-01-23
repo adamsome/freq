@@ -23,13 +23,13 @@ const RoomPage = ({ cookie, user, game }: Props) => {
   return (
     <Container title="Game" cookie={cookie} game={game}>
       <main>
-        <GameBoard player_id={user.player_id} game={game} />
+        <GameBoard game={game} />
 
         <pre onClick={() => setShowDebug(!showDebug)}>
           {game.game_started_at.replace('T', ' ').slice(0, -5) + ' '}
-          {user?.player_id?.substr(0, 8)}
+          {user?.id?.substr(0, 8)}
           {' ('}
-          {game.players.findIndex((p) => p?.player_id === user?.player_id) + 1}
+          {game.players.findIndex((p) => p?.id === user?.id) + 1}
           {`/${game.players.length})`}
         </pre>
         {showDebug && user?.connected && (
@@ -63,7 +63,7 @@ export const getServerSideProps: GetServerSideProps = withSession(
       return { redirect: { destination: '/', permanent: false } }
     }
 
-    const room = head(params?.room)
+    const room = head(params?.room as string | undefined)?.toLowerCase()
 
     if (!isRoomValid(room)) {
       console.warn(`No 'room' param set in [room] SSR.`)
@@ -71,20 +71,20 @@ export const getServerSideProps: GetServerSideProps = withSession(
     }
 
     // const prevRoom: string | undefined
-    if (room !== user.room) {
+    if (room !== user.room.toLowerCase()) {
       user = { ...user, room }
       req.session.set('user', user)
       await req.session.save()
     }
 
     // TODO: Pass prevRoom so joinGame can remove player from old room
-    const game = await joinGame(room, user.player_id)
+    const game = await joinGame(room, user.id)
 
     return {
       props: {
         cookie: req.headers.cookie ?? '',
         user: req.session.get('user'),
-        game: createGameView(user.player_id, game),
+        game: createGameView(user.id, game),
       },
     }
   }

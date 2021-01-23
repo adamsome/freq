@@ -2,17 +2,17 @@ import { Game } from '../types/game.types'
 import { randomClues } from './clue'
 import { createPlayer } from './player'
 
-export function createNewGame(room: string, player_id: string): Game {
+export function createNewGame(room: string, userID: string): Game {
   // Assign player to random team
   const team = Math.random() < 0.5 ? 1 : 2
   // Since new game, player gets made leader
-  const player = createPlayer(player_id, team, true)
+  const player = createPlayer(userID, team, true)
   const clues = randomClues()
   const game_started_at = new Date().toISOString()
   const game: Game = {
-    room,
+    room: room.toLowerCase(),
     players: [player],
-    psychic: player_id,
+    psychic: userID,
     clues,
     guesses: {},
     match_number: 1,
@@ -27,8 +27,8 @@ export function createNewGame(room: string, player_id: string): Game {
   return game
 }
 
-export function doesGameHavePlayer(game: Game, player_id: string) {
-  return game.players.some((p) => p.player_id === player_id)
+export function doesGameHavePlayer(game: Game, userID: string) {
+  return game.players.some((p) => p.id === userID)
 }
 
 /**
@@ -42,14 +42,14 @@ function getCountByTeam(game: Game): number[] {
   }, [] as number[])
 }
 
-export function addGamePlayer(game: Game, player_id: string): Game {
+export function addGamePlayer(game: Game, userID: string): Game {
   const countByTeam = getCountByTeam(game)
   // Put new player on the smallest team
   const team = (countByTeam[1] ?? 0) > (countByTeam[2] ?? 0) ? 2 : 1
   // Make leader if team has none
   const leader = !game.players.some((p) => p.team === team && p.leader)
   // Return game w/ new player added
-  const player = createPlayer(player_id, team, leader)
+  const player = createPlayer(userID, team, leader, game.players)
   const players = [...game.players, player]
   return { ...game, players }
 }

@@ -7,6 +7,7 @@ import { isStringOrNumber } from './assertion'
 type CxParam =
   | string
   | number
+  | boolean
   | (Record<string | number, any> & { toString?: () => string })
 
 export const cx = (...classNames: (CxParam | CxParam[])[]): string => {
