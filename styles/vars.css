@@ -32,8 +32,8 @@
   --body-inverse: #e5e5e5;
   --subtle: #757474;
   --hint: #b1b1b1;
-  --primary: #020202;
-  --primary-lit: #015fca;
+  --primary: #1251f0;
+  --primary-lit: #0040e1;
   --bg: #ffffff;
   --bg-1: #eeeeee;
   --border: #e5e5e5;
@@ -53,8 +53,8 @@ html[style*='freq-color-mode: dark'] {
   --body-inverse: #151515;
   --subtle: #727272;
   --hint: #454545;
-  --primary: #0070f3;
-  --primary-lit: #1e85fc;
+  --primary: #0040e1;
+  --primary-lit: #1251f0;
   --bg: #000000;
   --bg-1: #111111;
   --border: #151515;

@@ -2,9 +2,10 @@ import { GetServerSideProps } from 'next'
 import { useState } from 'react'
 import Container from '../components/container'
 import GameBoard from '../components/game-board'
+import { useGameWithError } from '../hooks/use-game'
+import { isRoomValid } from '../lib/game'
 import { joinGame } from '../lib/game-store'
-import { createGameView } from '../lib/game-view'
-import { isRoomValid } from '../lib/room'
+import { toGameView } from '../lib/game-view'
 import { GameView } from '../types/game.types'
 import { UserConnected } from '../types/user.types'
 import { head } from '../util/array'
@@ -18,18 +19,22 @@ type Props = typeof defaultProps & {
 
 const defaultProps = {}
 
-const RoomPage = ({ cookie, user, game }: Props) => {
+const RoomPage = ({ cookie, user, game: initGame }: Props) => {
+  const [game, error] = useGameWithError(initGame)
   const [showDebug, setShowDebug] = useState(false)
+
+  if (error) return <div>🤷‍♀️ Sorry... ({error})</div>
+  if (!game) return <div>Loading...</div>
+
   return (
-    <Container title="Game" cookie={cookie} game={game}>
+    <Container title="Game" cookie={cookie}>
       <main>
-        <GameBoard game={game} />
+        <GameBoard />
 
         <pre onClick={() => setShowDebug(!showDebug)}>
           {game.game_started_at.replace('T', ' ').slice(0, -5) + ' '}
           {user?.id?.substr(0, 8)}
-          {' ('}
-          {game.players.findIndex((p) => p?.id === user?.id) + 1}
+          {` (${game.players.findIndex((p) => p?.id === user?.id) + 1}`}
           {`/${game.players.length})`}
         </pre>
         {showDebug && user?.connected && (
@@ -84,7 +89,7 @@ export const getServerSideProps: GetServerSideProps = withSession(
       props: {
         cookie: req.headers.cookie ?? '',
         user: req.session.get('user'),
-        game: createGameView(user.id, game),
+        game: toGameView(user.id, game),
       },
     }
   }

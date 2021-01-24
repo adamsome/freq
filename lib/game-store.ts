@@ -1,8 +1,9 @@
 import { Db } from 'mongodb'
-import { Game } from '../types/game.types'
+import { Game, GameView } from '../types/game.types'
 import { HasObjectID } from '../types/io.types'
-import { connectToDatabase, omitID } from '../util/mongodb'
+import { connectToDatabase } from '../util/mongodb'
 import { addGamePlayer, createNewGame, doesGameHavePlayer } from './game'
+import { toGameView } from './game-view'
 
 const fromCollection = (db: Db) => db.collection<Game & HasObjectID>('games')
 
@@ -11,11 +12,13 @@ export async function fetchGame(room?: string): Promise<Game | null> {
   if (!room) {
     return null
   }
-  const game = await fromCollection(db).findOne({ room: room.toLowerCase() })
-  return omitID(game)
+  return await fromCollection(db).findOne({ room: room.toLowerCase() })
 }
 
-export async function joinGame(room: string, userID: string): Promise<Game> {
+export async function joinGame(
+  room: string,
+  userID: string
+): Promise<GameView> {
   const { db } = await connectToDatabase()
   const collection = fromCollection(db)
 
@@ -36,5 +39,17 @@ export async function joinGame(room: string, userID: string): Promise<Game> {
       await collection.updateOne(filter, { $set: update })
     }
   }
-  return game
+  return toGameView(userID, game)
+}
+
+export async function updateGameGuess(
+  userID: string,
+  room: string,
+  guess: number
+) {
+  const { db } = await connectToDatabase()
+  const collection = fromCollection(db)
+  const filter = { room: room.toLowerCase() }
+  const update = { [`guesses.${userID}.value`]: guess }
+  await collection.updateOne(filter, { $set: update })
 }

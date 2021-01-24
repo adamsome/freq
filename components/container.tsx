@@ -2,23 +2,23 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
 import useColorMode from '../hooks/use-color-mode'
+import useGame from '../hooks/use-game'
 import useUser from '../hooks/use-user'
-import { Game } from '../types/game.types'
 import fetchJson from '../util/fetch-json'
 
 type Props = typeof defaultProps & {
   children: React.ReactNode
   cookie: string
   title?: string
-  game?: Game
 }
 
 const defaultProps = {
   appName: 'Freq',
 }
 
-const Container = ({ children, cookie, appName, title, game }: Props) => {
+const Container = ({ children, cookie, appName, title }: Props) => {
   const [user, mutateUser] = useUser()
+  const [game] = useGame()
   const router = useRouter()
   const { colorMode, toggleColorMode } = useColorMode(cookie)
 

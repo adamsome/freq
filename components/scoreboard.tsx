@@ -21,7 +21,7 @@ const Scoreboard = ({ game }: Props) => {
   const colorPlayer = (p: Player) => {
     const color = colorDict[p.color ?? 0]?.hex
     return {
-      color: selected === p.id ? 'var(--body-dark)' : color,
+      color: selected === p.id ? 'var(--body-light)' : color,
       background: selected === p.id ? color : undefined,
     }
   }

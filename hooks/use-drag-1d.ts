@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { isLeftClick } from '../util/dom'
 import useEvent from './use-event'
+import useLayoutEffect from './use-passive-layout-effect'
 import useSize from './use-size'
 
 interface UseDrag1DOptions {
@@ -29,30 +30,41 @@ export const useDrag1D = <T extends HTMLElement>(
   const [rawLength] = useSize(target)
   const length = rawLength - opts.lengthOffset
 
-  // How far the target has been dragged from center position
-  const [offset, setOffset] = useState(0)
+  // Position during a drag base on how far the cursor has moved
+  const [dragPosition, setDragPosition] = useState(0)
+  // Time the drag started; null if not currently dragging
+  const [dragStartAt, setDragStartAt] = useState<Date | null>(null)
+  // Track the last cursor position since dragPosition was last updated
+  const [prevCursorPosition, setPrevCursorPosition] = useState(0)
+  // Non-drag position
+  const [position, setPosition] = useState(() => initPosition)
+
+  /** Clamp position to the bounds of the target */
+  const clamp = (p: number) => Math.max(0, Math.min(p, length))
 
   const initPosition =
     typeof opts.initialPosition === 'number'
       ? opts.initialPosition
       : opts.initialPosition(length)
 
-  const realPosition = initPosition + offset
-  // Clamp position to the bounds of the target
-  const position = Math.max(0, Math.min(realPosition, length))
+  // When initial position changes, reset the offset so the the position
+  // is set exactly to that set, not with the added offset
+  useLayoutEffect(() => {
+    setPosition(clamp(initPosition))
+  }, [initPosition])
+
+  const currentPosition = dragStartAt == null ? position : clamp(dragPosition)
 
   // Handle drag events
 
-  const [dragStartAt, setDragStartAt] = useState<Date | null>(null)
-  const [prevCursorPosition, setPrevCursorPosition] = useState(0)
-
   const handleStart = (cursorPosition?: number) => {
     setDragStartAt(new Date())
+    setDragPosition(position)
 
     if (cursorPosition) setPrevCursorPosition(cursorPosition)
 
     if (opts.onStart) {
-      opts.onStart(length, position)
+      opts.onStart(length, currentPosition)
     }
   }
 
@@ -60,30 +72,25 @@ export const useDrag1D = <T extends HTMLElement>(
     if (!dragStartAt) return
 
     // Add difference since the last position to the offset
-    setOffset(cursorPosition - prevCursorPosition + offset)
+    setDragPosition(cursorPosition - prevCursorPosition + dragPosition)
     setPrevCursorPosition(cursorPosition)
 
     if (opts.onMove) {
       // Only set our output guess (which triggers callback event) after delay
       const msSinceDragStart = new Date().getTime() - dragStartAt.getTime()
       if (msSinceDragStart > opts.delayMS) {
-        opts.onMove(length, position)
+        opts.onMove(length, currentPosition)
       }
     }
   }
 
   const handleEnd = () => {
+    // Update position with where the drag ended (within the bounding box)
+    setPosition(clamp(dragPosition))
     setDragStartAt(null)
 
-    // Reset offset if the real position is out of bounds of the target
-    if (realPosition < 0) {
-      setOffset(-initPosition)
-    } else if (realPosition > length) {
-      setOffset(initPosition)
-    }
-
     if (opts.onEnd) {
-      opts.onEnd(length, position)
+      opts.onEnd(length, currentPosition)
     }
   }
 
@@ -106,5 +113,5 @@ export const useDrag1D = <T extends HTMLElement>(
   useEvent(target, 'touchmove', (e) => handleMove(touchPos(e)))
   useEvent(target, 'touchend', handleEnd)
 
-  return { position, length }
+  return { position: currentPosition, length, dragging: dragStartAt !== null }
 }

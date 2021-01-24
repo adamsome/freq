@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { isRoomValid } from '../../lib/room'
+import { isRoomValid } from '../../lib/game'
 import { User } from '../../types/user.types'
 import withSession from '../../util/with-session'
 

@@ -2,13 +2,13 @@ import React, { useEffect, useRef } from 'react'
 import { useDrag1D } from '../hooks/use-drag-1d'
 import { useThrottle } from '../hooks/use-throttle'
 import { Clue } from '../types/game.types'
-import { PlayerGuess } from '../types/player.types'
+import { PlayerWithGuess } from '../types/player.types'
 import MeterBackboard from './meter-backboard'
 import Needle from './needle'
 
 type Props = typeof defaultProps & {
   clue: Clue
-  players: PlayerGuess[]
+  players: PlayerWithGuess[]
   onGuessChange: (guess: number) => void
 }
 
@@ -29,9 +29,11 @@ const Meter = ({ clue, players, onGuessChange }: Props) => {
     if (guess != null) onGuessChange(guess)
   }, [guess])
 
+  const initialGuess = players[0]?.guess?.value
+
   // Track the width and drag position of the meter
   const { position, length } = useDrag1D(meterWrapperRef, 'x', {
-    initialPosition: (w) => w / 2,
+    initialPosition: (w) => (initialGuess != null ? w * initialGuess : w / 2),
     lengthOffset: NEEDLE_WIDTH,
     delayMS: 1000 / CHANGE_FPS,
     onMove: (width, x) => setGuess(x / width),
@@ -60,7 +62,9 @@ const Meter = ({ clue, players, onGuessChange }: Props) => {
           <div
             key={i}
             className="needle-wrapper needle-teammate"
-            style={{ transform: buildTeammateNeedleTranslate(p.guess) }}
+            style={{
+              transform: buildTeammateNeedleTranslate(p.guess.value),
+            }}
           >
             <Needle player={p} />
           </div>

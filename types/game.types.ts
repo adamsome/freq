@@ -1,4 +1,6 @@
-import { Player, PlayerGuess } from './player.types'
+import { Guess } from './guess.types'
+import { Dict } from './object.model'
+import { Player, PlayerWithGuess } from './player.types'
 
 export interface Clue {
   left: string
@@ -23,7 +25,7 @@ export interface Game {
   psychic?: string
   clues: Clue[]
   clue_selected?: number
-  guesses: Record<string, number>
+  guesses: Dict<Guess>
   match_number: number
   round_number: number
   phase: Phase
@@ -37,5 +39,5 @@ export interface Game {
 
 export interface GameView extends Game {
   cluesToShow: Clue[]
-  playerGuesses: PlayerGuess[]
+  playerGuesses: PlayerWithGuess[]
 }

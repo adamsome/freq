@@ -1,14 +1,15 @@
 import { Game, GameView } from '../types/game.types'
+import { Guess } from '../types/guess.types'
 import { HasObjectID } from '../types/io.types'
 import { Dict } from '../types/object.model'
-import { Player, PlayerGuess } from '../types/player.types'
+import { Player, PlayerWithGuess } from '../types/player.types'
 import { omitID } from '../util/mongodb'
 
 const createPlayerGuesses = (
   userID: string,
   players: Player[],
-  guesses: Dict<number>
-): PlayerGuess[] => {
+  guesses: Dict<Guess>
+): PlayerWithGuess[] => {
   const { player, otherPlayers } = players.reduce(
     (acc, p) => {
       const guess = guesses[p.id]
@@ -21,8 +22,8 @@ const createPlayerGuesses = (
       return acc
     },
     { otherPlayers: [] } as {
-      player?: PlayerGuess
-      otherPlayers: PlayerGuess[]
+      player?: PlayerWithGuess
+      otherPlayers: PlayerWithGuess[]
     }
   )
   if (!player) {
@@ -34,7 +35,7 @@ const createPlayerGuesses = (
   return [player, ...otherPlayers]
 }
 
-export function createGameView(
+export function toGameView(
   userID: string,
   game: Game & Partial<HasObjectID>
 ): GameView {

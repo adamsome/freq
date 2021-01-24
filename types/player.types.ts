@@ -1,3 +1,5 @@
+import { Guess } from './guess.types'
+
 export interface Player {
   id: string
   name?: string
@@ -8,6 +10,6 @@ export interface Player {
   score?: number
 }
 
-export interface PlayerGuess extends Player {
-  guess: number
+export interface PlayerWithGuess extends Player {
+  guess: Guess
 }

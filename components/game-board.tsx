@@ -1,27 +1,30 @@
-import { Clue, GameView } from '../types/game.types'
-import { isBrowser } from '../util/dom'
+import { mutate } from 'swr'
+import useGame from '../hooks/use-game'
+import fetchJson from '../util/fetch-json'
 import Meter from './meter'
 import Scoreboard from './scoreboard'
 
-type Props = typeof defaultProps & {
-  game: GameView
-}
+const GameBoard = () => {
+  const [game] = useGame()
+  if (!game) return null
 
-const defaultProps = {}
-
-const GameBoard = ({ game }: Props) => {
   const { cluesToShow, playerGuesses } = game
 
-  // TODO: Remove
-  if (isBrowser) {
-    // eslint-disable-next-line no-console
-    console.log('game', game)
-  }
-
-  const handleGuessChange = (clue: Clue) => (guess: number) => {
+  const handleGuessChange = async (guess: number) => {
     // TODO: Implement /guess
     // eslint-disable-next-line no-console
-    console.log('guess', guess, clue)
+    console.log('guess', guess)
+
+    try {
+      await fetchJson('/api/guess', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ guess }),
+      })
+      mutate('/api/game')
+    } catch (error) {
+      console.error('Error updating guess.', error)
+    }
   }
 
   return (
@@ -31,7 +34,7 @@ const GameBoard = ({ game }: Props) => {
           <Meter
             clue={clue}
             players={playerGuesses}
-            onGuessChange={handleGuessChange(clue)}
+            onGuessChange={handleGuessChange}
           ></Meter>
         </div>
       ))}
@@ -53,7 +56,5 @@ const GameBoard = ({ game }: Props) => {
     </>
   )
 }
-
-GameBoard.defaultProps = defaultProps
 
 export default GameBoard

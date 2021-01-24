@@ -1,10 +1,10 @@
 import React from 'react'
 import colorDict from '../lib/color-dict'
-import { PlayerGuess } from '../types/player.types'
+import { PlayerWithGuess } from '../types/player.types'
 import { cx } from '../util/dom'
 
 type Props = typeof defaultProps & {
-  player: PlayerGuess
+  player: PlayerWithGuess
 }
 
 const defaultProps = {
