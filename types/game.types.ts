@@ -22,7 +22,7 @@ export type Phase = typeof PHASES[number]
 export interface Game {
   room: string
   players: Player[]
-  psychic?: string
+  psychic: string
   clues: Clue[]
   clue_selected?: number
   guesses: Dict<Guess>

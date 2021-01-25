@@ -62,3 +62,14 @@ export function isRoomValid(room?: string): room is string {
     !!room.match(/^[a-z0-9]+$/i)
   )
 }
+
+export function getTeamName(team?: 1 | 2): string {
+  switch (team) {
+    case 1:
+      return 'Red'
+    case 2:
+      return 'Blue'
+    default:
+      return 'Audience'
+  }
+}

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Container from '../components/container'
 import GameBoard from '../components/game-board'
 import { useGameWithError } from '../hooks/use-game'
@@ -13,15 +12,13 @@ import withSession from '../util/with-session'
 
 type Props = typeof defaultProps & {
   cookie: string
-  user: UserConnected
   game: GameView
 }
 
 const defaultProps = {}
 
-const RoomPage = ({ cookie, user, game: initGame }: Props) => {
+const RoomPage = ({ cookie, game: initGame }: Props) => {
   const [game, error] = useGameWithError(initGame)
-  const [showDebug, setShowDebug] = useState(false)
 
   if (error) return <div>🤷‍♀️ Sorry... ({error})</div>
   if (!game) return <div>Loading...</div>
@@ -30,17 +27,6 @@ const RoomPage = ({ cookie, user, game: initGame }: Props) => {
     <Container title="Game" cookie={cookie} game={game}>
       <main>
         <GameBoard />
-
-        <pre onClick={() => setShowDebug(!showDebug)}>
-          {game.game_started_at.replace('T', ' ').slice(0, -5) + ' '}
-          {user?.id?.substr(0, 8)}
-          {` (${game.players.findIndex((p) => p?.id === user?.id) + 1}`}
-          {`/${game.players.length})`}
-        </pre>
-        {showDebug && user?.connected && (
-          <pre>{JSON.stringify(user, null, 2)}</pre>
-        )}
-        {showDebug && <pre>{JSON.stringify(game, null, 2)}</pre>}
       </main>
 
       <style jsx>{`
@@ -88,7 +74,6 @@ export const getServerSideProps = withSession(
     return {
       props: {
         cookie: req.headers.cookie ?? '',
-        user: req.session.get('user'),
         game: toGameView(user.id, game),
       },
     }

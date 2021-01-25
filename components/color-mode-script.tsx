@@ -14,7 +14,7 @@ function setScript(initialValue: Mode) {
   let persistedPreference: Mode
 
   try {
-    persistedPreference = localStorage.getItem('freq-color-mode') as Mode
+    persistedPreference = localStorage.getItem('freq/color-mode') as Mode
   } catch (error) {
     console.warn(
       '`localStorage` is not available. ' +

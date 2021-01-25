@@ -36,6 +36,7 @@
   --primary-lit: #0040e1;
   --bg: #ffffff;
   --bg-1: #eeeeee;
+  --bg-2: #dadada;
   --border: #e5e5e5;
   --border-1: #b1b1b1;
   --border-2: #757474;
@@ -58,6 +59,7 @@ html[style*='freq-color-mode: dark'] {
   --primary-lit: #1251f0;
   --bg: #000000;
   --bg-1: #111111;
+  --bg-2: #252525;
   --border: #151515;
   --border-1: #454545;
   --border-2: #727272;

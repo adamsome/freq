@@ -4,9 +4,10 @@ import { isBrowser } from '../util/dom'
 import {
   cookieStorageManager,
   localStorageManager,
+  StorageKey,
 } from '../util/storage-manager'
 
-const colorModeKey = 'freq-color-mode'
+const colorModeKey: StorageKey = 'freq/color-mode'
 
 export const root = {
   get: () =>

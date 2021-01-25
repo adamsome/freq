@@ -7,15 +7,15 @@ import { setCookieOnServer } from './cookie'
 
 const hasLocalStorage = typeof Storage !== 'undefined'
 
-export type StorageKeys = 'freq-color-mode' | 'freq-player-id'
+export type StorageKey = 'freq/color-mode' | 'freq/debug-mode'
 
 interface SetOptions {
   serverResponse: HasResponseSetHeader
 }
 
 export interface StorageManager<T extends string = string> {
-  get(key: StorageKeys, init?: T): T | undefined
-  set(key: StorageKeys, value: T, options?: SetOptions): void
+  get(key: StorageKey, init?: T): T | undefined
+  set(key: StorageKey, value: T, options?: SetOptions): void
   type: 'cookie' | 'localStorage'
 }
 

@@ -1,6 +1,7 @@
 import { mutate } from 'swr'
 import useGame from '../hooks/use-game'
 import fetchJson from '../util/fetch-json'
+import ActionPanel from './action-panel'
 import Meter from './meter'
 import Scoreboard from './scoreboard'
 
@@ -34,6 +35,8 @@ const GameBoard = () => {
           ></Meter>
         </div>
       ))}
+
+      <ActionPanel />
 
       <Scoreboard game={game} />
 

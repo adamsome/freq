@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
-import colorDict from '../lib/color-dict'
+import Modal from 'react-responsive-modal'
 import { Game } from '../types/game.types'
 import { Player } from '../types/player.types'
 import { partition } from '../util/array'
 import { cx } from '../util/dom'
+import { colorPlayer } from '../util/dom-style'
+import PlayerCard from './player-card'
 
 type Props = typeof defaultProps & {
   game: Game
@@ -12,19 +14,21 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 const Scoreboard = ({ game }: Props) => {
-  const [selected, setSelected] = useState<string | null>(null)
+  const [selected, setSelected] = useState<Player | null>(null)
 
-  const { score_team_1, score_team_2 } = game
+  // Modal state
+  // TODO: Only make modal openable by a captain
+  // TODO: Only make players clickable by a captain
+  const [modelOpen, setModelOpen] = useState(false)
+  const handlePlayerSelect = (p: Player) => {
+    setSelected(p)
+    setModelOpen(true)
+  }
+  const handleModalClose = () => setModelOpen(false)
+
+  const { score_team_1, score_team_2, psychic } = game
   const [, players] = partition((p) => p.team == null, game.players)
   const teams = partition((p) => p.team === 1, players)
-
-  const colorPlayer = (p: Player) => {
-    const color = colorDict[p.color ?? 0]?.hex
-    return {
-      color: selected === p.id ? 'var(--body-light)' : color,
-      background: selected === p.id ? color : undefined,
-    }
-  }
 
   return (
     <div className="wrapper">
@@ -44,9 +48,9 @@ const Scoreboard = ({ game }: Props) => {
             {t.map((p) => (
               <div
                 key={p.id}
-                className={cx('player', selected === p.id && 'selected')}
-                style={colorPlayer(p)}
-                onClick={() => setSelected(p.id)}
+                className={cx('player', selected?.id === p.id && 'selected')}
+                style={colorPlayer(p, selected?.id === p.id)}
+                onClick={() => handlePlayerSelect(p)}
               >
                 <div className="icon">{p.icon}</div>
                 <div className="name-wrapper">
@@ -60,9 +64,23 @@ const Scoreboard = ({ game }: Props) => {
         ))}
       </div>
 
+      <Modal
+        open={modelOpen}
+        onClose={handleModalClose}
+        center
+        classNames={{ modal: 'freq-model-reset-sm' }}
+      >
+        <PlayerCard
+          player={selected}
+          psychic={psychic}
+          onClose={handleModalClose}
+        />
+      </Modal>
+
       <style jsx>{`
         .wrapper {
           width: 100%;
+          max-width: 30rem;
         }
 
         .header {
@@ -167,9 +185,6 @@ const Scoreboard = ({ game }: Props) => {
           text-align: right;
           margin-right: 0;
           margin-left: var(--inset-sm);
-        }
-
-        .player .score {
         }
       `}</style>
     </div>

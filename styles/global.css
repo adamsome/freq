@@ -135,3 +135,20 @@ pre {
   font-family: var(--font-family-mono);
   font-size: var(--font-size-sm);
 }
+
+/** Vendors */
+
+.react-responsive-modal-modal {
+  background: var(--input-bg);
+  border-radius: var(--border-radius-md);
+}
+
+.freq-model-reset-sm {
+  max-width: 400px;
+  margin: var(--inset-md);
+  padding: 0;
+}
+
+.freq-model-reset-sm svg {
+  fill: var(--body-light);
+}

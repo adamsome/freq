@@ -2,7 +2,9 @@ import { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
 import fetch from '../util/fetch-json'
 
+// Do not modify order (normaize, ...vendors, global, vars)
 import '../styles/normalize.css'
+import 'react-responsive-modal/styles.css'
 import '../styles/global.css'
 import '../styles/vars.css'
 

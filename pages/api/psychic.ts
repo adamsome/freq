@@ -15,8 +15,7 @@ export default withSession(
         }
 
         const body = await req.body
-        const prop = `guesses.${user.id}.value`
-        await updateGameProp(user.room, prop, body.guess)
+        await updateGameProp(user.room, 'psychic', body.psychic)
         return res.json(true)
       } catch (error) {
         const { response } = error

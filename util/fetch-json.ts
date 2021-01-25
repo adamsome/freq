@@ -1,3 +1,5 @@
+import { mutate } from 'swr'
+
 export default async function fetcher(input: RequestInfo, init?: RequestInit) {
   try {
     const response = await fetch(input, init)
@@ -19,5 +21,25 @@ export default async function fetcher(input: RequestInfo, init?: RequestInit) {
       error.data = { message: error.message }
     }
     throw error
+  }
+}
+
+export async function postJson(
+  input: RequestInfo,
+  body: any,
+  onError?: (error: any) => void
+) {
+  try {
+    await fetcher(input, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    mutate('/api/game')
+  } catch (error) {
+    console.error(`Error updating '${input}'.`, error)
+    if (onError) {
+      onError(error)
+    }
   }
 }
