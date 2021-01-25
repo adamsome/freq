@@ -45,6 +45,7 @@
   --input-border: #d5d5d5;
   --translucent: #00000033;
   --translucent-inverse: #ffffff22;
+  --translucent-inverse1: #ffffffc7;
 }
 
 html[style*='freq-color-mode:dark'],
@@ -66,4 +67,5 @@ html[style*='freq-color-mode: dark'] {
   --input-border: #151515;
   --translucent: #ffffff22;
   --translucent-inverse: #00000033;
+  --translucent-inverse-1: #000000c7;
 }

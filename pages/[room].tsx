@@ -1,4 +1,3 @@
-import { GetServerSideProps } from 'next'
 import { useState } from 'react'
 import Container from '../components/container'
 import GameBoard from '../components/game-board'
@@ -7,6 +6,7 @@ import { isRoomValid } from '../lib/game'
 import { joinGame } from '../lib/game-store'
 import { toGameView } from '../lib/game-view'
 import { GameView } from '../types/game.types'
+import { SessionContext } from '../types/io.types'
 import { UserConnected } from '../types/user.types'
 import { head } from '../util/array'
 import withSession from '../util/with-session'
@@ -27,7 +27,7 @@ const RoomPage = ({ cookie, user, game: initGame }: Props) => {
   if (!game) return <div>Loading...</div>
 
   return (
-    <Container title="Game" cookie={cookie}>
+    <Container title="Game" cookie={cookie} game={game}>
       <main>
         <GameBoard />
 
@@ -60,8 +60,8 @@ const RoomPage = ({ cookie, user, game: initGame }: Props) => {
 
 RoomPage.defaultProps = defaultProps
 
-export const getServerSideProps: GetServerSideProps = withSession(
-  async ({ req, params }) => {
+export const getServerSideProps = withSession(
+  async ({ req, params }: SessionContext) => {
     let user: UserConnected | undefined = req.session.get('user')
     if (!user) {
       console.warn(`No 'user' param set in [room] SSR.`)

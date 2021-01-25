@@ -11,10 +11,6 @@ const GameBoard = () => {
   const { cluesToShow, playerGuesses } = game
 
   const handleGuessChange = async (guess: number) => {
-    // TODO: Implement /guess
-    // eslint-disable-next-line no-console
-    console.log('guess', guess)
-
     try {
       await fetchJson('/api/guess', {
         method: 'POST',

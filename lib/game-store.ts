@@ -1,5 +1,5 @@
 import { Db } from 'mongodb'
-import { Game, GameView } from '../types/game.types'
+import { Game, GameView, Phase } from '../types/game.types'
 import { HasObjectID } from '../types/io.types'
 import { connectToDatabase } from '../util/mongodb'
 import { addGamePlayer, createNewGame, doesGameHavePlayer } from './game'
@@ -51,5 +51,13 @@ export async function updateGameGuess(
   const collection = fromCollection(db)
   const filter = { room: room.toLowerCase() }
   const update = { [`guesses.${userID}.value`]: guess }
+  await collection.updateOne(filter, { $set: update })
+}
+
+export async function updateGamePhase(room: string, phase: Phase) {
+  const { db } = await connectToDatabase()
+  const collection = fromCollection(db)
+  const filter = { room: room.toLowerCase() }
+  const update = { phase }
   await collection.updateOne(filter, { $set: update })
 }

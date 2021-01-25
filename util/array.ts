@@ -11,6 +11,13 @@ export function head<T>(arrayOrElement?: T | T[] | null): T | undefined {
   return array != null && array.length ? array[0] : undefined
 }
 
+export function nth(offset: number, arr: string): string
+export function nth<T>(offset: number, arr: T[]): T
+export function nth<T>(offset: number, arr: string | T[]): T | string {
+  const idx = offset < 0 ? arr.length + offset : offset
+  return typeof arr === 'string' ? arr.charAt(idx) : arr[idx]
+}
+
 /**
  * Takes a predicate and a list of values and returns a a tuple (2-item array),
  *  with each item containing the subset of the list that matches the predicate
@@ -56,3 +63,17 @@ export const reject = <T>(arr: T[], fn: (value: T) => boolean): T[] => {
 
 export const rejectNil = <T>(list: Array<T | undefined | null>): T[] =>
   reject(list, isNil)
+
+/**
+ * Shuffle an array using the Fisher-Yates algorithm.
+ *
+ * @see https://stackoverflow.com/questions/49555273/how-to-shuffle-an-array-of-objects-in-javascript/
+ */
+export const shuffle = <T>(array: T[]) => {
+  let i = array.length
+  while (i--) {
+    const ri = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[ri]] = [array[ri], array[i]]
+  }
+  return array
+}

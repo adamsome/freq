@@ -1,21 +1,26 @@
 import { randomItem } from '../util/array'
 
-export function randomName(excludeNames?: string[], attempt?: number): string {
-  if (attempt ?? 0 > 5) {
+/** If this retry attempt is 1 or more add a suffix, e.g. 'Name (3)` */
+function buildName(name: string, retry: number): string {
+  const suffix = `${retry ? ` (${retry})` : ''}`
+  return `${name}${suffix}`
+}
+
+export function randomName(excludeNames: string[] = [], retry = 0): string {
+  if (retry > 5) {
+    // Short-curcuit retries at 5
     return 'No Name'
   }
-  let i = 0
-  let name: string | undefined
-  // TODO: Very inefficient algorithm, if name list increases, improve
-  while (!name && i < nameSet.length) {
-    const suffix = `${attempt != null ? ` (${attempt})` : ''}`
-    const nextName = `${randomItem(nameSet)}${suffix}`
-    if (!excludeNames?.includes(nextName)) {
-      return nextName
-    }
-    i++
+  const availableNames = nameSet.filter((n) => {
+    return !excludeNames.includes(buildName(n, retry))
+  })
+
+  if (availableNames.length === 0) {
+    // All names in base list used, retry using the suffix above
+    return randomName(excludeNames, retry + 1)
   }
-  return randomName(excludeNames, (attempt ?? 0) + 1)
+
+  return buildName(randomItem(availableNames), retry)
 }
 
 const nameSet: string[] = [

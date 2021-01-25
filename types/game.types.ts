@@ -8,7 +8,7 @@ export interface Clue {
   gradient: string
 }
 
-const phases = [
+export const PHASES = [
   'prep',
   'choose',
   'guess',
@@ -17,7 +17,7 @@ const phases = [
   'win',
 ] as const
 
-export type Phase = typeof phases[number]
+export type Phase = typeof PHASES[number]
 
 export interface Game {
   room: string
@@ -38,6 +38,7 @@ export interface Game {
 }
 
 export interface GameView extends Game {
+  currentPlayer: Player
   cluesToShow: Clue[]
   playerGuesses: PlayerWithGuess[]
 }

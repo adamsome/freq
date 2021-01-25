@@ -1,15 +1,15 @@
-import { Game, GameView } from '../types/game.types'
+import { Clue, Game, GameView, Phase } from '../types/game.types'
 import { Guess } from '../types/guess.types'
 import { HasObjectID } from '../types/io.types'
 import { Dict } from '../types/object.model'
 import { Player, PlayerWithGuess } from '../types/player.types'
 import { omitID } from '../util/mongodb'
 
-const createPlayerGuesses = (
+function createPlayerGuesses(
   userID: string,
   players: Player[],
   guesses: Dict<Guess>
-): PlayerWithGuess[] => {
+): PlayerWithGuess[] {
   const { player, otherPlayers } = players.reduce(
     (acc, p) => {
       const guess = guesses[p.id]
@@ -35,15 +35,40 @@ const createPlayerGuesses = (
   return [player, ...otherPlayers]
 }
 
+function createCluesToShow(
+  phase: Phase,
+  clues: Clue[],
+  selected?: number
+): Clue[] {
+  switch (phase) {
+    case 'prep':
+      return []
+    case 'choose':
+      return clues
+    default:
+      return selected != null ? [clues[selected]] : clues
+  }
+}
+
 export function toGameView(
   userID: string,
   game: Game & Partial<HasObjectID>
 ): GameView {
-  const { clues, clue_selected, players, guesses } = game
-  const cluesToShow = clue_selected == null ? clues : [clues[clue_selected]]
+  const { phase, clues, clue_selected, players, guesses } = game
+
+  const currentPlayer = players.find((p) => p.id === userID)
+  if (!currentPlayer) {
+    throw new Error(
+      `Unexpected error: Game has no player with user ID '${userID}'`
+    )
+  }
+
+  const cluesToShow = createCluesToShow(phase, clues, clue_selected)
   const playerGuesses = createPlayerGuesses(userID, players, guesses)
+
   const view: GameView & Partial<HasObjectID> = {
     ...game,
+    currentPlayer,
     cluesToShow,
     playerGuesses,
   }
