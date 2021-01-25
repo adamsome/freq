@@ -106,21 +106,24 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
         {showDebug && <DebugText game={game} user={user} />}
       </div>
 
-      <Modal
-        open={modelOpen}
-        onClose={handleModalClose}
-        center
-        classNames={{ modal: 'freq-model-reset-sm' }}
-      >
-        <PlayerOptions
-          player={game?.currentPlayer}
-          colorMode={colorMode}
-          onDebugToggle={handleDebugToggle}
-          onColorModeToggle={handleToggleColorMode}
-          onLogout={handleLogout}
+      {game && user?.connected && (
+        <Modal
+          open={modelOpen}
           onClose={handleModalClose}
-        />
-      </Modal>
+          center
+          classNames={{ modal: 'freq-model-reset-sm' }}
+        >
+          <PlayerOptions
+            player={game.currentPlayer}
+            playerIndex={game.players.findIndex((p) => user.id === p.id)}
+            colorMode={colorMode}
+            onDebugToggle={handleDebugToggle}
+            onColorModeToggle={handleToggleColorMode}
+            onLogout={handleLogout}
+            onClose={handleModalClose}
+          />
+        </Modal>
+      )}
 
       <style jsx>{`
         .container {

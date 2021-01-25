@@ -3,10 +3,12 @@ import { ColorMode } from '../types/color-mode.types'
 import { Player } from '../types/player.types'
 import { isBrowser } from '../util/dom'
 import { colorPlayer } from '../util/dom-style'
+import { postJson } from '../util/fetch-json'
 import { localStorageManager } from '../util/storage-manager'
 
 type Props = typeof defaultProps & {
   player?: Player | null
+  playerIndex: number
   colorMode?: ColorMode
   onDebugToggle?: () => void
   onColorModeToggle?: () => void
@@ -17,13 +19,19 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 const PlayerOptions = (props: Props) => {
-  const { player, colorMode } = props
+  const { player, playerIndex, colorMode } = props
   const { onDebugToggle, onColorModeToggle, onLogout, onClose } = props
   if (!player) return null
 
   const debugModeVal: any =
     isBrowser && localStorageManager().get('freq/debug-mode')
   const allowDebugMode = debugModeVal === true || debugModeVal === 'true'
+
+  const handleLeaderSet = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    await postJson('/api/leader', { index: playerIndex, value: false })
+    if (onClose) onClose()
+  }
 
   return (
     <>
@@ -38,6 +46,12 @@ const PlayerOptions = (props: Props) => {
         <button style={colorPlayer(player)} onClick={onColorModeToggle}>
           {colorMode === 'light' ? 'Dark' : 'Light'} mode
         </button>
+
+        {player.leader && (
+          <button style={colorPlayer(player)} onClick={handleLeaderSet}>
+            Remove as leader
+          </button>
+        )}
 
         <button style={colorPlayer(player)} onClick={onLogout}>
           Exit game

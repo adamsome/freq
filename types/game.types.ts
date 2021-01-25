@@ -37,8 +37,15 @@ export interface Game {
   round_started_at: string
 }
 
+export interface Command {
+  text: string
+  waiting?: boolean
+}
+
 export interface GameView extends Game {
   currentPlayer: Player
   cluesToShow: Clue[]
   playerGuesses: PlayerWithGuess[]
+  commandInfo: string
+  commands: Command[]
 }

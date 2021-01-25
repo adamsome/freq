@@ -14,21 +14,21 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 const Scoreboard = ({ game }: Props) => {
-  const [selected, setSelected] = useState<Player | null>(null)
-
   // Modal state
   // TODO: Only make modal openable by a captain
   // TODO: Only make players clickable by a captain
-  const [modelOpen, setModelOpen] = useState(false)
+  const [modelOpen, setModelOpen] = useState<[Player, number] | null>(null)
   const handlePlayerSelect = (p: Player) => {
-    setSelected(p)
-    setModelOpen(true)
+    const playerIndex = game.players.findIndex((_p) => p.id === _p.id)
+    setModelOpen([p, playerIndex])
   }
-  const handleModalClose = () => setModelOpen(false)
+  const handleModalClose = () => setModelOpen(null)
 
   const { score_team_1, score_team_2, psychic } = game
   const [, players] = partition((p) => p.team == null, game.players)
   const teams = partition((p) => p.team === 1, players)
+  // TODO: Add to game view state
+  const activePlayers: string[] = []
 
   return (
     <div className="wrapper">
@@ -48,13 +48,17 @@ const Scoreboard = ({ game }: Props) => {
             {t.map((p) => (
               <div
                 key={p.id}
-                className={cx('player', selected?.id === p.id && 'selected')}
-                style={colorPlayer(p, selected?.id === p.id)}
+                className={cx(
+                  'player',
+                  activePlayers.includes(p.id) && 'selected'
+                )}
+                style={colorPlayer(p, activePlayers.includes(p.id))}
                 onClick={() => handlePlayerSelect(p)}
               >
                 <div className="icon">{p.icon}</div>
                 <div className="name-wrapper">
                   <div className="name">{`${p.name ?? 'Unnamed'}`}</div>
+                  {p.leader && <div>🎩</div>}
                   {game.psychic === p.id && <div>🧠</div>}
                 </div>
                 <div className="score">{p.score ?? 0}</div>
@@ -65,13 +69,14 @@ const Scoreboard = ({ game }: Props) => {
       </div>
 
       <Modal
-        open={modelOpen}
+        open={modelOpen != null}
         onClose={handleModalClose}
         center
         classNames={{ modal: 'freq-model-reset-sm' }}
       >
         <PlayerCard
-          player={selected}
+          player={modelOpen?.[0]}
+          playerIndex={modelOpen?.[1] ?? -1}
           psychic={psychic}
           onClose={handleModalClose}
         />
@@ -80,7 +85,6 @@ const Scoreboard = ({ game }: Props) => {
       <style jsx>{`
         .wrapper {
           width: 100%;
-          max-width: 30rem;
         }
 
         .header {
@@ -172,9 +176,9 @@ const Scoreboard = ({ game }: Props) => {
           display: flex;
         }
 
-        .player .name {
+        .player .name-wrapper > * {
           text-align: left;
-          margin-right: var(--inset-sm);
+          margin-right: var(--inset-xs);
         }
 
         .column.right .name-wrapper {
@@ -184,7 +188,7 @@ const Scoreboard = ({ game }: Props) => {
         .column.right .name {
           text-align: right;
           margin-right: 0;
-          margin-left: var(--inset-sm);
+          margin-left: var(--inset-xs);
         }
       `}</style>
     </div>

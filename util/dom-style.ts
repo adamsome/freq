@@ -1,7 +1,7 @@
 import colorDict from '../lib/color-dict'
 import { Player } from '../types/player.types'
 
-export const colorPlayer = (p?: Player | null, lit = false) => {
+export const colorPlayer = (p?: Player | false | null, lit = false) => {
   if (!p) return undefined
   const color = colorDict[p.color ?? 0]?.hex
   return {

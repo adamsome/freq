@@ -74,6 +74,11 @@ button:focus {
   outline: 3px solid transparent;
 }
 
+a:disabled,
+button:disabled {
+  cursor: not-allowed;
+}
+
 img {
   max-width: 100%;
   display: block;

@@ -8,6 +8,7 @@ type CxParam =
   | string
   | number
   | boolean
+  | undefined
   | (Record<string | number, any> & { toString?: () => string })
 
 export const cx = (...classNames: (CxParam | CxParam[])[]): string => {

@@ -14,10 +14,9 @@ export default withSession(
           return res.status(500).json(new Error(msg))
         }
 
-        // TODO: Validate, ensure user is captain and that
-        // this game phase should allow the change
         const body = await req.body
-        await updateGameProp(user.room, 'psychic', body.psychic)
+        const prop = `players.${body.index}.leader`
+        await updateGameProp(user.room, prop, body.value)
         return res.json(true)
       } catch (error) {
         const { response } = error

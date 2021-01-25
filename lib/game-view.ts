@@ -1,4 +1,4 @@
-import { Clue, Game, GameView, Phase } from '../types/game.types'
+import { Clue, Command, Game, GameView, Phase } from '../types/game.types'
 import { Guess } from '../types/guess.types'
 import { HasObjectID } from '../types/io.types'
 import { Dict } from '../types/object.model'
@@ -50,6 +50,22 @@ function createCluesToShow(
   }
 }
 
+function createCommands(
+  player: Player,
+  game: Game
+): [Array<Command>, string] | [Array<Command>] {
+  switch (game.phase) {
+    case 'prep': {
+      if (player.leader) {
+        return [[{ text: "Everyone's in" }]]
+      }
+      return [[{ text: 'Waiting for players...', waiting: true }]]
+    }
+    default:
+      return [[]]
+  }
+}
+
 export function toGameView(
   userID: string,
   game: Game & Partial<HasObjectID>
@@ -65,12 +81,15 @@ export function toGameView(
 
   const cluesToShow = createCluesToShow(phase, clues, clue_selected)
   const playerGuesses = createPlayerGuesses(userID, players, guesses)
+  const [commands, commandInfo] = createCommands(currentPlayer, game)
 
   const view: GameView & Partial<HasObjectID> = {
     ...game,
     currentPlayer,
     cluesToShow,
     playerGuesses,
+    commandInfo: commandInfo ?? '',
+    commands,
   }
   return omitID(view)
 }

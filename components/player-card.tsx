@@ -6,13 +6,14 @@ import { postJson } from '../util/fetch-json'
 
 type Props = typeof defaultProps & {
   player?: Player | null
+  playerIndex: number
   psychic?: string
   onClose?: () => void
 }
 
 const defaultProps = {}
 
-const PlayerCard = ({ player, psychic, onClose }: Props) => {
+const PlayerCard = ({ player, playerIndex, psychic, onClose }: Props) => {
   if (!player) return null
 
   const teamName = getTeamName(player.team)
@@ -25,18 +26,33 @@ const PlayerCard = ({ player, psychic, onClose }: Props) => {
     if (onClose) onClose()
   }
 
+  const handleLeaderSet = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    await postJson('/api/leader', { index: playerIndex, value: true })
+    if (onClose) onClose()
+  }
+
   return (
     <>
-      <h2 style={colorPlayer(player, true)}>{player.name}</h2>
+      <h2 style={colorPlayer(player, true)}>
+        {player.name}-{playerIndex}
+      </h2>
       <div>
         {psychic !== player.id && (
           <button
             style={colorPlayer(player)}
             onClick={handlePsychicChange(player.id)}
           >
-            Make {teamName} Psychic
+            Make {teamName} psychic
           </button>
         )}
+
+        {!player.leader && (
+          <button style={colorPlayer(player)} onClick={handleLeaderSet}>
+            Make {teamName} leader
+          </button>
+        )}
+
         <button className="close" onClick={onClose}>
           Close
         </button>
