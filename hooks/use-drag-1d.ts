@@ -8,6 +8,7 @@ interface UseDrag1DOptions {
   initialPosition: number | ((length: number) => number)
   lengthOffset: number
   delayMS: number
+  disable: boolean
   onStart?: (width: number, position: number) => void
   onMove?: (width: number, position: number) => void
   onEnd?: (width: number, position: number) => void
@@ -17,6 +18,7 @@ const defaultOptions: UseDrag1DOptions = {
   initialPosition: 0,
   lengthOffset: 0,
   delayMS: 0,
+  disable: false,
 }
 
 export const useDrag1D = <T extends HTMLElement>(
@@ -58,6 +60,7 @@ export const useDrag1D = <T extends HTMLElement>(
   // Handle drag events
 
   const handleStart = (cursorPosition?: number) => {
+    if (opts.disable) return
     setDragStartAt(new Date())
     setDragPosition(position)
 
@@ -69,7 +72,7 @@ export const useDrag1D = <T extends HTMLElement>(
   }
 
   const handleMove = (cursorPosition: number) => {
-    if (!dragStartAt) return
+    if (!dragStartAt || opts.disable) return
 
     // Add difference since the last position to the offset
     setDragPosition(cursorPosition - prevCursorPosition + dragPosition)
@@ -85,6 +88,7 @@ export const useDrag1D = <T extends HTMLElement>(
   }
 
   const handleEnd = () => {
+    if (opts.disable) return
     // Update position with where the drag ended (within the bounding box)
     setPosition(clamp(dragPosition))
     setDragStartAt(null)

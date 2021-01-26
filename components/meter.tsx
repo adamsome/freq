@@ -1,13 +1,18 @@
 import React, { useEffect, useRef } from 'react'
 import { useDrag1D } from '../hooks/use-drag-1d'
 import { useThrottle } from '../hooks/use-throttle'
-import { Clue } from '../types/game.types'
-import { PlayerWithGuess } from '../types/player.types'
+import { Clue, Player, PlayerWithGuess } from '../types/game.types'
+import { partition } from '../util/array'
+import { cx } from '../util/dom'
 import MeterBackboard from './meter-backboard'
 import Needle from './needle'
 
 type Props = typeof defaultProps & {
   clue: Clue
+  clueIndex: number
+  isChoosing: boolean
+  isGuessing: boolean
+  currentPlayer: Player
   players: PlayerWithGuess[]
   onGuessChange: (guess: number) => void
 }
@@ -18,24 +23,45 @@ const NEEDLE_WIDTH = 32
 const NEEDLE_TEAMMATE_WIDTH = 24
 const CHANGE_FPS = 2
 
-const Meter = ({ clue, players, onGuessChange }: Props) => {
+const Meter = ({
+  clue,
+  clueIndex,
+  isChoosing,
+  isGuessing,
+  currentPlayer,
+  players,
+  onGuessChange,
+}: Props) => {
   const meterWrapperRef = useRef<HTMLDivElement>(null)
   const needleRef = useRef<HTMLDivElement>(null)
 
   // Throttle the guess change callback
   const [guess, setGuess] = useThrottle<number | null>(null, CHANGE_FPS)
 
+  // Update guess when set and guesses exist (otherwise disallowed)
   useEffect(() => {
     if (guess != null) onGuessChange(guess)
   }, [guess])
 
-  const initialGuess = players[0]?.guess?.value
+  const partitionedPlayers = partition(
+    (p) => p.id === currentPlayer.id,
+    players
+  )
+  const [currentPlayerGuesses, otherPlayerGueses] = partitionedPlayers
+
+  const initialGuess = currentPlayerGuesses[0]?.guess?.value
+  const hasGuesses = players.length > 0
+  const disable =
+    !hasGuesses ||
+    currentPlayerGuesses[0]?.guess?.locked === true ||
+    !isGuessing
 
   // Track the width and drag position of the meter
   const { position, length } = useDrag1D(meterWrapperRef, 'x', {
     initialPosition: (w) => (initialGuess != null ? w * initialGuess : w / 2),
     lengthOffset: NEEDLE_WIDTH,
     delayMS: 1000 / CHANGE_FPS,
+    disable,
     onMove: (width, x) => setGuess(x / width),
     onEnd: (w, x) => setGuess(x / w),
   })
@@ -54,11 +80,19 @@ const Meter = ({ clue, players, onGuessChange }: Props) => {
 
   return (
     <>
-      <div ref={meterWrapperRef} className="wrapper">
-        <MeterBackboard clue={clue}></MeterBackboard>
+      <div
+        ref={meterWrapperRef}
+        className={cx('wrapper', !hasGuesses && 'no-guess')}
+      >
+        <MeterBackboard
+          clue={clue}
+          clueIndex={clueIndex}
+          isChoosing={isChoosing}
+          hasSlider={hasGuesses || isGuessing}
+        ></MeterBackboard>
 
         {/* Teammate Needles */}
-        {players.slice(1).map((p, i) => (
+        {otherPlayerGueses.map((p, i) => (
           <div
             key={i}
             className="needle-wrapper needle-teammate"
@@ -71,9 +105,11 @@ const Meter = ({ clue, players, onGuessChange }: Props) => {
         ))}
 
         {/* Player Needle */}
-        <div ref={needleRef} className="needle-wrapper">
-          <Needle player={players[0]} size="lg" />
-        </div>
+        {hasGuesses && currentPlayerGuesses.length > 0 && (
+          <div ref={needleRef} className="needle-wrapper">
+            <Needle player={currentPlayerGuesses[0]} size="lg" />
+          </div>
+        )}
       </div>
 
       <style jsx>{`

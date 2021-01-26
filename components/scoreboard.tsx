@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import Modal from 'react-responsive-modal'
-import { Game } from '../types/game.types'
-import { Player } from '../types/player.types'
-import { partition } from '../util/array'
+import { getPlayersPerTeam } from '../lib/player'
+import { GameView, Player } from '../types/game.types'
 import { cx } from '../util/dom'
-import { colorPlayer } from '../util/dom-style'
+import { styleColor } from '../util/dom-style'
 import PlayerCard from './player-card'
 
 type Props = typeof defaultProps & {
-  game: Game
+  game: GameView
 }
 
 const defaultProps = {}
@@ -17,16 +16,12 @@ const Scoreboard = ({ game }: Props) => {
   // Modal state
   // TODO: Only make modal openable by a captain
   // TODO: Only make players clickable by a captain
-  const [modelOpen, setModelOpen] = useState<[Player, number] | null>(null)
-  const handlePlayerSelect = (p: Player) => {
-    const playerIndex = game.players.findIndex((_p) => p.id === _p.id)
-    setModelOpen([p, playerIndex])
-  }
+  const [modelOpen, setModelOpen] = useState<Player | null>(null)
+  const handlePlayerSelect = (p: Player) => setModelOpen(p)
   const handleModalClose = () => setModelOpen(null)
 
-  const { score_team_1, score_team_2, psychic } = game
-  const [, players] = partition((p) => p.team == null, game.players)
-  const teams = partition((p) => p.team === 1, players)
+  const { currentPlayer, score_team_1, score_team_2 } = game
+  const teams = getPlayersPerTeam(game.players)
   // TODO: Add to game view state
   const activePlayers: string[] = []
 
@@ -52,15 +47,22 @@ const Scoreboard = ({ game }: Props) => {
                   'player',
                   activePlayers.includes(p.id) && 'selected'
                 )}
-                style={colorPlayer(p, activePlayers.includes(p.id))}
+                style={styleColor(p, activePlayers.includes(p.id))}
                 onClick={() => handlePlayerSelect(p)}
               >
                 <div className="icon">{p.icon}</div>
+
                 <div className="name-wrapper">
-                  <div className="name">{`${p.name ?? 'Unnamed'}`}</div>
+                  <div
+                    className={cx({
+                      name: true,
+                      current: currentPlayer.id === p.id,
+                    })}
+                  >{`${p.name ?? 'Unnamed'}`}</div>
                   {p.leader && <div>🎩</div>}
                   {game.psychic === p.id && <div>🧠</div>}
                 </div>
+
                 <div className="score">{p.score ?? 0}</div>
               </div>
             ))}
@@ -74,17 +76,15 @@ const Scoreboard = ({ game }: Props) => {
         center
         classNames={{ modal: 'freq-model-reset-sm' }}
       >
-        <PlayerCard
-          player={modelOpen?.[0]}
-          playerIndex={modelOpen?.[1] ?? -1}
-          psychic={psychic}
-          onClose={handleModalClose}
-        />
+        <PlayerCard player={modelOpen} game={game} onClose={handleModalClose} />
       </Modal>
 
       <style jsx>{`
         .wrapper {
           width: 100%;
+          padding: 0 6px;
+          white-space: nowrap;
+          overflow: hidden;
         }
 
         .header {
@@ -94,7 +94,8 @@ const Scoreboard = ({ game }: Props) => {
           align-items: baseline;
           font-weight: 800;
           border-bottom: 1px solid var(--border-3);
-          padding: 0 0.87em;
+          padding: 0 0;
+          white-space: nowrap;
         }
 
         .header > div {
@@ -103,6 +104,7 @@ const Scoreboard = ({ game }: Props) => {
 
         .header > .name {
           width: 5em;
+          white-space: nowrap;
         }
 
         .header > .name.right {
@@ -139,15 +141,21 @@ const Scoreboard = ({ game }: Props) => {
           align-items: center;
           flex-direction: row;
           color: var(--body);
-          padding: var(--stack-xs) 0.87em;
-          white-space: nowrap;
+          padding-top: var(--stack-xs);
+          padding-bottom: var(--stack-xs) 0.87em;
+          padding-left: 0em;
+          padding-right: 0.87em;
           margin-right: 3px;
+          white-space: nowrap;
+          overflow: hidden;
           cursor: pointer;
         }
 
         .column.right .player {
           margin-right: 0;
           margin-left: 3px;
+          padding-left: 0.87em;
+          padding-right: 0;
           flex-direction: row-reverse;
         }
 
@@ -162,13 +170,13 @@ const Scoreboard = ({ game }: Props) => {
         .player .icon,
         .header .icon {
           flex: 0 0 1.5em;
+          margin-left: var(--inset-xs);
           margin-right: var(--inset-xs);
           text-align: center;
         }
 
         .icon.right {
-          margin-right: unset;
-          margin-left: var(--inset-xs);
+          margin-right: var(--inset-xs);
         }
 
         .player .name-wrapper {
@@ -176,9 +184,15 @@ const Scoreboard = ({ game }: Props) => {
           display: flex;
         }
 
+        .player .name.current {
+          font-weight: 600;
+        }
+
         .player .name-wrapper > * {
           text-align: left;
           margin-right: var(--inset-xs);
+          white-space: nowrap;
+          overflow: hidden;
         }
 
         .column.right .name-wrapper {
@@ -189,6 +203,13 @@ const Scoreboard = ({ game }: Props) => {
           text-align: right;
           margin-right: 0;
           margin-left: var(--inset-xs);
+        }
+
+        @media screen and (max-width: 480px) {
+          .header .icon,
+          .player {
+            font-size: var(--font-size-sm);
+          }
         }
       `}</style>
     </div>

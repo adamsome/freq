@@ -14,3 +14,9 @@ export function nextPhase(phase: Phase, offset = 1): Phase {
   const i = PHASES.findIndex((p) => p === phase)
   return nth((i + offset) % PHASES.length, PHASES)
 }
+
+const freePhases: Phase[] = ['prep', 'reveal', 'win']
+
+export function isFreePhase(phase: Phase): boolean {
+  return freePhases.includes(phase)
+}

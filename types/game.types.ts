@@ -1,7 +1,18 @@
-import { Guess } from './guess.types'
-import { Dict } from './object.model'
-import { Player, PlayerWithGuess } from './player.types'
+import { Dict } from './object.types'
 
+export interface Player {
+  id: string
+  name?: string
+  team?: 1 | 2
+  color?: string
+  icon?: string
+  leader?: boolean
+  score?: number
+}
+
+export interface PlayerWithGuess extends Player {
+  guess: Guess
+}
 export interface Clue {
   left: string
   right: string
@@ -19,13 +30,17 @@ export const PHASES = [
 
 export type Phase = typeof PHASES[number]
 
+export interface Guess {
+  value: number
+  locked?: boolean
+}
 export interface Game {
   room: string
   players: Player[]
   psychic: string
   clues: Clue[]
   clue_selected?: number
-  guesses: Dict<Guess>
+  guesses?: Dict<Guess>
   match_number: number
   round_number: number
   phase: Phase
@@ -34,18 +49,32 @@ export interface Game {
   score_team_2: number
   game_started_at: string
   game_finished_at?: string
-  round_started_at: string
+  round_started_at?: string
 }
+
+export type CommandType =
+  | 'change_player_team'
+  | 'toggle_player_leader'
+  | 'make_player_psychic'
+  // Phases
+  | 'begin_round'
+  | 'select_clue'
+  | 'confirm_clue'
+  | 'set_guess'
+  | 'lock_guess'
 
 export interface Command {
   text: string
+  type?: CommandType
   waiting?: boolean
+  disabled?: boolean
 }
 
 export interface GameView extends Game {
   currentPlayer: Player
   cluesToShow: Clue[]
   playerGuesses: PlayerWithGuess[]
+  canChangePsychicTo: 'any' | 'same_team' | 'none'
   commandInfo: string
   commands: Command[]
 }

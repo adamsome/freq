@@ -1,5 +1,5 @@
 import { NextApiResponse } from 'next'
-import { updateGameProp } from '../../lib/game-store'
+import { updateGamePath } from '../../lib/game-store'
 import { RequestWithSession } from '../../types/io.types'
 import withSession from '../../util/with-session'
 
@@ -15,7 +15,7 @@ export default withSession(
         }
 
         const body = await req.body
-        await updateGameProp(user.room, 'phase', body.phase)
+        await updateGamePath(user.room, 'phase', body.phase)
         return res.json(true)
       } catch (error) {
         const { response } = error

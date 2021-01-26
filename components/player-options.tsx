@@ -1,14 +1,13 @@
 import React from 'react'
 import { ColorMode } from '../types/color-mode.types'
-import { Player } from '../types/player.types'
+import { Player } from '../types/game.types'
 import { isBrowser } from '../util/dom'
-import { colorPlayer } from '../util/dom-style'
-import { postJson } from '../util/fetch-json'
+import { styleColor } from '../util/dom-style'
+import { postCommand } from '../util/fetch-json'
 import { localStorageManager } from '../util/storage-manager'
 
 type Props = typeof defaultProps & {
   player?: Player | null
-  playerIndex: number
   colorMode?: ColorMode
   onDebugToggle?: () => void
   onColorModeToggle?: () => void
@@ -19,7 +18,7 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 const PlayerOptions = (props: Props) => {
-  const { player, playerIndex, colorMode } = props
+  const { player, colorMode } = props
   const { onDebugToggle, onColorModeToggle, onLogout, onClose } = props
   if (!player) return null
 
@@ -29,31 +28,31 @@ const PlayerOptions = (props: Props) => {
 
   const handleLeaderSet = async (e: React.MouseEvent) => {
     e.preventDefault()
-    await postJson('/api/leader', { index: playerIndex, value: false })
+    await postCommand('toggle_player_leader', player)
     if (onClose) onClose()
   }
 
   return (
     <>
-      <h2 style={colorPlayer(player, true)}>{player.name}</h2>
+      <h2 style={styleColor(player, true)}>{player.name}</h2>
       <div>
         {allowDebugMode && (
-          <button style={colorPlayer(player)} onClick={onDebugToggle}>
+          <button style={styleColor(player)} onClick={onDebugToggle}>
             Debug mode
           </button>
         )}
 
-        <button style={colorPlayer(player)} onClick={onColorModeToggle}>
+        <button style={styleColor(player)} onClick={onColorModeToggle}>
           {colorMode === 'light' ? 'Dark' : 'Light'} mode
         </button>
 
         {player.leader && (
-          <button style={colorPlayer(player)} onClick={handleLeaderSet}>
+          <button style={styleColor(player)} onClick={handleLeaderSet}>
             Remove as leader
           </button>
         )}
 
-        <button style={colorPlayer(player)} onClick={onLogout}>
+        <button style={styleColor(player)} onClick={onLogout}>
           Exit game
         </button>
 

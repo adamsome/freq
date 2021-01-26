@@ -51,7 +51,7 @@ const Title = ({ title, animate }: Props) => {
         h1 {
           margin: 0;
           line-height: 1.15;
-          font-size: var(--font-size-2x);
+          font-size: var(--font-size-xxl);
           text-align: center;
         }
 

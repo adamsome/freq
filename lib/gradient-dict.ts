@@ -2,7 +2,7 @@
 // License: https://github.com/ghosh/uiGradients/blob/master/LICENSE.md
 // Source: https://github.com/ghosh/uiGradients/blob/master/gradients.json
 
-import { Dict } from '../types/object.model'
+import { Dict } from '../types/object.types'
 import { randomItem } from '../util/array'
 import { objectKeys } from '../util/object'
 

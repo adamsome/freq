@@ -1,4 +1,5 @@
 import { mutate } from 'swr'
+import { CommandType } from '../types/game.types'
 
 export default async function fetcher(input: RequestInfo, init?: RequestInit) {
   try {
@@ -37,9 +38,17 @@ export async function postJson(
     })
     mutate('/api/game')
   } catch (error) {
-    console.error(`Error updating '${input}'.`, error)
+    console.error(`Error updating '${input}'.`, error.data ?? error)
     if (onError) {
       onError(error)
     }
   }
+}
+
+export async function postCommand(type: CommandType, value?: any) {
+  const body: any = { type }
+  if (value != null) {
+    body.value = value
+  }
+  await postJson('/api/command', body)
 }

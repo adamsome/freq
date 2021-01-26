@@ -1,4 +1,5 @@
-import { Player } from '../types/player.types'
+import { Player } from '../types/game.types'
+import { partition } from '../util/array'
 import { assignColor } from './color-dict'
 import { randomIcon } from './icon'
 import { randomName } from './name'
@@ -19,4 +20,9 @@ export function createPlayer(
   }
   const player: Player = { id, name, icon, team, color, leader }
   return player
+}
+
+export function getPlayersPerTeam(players: Player[]): [Player[], Player[]] {
+  const [, teamPlayers] = partition((p) => p.team == null, players)
+  return partition((p) => p.team === 1, teamPlayers)
 }

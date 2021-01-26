@@ -8,7 +8,7 @@ import useUser from '../hooks/use-user'
 import { nextPhase } from '../lib/phase'
 import { GameView } from '../types/game.types'
 import { cx } from '../util/dom'
-import { colorPlayer } from '../util/dom-style'
+import { styleColor } from '../util/dom-style'
 import fetchJson from '../util/fetch-json'
 import DebugText from './debug-text'
 import IconSvg from './icon-svg'
@@ -84,7 +84,7 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
           {game?.currentPlayer ? (
             <button
               className="icon"
-              style={colorPlayer(game.currentPlayer)}
+              style={styleColor(game.currentPlayer)}
               onClick={handleModalOpen}
             >
               {game.currentPlayer.name ?? 'Noname'}
@@ -115,7 +115,6 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
         >
           <PlayerOptions
             player={game.currentPlayer}
-            playerIndex={game.players.findIndex((p) => user.id === p.id)}
             colorMode={colorMode}
             onDebugToggle={handleDebugToggle}
             onColorModeToggle={handleToggleColorMode}

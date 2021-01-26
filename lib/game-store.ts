@@ -42,14 +42,20 @@ export async function joinGame(
   return toGameView(userID, game)
 }
 
-export async function updateGameProp(
+export async function updateGamePath(room: string, path: string, value: any) {
+  const { db } = await connectToDatabase()
+  const collection = fromCollection(db)
+  const filter = { room: room.toLowerCase() }
+  const update = { [path]: value }
+  await collection.updateOne(filter, { $set: update })
+}
+
+export async function deleteGameProp<K extends keyof Game>(
   room: string,
-  prop: string,
-  value: number
+  prop: K
 ) {
   const { db } = await connectToDatabase()
   const collection = fromCollection(db)
   const filter = { room: room.toLowerCase() }
-  const update = { [prop]: value }
-  await collection.updateOne(filter, { $set: update })
+  await collection.updateOne(filter, { $unset: { [prop]: '' } })
 }

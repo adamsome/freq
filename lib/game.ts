@@ -1,34 +1,35 @@
-import { Game } from '../types/game.types'
-import { randomClues } from './clue'
-import { createPlayer } from './player'
+import { Game, Player } from '../types/game.types'
+import { createPlayer, getPlayersPerTeam } from './player'
 
 export function createNewGame(room: string, userID: string): Game {
   // Assign player to random team
   const team = Math.random() < 0.5 ? 1 : 2
   // Since new game, player gets made leader
   const player = createPlayer(userID, team, true)
-  const clues = randomClues()
-  const game_started_at = new Date().toISOString()
   const game: Game = {
     room: room.toLowerCase(),
     players: [player],
     psychic: userID,
-    clues,
+    clues: [],
     guesses: {},
     match_number: 1,
-    round_number: 1,
+    round_number: 0,
     phase: 'prep',
     team_turn: team,
-    score_team_1: 0,
-    score_team_2: 1,
-    game_started_at,
-    round_started_at: game_started_at,
+    score_team_1: team === 1 ? 0 : 1,
+    score_team_2: team === 2 ? 0 : 1,
+    game_started_at: new Date().toISOString(),
   }
   return game
 }
 
 export function doesGameHavePlayer(game: Game, userID: string) {
   return game.players.some((p) => p.id === userID)
+}
+
+export function doesGameHaveEnoughPlayers(game: Game) {
+  const teams = getPlayersPerTeam(game.players)
+  return teams[0].length > 1 && teams[1].length > 1
 }
 
 /**
@@ -72,4 +73,33 @@ export function getTeamName(team?: 1 | 2): string {
     default:
       return 'Audience'
   }
+}
+
+export function getGamePsychic(game: Game): Player {
+  const psychic = game.players.find((p) => p.id === game.psychic)
+  if (!psychic) {
+    throw new Error('Enexpected error: No player is set as psychic.')
+  }
+  return psychic
+}
+
+export function isPlayerPsychic(userID: string, game: Game): boolean {
+  return userID === game.psychic
+}
+
+export function isInvalidPlayerTeamChange(
+  game: Game,
+  player: Player
+): string | undefined {
+  if (player.id === game.psychic)
+    return "Cannot change the psychic's team. Must change psychic first."
+
+  const phase = game.phase
+  if (phase === 'prep' || phase === 'win') return
+
+  const team = game.players
+    .filter((p) => p.team === player.team)
+    .filter((p) => p.id !== player.id)
+  if (team.length < 2)
+    throw new Error('Cannot change player team that leaves team empty')
 }

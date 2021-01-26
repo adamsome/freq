@@ -1,54 +1,69 @@
 import React from 'react'
-import { getTeamName } from '../lib/game'
-import { Player } from '../types/player.types'
-import { colorPlayer } from '../util/dom-style'
-import { postJson } from '../util/fetch-json'
+import { getTeamName, isInvalidPlayerTeamChange } from '../lib/game'
+import { GameView, Player } from '../types/game.types'
+import { styleColor } from '../util/dom-style'
+import { postCommand } from '../util/fetch-json'
 
 type Props = typeof defaultProps & {
   player?: Player | null
-  playerIndex: number
-  psychic?: string
+  game: GameView
   onClose?: () => void
 }
 
 const defaultProps = {}
 
-const PlayerCard = ({ player, playerIndex, psychic, onClose }: Props) => {
+const PlayerCard = ({ player, game, onClose }: Props) => {
   if (!player) return null
 
+  const { psychic, canChangePsychicTo, team_turn } = game
   const teamName = getTeamName(player.team)
+  const opposingTeamName = getTeamName(player.team === 1 ? 2 : 1)
 
-  const handlePsychicChange = (psychic: string) => async (
-    e: React.MouseEvent
-  ) => {
+  const canChangePsychic =
+    canChangePsychicTo === 'none'
+      ? false
+      : canChangePsychicTo === 'any'
+      ? true
+      : player.team === team_turn
+
+  const canChangeTeam = !isInvalidPlayerTeamChange(game, player)
+
+  const handleTeamChange = async (e: React.MouseEvent) => {
     e.preventDefault()
-    await postJson('/api/psychic', { psychic })
+    await postCommand('change_player_team', player)
+    if (onClose) onClose()
+  }
+
+  const handlePsychicChange = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    await postCommand('make_player_psychic', player)
     if (onClose) onClose()
   }
 
   const handleLeaderSet = async (e: React.MouseEvent) => {
     e.preventDefault()
-    await postJson('/api/leader', { index: playerIndex, value: true })
+    await postCommand('toggle_player_leader', player)
     if (onClose) onClose()
   }
 
   return (
     <>
-      <h2 style={colorPlayer(player, true)}>
-        {player.name}-{playerIndex}
-      </h2>
+      <h2 style={styleColor(player, true)}>{player.name}</h2>
       <div>
-        {psychic !== player.id && (
-          <button
-            style={colorPlayer(player)}
-            onClick={handlePsychicChange(player.id)}
-          >
+        {canChangeTeam && (
+          <button style={styleColor(player)} onClick={handleTeamChange}>
+            Move to {opposingTeamName} team
+          </button>
+        )}
+
+        {psychic !== player.id && canChangePsychic && (
+          <button style={styleColor(player)} onClick={handlePsychicChange}>
             Make {teamName} psychic
           </button>
         )}
 
         {!player.leader && (
-          <button style={colorPlayer(player)} onClick={handleLeaderSet}>
+          <button style={styleColor(player)} onClick={handleLeaderSet}>
             Make {teamName} leader
           </button>
         )}

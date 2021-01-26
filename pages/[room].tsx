@@ -32,7 +32,7 @@ const RoomPage = ({ cookie, game: initGame }: Props) => {
       <style jsx>{`
         main {
           width: 100%;
-          max-width: 30rem;
+          max-width: 40rem;
           padding: var(--stack-lg) var(--inset-sm);
           flex: 1;
           display: flex;

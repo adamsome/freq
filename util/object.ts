@@ -2,7 +2,7 @@
 // License: https://github.com/chakra-ui/chakra-ui/blob/4478509039b4ed9df8a7710f49b12588e1202de2/LICENSE
 // Source: https://github.com/chakra-ui/chakra-ui/blob/develop/packages/utils/src/object.ts
 
-import { Dict, StringOrNumber } from '../types/object.model'
+import { Dict, StringOrNumber } from '../types/object.types'
 import { randomItem } from './array'
 
 interface OmitFn {
