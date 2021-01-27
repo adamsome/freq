@@ -154,7 +154,7 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
           justify-content: center;
           align-items: center;
           border-bottom: 1px solid var(--border);
-          background: var(--translucent-inverse-1);
+          background: var(--translucent-inverse-2);
           backdrop-filter: blur(10px);
           z-index: 100;
         }
@@ -228,8 +228,8 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
           margin: 0 2px;
         }
 
-        .debug .label {
-          width: 6em;
+        .debug label {
+          width: 4.2em;
           text-align: center;
         }
       `}</style>

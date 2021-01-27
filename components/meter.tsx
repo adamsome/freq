@@ -12,6 +12,7 @@ type Props = typeof defaultProps & {
   clue: Clue
   clueIndex: number
   averageGuess?: number
+  target?: number
   isChoosing: boolean
   isGuessing: boolean
   currentPlayer: Player
@@ -29,6 +30,7 @@ const Meter = ({
   clue,
   clueIndex,
   averageGuess,
+  target,
   isChoosing,
   isGuessing,
   currentPlayer,
@@ -92,6 +94,7 @@ const Meter = ({
         <MeterBackboard
           clue={clue}
           clueIndex={clueIndex}
+          target={target}
           isChoosing={isChoosing}
           hasSlider={hasGuesses || isGuessing}
         ></MeterBackboard>
@@ -139,25 +142,21 @@ const Meter = ({
         .average {
           position: absolute;
           top: 0px;
-          bottom: 0px;
+          bottom: 32px;
         }
 
         .average .line {
           position: absolute;
           top: 0px;
           left: calc(50% - 1px);
-          border-left: 2px solid var(--translucent);
+          border-left: 2px solid var(--bg);
           height: calc(100% - var(--stack-xl));
           writing-mode: vertical-rl;
           text-orientation: mixed;
-          color: var(--translucent);
+          color: var(--translucent-inverse-1);
           font-size: var(--font-size-xs);
           text-align: right;
-          line-height: 10px;
-        }
-
-        .average .line span {
-          margin-bottom: var(--inset-xs);
+          line-height: 11px;
         }
 
         .needle-wrapper {

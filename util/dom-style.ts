@@ -3,11 +3,16 @@ import colorDict from '../lib/color-dict'
 import gradientDict from '../lib/gradient-dict'
 
 export const styleColor = (
-  p?: { color?: string } | false | null,
+  colorOrHasColor?: string | { color?: string } | false | null,
   lit = false
 ) => {
-  if (!p) return undefined
-  const color = colorDict[p.color ?? 0]?.hex
+  if (!colorOrHasColor) return undefined
+  const colorName =
+    typeof colorOrHasColor === 'string'
+      ? colorOrHasColor
+      : colorOrHasColor.color
+
+  const color = colorDict[colorName ?? 0]?.hex
   return {
     color: lit ? 'var(--body-light)' : color,
     background: lit ? color : undefined,

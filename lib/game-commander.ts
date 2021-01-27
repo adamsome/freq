@@ -5,6 +5,7 @@ import { User } from '../types/user.types'
 import { randomClues } from './clue'
 import { assignColor } from './color-dict'
 import {
+  areAllGuessesLocked,
   doesGameHaveEnoughPlayers,
   isInvalidPlayerTeamChange,
   isPlayerPsychic,
@@ -91,6 +92,9 @@ export class GameCommander
 
     await this.delete('clue_selected')
     await this.delete('guesses')
+
+    const target = Math.max(0.0225, Math.min(Math.random(), 1 - 0.0225))
+    await this.update('target', target)
     await this.update('clues', randomClues())
     await this.update('round_number', this.game.round_number + 1)
     await this.update('round_started_at', new Date().toISOString())
@@ -98,7 +102,7 @@ export class GameCommander
   }
 
   async select_clue(clueIndex: number) {
-    if (isPlayerPsychic(this.player.id, this.game))
+    if (!isPlayerPsychic(this.player.id, this.game))
       throw new Error('Only psychic can select clue.')
 
     if (this.game.phase !== 'choose')
@@ -146,6 +150,27 @@ export class GameCommander
       throw new Error('Can only lock guess once one is made.')
 
     await this.updatePath(`guesses.${this.player.id}.locked`, true)
+
+    if (!areAllGuessesLocked(this.game, this.player)) return
+
+    this.update('phase', 'direction')
+  }
+
+  async set_direction(directionGuess: 1 | -1) {
+    if (this.player.team === this.game.team_turn)
+      throw new Error('Only players not on turn team can set direction.')
+
+    if (this.game.phase !== 'direction')
+      throw new Error('Can only lock direction in the direction phase.')
+
+    if (this.game.guesses?.[this.player.id]?.locked)
+      throw new Error('Cannot set direction once its locked.')
+
+    await this.updatePath(`guesses.${this.player.id}.value`, directionGuess)
+  }
+
+  async reveal() {
+    throw new Error('Reveal not yet implemented.')
   }
 
   // Helpers

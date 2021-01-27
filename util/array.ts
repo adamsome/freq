@@ -77,3 +77,21 @@ export const shuffle = <T>(array: T[]) => {
   }
   return array
 }
+
+export function reverse(arrayOrElement: null | undefined): undefined
+export function reverse<T>(arrayOrElement: T | T[]): T[]
+export function reverse<T>(
+  arrayOrElement: T | T[] | null | undefined
+): T[] | undefined {
+  const array = asArray(arrayOrElement)
+  return array != null && array.length ? array.slice().reverse() : undefined
+}
+
+export function tail(arrayOrElement: null | undefined): undefined
+export function tail<T>(arrayOrElement: T | T[]): T[]
+export function tail<T>(
+  arrayOrElement: T | T[] | null | undefined
+): T[] | undefined {
+  const array = asArray(arrayOrElement)
+  return array != null && array.length ? array.slice(1) : undefined
+}

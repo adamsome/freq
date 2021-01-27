@@ -3,23 +3,33 @@ import { gradientLightTextDict } from '../lib/gradient-dict'
 import { Clue } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleLinearGradient } from '../util/dom-style'
+import MeterTarget from './meter-target'
 
 type Props = typeof defaultProps & {
   clue: Clue
   clueIndex: number
+  target?: number
   isChoosing: boolean
   hasSlider: boolean
 }
 
 const defaultProps = {}
 
-const MeterBackboard = ({ clue, clueIndex, isChoosing, hasSlider }: Props) => {
+const MeterBackboard = ({
+  clue,
+  clueIndex,
+  target,
+  isChoosing,
+  hasSlider,
+}: Props) => {
   const [lightLeft, lightRight] = gradientLightTextDict[clue.gradient] ?? []
   return (
     <div
       className={cx('meter-bg', hasSlider && 'has-slider')}
       style={styleLinearGradient(clue.gradient)}
     >
+      {target != null && <MeterTarget position={target * 100} />}
+
       <div className={cx({ invert: lightLeft })}>{clue.left}</div>
 
       <div className={cx({ invert: lightRight })}>{clue.right}</div>
@@ -48,10 +58,20 @@ const MeterBackboard = ({ clue, clueIndex, isChoosing, hasSlider }: Props) => {
           font-weight: 700;
           border: 1px solid var(--translucent);
           border-radius: var(--border-radius-md);
+          overflow: hidden;
         }
 
         .meter-bg.has-slider {
           bottom: var(--stack-xl);
+        }
+
+        .target {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 15%;
+          height: 100%;
+          background: var(--translucent);
         }
 
         .invert {

@@ -41,6 +41,7 @@ export interface Game {
   clues: Clue[]
   clue_selected?: number
   guesses?: Dict<Guess>
+  target?: number
   match_number: number
   round_number: number
   phase: Phase
@@ -62,12 +63,18 @@ export type CommandType =
   | 'confirm_clue'
   | 'set_guess'
   | 'lock_guess'
+  | 'set_direction'
+  | 'reveal'
 
 export interface Command {
   text: string
   type?: CommandType
-  waiting?: boolean
   disabled?: boolean
+  rightText?: string
+  value?: any
+  rightValue?: any
+  /** Percent width the right-side command should have */
+  rightWidth?: number
 }
 
 export interface GameView extends Game {
@@ -77,5 +84,6 @@ export interface GameView extends Game {
   averageGuess?: number
   canChangePsychicTo: 'any' | 'same_team' | 'none'
   commandInfo: string
+  commandInfoColor?: string
   commands: Command[]
 }

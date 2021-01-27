@@ -1,5 +1,5 @@
-import { Game, Player } from '../types/game.types'
-import { createPlayer, getPlayersPerTeam } from './player'
+import { Game, Guess, Player } from '../types/game.types'
+import { createPlayer, getPlayersPerTeam, getTeamPlayers } from './player'
 
 export function createNewGame(room: string, userID: string): Game {
   // Assign player to random team
@@ -97,9 +97,54 @@ export function isInvalidPlayerTeamChange(
   const phase = game.phase
   if (phase === 'prep' || phase === 'win') return
 
+  const guessPhase = phase === 'choose' || phase === 'direction'
+  if (guessPhase && game.guesses?.[player.id]?.value != null)
+    return "Cannot change a player who's already guessed"
+
   const team = game.players
     .filter((p) => p.team === player.team)
     .filter((p) => p.id !== player.id)
   if (team.length < 2)
     throw new Error('Cannot change player team that leaves team empty')
+}
+
+export function areAllGuessesLocked(
+  game: Game,
+  ...ignorePlayers: Player[]
+): boolean {
+  const { players, psychic, team_turn } = game
+  const guessers = getTeamPlayers(players, team_turn, psychic, ...ignorePlayers)
+  for (const guesser of guessers) {
+    if (!game.guesses?.[guesser.id].locked) {
+      return false
+    }
+  }
+  return true
+}
+
+interface GuessInfo {
+  numNeeded: number
+  numSet: number
+  numLocked: number
+  guesses: Guess[]
+}
+
+export function getGuessInfo(game: Game, team?: 1 | 2): GuessInfo {
+  const { players, psychic } = game
+  const guessers = getTeamPlayers(players, team, psychic)
+  const numNeeded = guessers.length
+  return guessers.reduce(
+    (acc, p) => {
+      const guess: Guess | undefined = game.guesses?.[p.id]
+      if (guess?.value != null) {
+        if (guess?.locked === true) {
+          acc.numLocked++
+        }
+        acc.numSet++
+        acc.guesses.push(guess)
+      }
+      return acc
+    },
+    { numNeeded, numSet: 0, numLocked: 0, guesses: [] } as GuessInfo
+  )
 }

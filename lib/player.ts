@@ -26,3 +26,14 @@ export function getPlayersPerTeam(players: Player[]): [Player[], Player[]] {
   const [, teamPlayers] = partition((p) => p.team == null, players)
   return partition((p) => p.team === 1, teamPlayers)
 }
+
+export function getTeamPlayers(
+  players: Player[],
+  team: 1 | 2 | undefined,
+  ...ignorePlayers: (string | { id: string })[]
+): Player[] {
+  const ignoreIDs = ignorePlayers.map((p) => (typeof p === 'string' ? p : p.id))
+  return players
+    .filter((p) => p.team === team)
+    .filter((p) => !ignoreIDs.includes(p.id))
+}

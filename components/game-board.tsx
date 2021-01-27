@@ -13,6 +13,7 @@ const GameBoard = () => {
     phase,
     cluesToShow,
     clue_selected,
+    target,
     playerGuesses,
     currentPlayer,
     psychic,
@@ -45,13 +46,14 @@ const GameBoard = () => {
             selected: clue_selected === i,
             'not-selected': clue_selected != null && clue_selected !== i,
           })}
-          key={i}
+          key={clue.left + clue.right}
           onClick={handleClueSelect(i)}
         >
           <Meter
             clue={clue}
             clueIndex={i}
             averageGuess={averageGuess}
+            target={target}
             isChoosing={isChoosing}
             isGuessing={isGuessing}
             currentPlayer={currentPlayer}
@@ -80,7 +82,7 @@ const GameBoard = () => {
 
         .meter-wrapper.choosing {
           transform: scale(0.95);
-          transition: 180ms transform ease-in-out;
+          transition: 180ms opacity ease-in-out, 180ms transform ease-in-out;
         }
 
         .meter-wrapper.choosing.is-psychic {

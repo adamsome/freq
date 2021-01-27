@@ -9,9 +9,9 @@ export interface ColorDef {
   /** Hex color code. */
   hex: string
   /** Order should be should in a listing. */
-  list: number
+  list?: number
   /** Order should be assigned to a player. */
-  assign: number
+  assign?: number
 }
 
 export function assignColor(
@@ -21,7 +21,7 @@ export function assignColor(
   const allColors = objectKeys(colorDict)
   const teamColors = allColors
     .filter((c) => colorDict[c].team === team)
-    .sort((a, b) => colorDict[a].assign - colorDict[b].assign)
+    .sort((a, b) => (colorDict[a].assign ?? 999) - (colorDict[b].assign ?? 999))
   for (const color of teamColors) {
     if (!excludeColors?.includes(color)) {
       return color
@@ -60,6 +60,7 @@ const colorDict: Dict<ColorDef> = {
   'Cadet Blue': { team: 2, hex: '#5F9EA0', list: 15, assign: 11 },
   'Cornflower Blue': { team: 2, hex: '#6495ED', list: 2, assign: 12 },
   Iris: { team: 2, hex: '#5A4FCF', list: 4, assign: 13 },
+  Gray: { hex: '#727272' },
 }
 
 export default colorDict

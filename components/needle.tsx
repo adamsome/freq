@@ -12,10 +12,11 @@ const defaultProps = {
 }
 
 const Needle = ({ player, size }: Props) => {
-  const { color = 'yellow', icon = '😃' } = player
+  const { color = 'yellow', icon = '😃', guess } = player
   const hex = colorDict[color]?.hex
+
   return (
-    <div className={cx('wrapper', size)}>
+    <div className={cx('wrapper', size, guess.locked && 'locked')}>
       <div className="needle" style={{ background: hex }}></div>
       <div className="base" style={{ background: hex }}>
         <span>{icon}</span>
@@ -37,10 +38,14 @@ const Needle = ({ player, size }: Props) => {
 
         .needle {
           width: 2px;
-          height: calc(100% - 14px);
+          height: calc(100% - 18px);
           background: #000000;
-          box-shadow: 0 0 0 1px #00000066;
+          box-shadow: 0 0 0 1px #00000044;
           border-radius: 4px;
+        }
+
+        .locked .needle {
+          box-shadow: 0 0 0 1px #00000099;
         }
 
         .lg .needle {
@@ -59,7 +64,7 @@ const Needle = ({ player, size }: Props) => {
           background: #000000;
           color: var(--body-inverse);
           font-size: var(--font-size-md);
-          box-shadow: 0 0 0 1px #00000077;
+          box-shadow: 0 0 0 1px #00000055;
           border-radius: 400px;
         }
 
@@ -68,6 +73,10 @@ const Needle = ({ player, size }: Props) => {
           width: 32px;
           height: 32px;
           font-size: var(--font-size-lg);
+        }
+
+        .locked .base {
+          box-shadow: 0 0 0 1px #000000aa;
         }
 
         .connector {

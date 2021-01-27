@@ -182,6 +182,9 @@ const Scoreboard = ({ game }: Props) => {
         .player .name-wrapper {
           flex: 1;
           display: flex;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .player .name.current {
@@ -193,6 +196,7 @@ const Scoreboard = ({ game }: Props) => {
           margin-right: var(--inset-xs);
           white-space: nowrap;
           overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .column.right .name-wrapper {
