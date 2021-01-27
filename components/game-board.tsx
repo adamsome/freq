@@ -9,8 +9,15 @@ const GameBoard = () => {
   const [game] = useGame()
   if (!game) return null
 
-  const { phase, cluesToShow, clue_selected, playerGuesses } = game
-  const { currentPlayer, psychic } = game
+  const {
+    phase,
+    cluesToShow,
+    clue_selected,
+    playerGuesses,
+    currentPlayer,
+    psychic,
+    averageGuess,
+  } = game
   const isChoosing = game.phase === 'choose'
   const isGuessing = game.phase === 'guess'
   const showSlider = playerGuesses.length > 0 || phase === 'guess'
@@ -44,6 +51,7 @@ const GameBoard = () => {
           <Meter
             clue={clue}
             clueIndex={i}
+            averageGuess={averageGuess}
             isChoosing={isChoosing}
             isGuessing={isGuessing}
             currentPlayer={currentPlayer}

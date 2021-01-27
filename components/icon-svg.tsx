@@ -6,27 +6,26 @@ type Props = typeof defaultProps & {
   name: IconSvgName
 }
 
-const defaultProps = {}
+const defaultProps = {
+  color: 'subtle' as string,
+  size: '1.25em' as string,
+  top: '0' as string,
+}
 
-const IconSvg = ({ name }: Props) => {
+const IconSvg = ({ name, color, size, top }: Props) => {
+  const fill = `var(--${color})`
   if (name === 'dropdown')
     return (
       <svg
         aria-hidden="true"
         focusable="false"
-        width="1.25em"
-        height="1.25em"
-        style={{ transform: 'rotate(360deg)' }}
+        width={size}
+        height={size}
+        style={{ transform: 'rotate(360deg)', fill, position: 'relative', top }}
         preserveAspectRatio="xMidYMid meet"
         viewBox="0 0 24 24"
       >
         <path d="M7 10l5 5l5-5z" />
-
-        <style jsx>{`
-          path {
-            fill: var(--subtle);
-          }
-        `}</style>
       </svg>
     )
 

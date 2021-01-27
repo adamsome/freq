@@ -74,6 +74,7 @@ export interface GameView extends Game {
   currentPlayer: Player
   cluesToShow: Clue[]
   playerGuesses: PlayerWithGuess[]
+  averageGuess?: number
   canChangePsychicTo: 'any' | 'same_team' | 'none'
   commandInfo: string
   commands: Command[]

@@ -39,6 +39,21 @@ function createPlayerNeedleGuesses(
   }, [] as PlayerWithGuess[])
 }
 
+function createAverageGuess(game: Game) {
+  if (game.phase === 'choose' || game.phase === 'prep') return
+
+  const guessingTeam = game.players.filter((p) => p.team === game.team_turn)
+  const guesses = guessingTeam.reduce((acc, p) => {
+    const guess = game.guesses?.[p.id]
+    if (guess) {
+      acc.push(guess.value)
+    }
+    return acc
+  }, [] as number[])
+  const sum = guesses.reduce((acc, g) => acc + g, 0)
+  return sum / guesses.length
+}
+
 function createCluesToShow(
   phase: Phase,
   clues: Clue[],
@@ -126,15 +141,14 @@ export function toGameView(
     )
   }
 
-  const cluesToShow = createCluesToShow(phase, clues, clue_selected)
-  const playerGuesses = createPlayerNeedleGuesses(currentPlayer, game)
   const [commands, commandInfo] = createCommands(currentPlayer, game)
 
   const view: GameView & Partial<HasObjectID> = {
     ...game,
     currentPlayer,
-    cluesToShow,
-    playerGuesses,
+    cluesToShow: createCluesToShow(phase, clues, clue_selected),
+    playerGuesses: createPlayerNeedleGuesses(currentPlayer, game),
+    averageGuess: createAverageGuess(game),
     canChangePsychicTo: canChangePsychicTo(game.phase),
     commandInfo: commandInfo ?? '',
     commands,

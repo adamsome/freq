@@ -4,12 +4,14 @@ import { useThrottle } from '../hooks/use-throttle'
 import { Clue, Player, PlayerWithGuess } from '../types/game.types'
 import { partition } from '../util/array'
 import { cx } from '../util/dom'
+import IconSvg from './icon-svg'
 import MeterBackboard from './meter-backboard'
 import Needle from './needle'
 
 type Props = typeof defaultProps & {
   clue: Clue
   clueIndex: number
+  averageGuess?: number
   isChoosing: boolean
   isGuessing: boolean
   currentPlayer: Player
@@ -26,6 +28,7 @@ const CHANGE_FPS = 2
 const Meter = ({
   clue,
   clueIndex,
+  averageGuess,
   isChoosing,
   isGuessing,
   currentPlayer,
@@ -72,9 +75,11 @@ const Meter = ({
       needleRef.current.style.transform = `translateX(${position}px)`
   }, [position])
 
-  const buildTeammateNeedleTranslate = (teammateGuess: number) => {
-    const needleTeammateWidthDiff = NEEDLE_WIDTH - NEEDLE_TEAMMATE_WIDTH
-    const x = length * teammateGuess + needleTeammateWidthDiff / 2
+  const buildGuessTranslate = (
+    guess: number,
+    offset = (NEEDLE_WIDTH - NEEDLE_TEAMMATE_WIDTH) / 2
+  ) => {
+    const x = length * guess + offset
     return `translateX(${x}px)`
   }
 
@@ -91,13 +96,25 @@ const Meter = ({
           hasSlider={hasGuesses || isGuessing}
         ></MeterBackboard>
 
+        {averageGuess != null && (
+          <div
+            className="average"
+            style={{ transform: buildGuessTranslate(averageGuess, -16) }}
+          >
+            <div className="line">
+              <span>AVERAGE</span>
+            </div>
+            <IconSvg name="dropdown" color="bg" size="64px" top="-1.5em" />
+          </div>
+        )}
+
         {/* Teammate Needles */}
         {otherPlayerGueses.map((p, i) => (
           <div
             key={i}
             className="needle-wrapper needle-teammate"
             style={{
-              transform: buildTeammateNeedleTranslate(p.guess.value),
+              transform: buildGuessTranslate(p.guess.value),
             }}
           >
             <Needle player={p} />
@@ -119,12 +136,37 @@ const Meter = ({
           height: 100%;
         }
 
+        .average {
+          position: absolute;
+          top: 0px;
+          bottom: 0px;
+        }
+
+        .average .line {
+          position: absolute;
+          top: 0px;
+          left: calc(50% - 1px);
+          border-left: 2px solid var(--translucent);
+          height: calc(100% - var(--stack-xl));
+          writing-mode: vertical-rl;
+          text-orientation: mixed;
+          color: var(--translucent);
+          font-size: var(--font-size-xs);
+          text-align: right;
+          line-height: 10px;
+        }
+
+        .average .line span {
+          margin-bottom: var(--inset-xs);
+        }
+
         .needle-wrapper {
           position: absolute;
           top: 5px;
           height: calc(100% - 8px);
         }
 
+        .average,
         .needle-teammate {
           transition: 180ms transform ease-in-out;
         }
