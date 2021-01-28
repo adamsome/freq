@@ -57,6 +57,16 @@ export function randomItem<T>(arr: T[]): T {
   return arr[index]
 }
 
+export const range = (from: number, to: number): number[] => {
+  const result = []
+  let n = from
+  while (n < to) {
+    result.push(n)
+    n += 1
+  }
+  return result
+}
+
 export const reject = <T>(arr: T[], fn: (value: T) => boolean): T[] => {
   return arr.filter((it) => !fn(it))
 }

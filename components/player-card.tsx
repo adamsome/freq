@@ -1,6 +1,6 @@
 import React from 'react'
 import { getTeamName, isInvalidPlayerTeamChange } from '../lib/game'
-import { GameView, Player } from '../types/game.types'
+import { CommandType, GameView, Player } from '../types/game.types'
 import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
 
@@ -28,21 +28,15 @@ const PlayerCard = ({ player, game, onClose }: Props) => {
 
   const canChangeTeam = !isInvalidPlayerTeamChange(game, player)
 
-  const handleTeamChange = async (e: React.MouseEvent) => {
+  const handlePlayerCommand = (type: CommandType) => async (
+    e: React.MouseEvent
+  ) => {
     e.preventDefault()
-    await postCommand('change_player_team', player)
-    if (onClose) onClose()
-  }
-
-  const handlePsychicChange = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    await postCommand('make_player_psychic', player)
-    if (onClose) onClose()
-  }
-
-  const handleLeaderSet = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    await postCommand('toggle_player_leader', player)
+    try {
+      await postCommand(type, player)
+    } catch (err) {
+      console.error(`Error posting command '${type}'.`, err.data ?? err)
+    }
     if (onClose) onClose()
   }
 
@@ -51,19 +45,28 @@ const PlayerCard = ({ player, game, onClose }: Props) => {
       <h2 style={styleColor(player, true)}>{player.name}</h2>
       <div>
         {canChangeTeam && (
-          <button style={styleColor(player)} onClick={handleTeamChange}>
+          <button
+            style={styleColor(player)}
+            onClick={handlePlayerCommand('change_player_team')}
+          >
             Move to {opposingTeamName} team
           </button>
         )}
 
         {psychic !== player.id && canChangePsychic && (
-          <button style={styleColor(player)} onClick={handlePsychicChange}>
+          <button
+            style={styleColor(player)}
+            onClick={handlePlayerCommand('make_player_psychic')}
+          >
             Make {teamName} psychic
           </button>
         )}
 
         {!player.leader && (
-          <button style={styleColor(player)} onClick={handleLeaderSet}>
+          <button
+            style={styleColor(player)}
+            onClick={handlePlayerCommand('toggle_player_leader')}
+          >
             Make {teamName} leader
           </button>
         )}

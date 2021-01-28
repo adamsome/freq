@@ -30,6 +30,12 @@ export function assignColor(
   return randomItem(teamColors)
 }
 
+export function getTeamColor(team?: 1 | 2) {
+  const color: keyof typeof colorDict =
+    team === 1 ? 'Munsell Red' : team === 2 ? 'Munsell Blue' : 'Gray'
+  return color as string
+}
+
 const colorDict: Dict<ColorDef> = {
   'Munsell Red': { team: 1, hex: '#f2003c', list: 13, assign: 0 },
   Coral: { team: 1, hex: '#FF7F50', list: 4, assign: 1 },

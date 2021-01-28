@@ -3,7 +3,6 @@ import GameBoard from '../components/game-board'
 import { useGameWithError } from '../hooks/use-game'
 import { isRoomValid } from '../lib/game'
 import { joinGame } from '../lib/game-store'
-import { toGameView } from '../lib/game-view'
 import { GameView } from '../types/game.types'
 import { SessionContext } from '../types/io.types'
 import { UserConnected } from '../types/user.types'
@@ -33,7 +32,7 @@ const RoomPage = ({ cookie, game: initGame }: Props) => {
         main {
           width: 100%;
           max-width: 40rem;
-          padding: var(--stack-lg) var(--inset-sm);
+          padding: var(--stack-md) var(--inset-sm);
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -74,7 +73,7 @@ export const getServerSideProps = withSession(
     return {
       props: {
         cookie: req.headers.cookie ?? '',
-        game: toGameView(user.id, game),
+        game,
       },
     }
   }

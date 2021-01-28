@@ -2,6 +2,7 @@ import useGame from '../hooks/use-game'
 import { cx } from '../util/dom'
 import { postCommand } from '../util/fetch-json'
 import CommandPanel from './command-panel'
+import HeaderMessage from './header-message'
 import Meter from './meter'
 import Scoreboard from './scoreboard'
 
@@ -14,6 +15,7 @@ const GameBoard = () => {
     cluesToShow,
     clue_selected,
     target,
+    target_width,
     playerGuesses,
     currentPlayer,
     psychic,
@@ -26,16 +28,28 @@ const GameBoard = () => {
 
   const handleGuessChange = async (guess: number) => {
     if (phase !== 'guess') return
-    await postCommand('set_guess', guess)
+    try {
+      await postCommand('set_guess', guess)
+    } catch (err) {
+      console.error(`Error posting guess 'set_guess'.`, err.data ?? err)
+    }
   }
 
   const handleClueSelect = (i: number) => async () => {
     if (!isChoosing || !isPsychic) return
-    await postCommand('select_clue', i)
+    try {
+      await postCommand('select_clue', i)
+    } catch (err) {
+      console.error(`Error posting guess 'select_clue'.`, err.data ?? err)
+    }
   }
 
   return (
     <>
+      <div className="section top">
+        <HeaderMessage />
+      </div>
+
       {cluesToShow.map((clue, i) => (
         <div
           className={cx({
@@ -54,6 +68,7 @@ const GameBoard = () => {
             clueIndex={i}
             averageGuess={averageGuess}
             target={target}
+            target_width={target_width}
             isChoosing={isChoosing}
             isGuessing={isGuessing}
             currentPlayer={currentPlayer}
@@ -90,7 +105,7 @@ const GameBoard = () => {
         }
 
         .meter-wrapper.choosing.not-selected {
-          opacity: 0.6;
+          opacity: 0.3;
         }
 
         .meter-wrapper.choosing.selected,
@@ -101,6 +116,10 @@ const GameBoard = () => {
         .section {
           width: 100%;
           margin-bottom: var(--stack-lg);
+        }
+
+        .section.top {
+          margin-bottom: var(--stack-sm);
         }
 
         pre {

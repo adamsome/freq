@@ -4,11 +4,14 @@ export function randomIcon() {
   return randomItem(iconSet)
 }
 
+export function getTeamIcon(team?: 1 | 2) {
+  return team === 1 ? '🔥' : team === 2 ? '🌊' : '🤷‍♀️'
+}
+
 const iconSet: string[] = [
   '🌞',
   '👽',
   '🎃',
-  '😃',
   '🧐',
   '😎',
   '🤪',

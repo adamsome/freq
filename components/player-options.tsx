@@ -28,7 +28,14 @@ const PlayerOptions = (props: Props) => {
 
   const handleLeaderSet = async (e: React.MouseEvent) => {
     e.preventDefault()
-    await postCommand('toggle_player_leader', player)
+    try {
+      await postCommand('toggle_player_leader', player)
+    } catch (err) {
+      console.error(
+        `Error posting command 'toggle_player_leader'.`,
+        err.data ?? err
+      )
+    }
     if (onClose) onClose()
   }
 

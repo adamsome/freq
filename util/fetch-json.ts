@@ -25,24 +25,13 @@ export default async function fetcher(input: RequestInfo, init?: RequestInit) {
   }
 }
 
-export async function postJson(
-  input: RequestInfo,
-  body: any,
-  onError?: (error: any) => void
-) {
-  try {
-    await fetcher(input, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    })
-    mutate('/api/game')
-  } catch (error) {
-    console.error(`Error updating '${input}'.`, error.data ?? error)
-    if (onError) {
-      onError(error)
-    }
-  }
+export async function postJson(input: RequestInfo, body: any) {
+  await fetcher(input, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  mutate('/api/game')
 }
 
 export async function postCommand(type: CommandType, value?: any) {

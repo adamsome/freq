@@ -2,8 +2,9 @@ import { Db } from 'mongodb'
 import { Game, GameView } from '../types/game.types'
 import { HasObjectID } from '../types/io.types'
 import { connectToDatabase } from '../util/mongodb'
-import { addGamePlayer, createNewGame, doesGameHavePlayer } from './game'
+import { createNewGame } from './game'
 import { toGameView } from './game-view'
+import { addPlayer, hasPlayer } from './player'
 
 const fromCollection = (db: Db) => db.collection<Game & HasObjectID>('games')
 
@@ -31,8 +32,8 @@ export async function joinGame(
     await collection.insertOne(game)
   } else {
     // Add player to game if not already
-    if (!doesGameHavePlayer(game, userID)) {
-      game = addGamePlayer(game, userID)
+    if (!hasPlayer(game.players, userID)) {
+      game.players = addPlayer(game.players, userID)
 
       const filter = { room: game.room.toLowerCase() }
       const update = { players: game.players }

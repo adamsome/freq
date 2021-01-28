@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import Modal from 'react-responsive-modal'
+import { getTeamName } from '../lib/game'
+import { getTeamIcon } from '../lib/icon'
 import { getPlayersPerTeam } from '../lib/player'
 import { GameView, Player } from '../types/game.types'
 import { cx } from '../util/dom'
@@ -22,19 +24,23 @@ const Scoreboard = ({ game }: Props) => {
 
   const { currentPlayer, score_team_1, score_team_2 } = game
   const teams = getPlayersPerTeam(game.players)
+  const icon1 = getTeamIcon(1)
+  const icon2 = getTeamIcon(2)
+  const team1 = getTeamName(1)
+  const team2 = getTeamName(2)
   // TODO: Add to game view state
   const activePlayers: string[] = []
 
   return (
     <div className="wrapper">
       <div className="header">
-        <div className="icon">🔥</div>
-        <div className="name">Red</div>
+        <div className="icon">{icon1}</div>
+        <div className="name">{team1}</div>
         <div className="score">
           {score_team_1} &mdash; {score_team_2}
         </div>
-        <div className="name right">Blue</div>
-        <div className="icon right">🌊</div>
+        <div className="name right">{team2}</div>
+        <div className="icon right">{icon2}</div>
       </div>
 
       <div className="grid">
@@ -84,7 +90,6 @@ const Scoreboard = ({ game }: Props) => {
           width: 100%;
           padding: 0 6px;
           white-space: nowrap;
-          overflow: hidden;
         }
 
         .header {
@@ -195,8 +200,6 @@ const Scoreboard = ({ game }: Props) => {
           text-align: left;
           margin-right: var(--inset-xs);
           white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
         }
 
         .column.right .name-wrapper {

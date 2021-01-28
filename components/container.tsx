@@ -2,14 +2,13 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import Modal from 'react-responsive-modal'
-import { mutate } from 'swr'
 import useColorMode from '../hooks/use-color-mode'
 import useUser from '../hooks/use-user'
-import { nextPhase } from '../lib/phase'
 import { GameView } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import fetchJson from '../util/fetch-json'
+import DebugBar from './debug-bar'
 import DebugText from './debug-text'
 import IconSvg from './icon-svg'
 import PlayerOptions from './player-options'
@@ -42,22 +41,6 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
     router.push('/')
   }
 
-  const handlePhaseNext = (offset: number) => async (e: React.MouseEvent) => {
-    e.preventDefault()
-
-    const phase = nextPhase(game?.phase ?? 'prep', offset)
-    try {
-      await fetchJson('/api/phase', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phase }),
-      })
-      mutate('/api/game')
-    } catch (error) {
-      console.error('Error updating phase.', error)
-    }
-  }
-
   return (
     <div className={cx('container', showDebug && 'show-debug')}>
       <Head>
@@ -71,17 +54,7 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
       </Head>
 
       <header>
-        {showDebug && (
-          <div className="debug wrapper">
-            {user?.connected && (
-              <>
-                <button onClick={handlePhaseNext(-1)}>&lt;</button>
-                <label>{game?.phase ?? 'No Phase'}</label>
-                <button onClick={handlePhaseNext(1)}>&gt;</button>
-              </>
-            )}
-          </div>
-        )}
+        {showDebug && <DebugBar game={game} user={user} />}
 
         <div className="wrapper">
           <h1>{game ? `Freq ${game.room.toUpperCase()}` : ''}</h1>
@@ -208,6 +181,7 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
           align-items: center;
           justify-content: flex-start;
           flex: 1 1 100%;
+          height: 100%;
           width: 100%;
           overflow: auto;
           padding-top: 3em;
@@ -215,22 +189,6 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
 
         .show-debug .body {
           padding-top: 5em;
-        }
-
-        header .debug.wrapper {
-          font-size: var(--font-size-sm);
-          min-height: 2em;
-        }
-
-        .debug button,
-        .debug a {
-          padding: 0 2px;
-          margin: 0 2px;
-        }
-
-        .debug label {
-          width: 4.2em;
-          text-align: center;
         }
       `}</style>
     </div>

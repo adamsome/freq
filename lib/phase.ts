@@ -20,3 +20,9 @@ const freePhases: Phase[] = ['prep', 'reveal', 'win']
 export function isFreePhase(phase: Phase): boolean {
   return freePhases.includes(phase)
 }
+
+const guessingPhases: Phase[] = ['guess', 'direction']
+
+export function isGuessingPhase(phase: Phase): boolean {
+  return guessingPhases.includes(phase)
+}

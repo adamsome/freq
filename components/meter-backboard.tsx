@@ -9,6 +9,7 @@ type Props = typeof defaultProps & {
   clue: Clue
   clueIndex: number
   target?: number
+  target_width?: number
   isChoosing: boolean
   hasSlider: boolean
 }
@@ -19,6 +20,7 @@ const MeterBackboard = ({
   clue,
   clueIndex,
   target,
+  target_width,
   isChoosing,
   hasSlider,
 }: Props) => {
@@ -28,11 +30,15 @@ const MeterBackboard = ({
       className={cx('meter-bg', hasSlider && 'has-slider')}
       style={styleLinearGradient(clue.gradient)}
     >
-      {target != null && <MeterTarget position={target * 100} />}
+      {target != null && (
+        <MeterTarget position={target * 100} width={target_width} />
+      )}
 
-      <div className={cx({ invert: lightLeft })}>{clue.left}</div>
+      <div className={cx({ clue: true, invert: lightLeft })}>{clue.left}</div>
 
-      <div className={cx({ invert: lightRight })}>{clue.right}</div>
+      <div className={cx('clue', 'right', { invert: lightRight })}>
+        <span>{clue.right}</span>
+      </div>
 
       {isChoosing && (
         <div className="index">
@@ -59,6 +65,15 @@ const MeterBackboard = ({
           border: 1px solid var(--translucent);
           border-radius: var(--border-radius-md);
           overflow: hidden;
+        }
+
+        .clue {
+          max-width: 50%;
+          line-height: 24px;
+        }
+
+        .clue.right {
+          text-align: right;
         }
 
         .meter-bg.has-slider {

@@ -13,6 +13,8 @@ export function randomGradient() {
 export const gradientLightTextDict: Dict<boolean[]> = {
   Omolon: [true],
   Argon: [true],
+  'Purple Bliss': [true],
+  'Love and Liberty': [true, true],
 }
 
 /**
@@ -91,7 +93,6 @@ const gradientDict: Dict<string[]> = {
   'Bora Bora': ['#2bc0e4', '#eaecc6'],
   Moss: ['#134e5e', '#71b280'],
   'Shroom Haze': ['#5c258d', '#4389a2'],
-  Mystic: ['#757f9a', '#d7dde8'],
   'Midnight City': ['#232526', '#414345'],
   'Sea Blizz': ['#1cd8d2', '#93edc7'],
   Opa: ['#3d7eaa', '#ffe47a'],

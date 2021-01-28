@@ -8,6 +8,7 @@ export interface Player {
   icon?: string
   leader?: boolean
   score?: number
+  psychic_count: number
 }
 
 export interface PlayerWithGuess extends Player {
@@ -42,6 +43,7 @@ export interface Game {
   clue_selected?: number
   guesses?: Dict<Guess>
   target?: number
+  target_width: number
   match_number: number
   round_number: number
   phase: Phase
@@ -66,6 +68,10 @@ export type CommandType =
   | 'set_direction'
   | 'reveal'
 
+export interface Header {
+  text: string
+  color?: string
+}
 export interface Command {
   text: string
   type?: CommandType
@@ -75,15 +81,19 @@ export interface Command {
   rightValue?: any
   /** Percent width the right-side command should have */
   rightWidth?: number
+  info?: string
+  infoColor?: string
 }
 
-export interface GameView extends Game {
+export interface CommandsView {
+  headers: Header[]
+  commands: Command[]
+}
+
+export interface GameView extends Game, CommandsView {
   currentPlayer: Player
   cluesToShow: Clue[]
   playerGuesses: PlayerWithGuess[]
   averageGuess?: number
   canChangePsychicTo: 'any' | 'same_team' | 'none'
-  commandInfo: string
-  commandInfoColor?: string
-  commands: Command[]
 }

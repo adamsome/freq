@@ -13,6 +13,7 @@ type Props = typeof defaultProps & {
   clueIndex: number
   averageGuess?: number
   target?: number
+  target_width?: number
   isChoosing: boolean
   isGuessing: boolean
   currentPlayer: Player
@@ -31,6 +32,7 @@ const Meter = ({
   clueIndex,
   averageGuess,
   target,
+  target_width,
   isChoosing,
   isGuessing,
   currentPlayer,
@@ -95,6 +97,7 @@ const Meter = ({
           clue={clue}
           clueIndex={clueIndex}
           target={target}
+          target_width={target_width}
           isChoosing={isChoosing}
           hasSlider={hasGuesses || isGuessing}
         ></MeterBackboard>
