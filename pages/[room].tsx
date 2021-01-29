@@ -47,9 +47,7 @@ RoomPage.defaultProps = defaultProps
 
 export const getServerSideProps = withSession(
   async ({ req, params }: SessionContext) => {
-    console.warn(`[ROOM]`)
     let user: UserConnected | undefined = req.session.get('user')
-    console.warn(`[ROOM]`, user)
 
     const room = head(params?.room as string | undefined)?.toLowerCase()
 

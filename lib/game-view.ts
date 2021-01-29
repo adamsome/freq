@@ -82,6 +82,7 @@ function canChangePsychicTo(phase: Phase): GameView['canChangePsychicTo'] {
     case 'prep':
     case 'win':
       return 'any'
+    case 'choose':
     case 'reveal':
       return 'same_team'
     default:
