@@ -7,6 +7,7 @@ import { assignColor } from './color-dict'
 import {
   doesGameHaveEnoughPlayers,
   getNextPsychic,
+  getPsychic,
   isInvalidPlayerTeamChange,
 } from './game'
 import { deleteGameProp, fetchGame, updateGamePath } from './game-store'
@@ -67,6 +68,16 @@ export class GameCommander
       throw new Error('Cannot make audience members the psychic')
 
     await this.update('next_psychic', player.id)
+  }
+
+  async set_current_psychic(player: Player) {
+    if (this.game.phase !== 'choose')
+      throw new Error('Can only change the psychic in the choose phase.')
+
+    if (player.team !== getPsychic(this.game)?.team)
+      throw new Error('Can only change psychic within same team during game')
+
+    await this.update('psychic', player.id)
   }
 
   // Phase Commands

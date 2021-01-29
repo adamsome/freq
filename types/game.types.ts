@@ -62,6 +62,7 @@ export type CommandType =
   | 'change_player_team'
   | 'toggle_player_leader'
   | 'set_next_psychic'
+  | 'set_current_psychic'
   // Phases
   | 'begin_round'
   | 'select_clue'

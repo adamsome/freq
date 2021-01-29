@@ -19,17 +19,19 @@ const defaultProps = {}
 const PlayerCard = ({ player, game, onClose }: Props) => {
   if (!player) return null
 
-  const { psychic, canChangePsychicTo } = game
+  const { phase, psychic, canChangePsychicTo, team_turn } = game
   const teamName = getTeamName(player.team)
   const opposingTeamName = getTeamName(player.team === 1 ? 2 : 1)
   const nextPsychic = getNextPsychic(game)
 
-  const canChangePsychic =
+  const canChangeNextPsychic =
     canChangePsychicTo === 'none'
       ? false
       : canChangePsychicTo === 'any'
       ? true
       : !nextPsychic || player.team === nextPsychic.team
+
+  const canChangePsychic = phase === 'choose' && player.team === team_turn
 
   const canChangeTeam = !isInvalidPlayerTeamChange(game, player)
 
@@ -60,12 +62,23 @@ const PlayerCard = ({ player, game, onClose }: Props) => {
 
         {psychic !== player.id &&
           nextPsychic?.id !== player.id &&
-          canChangePsychic && (
+          canChangeNextPsychic && (
             <button
               style={styleColor(player)}
               onClick={handlePlayerCommand('set_next_psychic')}
             >
               Make next psychic
+            </button>
+          )}
+
+        {psychic !== player.id &&
+          nextPsychic?.id !== player.id &&
+          canChangePsychic && (
+            <button
+              style={styleColor(player)}
+              onClick={handlePlayerCommand('set_current_psychic')}
+            >
+              Change to current psychic
             </button>
           )}
 
