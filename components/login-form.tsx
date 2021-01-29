@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
+import { cx } from '../util/dom'
 
 type Props = typeof defaultProps & {
   room?: string
   error?: string | null
+  fetching?: boolean
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
 }
 
 const defaultProps = {}
 
-const LoginForm = ({ error, onSubmit, room: initRoom }: Props) => {
+const LoginForm = ({ error, onSubmit, room: initRoom, fetching }: Props) => {
   const [room, setRoom] = useState(initRoom ?? '')
 
   const handleRoomChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -31,7 +33,9 @@ const LoginForm = ({ error, onSubmit, room: initRoom }: Props) => {
           required
         />
 
-        <button type="submit">Start</button>
+        <button className={cx({ fetching })} type="submit" disabled={fetching}>
+          <span>Start</span>
+        </button>
       </div>
 
       {error && <p className="error">{error}</p>}
@@ -69,6 +73,11 @@ const LoginForm = ({ error, onSubmit, room: initRoom }: Props) => {
 
         button:hover {
           color: var(--primary-lit);
+        }
+
+        button.fetching,
+        button:disabled {
+          color: var(--hint);
         }
 
         .error {

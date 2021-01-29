@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Container from '../components/container'
 import LoginForm from '../components/login-form'
 import Title from '../components/title'
@@ -16,27 +16,40 @@ type Props = typeof defaultProps & {
 
 const defaultProps = {}
 
-export const HomePage = ({ cookie, room }: Props) => {
-  const [, mutateUser] = useUser({
-    redirectIfFound: true,
-    redirectTo: (user) => {
-      if (isRoomValid(user.room)) {
-        return user.room
-      }
-    },
-  })
+export const HomePage = ({ cookie, room: randomRoom }: Props) => {
+  const [user, mutateUser] = useUser()
 
   const router = useRouter()
   const { error: queryError } = router.query
 
   const [error, setError] = useState<string | null>(head(queryError) ?? null)
+  const [fetching, setFetching] = useState(false)
+  const [delayedFetching, setDelayedFetching] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    let timer: number
+    if (delayedFetching != null) {
+      timer = window.setTimeout(() => {
+        setFetching(delayedFetching)
+        setDelayedFetching(null)
+      }, 1000)
+    }
+    return () => {
+      if (timer != null) clearTimeout(timer)
+    }
+  }, [delayedFetching])
+
+  const room = user?.connected ? user.room : randomRoom
 
   const handleStart = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (fetching) return
+    setFetching(true)
 
     const handleError = (error: any) => {
       console.error('An unexpected error happened:', error)
       setError(error.data?.message ?? error.message ?? 'Unexpected Error')
+      setFetching(false)
     }
 
     const room = e.currentTarget?.room?.value?.toLowerCase()
@@ -50,13 +63,19 @@ export const HomePage = ({ cookie, room }: Props) => {
     }
 
     try {
-      await mutateUser(
+      const user = await mutateUser(
         fetchJson('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ room }),
         })
       )
+      if (user?.connected) {
+        router.push(`/${user.room}`)
+      } else {
+        handleError(new Error('User could not login.'))
+      }
+      setDelayedFetching(false)
     } catch (error) {
       handleError(error)
     }
@@ -72,7 +91,12 @@ export const HomePage = ({ cookie, room }: Props) => {
           create a new game.
         </p>
 
-        <LoginForm room={room} onSubmit={handleStart} error={error}></LoginForm>
+        <LoginForm
+          room={room}
+          error={error}
+          fetching={fetching}
+          onSubmit={handleStart}
+        ></LoginForm>
       </main>
 
       <footer>
