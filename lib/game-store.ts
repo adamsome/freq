@@ -18,7 +18,9 @@ export async function fetchGame(room?: string): Promise<Game | null> {
 
 export async function joinGame(
   room: string,
-  userID: string
+  userID: string,
+  // TODO: Implement leave old room
+  _prevRoom?: string
 ): Promise<GameView> {
   const { db } = await connectToDatabase()
   const collection = fromCollection(db)

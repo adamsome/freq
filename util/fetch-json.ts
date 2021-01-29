@@ -25,19 +25,23 @@ export default async function fetcher(input: RequestInfo, init?: RequestInit) {
   }
 }
 
-export async function postJson(input: RequestInfo, body: any) {
-  await fetcher(input, {
+export async function postJson<T>(input: RequestInfo, body: any): Promise<T> {
+  return await fetcher(input, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
-  mutate('/api/game')
 }
 
-export async function postCommand(type: CommandType, value?: any) {
+export async function postCommand<T>(
+  type: CommandType,
+  value?: any
+): Promise<T> {
   const body: any = { type }
   if (value != null) {
     body.value = value
   }
-  await postJson('/api/command', body)
+  const data = await postJson<T>('/api/command', body)
+  mutate('/api/game')
+  return data
 }

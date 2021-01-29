@@ -7,7 +7,7 @@ import { GameView } from '../types/game.types'
 import { SessionContext } from '../types/io.types'
 import { UserConnected } from '../types/user.types'
 import { head } from '../util/array'
-import withSession from '../util/with-session'
+import withSession, { createUserSession } from '../util/with-session'
 
 type Props = typeof defaultProps & {
   cookie: string
@@ -47,28 +47,40 @@ RoomPage.defaultProps = defaultProps
 
 export const getServerSideProps = withSession(
   async ({ req, params }: SessionContext) => {
+    console.warn(`[ROOM]`)
     let user: UserConnected | undefined = req.session.get('user')
-    if (!user) {
-      console.warn(`No 'user' param set in [room] SSR.`)
+    console.warn(`[ROOM]`, user)
+
+    const room = head(params?.room as string | undefined)?.toLowerCase()
+
+    if (!room) {
+      console.warn(`No 'room' param set in [room] SSR.`)
       return { redirect: { destination: '/', permanent: false } }
     }
 
-    const room = head(params?.room as string | undefined)?.toLowerCase()
+    if (!user) {
+      try {
+        user = await createUserSession(req, room)
+      } catch (error) {
+        console.error('Error logging in:', error)
+        return { redirect: { destination: '/', permanent: false } }
+      }
+    }
 
     if (!isRoomValid(room)) {
       console.warn(`No 'room' param set in [room] SSR.`)
       return { redirect: { destination: '/', permanent: false } }
     }
 
-    // const prevRoom: string | undefined
+    let prevRoom: string | undefined
     if (room !== user.room.toLowerCase()) {
+      prevRoom = user.room
       user = { ...user, room }
       req.session.set('user', user)
       await req.session.save()
     }
 
-    // TODO: Pass prevRoom so joinGame can remove player from old room
-    const game = await joinGame(room, user.id)
+    const game = await joinGame(room, user.id, prevRoom)
 
     return {
       props: {
