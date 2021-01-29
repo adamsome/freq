@@ -1,5 +1,5 @@
-import { Game, Player } from '../types/game.types'
-import { isGuessingPhase } from './phase'
+import { Game, GameView, Player } from '../types/game.types'
+import { isFreePhase, isGuessingPhase } from './phase'
 import { createPlayer, getPlayersPerTeam, getTeamPlayers } from './player'
 
 const DEFAULT_TARGET_WIDTH = 22.5
@@ -14,14 +14,16 @@ export function createNewGame(room: string, userID: string): Game {
     target_width: DEFAULT_TARGET_WIDTH,
     players: [player],
     psychic: userID,
+    next_psychic: userID,
     clues: [],
     guesses: {},
+    directions: {},
     match_number: 1,
     round_number: 0,
     phase: 'prep',
     team_turn: team,
-    score_team_1: team === 1 ? 0 : 1,
-    score_team_2: team === 2 ? 0 : 1,
+    score_team_1: 0,
+    score_team_2: 0,
     game_started_at: new Date().toISOString(),
   }
   return game
@@ -52,18 +54,22 @@ export function getTeamName(team?: 1 | 2): string {
   }
 }
 
-export function getPsychic(game: Game): Player {
-  const psychic = game.players.find((p) => p.id === game.psychic)
-  if (!psychic) {
-    throw new Error('Enexpected error: No player is set as psychic.')
-  }
-  return psychic
+export function getPsychic(game: Game): Player | undefined {
+  return game.players.find((p) => p.id === game.psychic)
 }
 
-export function getNextPsychic(game: Game, team: 1 | 2): Player {
-  const players = getTeamPlayers(game.players, team)
+export function getNextPsychic(game: Game): Player | undefined {
+  const { next_psychic, team_turn, players } = game
+
+  if (next_psychic) {
+    const next = players.find((p) => p.id === next_psychic)
+    if (next) return next
+  }
+
+  const otherTeam = team_turn === 1 ? 2 : 1
+  const teamPlayers = getTeamPlayers(players, otherTeam)
   let leastPsychic: Player | undefined
-  for (const player of players) {
+  for (const player of teamPlayers) {
     if (
       !leastPsychic ||
       (player.psychic_count ?? 0) < (leastPsychic.psychic_count ?? 0)
@@ -71,27 +77,34 @@ export function getNextPsychic(game: Game, team: 1 | 2): Player {
       leastPsychic = player
     }
   }
-  if (!leastPsychic) {
-    throw new Error('Unexpected error: No next psychic found.')
-  }
   return leastPsychic
 }
 
 export function isInvalidPlayerTeamChange(
-  game: Game,
+  game: GameView,
   player: Player
 ): string | undefined {
-  if (player.id === game.psychic)
-    return "Cannot change the psychic's team. Must change psychic first."
+  const nextPsychic = getNextPsychic(game)
+  if (player.id === nextPsychic?.id && game.canChangePsychicTo !== 'any')
+    return "Cannot change the next psychic's team."
 
-  const phase = game.phase
-  if (phase === 'prep' || phase === 'win') return
+  // Any team change allowed in free phases
+  if (isFreePhase(game.phase)) return
 
-  if (isGuessingPhase(phase) && game.guesses?.[player.id]?.value != null)
-    return "Cannot change a player who's already guessed"
+  if (player.id === game.psychic) return "Cannot change the psychic's team."
+
+  if (isGuessingPhase(game.phase)) {
+    if (game.guesses?.[player.id]?.value != null) {
+      return "Cannot change a player who's already guessed."
+    }
+    if (game.directions?.[player.id]?.value != null) {
+      return "Cannot change a player who's already guessed a direction."
+    }
+  }
 
   const team = game.players
     .filter((p) => p.team === player.team)
     .filter((p) => p.id !== player.id)
-  if (team.length < 2) return 'Cannot change player team that leaves team empty'
+  if (team.length < 2)
+    return 'Cannot change player team that leaves team empty.'
 }

@@ -1,5 +1,9 @@
 import React from 'react'
-import { getTeamName, isInvalidPlayerTeamChange } from '../lib/game'
+import {
+  getNextPsychic,
+  getTeamName,
+  isInvalidPlayerTeamChange,
+} from '../lib/game'
 import { CommandType, GameView, Player } from '../types/game.types'
 import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
@@ -15,16 +19,17 @@ const defaultProps = {}
 const PlayerCard = ({ player, game, onClose }: Props) => {
   if (!player) return null
 
-  const { psychic, canChangePsychicTo, team_turn } = game
+  const { psychic, canChangePsychicTo } = game
   const teamName = getTeamName(player.team)
   const opposingTeamName = getTeamName(player.team === 1 ? 2 : 1)
+  const nextPsychic = getNextPsychic(game)
 
   const canChangePsychic =
     canChangePsychicTo === 'none'
       ? false
       : canChangePsychicTo === 'any'
       ? true
-      : player.team === team_turn
+      : !nextPsychic || player.team === nextPsychic.team
 
   const canChangeTeam = !isInvalidPlayerTeamChange(game, player)
 
@@ -53,14 +58,16 @@ const PlayerCard = ({ player, game, onClose }: Props) => {
           </button>
         )}
 
-        {psychic !== player.id && canChangePsychic && (
-          <button
-            style={styleColor(player)}
-            onClick={handlePlayerCommand('make_player_psychic')}
-          >
-            Make {teamName} psychic
-          </button>
-        )}
+        {psychic !== player.id &&
+          nextPsychic?.id !== player.id &&
+          canChangePsychic && (
+            <button
+              style={styleColor(player)}
+              onClick={handlePlayerCommand('set_next_psychic')}
+            >
+              Make next psychic
+            </button>
+          )}
 
         {!player.leader && (
           <button

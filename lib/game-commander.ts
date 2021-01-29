@@ -52,25 +52,21 @@ export class GameCommander
     await this.updatePath(`players.${index}.leader`, !player.leader)
   }
 
-  async make_player_psychic(player: Player) {
+  async set_next_psychic(player: Player) {
     const allow = this.game.canChangePsychicTo
     if (allow === 'none')
       throw new Error('Can only change the psychic in the free phases.')
 
-    const isTeamChange = player.team !== this.game.team_turn
-    if (allow === 'same_team' && isTeamChange)
+    if (
+      allow === 'same_team' &&
+      player.team !== getNextPsychic(this.game)?.team
+    )
       throw new Error('Can only change psychic within same team during game')
 
     if (player.team == null)
       throw new Error('Cannot make audience members the psychic')
 
-    if (isTeamChange) {
-      await this.update('team_turn', player.team)
-      await this.update('score_team_1', player.team === 1 ? 0 : 1)
-      await this.update('score_team_2', player.team === 1 ? 1 : 0)
-    }
-
-    await this.update('psychic', player.id)
+    await this.update('next_psychic', player.id)
   }
 
   // Phase Commands
@@ -84,47 +80,33 @@ export class GameCommander
 
     const players = this.game.players
 
-    // Assume team has been set in the prep phase
-    let team = this.game.team_turn
+    // Need to pick a the next psychic and set turn to their team
+    const psychic = getNextPsychic(this.game) ?? this.player
+    await this.update('psychic', psychic.id)
+    await this.update('team_turn', psychic.team ?? 1)
 
-    if (this.game.phase !== 'prep') {
-      // Did not come from prep, rather end of round/match, so flip teamk
-      team = team === 1 ? 2 : 1
-      await this.update('team_turn', team)
-
-      // Similarly, need to pick a new psychic
-      const psychic = getNextPsychic(this.game, team)
-      await this.update('psychic', psychic.id)
-
-      // Update the psychic player's psychic_count
-      const psychicIndex = players.findIndex((p) => p.id === psychic.id)
-      if (psychicIndex < 0) {
-        throw new Error('Unexpected error: no next psychic index found.')
-      }
-      const nextCount = (psychic.psychic_count ?? 0) + 1
-      await this.updatePath(`players.${psychicIndex}.psychic_count`, nextCount)
-    } else {
-      // Update the psychic player's psychic_count
-      const psychicIndex = players.findIndex((p) => p.id === this.game.psychic)
-      if (psychicIndex < 0) {
-        throw new Error('Unexpected error: no psychic index found.')
-      }
-      const psychicCount = players[psychicIndex].psychic_count ?? 0
-      const nextCount = (psychicCount ?? 0) + 1
-      await this.updatePath(`players.${psychicIndex}.psychic_count`, nextCount)
+    // Update the psychic player's psychic_count
+    const psychicIndex = players.findIndex((p) => p.id === psychic.id)
+    if (psychicIndex < 0) {
+      throw new Error('Unexpected error: no next psychic index found.')
     }
+    const nextCount = (psychic.psychic_count ?? 0) + 1
+    await this.updatePath(`players.${psychicIndex}.psychic_count`, nextCount)
 
-    if (this.game.phase === 'win') {
+    if (this.game.phase !== 'reveal') {
       // Reset the scores based on which team is up (0); other team (1)
-      await this.update('score_team_1', team === 1 ? 0 : 1)
-      await this.update('score_team_2', team === 1 ? 1 : 0)
+      await this.update('score_team_1', psychic.team === 1 ? 0 : 1)
+      await this.update('score_team_2', psychic.team === 1 ? 1 : 0)
       await this.update('match_number', this.game.match_number + 1)
     }
 
+    await this.delete('next_psychic')
     await this.delete('clue_selected')
     await this.delete('guesses')
+    await this.delete('directions')
 
-    const target = Math.max(0.0225, Math.min(Math.random(), 1 - 0.0225))
+    const minWidth = this.game.target_width / 5 / 2 / 100
+    const target = Math.max(minWidth, Math.min(Math.random(), 1 - minWidth))
     await this.update('target', target)
     await this.update('clues', randomClues())
     await this.update('round_number', this.game.round_number + 1)
@@ -195,10 +177,10 @@ export class GameCommander
     if (this.game.phase !== 'direction')
       throw new Error('Can only lock direction in the direction phase.')
 
-    if (this.game.guesses?.[this.player.id]?.locked)
+    if (this.game.directions?.[this.player.id]?.value != null)
       throw new Error('Cannot set direction once its locked.')
 
-    await this.updatePath(`guesses.${this.player.id}.value`, directionGuess)
+    await this.updatePath(`directions.${this.player.id}.value`, directionGuess)
 
     // Update the guess since we'll need the updated guesses to calculate
     // if guesses are set and the round scores in the reveal phase
@@ -216,14 +198,7 @@ export class GameCommander
     await this.update('phase', 'reveal')
 
     // Get round scores and add to state scores
-    const scoreInfo = getRoundScores(
-      this.game.players,
-      this.game.psychic,
-      this.game.target_width,
-      this.game.team_turn,
-      this.game.guesses,
-      this.game.target
-    )
+    const scoreInfo = getRoundScores(this.game)
     const [score1, score2, scoreByPlayer] = scoreInfo
     const nextScore1 = this.game.score_team_1 + score1
     const nextScore2 = this.game.score_team_2 + score2
@@ -236,15 +211,14 @@ export class GameCommander
       await this.updatePath(`players.${i}.score`, nextScore)
     }
 
-    if (nextScore1 >= 10 || nextScore2 >= 10) {
+    if ((nextScore1 >= 10 || nextScore2 >= 10) && nextScore1 !== nextScore2) {
       return await this.win()
     }
   }
 
   private async win() {
     await this.update('phase', 'win')
-
-    throw new Error('Win not yet implemented.')
+    await this.update('game_finished_at', new Date().toISOString())
   }
 
   // Helpers

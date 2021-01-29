@@ -39,9 +39,12 @@ export interface Game {
   room: string
   players: Player[]
   psychic: string
+  next_psychic?: string
   clues: Clue[]
   clue_selected?: number
+  // TODO: Rename to 'needles'
   guesses?: Dict<Guess>
+  directions?: Dict<Guess>
   target?: number
   target_width: number
   match_number: number
@@ -58,7 +61,7 @@ export interface Game {
 export type CommandType =
   | 'change_player_team'
   | 'toggle_player_leader'
-  | 'make_player_psychic'
+  | 'set_next_psychic'
   // Phases
   | 'begin_round'
   | 'select_clue'

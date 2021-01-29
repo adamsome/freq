@@ -1,7 +1,9 @@
 import { Game, Guess, Player } from '../types/game.types'
 import { Dict } from '../types/object.types'
-import { partition } from '../util/array'
-import { calculateAverageGuess, getGuessInfo } from './guess'
+import {
+  calculateAverageDirectionGuess,
+  calculateAverageNeedleGuess,
+} from './guess'
 import { getPlayersPerTeam } from './player'
 
 export function getRoundScores(game: Game): [number, number, Dict<number>]
@@ -10,7 +12,8 @@ export function getRoundScores(
   psychic: string,
   target_width: number,
   team_turn: 1 | 2 | undefined,
-  guessesDict: Dict<Guess> | undefined,
+  needles: Dict<Guess> | undefined,
+  directions: Dict<Guess> | undefined,
   target: number | undefined
 ): [number, number, Dict<number>]
 export function getRoundScores(
@@ -18,7 +21,8 @@ export function getRoundScores(
   psychic?: string,
   target_width?: number,
   team_turn?: 1 | 2 | undefined,
-  guessesDict?: Dict<Guess> | undefined,
+  needles?: Dict<Guess> | undefined,
+  directions?: Dict<Guess> | undefined,
   target?: number
 ): [number, number, Dict<number>] {
   if (Array.isArray(gameOrPlayers)) {
@@ -30,7 +34,8 @@ export function getRoundScores(
       psychic,
       target_width,
       team_turn,
-      guessesDict,
+      needles,
+      directions,
       target
     )
   }
@@ -41,6 +46,7 @@ export function getRoundScores(
     g.target_width,
     g.team_turn,
     g.guesses,
+    g.directions,
     g.target
   )
 }
@@ -50,14 +56,14 @@ function _getRoundScores(
   psychic: string,
   target_width: number,
   team_turn: 1 | 2 | undefined,
-  guessesDict: Dict<Guess> | undefined,
+  needles: Dict<Guess> | undefined,
+  directions: Dict<Guess> | undefined,
   target: number | undefined
 ): [number, number, Dict<number>] {
   if (!target)
     throw new Error('Unexpected error: no target while getting round scores.')
 
-  const averageGuess =
-    calculateAverageGuess(players, team_turn, guessesDict) ?? 0.5
+  const averageGuess = calculateAverageNeedleGuess(needles) ?? 0.5
 
   // Target width is as a percent vs guess & target, which are decimals
   // Target is broken up into 5 bands
@@ -76,18 +82,10 @@ function _getRoundScores(
   let directionScore = 0
   // Opposing team gets 0 if guessing team hits the center band
   if (guessScore !== 4) {
-    const { guesses } = getGuessInfo(
-      players,
-      psychic,
-      guessesDict,
-      team_turn === 1 ? 2 : 1
-    )
-    const leftVsRight = partition((g) => g.value === -1, guesses)
-    const [numLeft, numRight] = leftVsRight.map((xs) => xs.length)
-
-    if (numLeft > numRight && target < averageGuess) {
+    const dir = calculateAverageDirectionGuess(directions)
+    if (dir === -1 && target < averageGuess) {
       directionScore = 1
-    } else if (numLeft < numRight && target > averageGuess) {
+    } else if (dir === 1 && target > averageGuess) {
       directionScore = 1
     }
   }

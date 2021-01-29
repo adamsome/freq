@@ -1,86 +1,75 @@
-import { Game, Guess, Player } from '../types/game.types'
+import { Game, Guess } from '../types/game.types'
 import { Dict } from '../types/object.types'
+import { partition } from '../util/array'
 import { getTeamPlayers } from './player'
 
-function _areAllGuesses(
+export function getGuessesLocked(guessDict: Dict<Guess> = {}): Guess[] {
+  return Object.values(guessDict).filter((g) => g.locked == true)
+}
+
+export function getGuessesSet(guessDict: Dict<Guess> = {}): Guess[] {
+  return Object.values(guessDict).filter((g) => g.value != null)
+}
+
+// Needle Guesses
+
+export function getNeedleGuessesNeeded(
   game: Game,
-  useOpposingTeam = false,
-  requireLock = false,
-  ...ignorePlayers: Player[]
-): boolean {
-  const { players, psychic, team_turn } = game
-  const team = !useOpposingTeam ? team_turn : team_turn === 1 ? 2 : 1
-  const guessers = getTeamPlayers(players, team, psychic, ...ignorePlayers)
-  for (const guesser of guessers) {
-    const guess = game.guesses?.[guesser.id]
-    if (requireLock && !guess?.locked) {
-      return false
-    }
-    if (!requireLock && guess?.value == null) {
-      return false
-    }
-  }
-  return true
+  ...ignorePlayers: (string | { id: string })[]
+): number {
+  const { players, team_turn, psychic } = game
+  return getTeamPlayers(players, team_turn, psychic, ...ignorePlayers).length
 }
 
 export function areAllNeedleGuessesLocked(
   game: Game,
-  ...ignorePlayers: Player[]
+  ...ignorePlayers: (string | { id: string })[]
 ): boolean {
-  return _areAllGuesses(game, false, true, ...ignorePlayers)
+  const guessesNeeded = getNeedleGuessesNeeded(game, ...ignorePlayers)
+  const guesses = getGuessesLocked(game.guesses)
+  return guesses.length >= guessesNeeded
+}
+
+export function calculateAverageNeedleGuess(
+  needleGuessDict: Dict<Guess> = {}
+): number | undefined {
+  const guessVals = getGuessesSet(needleGuessDict).map((g) => g.value)
+  const sum = guessVals.reduce((acc, g) => acc + g, 0)
+  return sum / guessVals.length
+}
+
+// Direction Guesses
+
+export function getDirectionGuessesNeeded(
+  game: Game,
+  ...ignorePlayers: (string | { id: string })[]
+): number {
+  const { players, team_turn } = game
+  const team = team_turn === 1 ? 2 : 1
+  return getTeamPlayers(players, team, ...ignorePlayers).length
 }
 
 export function areAllDirectionGuessesSet(
   game: Game,
-  ...ignorePlayers: Player[]
+  ...ignorePlayers: (string | { id: string })[]
 ): boolean {
-  return _areAllGuesses(game, true, false, ...ignorePlayers)
+  const guessesNeeded = getDirectionGuessesNeeded(game, ...ignorePlayers)
+  const guesses = getGuessesSet(game.directions)
+  return guesses.length >= guessesNeeded
 }
 
-interface GuessInfo {
-  numNeeded: number
-  numSet: number
-  numLocked: number
-  guesses: Guess[]
+export function getDirectionCounts(
+  guessDict: Dict<Guess> = {}
+): [number, number] {
+  const guessVals = getGuessesSet(guessDict).map((g) => g.value)
+  const [left, rest] = partition((val) => val === -1, guessVals)
+  const right = rest.filter((val) => val === 1)
+  return [left.length, right.length]
 }
 
-export function getGuessInfo(
-  players: Player[],
-  psychic: string,
-  guesses?: Dict<Guess>,
-  team?: 1 | 2
-): GuessInfo {
-  const guessers = getTeamPlayers(players, team, psychic)
-  const numNeeded = guessers.length
-  return guessers.reduce(
-    (acc, p) => {
-      const guess: Guess | undefined = guesses?.[p.id]
-      if (guess?.value != null) {
-        if (guess?.locked === true) {
-          acc.numLocked++
-        }
-        acc.numSet++
-        acc.guesses.push(guess)
-      }
-      return acc
-    },
-    { numNeeded, numSet: 0, numLocked: 0, guesses: [] } as GuessInfo
-  )
-}
-
-export function calculateAverageGuess(
-  players: Player[],
-  team_turn: 1 | 2 | undefined,
-  guesses?: Dict<Guess>
-): number | undefined {
-  const guessingTeam = players.filter((p) => p.team === team_turn)
-  const teamGuesses = guessingTeam.reduce((acc, p) => {
-    const guess = guesses?.[p.id]
-    if (guess) {
-      acc.push(guess.value)
-    }
-    return acc
-  }, [] as number[])
-  const sum = teamGuesses.reduce((acc, g) => acc + g, 0)
-  return sum / teamGuesses.length
+export function calculateAverageDirectionGuess(
+  guessDict: Dict<Guess> = {}
+): -1 | 1 {
+  const [left, right] = getDirectionCounts(guessDict)
+  return left > right ? -1 : 1
 }

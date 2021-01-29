@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import Modal from 'react-responsive-modal'
-import { getTeamName } from '../lib/game'
+import { getNextPsychic, getTeamName } from '../lib/game'
 import { getTeamIcon } from '../lib/icon'
+import { isFreePhase } from '../lib/phase'
 import { getPlayersPerTeam } from '../lib/player'
 import { GameView, Player } from '../types/game.types'
 import { cx } from '../util/dom'
@@ -16,14 +17,14 @@ const defaultProps = {}
 
 const Scoreboard = ({ game }: Props) => {
   // Modal state
-  // TODO: Only make modal openable by a captain
-  // TODO: Only make players clickable by a captain
   const [modelOpen, setModelOpen] = useState<Player | null>(null)
-  const handlePlayerSelect = (p: Player) => setModelOpen(p)
-  const handleModalClose = () => setModelOpen(null)
 
   const { currentPlayer, score_team_1, score_team_2 } = game
+
+  const leader = currentPlayer.leader == true
   const teams = getPlayersPerTeam(game.players)
+  const nextPsychic = getNextPsychic(game)
+  const showNextPsychic = isFreePhase(game.phase) || game.next_psychic != null
   const icon1 = getTeamIcon(1)
   const icon2 = getTeamIcon(2)
   const team1 = getTeamName(1)
@@ -31,8 +32,11 @@ const Scoreboard = ({ game }: Props) => {
   // TODO: Add to game view state
   const activePlayers: string[] = []
 
+  const handlePlayerSelect = (p: Player) => leader && setModelOpen(p)
+  const handleModalClose = () => setModelOpen(null)
+
   return (
-    <div className="wrapper">
+    <div className={cx({ wrapper: true, leader })}>
       <div className="header">
         <div className="icon">{icon1}</div>
         <div className="name">{team1}</div>
@@ -66,7 +70,12 @@ const Scoreboard = ({ game }: Props) => {
                     })}
                   >{`${p.name ?? 'Unnamed'}`}</div>
                   {p.leader && <div>🎩</div>}
-                  {game.psychic === p.id && <div>🧠</div>}
+                  {game.psychic === p.id && nextPsychic?.id !== p.id && (
+                    <div>🧠</div>
+                  )}
+                  {nextPsychic?.id === p.id && showNextPsychic && (
+                    <div className="xs">🧠</div>
+                  )}
                 </div>
 
                 <div className="score">{p.score ?? 0}</div>
@@ -153,6 +162,9 @@ const Scoreboard = ({ game }: Props) => {
           margin-right: 3px;
           white-space: nowrap;
           overflow: hidden;
+        }
+
+        .leader .player {
           cursor: pointer;
         }
 
@@ -164,7 +176,7 @@ const Scoreboard = ({ game }: Props) => {
           flex-direction: row-reverse;
         }
 
-        .player:hover {
+        .leader .player:hover {
           background: var(--bg-1);
         }
 
@@ -187,6 +199,7 @@ const Scoreboard = ({ game }: Props) => {
         .player .name-wrapper {
           flex: 1;
           display: flex;
+          align-items: center;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -210,6 +223,10 @@ const Scoreboard = ({ game }: Props) => {
           text-align: right;
           margin-right: 0;
           margin-left: var(--inset-xs);
+        }
+
+        .xs {
+          font-size: var(--font-size-xs);
         }
 
         @media screen and (max-width: 480px) {

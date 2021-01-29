@@ -82,7 +82,9 @@ const GameBoard = () => {
         <CommandPanel />
       </div>
 
-      <Scoreboard game={game} />
+      <div className="section">
+        <Scoreboard game={game} />
+      </div>
 
       <style jsx>{`
         .meter-wrapper {

@@ -11,7 +11,7 @@ import {
   PlayerWithGuess,
 } from '../types/game.types'
 import { HasObjectID } from '../types/io.types'
-import { partition, range } from '../util/array'
+import { range } from '../util/array'
 import { getTeamColor } from './color-dict'
 import {
   doesGameHaveEnoughPlayers,
@@ -19,9 +19,17 @@ import {
   getPsychic,
   getTeamName,
 } from './game'
-import { calculateAverageGuess, getGuessInfo } from './guess'
+import {
+  calculateAverageNeedleGuess,
+  getDirectionCounts,
+  getDirectionGuessesNeeded,
+  getGuessesLocked,
+  getGuessesSet,
+  getNeedleGuessesNeeded,
+} from './guess'
 import { getTeamIcon } from './icon'
 import { isFreePhase } from './phase'
+import { getPlayerDict } from './player'
 import { getRoundScores } from './score'
 
 function createPlayerNeedleGuesses(
@@ -32,19 +40,26 @@ function createPlayerNeedleGuesses(
     return []
   }
 
-  const guessingTeam = game.players.filter((p) => p.team === game.team_turn)
+  const playerDict = getPlayerDict(game.players)
 
-  return guessingTeam.reduce((acc, p) => {
-    const guess = game.guesses?.[p.id]
+  const guessEntries = Object.entries(game.guesses ?? {})
+  const guesses = guessEntries.map(([playerID, guess]) => {
+    const player = playerDict[playerID]
+    const playerWithGuess: PlayerWithGuess = { ...player, guess }
+    return playerWithGuess
+  })
 
-    const isCurrentPlayer = p.id === currentPlayer.id
-    if (isCurrentPlayer && game.psychic !== p.id) {
-      acc.push({ ...p, guess: guess ?? { value: 0.5 } })
-    } else if (guess) {
-      acc.push({ ...p, guess })
-    }
-    return acc
-  }, [] as PlayerWithGuess[])
+  // If current player has no guess yet, create one for them
+  if (
+    game.phase === 'guess' &&
+    currentPlayer.id !== game.psychic &&
+    currentPlayer.team === game.team_turn &&
+    !guesses.find((p) => p.id === currentPlayer.id)
+  ) {
+    guesses.push({ ...currentPlayer, guess: { value: 0.5 } })
+  }
+
+  return guesses
 }
 
 function createCluesToShow(
@@ -157,24 +172,21 @@ function createCommands(
   const view: CommandsView = { headers: [header], commands: [cmd] }
 
   const playerIndex = game.players.findIndex((p) => p.id === player.id) ?? 0
-  const psychic = getPsychic(game)
-  const isPsychic = psychic.id === player.id
-  const psychicLabel = `${psychic.icon} ${psychic.name}`
-  const playerGuess: Guess | undefined = game.guesses?.[player.id]
-  const locked = playerGuess?.locked === true
   const turnTeamName = getTeamName(game.team_turn)
   const otherTeamName = getTeamName(game.team_turn === 1 ? 2 : 1)
+  const enoughPlayers = doesGameHaveEnoughPlayers(game)
 
   switch (game.phase) {
     case 'prep': {
       header.text = getHourlyItem(welcomeMessages, playerIndex)
 
-      if (player.leader && doesGameHaveEnoughPlayers(game)) {
+      if (player.leader && enoughPlayers) {
         cmd.type = 'begin_round'
         cmd.text = "Everyone's in"
         cmd.info = 'Start game once all players have joined'
         return view
       }
+
       cmd.text = 'Waiting for players...'
       cmd.disabled = true
       cmd.info = player.leader
@@ -183,7 +195,8 @@ function createCommands(
       return view
     }
     case 'choose': {
-      if (isPsychic) {
+      const psychic = getPsychic(game) ?? player
+      if (psychic.id === player.id) {
         header.text = 'Choose a card & think of a clue!'
 
         cmd.type = 'confirm_clue'
@@ -195,6 +208,7 @@ function createCommands(
         return view
       }
 
+      const psychicLabel = `${psychic.icon} ${psychic.name}`
       header.text = `${psychicLabel} is thinking...!`
       header.color = psychic.color ?? 'Gray'
 
@@ -205,22 +219,32 @@ function createCommands(
       return view
     }
     case 'guess': {
-      if (isPsychic) {
+      const psychic = getPsychic(game) ?? player
+      const numSet = getGuessesLocked(game.guesses).length
+      const numNeeded = getNeedleGuessesNeeded(game)
+      const count = `(${numSet}/${numNeeded})`
+
+      if (psychic.id === player.id) {
         header.text = 'Your team is guessing!'
 
         cmd.text = 'Team is guessing...'
+        cmd.info = count
         cmd.disabled = true
         return view
       }
+
+      const guess: Guess | undefined = game.guesses?.[player.id]
+      const locked = guess?.locked === true
+
       if (player.team === game.team_turn) {
         header.text = 'Guess where the target is!'
 
         cmd.type = 'lock_guess'
         cmd.info = locked
-          ? "Waiting for teammates' guesses"
-          : 'Drag needle to guess where the clue is'
+          ? `Waiting for teammates' guesses ${count}`
+          : `Drag needle to guess where the clue is ${count}`
         cmd.text = locked ? 'Locked in' : 'Lock it in'
-        cmd.disabled = locked || playerGuess?.value == null
+        cmd.disabled = locked || guess?.value == null
         return view
       }
 
@@ -228,30 +252,27 @@ function createCommands(
       header.color = getTeamColor(game.team_turn)
 
       cmd.text = `Waiting on ${turnTeamName} team...`
+      cmd.info = count
       cmd.disabled = true
       return view
     }
     case 'direction': {
       const guessingTeam = game.team_turn === 1 ? 2 : 1
       const isGuessing = player.team === guessingTeam
+
       header.text = isGuessing
         ? 'Guess the direction!'
         : `${otherTeamName} is guessing the direction...`
-      header.color = getTeamColor(guessingTeam)
+      if (!isGuessing) {
+        header.color = getTeamColor(guessingTeam)
+      }
 
-      const leftLocked = playerGuess?.value === -1
-      const rightLocked = playerGuess?.value === 1
-      cmd.disabled = leftLocked || rightLocked || !isGuessing
+      const guess: Guess | undefined = game.directions?.[player.id]
+      cmd.disabled = guess?.value === -1 || guess?.value === 1 || !isGuessing
 
-      const { numSet, numNeeded, guesses } = getGuessInfo(
-        game.players,
-        game.psychic,
-        game.guesses,
-        guessingTeam
-      )
-
-      const partitionedGuesses = partition((g) => g.value === -1, guesses)
-      const [numLeft, numRight] = partitionedGuesses.map((gs) => gs.length)
+      const numSet = getGuessesSet(game.directions).length
+      const numNeeded = getDirectionGuessesNeeded(game)
+      const [numLeft, numRight] = getDirectionCounts(game.directions)
 
       cmd.info = !isGuessing
         ? `${otherTeamName} is guessing (${numSet}/${numNeeded})...`
@@ -269,19 +290,25 @@ function createCommands(
         : `(${numRight}) Right ➡`
       return view
     }
-    case 'reveal': {
-      const [score1, score2] = getRoundScores(
-        game.players,
-        game.psychic,
-        game.target_width,
-        game.team_turn,
-        game.guesses,
-        game.target
-      )
+    case 'reveal':
+    case 'win': {
+      if (game.phase === 'reveal') {
+        const [score1, score2] = getRoundScores(game)
+        view.headers = getScoreMessages([score1, score2], playerIndex)
+      } else {
+        const winningTeam = game.score_team_1 > game.score_team_2 ? 1 : 2
+        const winningTeamName = getTeamName(winningTeam)
+        const winningIcon = getTeamIcon(winningTeam)
+        const icons = range(0, 3)
+          .map(() => winningIcon)
+          .join('')
 
-      view.headers = getScoreMessages([score1, score2], playerIndex)
+        header.text = `${icons} ${winningTeamName} team wins! ${icons}`
+        header.color = getTeamColor(winningTeam)
+      }
 
-      const nextPsychic = getNextPsychic(game, game.team_turn === 1 ? 2 : 1)
+      const next = game.phase === 'reveal' ? 'round' : 'match'
+      const nextPsychic = getNextPsychic(game) ?? getPsychic(game) ?? player
       const isNextPsychic = nextPsychic.id === player.id
       const canStart = isNextPsychic || player.leader === true
       const nextPsychicLabel = `${nextPsychic.icon} ${nextPsychic.name}`
@@ -290,30 +317,13 @@ function createCommands(
         : `${nextPsychicLabel} is`
 
       cmd.type = 'begin_round'
-      cmd.text = canStart ? 'Start next round' : 'Wait for next round...'
-      cmd.disabled = !canStart
-      cmd.info = `${nextPsychicText} the Psychic next round!`
-      cmd.infoColor = psychic.color ?? 'Gray'
-      return view
-    }
-    case 'win': {
-      const winningTeam = game.score_team_1 > game.score_team_2 ? 1 : 2
-      const winningTeamName = getTeamName(winningTeam)
-      const winningIcon = getTeamIcon(winningTeam)
-      const icons = range(0, 3)
-        .map(() => winningIcon)
-        .join('')
-      header.text = `${icons} ${winningTeamName} team wins! ${icons}`
-      header.color = getTeamColor(winningTeam)
-
-      const canStart = isPsychic || player.leader === true
-      const nextPsychicText = isPsychic ? 'You are' : `${psychicLabel} is`
-
-      cmd.type = 'begin_round'
-      cmd.text = canStart ? 'Start a new match' : 'Wait for next match...'
-      cmd.disabled = !canStart
-      cmd.info = `${nextPsychicText} the Psychic next match!`
-      cmd.infoColor = psychic.color ?? 'Gray'
+      cmd.text = canStart ? `Start next ${next}` : `Wait for next ${next}...`
+      cmd.disabled = !canStart || !enoughPlayers
+      cmd.info =
+        canStart && !enoughPlayers
+          ? `You can start next ${next} once at least 2 players are on each team`
+          : `${nextPsychicText} the Psychic next ${next}!`
+      cmd.infoColor = nextPsychic.color ?? 'Gray'
       return view
     }
     default:
@@ -326,7 +336,7 @@ export function toGameView(
   game: Game & Partial<HasObjectID>,
   forceTarget = false
 ): GameView {
-  const { phase, clues, clue_selected, players, team_turn, guesses } = game
+  const { phase, clues, clue_selected, players, guesses } = game
 
   const currentPlayer = players.find((p) => p.id === userID)
   if (!currentPlayer) {
@@ -335,7 +345,7 @@ export function toGameView(
     )
   }
 
-  const averageGuess = calculateAverageGuess(players, team_turn, guesses)
+  const averageGuess = calculateAverageNeedleGuess(guesses)
 
   const commandsView = createCommands(currentPlayer, game, averageGuess)
 

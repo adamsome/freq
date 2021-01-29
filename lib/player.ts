@@ -1,4 +1,5 @@
 import { Player } from '../types/game.types'
+import { Dict } from '../types/object.types'
 import { partition } from '../util/array'
 import { assignColor } from './color-dict'
 import { randomIcon } from './icon'
@@ -63,4 +64,11 @@ export function addPlayer(players: Player[], userID: string): Player[] {
   // Return game w/ new player added
   const player = createPlayer(userID, team, leader, players)
   return [...players, player]
+}
+
+export function getPlayerDict(players: Player[]): Dict<Player> {
+  return players.reduce((acc, p) => {
+    acc[p.id] = p
+    return acc
+  }, {} as Dict<Player>)
 }
