@@ -1,8 +1,12 @@
 {
   "name": "freq",
   "author": "@adamsome",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adamsome/freq"
+  },
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
