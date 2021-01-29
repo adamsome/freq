@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { NextApiResponse } from 'next'
 import { GameCommander } from '../../lib/game-commander'
 import { CommandType } from '../../types/game.types'

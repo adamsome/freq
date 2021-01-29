@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { CommandType, Game, GameView, Player } from '../types/game.types'
 import { RequestWithSession } from '../types/io.types'
 import { User, UserConnected } from '../types/user.types'
