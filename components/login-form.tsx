@@ -12,7 +12,11 @@ const LoginForm = ({ error, onSubmit, room: initRoom }: Props) => {
   const [room, setRoom] = useState(initRoom ?? '')
 
   const handleRoomChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setRoom(e.currentTarget.value.toUpperCase().substr(0, 4))
+    const val = e.currentTarget.value.toLowerCase()
+    const re = /^[-a-zA-Z0-9\b]+$/
+    if (val === '' || re.test(val)) {
+      setRoom(val)
+    }
   }
 
   return (

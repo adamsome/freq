@@ -34,15 +34,6 @@ export function doesGameHaveEnoughPlayers(game: Game) {
   return teams[0].length > 1 && teams[1].length > 1
 }
 
-export function isRoomValid(room?: string): room is string {
-  return (
-    room != null &&
-    typeof room === 'string' &&
-    room.length < 16 &&
-    !!room.match(/^[a-z0-9]+$/i)
-  )
-}
-
 export function getTeamName(team?: 1 | 2): string {
   switch (team) {
     case 1:

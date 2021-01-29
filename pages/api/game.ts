@@ -1,7 +1,7 @@
 import { NextApiResponse } from 'next'
-import { isRoomValid } from '../../lib/game'
 import { fetchGame } from '../../lib/game-store'
 import { toGameView } from '../../lib/game-view'
+import { isRoomValid } from '../../lib/room'
 import { RequestWithSession } from '../../types/io.types'
 import withSession from '../../util/with-session'
 

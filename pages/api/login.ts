@@ -1,5 +1,5 @@
 import { NextApiResponse } from 'next'
-import { isRoomValid } from '../../lib/game'
+import { isRoomValid } from '../../lib/room'
 import { RequestWithSession } from '../../types/io.types'
 import withSession, { createUserSession } from '../../util/with-session'
 
@@ -10,7 +10,8 @@ export default withSession(
       const room = body.room
 
       if (!isRoomValid(room)) {
-        res.status(500).json(new Error('Cannot login with invalid room.'))
+        const message = 'Cannot login with invalid room.'
+        return res.status(500).json({ message })
       }
 
       try {
@@ -18,7 +19,9 @@ export default withSession(
         return res.json(user)
       } catch (error) {
         const { response } = error
-        return res.status(response?.status || 500).json(error.data)
+        return res
+          .status(response?.status || 500)
+          .json(error.data ?? { message: error.message })
       }
     }
     return res.status(404).send('')

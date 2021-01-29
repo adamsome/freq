@@ -1,8 +1,8 @@
 import Container from '../components/container'
 import GameBoard from '../components/game-board'
 import { useGameWithError } from '../hooks/use-game'
-import { isRoomValid } from '../lib/game'
 import { joinGame } from '../lib/game-store'
+import { isRoomValid } from '../lib/room'
 import { GameView } from '../types/game.types'
 import { SessionContext } from '../types/io.types'
 import { UserConnected } from '../types/user.types'
@@ -23,7 +23,7 @@ const RoomPage = ({ cookie, game: initGame }: Props) => {
   if (!game) return <div>Loading...</div>
 
   return (
-    <Container title="Game" cookie={cookie} game={game}>
+    <Container title={`Room ${game.room}`} cookie={cookie} game={game}>
       <main>
         <GameBoard />
       </main>
@@ -53,6 +53,7 @@ export const getServerSideProps = withSession(
 
     if (!room) {
       console.warn(`No 'room' param set in [room] SSR.`)
+      req.session.destroy()
       return { redirect: { destination: '/', permanent: false } }
     }
 
@@ -61,13 +62,18 @@ export const getServerSideProps = withSession(
         user = await createUserSession(req, room)
       } catch (error) {
         console.error('Error logging in:', error)
+        req.session.destroy()
         return { redirect: { destination: '/', permanent: false } }
       }
     }
 
     if (!isRoomValid(room)) {
-      console.warn(`No 'room' param set in [room] SSR.`)
-      return { redirect: { destination: '/', permanent: false } }
+      const msg =
+        `Room code '${room}' is invalid. ` +
+        'Must be two words separated by a dash.'
+      console.warn(msg)
+      req.session.destroy()
+      return { redirect: { destination: `/?error=${msg}`, permanent: false } }
     }
 
     let prevRoom: string | undefined

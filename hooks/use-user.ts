@@ -4,7 +4,10 @@ import useSWR from 'swr'
 import { User, UserConnected } from '../types/user.types'
 
 interface UseUserFoundOptions {
-  redirectTo?: string | false | ((user: UserConnected) => string)
+  redirectTo?:
+    | string
+    | false
+    | ((user: UserConnected) => string | undefined | null)
   redirectIfFound: true
 }
 
@@ -37,7 +40,9 @@ export default function useUser({
         typeof redirectTo === 'string'
           ? redirectTo
           : redirectTo(user as UserConnected)
-      Router.push(url)
+      if (url != null) {
+        Router.push(url)
+      }
     }
   }, [user, redirectIfFound, redirectTo])
 

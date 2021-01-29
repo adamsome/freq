@@ -1,24 +1,35 @@
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import Container from '../components/container'
 import LoginForm from '../components/login-form'
 import Title from '../components/title'
 import useUser from '../hooks/use-user'
+import { generateRoomKey, isRoomValid } from '../lib/room'
+import { head } from '../util/array'
 import fetchJson from '../util/fetch-json'
 
 type Props = typeof defaultProps & {
   cookie: string
+  room: string
 }
 
 const defaultProps = {}
 
-export const HomePage = ({ cookie }: Props) => {
+export const HomePage = ({ cookie, room }: Props) => {
   const [, mutateUser] = useUser({
     redirectIfFound: true,
-    redirectTo: (user) => user.room ?? '/',
+    redirectTo: (user) => {
+      if (isRoomValid(user.room)) {
+        return user.room
+      }
+    },
   })
 
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
+  const { error: queryError } = router.query
+
+  const [error, setError] = useState<string | null>(head(queryError) ?? null)
 
   const handleStart = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -31,7 +42,11 @@ export const HomePage = ({ cookie }: Props) => {
     const room = e.currentTarget?.room?.value?.toLowerCase()
 
     if (!room) {
-      handleError(new Error('No room found on login.'))
+      return handleError(new Error('No room found on login.'))
+    }
+
+    if (!isRoomValid(room)) {
+      return setError('Room code must be two words separated by a dash.')
     }
 
     try {
@@ -57,7 +72,7 @@ export const HomePage = ({ cookie }: Props) => {
           create a new game.
         </p>
 
-        <LoginForm onSubmit={handleStart} error={error}></LoginForm>
+        <LoginForm room={room} onSubmit={handleStart} error={error}></LoginForm>
       </main>
 
       <footer>
@@ -93,6 +108,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   return {
     props: {
       cookie: req.headers.cookie ?? '',
+      room: generateRoomKey(),
     },
   }
 }

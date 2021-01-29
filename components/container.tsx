@@ -57,7 +57,17 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
         {showDebug && <DebugBar game={game} user={user} />}
 
         <div className="wrapper">
-          <h1>{game ? `Freq ${game.room.toUpperCase()}` : ''}</h1>
+          <h1>
+            <div>{game ? `Freq` : ''}</div>
+            {game?.room && (
+              <>
+                <div className="slash">/</div>
+                <div className="room">
+                  <div>{game.room.toLowerCase()}</div>
+                </div>
+              </>
+            )}
+          </h1>
 
           {game?.currentPlayer ? (
             <button
@@ -65,6 +75,7 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
               style={styleColor(game.currentPlayer)}
               onClick={handleModalOpen}
             >
+              {game.currentPlayer.icon}&nbsp;&nbsp;
               {game.currentPlayer.name ?? 'Noname'}
               <div>
                 <IconSvg name="dropdown" />
@@ -142,6 +153,9 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
         }
 
         h1 {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
           font-size: var(--font-size-lg);
           margin: 0;
           white-space: nowrap;
@@ -154,6 +168,17 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
         header > .wrapper > a,
         header > .wrapper > button {
           flex: 0 0 auto;
+        }
+
+        .slash {
+          color: var(--hint);
+          font-weight: 400;
+          margin: 0 7px 0 8px;
+        }
+
+        .room {
+          font-weight: 500;
+          color: var(--subtle);
         }
 
         button:hover {
