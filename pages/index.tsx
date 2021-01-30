@@ -103,7 +103,13 @@ export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
       </main>
 
       <footer>
-        <p>adamsome</p>
+        <a
+          href="https://github.com/adamsome/freq"
+          target="_blank"
+          rel="noreferrer"
+        >
+          adamsome
+        </a>
       </footer>
 
       <style jsx>{`
