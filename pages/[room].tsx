@@ -12,11 +12,12 @@ import withSession, { createUserSession } from '../util/with-session'
 type Props = typeof defaultProps & {
   cookie: string
   game: GameView
+  roomUrl?: string
 }
 
 const defaultProps = {}
 
-const RoomPage = ({ cookie, game: initGame }: Props) => {
+const RoomPage = ({ cookie, game: initGame, roomUrl }: Props) => {
   const [game, error] = useGameWithError(initGame)
 
   if (error) return <div>🤷‍♀️ Sorry... ({error})</div>
@@ -25,7 +26,7 @@ const RoomPage = ({ cookie, game: initGame }: Props) => {
   return (
     <Container title={game.room} cookie={cookie} game={game}>
       <main>
-        <GameBoard />
+        <GameBoard roomUrl={roomUrl} />
       </main>
 
       <style jsx>{`
@@ -86,10 +87,13 @@ export const getServerSideProps = withSession(
 
     const game = await joinGame(room, user.id, prevRoom)
 
+    const roomUrl = `${process.env.BASE_URL}/${room}`
+
     return {
       props: {
         cookie: req.headers.cookie ?? '',
         game,
+        roomUrl,
       },
     }
   }

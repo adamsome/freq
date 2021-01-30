@@ -6,7 +6,13 @@ import HeaderMessage from './header-message'
 import Meter from './meter'
 import Scoreboard from './scoreboard'
 
-const GameBoard = () => {
+type Props = typeof defaultProps & {
+  roomUrl?: string
+}
+
+const defaultProps = {}
+
+const GameBoard = ({ roomUrl }: Props) => {
   const [game] = useGame()
   if (!game) return null
 
@@ -51,6 +57,13 @@ const GameBoard = () => {
       <div className="section top">
         <HeaderMessage />
       </div>
+
+      {phase === 'prep' && roomUrl && (
+        <div className="link section">
+          <div>Other players can use this link to join:</div>
+          <div className="url">{roomUrl}</div>
+        </div>
+      )}
 
       {cluesToShow.map((clue, i) => (
         <div
@@ -117,6 +130,21 @@ const GameBoard = () => {
           transform: scale(1);
         }
 
+        .link {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          color: var(--subtle);
+          font-size: var(--font-size-sm);
+        }
+
+        .link .url {
+          color: var(--primary);
+          text-align: center;
+          line-height: 1.15;
+        }
+
         .section {
           width: 100%;
           margin-bottom: var(--stack-lg);
@@ -134,5 +162,7 @@ const GameBoard = () => {
     </>
   )
 }
+
+GameBoard.defaultProps = defaultProps
 
 export default GameBoard
