@@ -52,8 +52,8 @@ export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
       setFetching(false)
     }
 
-    const room = e.currentTarget?.room?.value?.toLowerCase()
-    const name = e.currentTarget?.username?.value
+    const room: string | undefined = e.currentTarget?.room?.value?.toLowerCase()
+    const name: string | undefined = e.currentTarget?.username?.value
 
     if (!isRoomValid(room)) {
       return setError('Room code must be two words separated by a dash.')
@@ -61,7 +61,7 @@ export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
 
     try {
       const body: any = { room }
-      if (name) body.name = name
+      if (name) body.name = name.substr(0, 15)
 
       const user = await mutateUser(
         fetchJson('/api/login', {

@@ -63,7 +63,7 @@ const Needle = ({ player, size }: Props) => {
           height: 24px;
           background: #000000;
           color: var(--body-inverse);
-          font-size: var(--font-size-md);
+          font-size: var(--font-size-sm);
           box-shadow: 0 0 0 1px #00000055;
           border-radius: 400px;
         }

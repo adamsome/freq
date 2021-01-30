@@ -7,6 +7,7 @@ import { getPlayersPerTeam } from '../lib/player'
 import { GameView, Player } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
+import { roundTo } from '../util/number'
 import PlayerCard from './player-card'
 
 type Props = typeof defaultProps & {
@@ -79,7 +80,7 @@ const Scoreboard = ({ game }: Props) => {
                   )}
                 </div>
 
-                <div className="score">{p.score ?? 0}</div>
+                <div className="score">{roundTo(p.score ?? 0)}</div>
               </div>
             ))}
           </div>
@@ -107,7 +108,7 @@ const Scoreboard = ({ game }: Props) => {
           display: flex;
           justify-content: space-between;
           align-items: baseline;
-          font-weight: 800;
+          font-weight: 900;
           border-bottom: 1px solid var(--border-3);
           padding: 0 0;
           white-space: nowrap;
@@ -130,6 +131,7 @@ const Scoreboard = ({ game }: Props) => {
           flex: 1;
           text-align: center;
           font-size: var(--font-size-lg);
+          font-weight: 900;
         }
 
         .score {
@@ -191,6 +193,7 @@ const Scoreboard = ({ game }: Props) => {
           margin-left: var(--inset-xs);
           margin-right: var(--inset-xs);
           text-align: center;
+          align-self: center;
         }
 
         .icon.right {
@@ -213,6 +216,13 @@ const Scoreboard = ({ game }: Props) => {
         .player .name-wrapper > * {
           text-align: left;
           margin-right: var(--inset-xs);
+          white-space: nowrap;
+        }
+
+        .player .name-wrapper > .name {
+          flex: 0 1 auto;
+          text-overflow: ellipsis;
+          overflow: hidden;
           white-space: nowrap;
         }
 

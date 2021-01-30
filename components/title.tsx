@@ -28,6 +28,7 @@ const Title = ({ title, animate }: Props) => {
           margin: 0;
           line-height: 1.15;
           font-size: var(--font-size-xxl);
+          font-weight: 800;
           text-align: center;
         }
       `}</style>

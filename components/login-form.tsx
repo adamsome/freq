@@ -50,7 +50,7 @@ const LoginForm = ({
             name="username"
             placeholder="Username"
             value={name}
-            onChange={(e) => setName(e.currentTarget.value)}
+            onChange={(e) => setName(e.currentTarget.value.substr(0, 15))}
           />
         </div>
 
@@ -83,6 +83,7 @@ const LoginForm = ({
         input {
           height: 3rem;
           width: 100%;
+          font-weight: 500;
           border-radius: var(--border-radius-lg);
           margin-bottom: var(--stack-md);
         }
@@ -97,6 +98,7 @@ const LoginForm = ({
           flex: 0 1 auto;
           height: 3rem;
           width: 100%;
+          font-weight: 700;
           margin-top: 2px;
           color: var(--primary);
           border: 0;

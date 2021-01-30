@@ -141,6 +141,7 @@ const GameBoard = ({ roomUrl }: Props) => {
           align-items: center;
           color: var(--subtle);
           font-size: var(--font-size-sm);
+          font-weight: 300;
         }
 
         .link a {

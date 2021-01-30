@@ -14,7 +14,7 @@ const defaultProps = {}
 const CommandButton = ({ command: cmd, currentPlayer, onClick }: Props) => {
   const getCmdRightWidth = (cmd: Command) => {
     const w = (cmd.rightWidth ?? 0.5) * 100
-    const min = '6.25em'
+    const min = '6.5em'
     const rawWidth = `calc(${w}% - calc(var(--inset-sm) / 2))`
     return `max(${min}, min(${rawWidth}, calc(100% - ${min})))`
   }
@@ -72,14 +72,14 @@ const CommandButton = ({ command: cmd, currentPlayer, onClick }: Props) => {
           color: var(--subtle);
           line-height: 18px;
           margin-top: var(--stack-xs);
+          font-weight: 300;
         }
 
         .cmd {
           background: var(--translucent);
           border-radius: var(--border-radius-md);
           width: 100%;
-          padding-top: var(--stack-sm);
-          padding-bottom: var(--stack-sm);
+          padding: var(--stack-sm) 8px;
           border: 1px solid transparent;
           font-size: var(--font-size-lg);
         }

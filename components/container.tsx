@@ -166,6 +166,7 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
           justify-content: flex-start;
           align-items: center;
           font-size: var(--font-size-lg);
+          font-weight: 800;
           margin: 0;
           white-space: nowrap;
         }
@@ -186,13 +187,13 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
 
         .slash {
           color: var(--hint);
-          font-weight: 400;
+          font-weight: 300;
           margin: 0 7px 0 8px;
         }
 
-        .room {
+        header > .wrapper > h1 > .room {
           flex: 1;
-          font-weight: 500;
+          font-weight: 300;
           color: var(--subtle);
           overflow: hidden;
           text-overflow: ellipsis;
@@ -206,8 +207,7 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
         button.icon {
           display: flex;
           align-items: center;
-          padding-right: var(--inset-sm);
-          padding: 0 var(--inset-sm) 0 var(--inset-xs);
+          padding: 0 0 0 var(--inset-xs);
           font-size: var(--font-size-lg);
         }
 
