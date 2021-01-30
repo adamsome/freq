@@ -1,6 +1,6 @@
 import React from 'react'
 import { ColorMode } from '../types/color-mode.types'
-import { Player } from '../types/game.types'
+import { CommandType, Player } from '../types/game.types'
 import { isBrowser } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
@@ -26,15 +26,12 @@ const PlayerOptions = (props: Props) => {
     isBrowser && localStorageManager().get('freq/debug-mode')
   const allowDebugMode = debugModeVal === true || debugModeVal === 'true'
 
-  const handleLeaderSet = async (e: React.MouseEvent) => {
+  const handleCommand = (cmd: CommandType) => async (e: React.MouseEvent) => {
     e.preventDefault()
     try {
-      await postCommand('toggle_player_leader', player)
+      await postCommand(cmd, player)
     } catch (err) {
-      console.error(
-        `Error posting command 'toggle_player_leader'.`,
-        err.data ?? err
-      )
+      console.error(`Error posting command '${cmd}'.`, err.data ?? err)
     }
     if (onClose) onClose()
   }
@@ -54,8 +51,20 @@ const PlayerOptions = (props: Props) => {
         </button>
 
         {player.leader && (
-          <button style={styleColor(player)} onClick={handleLeaderSet}>
+          <button
+            style={styleColor(player)}
+            onClick={handleCommand('toggle_player_leader')}
+          >
             Remove as leader
+          </button>
+        )}
+
+        {player.leader && (
+          <button
+            style={styleColor(player)}
+            onClick={handleCommand('prep_new_match')}
+          >
+            Prepare new match
           </button>
         )}
 

@@ -66,6 +66,7 @@ export type CommandType =
   | 'set_current_psychic'
   | 'kick_player'
   // Phases
+  | 'prep_new_match'
   | 'begin_round'
   | 'select_clue'
   | 'confirm_clue'

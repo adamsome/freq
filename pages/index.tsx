@@ -116,6 +116,11 @@ export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
           align-items: center;
         }
 
+        p {
+          margin-bottom: 1.7rem;
+          text-align: center;
+        }
+
         footer {
           width: 100%;
           height: 100px;

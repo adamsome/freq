@@ -93,6 +93,15 @@ export class GameCommander
 
   // Phase Commands
 
+  async prep_new_match() {
+    if (!this.player?.leader)
+      throw new Error('Only leaders can start new match')
+
+    await this.update('score_team_1', 0)
+    await this.update('score_team_2', 0)
+    await this.update('phase', 'prep')
+  }
+
   async begin_round() {
     if (!isFreePhase(this.game.phase))
       throw new Error('Can only begin a round from the free phases.')
