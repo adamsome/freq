@@ -56,6 +56,7 @@ export interface Game {
   game_started_at: string
   game_finished_at?: string
   round_started_at?: string
+  kicked?: Dict<boolean>
 }
 
 export type CommandType =
@@ -63,6 +64,7 @@ export type CommandType =
   | 'toggle_player_leader'
   | 'set_next_psychic'
   | 'set_current_psychic'
+  | 'kick_player'
   // Phases
   | 'begin_round'
   | 'select_clue'
@@ -95,7 +97,7 @@ export interface CommandsView {
 }
 
 export interface GameView extends Game, CommandsView {
-  currentPlayer: Player
+  currentPlayer?: Player
   cluesToShow: Clue[]
   playerGuesses: PlayerWithGuess[]
   averageGuess?: number

@@ -13,12 +13,12 @@ const DebugText = ({ game, user }: Props) => {
   return (
     <>
       {' '}
-      {game && (
+      {game?.currentPlayer && (
         <pre>
           {game.game_started_at.replace('T', ' ').slice(0, -5) + ' '}
           {game.currentPlayer.id.substr(0, 8)}
           {` (${
-            game.players.findIndex((p) => p?.id === game.currentPlayer.id) + 1
+            game.players.findIndex((p) => p?.id === game.currentPlayer?.id) + 1
           }`}
           {`/${game.players.length})`}
         </pre>

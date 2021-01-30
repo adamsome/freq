@@ -9,7 +9,12 @@ import {
   getPsychic,
   isInvalidPlayerTeamChange,
 } from './game'
-import { deleteGameProp, fetchGame, updateGamePath } from './game-store'
+import {
+  deleteGameProp,
+  fetchGame,
+  leaveGame,
+  updateGamePath,
+} from './game-store'
 import { toGameView } from './game-view'
 import { areAllDirectionGuessesSet, areAllNeedleGuessesLocked } from './guess'
 import { isFreePhase, isGuessingPhase } from './phase'
@@ -17,7 +22,7 @@ import { getRoundScores } from './score'
 
 export class GameCommander
   implements Record<CommandType, (val?: any) => Promise<void>> {
-  get player(): Player {
+  get player(): Player | undefined {
     return this.game.currentPlayer
   }
 
@@ -79,6 +84,13 @@ export class GameCommander
     await this.update('psychic', player.id)
   }
 
+  async kick_player(player: Player) {
+    if (!this.player?.leader) throw new Error('Only leaders can kick players.')
+
+    leaveGame(this.game.room, player.id)
+    await this.updatePath(`kicked.${player.id}`, true)
+  }
+
   // Phase Commands
 
   async begin_round() {
@@ -91,7 +103,7 @@ export class GameCommander
     const players = this.game.players
 
     // Need to pick a the next psychic and set turn to their team
-    const psychic = getNextPsychic(this.game) ?? this.player
+    const psychic = getNextPsychic(this.game) ?? this.game.players[0]
     await this.update('psychic', psychic.id)
     await this.update('team_turn', psychic.team ?? 1)
 
@@ -136,7 +148,7 @@ export class GameCommander
   }
 
   async confirm_clue() {
-    if (this.player.id !== this.game.psychic)
+    if (this.player?.id !== this.game.psychic)
       throw new Error('Only psychic can confirm clue.')
 
     if (this.game.phase !== 'choose')
@@ -149,20 +161,24 @@ export class GameCommander
   }
 
   async set_guess(guess: number) {
-    const isPlayerTurn = this.player.team === this.game.team_turn
+    if (!this.player) throw new Error('Player is not a member of the game.')
+
+    const isPlayerTurn = this.player?.team === this.game.team_turn
     if (this.game.psychic === this.user.id || !isPlayerTurn)
       throw new Error('Only non-psychic players on turn team can set guess.')
 
     if (this.game.phase !== 'guess')
       throw new Error('Can only lock guess in the guess phase.')
 
-    if (this.game.guesses?.[this.player.id]?.locked)
+    if (this.player && this.game.guesses?.[this.player.id]?.locked)
       throw new Error('Cannot set guess once its locked.')
 
     await this.updatePath(`guesses.${this.player.id}.value`, guess)
   }
 
   async lock_guess() {
+    if (!this.player) throw new Error('Player is not a member of the game.')
+
     const isPlayerTurn = this.player.team === this.game.team_turn
     if (this.game.psychic === this.user.id || !isPlayerTurn)
       throw new Error('Only non-psychic players on turn team can lock guess.')
@@ -181,6 +197,8 @@ export class GameCommander
   }
 
   async set_direction(directionGuess: 1 | -1) {
+    if (!this.player) throw new Error('Player is not a member of the game.')
+
     if (this.player.team === this.game.team_turn)
       throw new Error('Only players not on turn team can set direction.')
 

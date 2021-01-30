@@ -11,6 +11,7 @@ const CommandPanel = () => {
   const [error, setError] = useState<string | null>(null)
 
   const { currentPlayer, commands } = game
+  if (!currentPlayer) return null
 
   const handleCommandClick = (cmd: Command, i = 0) => async (
     e: React.MouseEvent

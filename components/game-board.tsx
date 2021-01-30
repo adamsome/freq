@@ -21,6 +21,8 @@ const GameBoard = () => {
     psychic,
     averageGuess,
   } = game
+  if (!currentPlayer) return null
+
   const isChoosing = game.phase === 'choose'
   const isGuessing = game.phase === 'guess'
   const showSlider = playerGuesses.length > 0 || phase === 'guess'

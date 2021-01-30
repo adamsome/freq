@@ -33,8 +33,8 @@ import { getPlayerDict } from './player'
 import { getRoundScores } from './score'
 
 function createPlayerNeedleGuesses(
-  currentPlayer: Player,
-  game: Game
+  game: Game,
+  currentPlayer?: Player
 ): PlayerWithGuess[] {
   if (game.phase === 'choose' || game.phase === 'prep') {
     return []
@@ -51,6 +51,7 @@ function createPlayerNeedleGuesses(
 
   // If current player has no guess yet, create one for them
   if (
+    currentPlayer &&
     game.phase === 'guess' &&
     currentPlayer.id !== game.psychic &&
     currentPlayer.team === game.team_turn &&
@@ -90,13 +91,10 @@ function canChangePsychicTo(phase: Phase): GameView['canChangePsychicTo'] {
   }
 }
 
-function showTarget(currentPlayer: Player, game: Game): boolean {
-  if (game.psychic === currentPlayer.id) {
-    return true
-  }
-  if (isFreePhase(game.phase)) {
-    return true
-  }
+function showTarget(game: Game, currentPlayer?: Player): boolean {
+  if (!currentPlayer) return false
+  if (game.psychic === currentPlayer.id) return true
+  if (isFreePhase(game.phase)) return true
   return false
 }
 
@@ -164,13 +162,15 @@ const welcomeMessages = [
 ]
 
 function createCommands(
-  player: Player,
   game: Game,
+  player?: Player,
   averageGuess?: number
 ): CommandsView {
-  const header: Header = { text: '', color: player.color }
+  const header: Header = { text: '', color: player?.color }
   const cmd: Command = { text: '' }
   const view: CommandsView = { headers: [header], commands: [cmd] }
+
+  if (!player) return view
 
   const playerIndex = game.players.findIndex((p) => p.id === player.id) ?? 0
   const turnTeamName = getTeamName(game.team_turn)
@@ -340,22 +340,17 @@ export function toGameView(
   const { phase, clues, clue_selected, players, guesses } = game
 
   const currentPlayer = players.find((p) => p.id === userID)
-  if (!currentPlayer) {
-    throw new Error(
-      `Unexpected error: Game has no player with user ID '${userID}'`
-    )
-  }
 
   const averageGuess = calculateAverageNeedleGuess(guesses)
 
-  const commandsView = createCommands(currentPlayer, game, averageGuess)
+  const commandsView = createCommands(game, currentPlayer, averageGuess)
 
   const view: GameView & Partial<HasObjectID> = {
     ...game,
     ...commandsView,
     currentPlayer,
     cluesToShow: createCluesToShow(phase, clues, clue_selected),
-    playerGuesses: createPlayerNeedleGuesses(currentPlayer, game),
+    playerGuesses: createPlayerNeedleGuesses(game, currentPlayer),
     canChangePsychicTo: canChangePsychicTo(game.phase),
   }
 
@@ -363,7 +358,7 @@ export function toGameView(
     view.averageGuess = averageGuess
   }
 
-  if (!forceTarget && !showTarget(currentPlayer, game)) {
+  if (!forceTarget && !showTarget(game, currentPlayer)) {
     delete view.target
   }
 

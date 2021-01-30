@@ -91,6 +91,13 @@ const PlayerCard = ({ player, game, onClose }: Props) => {
           </button>
         )}
 
+        <button
+          style={styleColor(player)}
+          onClick={handlePlayerCommand('kick_player')}
+        >
+          Kick player
+        </button>
+
         <button className="close" onClick={onClose}>
           Close
         </button>

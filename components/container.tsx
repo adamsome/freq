@@ -41,6 +41,10 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
     router.push('/')
   }
 
+  if (user?.connected && game?.kicked?.[user.id] === true) {
+    handleLogout()
+  }
+
   return (
     <div className={cx('container', showDebug && 'show-debug')}>
       <Head>

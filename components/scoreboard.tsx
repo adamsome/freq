@@ -20,6 +20,7 @@ const Scoreboard = ({ game }: Props) => {
   const [modelOpen, setModelOpen] = useState<Player | null>(null)
 
   const { currentPlayer, score_team_1, score_team_2 } = game
+  if (!currentPlayer) return null
 
   const leader = currentPlayer.leader == true
   const teams = getPlayersPerTeam(game.players)
@@ -70,9 +71,9 @@ const Scoreboard = ({ game }: Props) => {
                     })}
                   >{`${p.name ?? 'Unnamed'}`}</div>
                   {p.leader && <div>🎩</div>}
-                  {game.psychic === p.id && nextPsychic?.id !== p.id && (
-                    <div>🧠</div>
-                  )}
+                  {game.phase !== 'prep' &&
+                    game.psychic === p.id &&
+                    nextPsychic?.id !== p.id && <div>🧠</div>}
                   {nextPsychic?.id === p.id && showNextPsychic && (
                     <div className="xs">🧠</div>
                   )}
