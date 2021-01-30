@@ -4,6 +4,7 @@ import { styleLinearGradient } from '../util/dom-style'
 
 type Props = typeof defaultProps & {
   room?: string
+  name?: string
   error?: string | null
   fetching?: boolean
   animate?: boolean
@@ -16,10 +17,12 @@ const LoginForm = ({
   error,
   onSubmit,
   room: initRoom,
+  name: initName,
   fetching,
   animate,
 }: Props) => {
   const [room, setRoom] = useState(initRoom ?? '')
+  const [name, setName] = useState(initName ?? '')
 
   const handleRoomChange = (e: React.FormEvent<HTMLInputElement>) => {
     const val = e.currentTarget.value.toLowerCase()
@@ -32,14 +35,24 @@ const LoginForm = ({
   return (
     <form onSubmit={onSubmit}>
       <div className="wrapper">
-        <input
-          type="text"
-          name="room"
-          placeholder="Room Code"
-          value={room}
-          onChange={handleRoomChange}
-          required
-        />
+        <div className="field">
+          <input
+            type="text"
+            name="room"
+            placeholder="Room Code"
+            value={room}
+            onChange={handleRoomChange}
+            required
+          />
+
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={name}
+            onChange={(e) => setName(e.currentTarget.value)}
+          />
+        </div>
 
         <button
           className={cx({ fetching, animate, 'animate-shift': animate })}
@@ -48,10 +61,10 @@ const LoginForm = ({
           disabled={fetching}
         >
           <span>Start</span>
+
+          {error && <p className="error">{error}</p>}
         </button>
       </div>
-
-      {error && <p className="error">{error}</p>}
 
       <style jsx>{`
         .wrapper {
@@ -61,11 +74,17 @@ const LoginForm = ({
           align-items: center;
         }
 
-        input {
-          height: 3rem;
+        .field {
           flex: 1;
           width: 100%;
           max-width: 18rem;
+        }
+
+        input {
+          height: 3rem;
+          width: 100%;
+          border-radius: var(--border-radius-lg);
+          margin-bottom: var(--stack-md);
         }
 
         input,
@@ -78,7 +97,7 @@ const LoginForm = ({
           flex: 0 1 auto;
           height: 3rem;
           width: 100%;
-          margin-top: var(--stack-md);
+          margin-top: 2px;
           color: var(--primary);
           border: 0;
           outline: 0;

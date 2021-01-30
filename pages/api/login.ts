@@ -8,6 +8,7 @@ export default withSession(
     if (req.method === 'POST') {
       const body = await req.body
       const room = body.room
+      const name = body.name
 
       if (!isRoomValid(room)) {
         const message = 'Cannot login with invalid room.'
@@ -15,7 +16,7 @@ export default withSession(
       }
 
       try {
-        const user = await createUserSession(req, room)
+        const user = await createUserSession(req, room, name)
         return res.json(user)
       } catch (error) {
         const { response } = error

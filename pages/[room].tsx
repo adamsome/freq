@@ -66,22 +66,7 @@ export const getServerSideProps = withSession(
     let user: UserConnected | undefined = req.session.get('user')
 
     const room = head(params?.room as string | undefined)?.toLowerCase()
-
-    if (!room) {
-      console.warn(`No 'room' param set in [room] SSR.`)
-      req.session.destroy()
-      return { redirect: { destination: '/', permanent: false } }
-    }
-
-    if (!user) {
-      try {
-        user = await createUserSession(req, room)
-      } catch (error) {
-        console.error('Error logging in:', error)
-        req.session.destroy()
-        return { redirect: { destination: '/', permanent: false } }
-      }
-    }
+    const name = head(params?.name as string | undefined)
 
     if (!isRoomValid(room)) {
       const msg =
@@ -92,6 +77,16 @@ export const getServerSideProps = withSession(
       return { redirect: { destination: `/?error=${msg}`, permanent: false } }
     }
 
+    if (!user) {
+      try {
+        user = await createUserSession(req, room, name)
+      } catch (error) {
+        console.error('Error logging in:', error)
+        req.session.destroy()
+        return { redirect: { destination: '/', permanent: false } }
+      }
+    }
+
     let prevRoom: string | undefined
     if (room !== user.room.toLowerCase()) {
       prevRoom = user.room
@@ -100,7 +95,7 @@ export const getServerSideProps = withSession(
       await req.session.save()
     }
 
-    const game = await joinGame(room, user.id, prevRoom)
+    const game = await joinGame(room, user, prevRoom)
 
     const roomUrl = `${process.env.BASE_URL}/${room}`
 

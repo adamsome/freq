@@ -1,20 +1,21 @@
 import { Game, GameView, Player } from '../types/game.types'
+import { UserConnected } from '../types/user.types'
 import { isFreePhase, isGuessingPhase } from './phase'
 import { createPlayer, getPlayersPerTeam, getTeamPlayers } from './player'
 
 const DEFAULT_TARGET_WIDTH = 22.5
 
-export function createNewGame(room: string, userID: string): Game {
+export function createNewGame(room: string, user: UserConnected): Game {
   // Assign player to random team
   const team = Math.random() < 0.5 ? 1 : 2
   // Since new game, player gets made leader
-  const player = createPlayer(userID, team, true)
+  const player = createPlayer(user, team, true)
   const game: Game = {
     room: room.toLowerCase(),
     target_width: DEFAULT_TARGET_WIDTH,
     players: [player],
-    psychic: userID,
-    next_psychic: userID,
+    psychic: user.id,
+    next_psychic: user.id,
     clues: [],
     guesses: {},
     directions: {},

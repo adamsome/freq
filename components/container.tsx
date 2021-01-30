@@ -37,8 +37,10 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
   const handleDebugToggle = () => setShowDebug(!showDebug)
   const handleToggleColorMode = (_e?: React.MouseEvent) => toggleColorMode()
   const handleLogout = async () => {
+    const name = user?.name
+    const url = `/${name ? `?name=${name}` : ''}`
     await mutateUser(fetchJson('/api/logout'))
-    router.push('/')
+    router.push(url)
   }
 
   if (user?.connected && game?.kicked?.[user.id] === true) {

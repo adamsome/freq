@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Container from '../components/container'
 import LoginForm from '../components/login-form'
 import Title from '../components/title'
+import { useDebounce } from '../hooks/use-debounce'
 import useUser from '../hooks/use-user'
 import { generateRoomKey, isRoomValid } from '../lib/room'
 import { head } from '../util/array'
@@ -22,26 +23,23 @@ export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
   const [user, mutateUser] = useUser()
 
   const router = useRouter()
-  const { error: queryError } = router.query
+  const { error: queryError, name: queryName } = router.query
 
   const [error, setError] = useState<string | null>(head(queryError) ?? null)
   const [fetching, setFetching] = useState(false)
-  const [delayedFetching, setDelayedFetching] = useState<boolean | null>(null)
+  const [debouncedFetching, setDebouncedFetching] = useDebounce<boolean | null>(
+    null,
+    4000
+  )
 
   useEffect(() => {
-    let timer: number
-    if (delayedFetching != null) {
-      timer = window.setTimeout(() => {
-        setFetching(delayedFetching)
-        setDelayedFetching(null)
-      }, 3000)
+    if (debouncedFetching != null) {
+      setFetching(debouncedFetching)
     }
-    return () => {
-      if (timer != null) clearTimeout(timer)
-    }
-  }, [delayedFetching])
+  }, [debouncedFetching])
 
   const room = user?.connected ? user.room : randomRoom
+  const name = head(queryName) ?? user?.name ?? ''
 
   const handleStart = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -55,21 +53,21 @@ export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
     }
 
     const room = e.currentTarget?.room?.value?.toLowerCase()
-
-    if (!room) {
-      return handleError(new Error('No room found on login.'))
-    }
+    const name = e.currentTarget?.username?.value
 
     if (!isRoomValid(room)) {
       return setError('Room code must be two words separated by a dash.')
     }
 
     try {
+      const body: any = { room }
+      if (name) body.name = name
+
       const user = await mutateUser(
         fetchJson('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ room }),
+          body: JSON.stringify(body),
         })
       )
       if (user?.connected) {
@@ -77,7 +75,7 @@ export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
       } else {
         handleError(new Error('User could not login.'))
       }
-      setDelayedFetching(false)
+      setDebouncedFetching(false)
     } catch (error) {
       handleError(error)
     }
@@ -95,6 +93,7 @@ export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
 
         <LoginForm
           room={room}
+          name={name}
           error={error}
           fetching={fetching}
           animate={animate}

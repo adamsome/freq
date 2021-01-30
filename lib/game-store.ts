@@ -1,6 +1,7 @@
 import { Db } from 'mongodb'
 import { Game, GameView } from '../types/game.types'
 import { HasObjectID } from '../types/io.types'
+import { UserConnected } from '../types/user.types'
 import { head } from '../util/array'
 import { connectToDatabase } from '../util/mongodb'
 import { createNewGame, getNextPsychic } from './game'
@@ -19,7 +20,7 @@ export async function fetchGame(room?: string): Promise<Game | null> {
 
 export async function joinGame(
   room: string,
-  userID: string,
+  user: UserConnected,
   // TODO: Implement leave old room
   _prevRoom?: string
 ): Promise<GameView> {
@@ -30,20 +31,20 @@ export async function joinGame(
   let game = await fetchGame(room)
   if (!game) {
     // Create new game
-    game = createNewGame(room, userID)
+    game = createNewGame(room, user)
 
     await collection.insertOne(game)
   } else {
     // Add player to game if not already
-    if (!hasPlayer(game.players, userID)) {
-      game.players = addPlayer(game.players, userID)
+    if (!hasPlayer(game.players, user.id)) {
+      game.players = addPlayer(game.players, user)
 
       const filter = { room: game.room.toLowerCase() }
       const update = { players: game.players }
       await collection.updateOne(filter, { $set: update })
     }
   }
-  return toGameView(userID, game)
+  return toGameView(user.id, game)
 }
 
 export async function leaveGame(room: string, userID: string) {

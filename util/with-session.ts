@@ -24,10 +24,12 @@ export default function withSession(handler: Handler) {
 
 export async function createUserSession(
   req: RequestWithSession,
-  room: string
+  room: string,
+  name?: string
 ): Promise<UserConnected> {
   const id = uuidv4()
   const user: User = { connected: true, room, id }
+  if (name) user.name = name
   req.session.set('user', user)
   await req.session.save()
   return user
