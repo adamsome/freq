@@ -12,11 +12,11 @@ const defaultProps = {
 }
 
 const Needle = ({ player, size }: Props) => {
-  const { color = 'yellow', icon = '😃', guess } = player
+  const { color = 'yellow', icon = '😃', locked } = player
   const hex = colorDict[color]?.hex
 
   return (
-    <div className={cx('wrapper', size, guess.locked && 'locked')}>
+    <div className={cx('wrapper', size, locked && 'locked')}>
       <div className="needle" style={{ background: hex }}></div>
       <div className="base" style={{ background: hex }}>
         <span>{icon}</span>

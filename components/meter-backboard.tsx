@@ -27,7 +27,7 @@ const MeterBackboard = ({
   const [lightLeft, lightRight] = gradientLightTextDict[clue.gradient] ?? []
   return (
     <div
-      className={cx('meter-bg', hasSlider && 'has-slider')}
+      className={cx('wrapper', hasSlider && 'has-slider')}
       style={styleLinearGradient(clue.gradient)}
     >
       {target != null && (
@@ -47,7 +47,7 @@ const MeterBackboard = ({
       )}
 
       <style jsx>{`
-        .meter-bg {
+        .wrapper {
           position: absolute;
           top: 0;
           bottom: 0;
@@ -67,6 +67,10 @@ const MeterBackboard = ({
           overflow: hidden;
         }
 
+        .wrapper.has-slider {
+          bottom: var(--stack-xl);
+        }
+
         .clue {
           max-width: 50%;
           line-height: 24px;
@@ -74,10 +78,6 @@ const MeterBackboard = ({
 
         .clue.right {
           text-align: right;
-        }
-
-        .meter-bg.has-slider {
-          bottom: var(--stack-xl);
         }
 
         .target {

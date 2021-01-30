@@ -32,6 +32,11 @@ export const useDrag1D = <T extends HTMLElement>(
   const [rawLength] = useSize(target)
   const length = rawLength - opts.lengthOffset
 
+  const initPosition =
+    typeof opts.initialPosition === 'number'
+      ? opts.initialPosition
+      : opts.initialPosition(length)
+
   // Position during a drag base on how far the cursor has moved
   const [dragPosition, setDragPosition] = useState(0)
   // Time the drag started; null if not currently dragging
@@ -43,11 +48,6 @@ export const useDrag1D = <T extends HTMLElement>(
 
   /** Clamp position to the bounds of the target */
   const clamp = (p: number) => Math.max(0, Math.min(p, length))
-
-  const initPosition =
-    typeof opts.initialPosition === 'number'
-      ? opts.initialPosition
-      : opts.initialPosition(length)
 
   // When initial position changes, reset the offset so the the position
   // is set exactly to that set, not with the added offset

@@ -6,6 +6,7 @@ import { partition } from '../util/array'
 import { cx } from '../util/dom'
 import IconSvg from './icon-svg'
 import MeterBackboard from './meter-backboard'
+import MeterDirections from './meter-directions'
 import Needle from './needle'
 
 type Props = typeof defaultProps & {
@@ -18,6 +19,7 @@ type Props = typeof defaultProps & {
   isGuessing: boolean
   currentPlayer: Player
   players: PlayerWithGuess[]
+  directions: PlayerWithGuess[]
   onGuessChange: (guess: number) => void
 }
 
@@ -37,6 +39,7 @@ const Meter = ({
   isGuessing,
   currentPlayer,
   players,
+  directions,
   onGuessChange,
 }: Props) => {
   const meterWrapperRef = useRef<HTMLDivElement>(null)
@@ -56,12 +59,10 @@ const Meter = ({
   )
   const [currentPlayerGuesses, otherPlayerGueses] = partitionedPlayers
 
-  const initialGuess = currentPlayerGuesses[0]?.guess?.value
+  const initialGuess = currentPlayerGuesses[0]?.value ?? 0.5
   const hasGuesses = players.length > 0
   const disable =
-    !hasGuesses ||
-    currentPlayerGuesses[0]?.guess?.locked === true ||
-    !isGuessing
+    !hasGuesses || currentPlayerGuesses[0]?.locked === true || !isGuessing
 
   // Track the width and drag position of the meter
   const { position, length } = useDrag1D(meterWrapperRef, 'x', {
@@ -102,6 +103,11 @@ const Meter = ({
           hasSlider={hasGuesses || isGuessing}
         ></MeterBackboard>
 
+        <MeterDirections
+          directions={directions}
+          hasSlider={hasGuesses || isGuessing}
+        />
+
         {averageGuess != null && (
           <div
             className="average"
@@ -115,15 +121,15 @@ const Meter = ({
         )}
 
         {/* Teammate Needles */}
-        {otherPlayerGueses.map((p, i) => (
+        {otherPlayerGueses.map((player, i) => (
           <div
             key={i}
             className="needle-wrapper needle-teammate"
             style={{
-              transform: buildGuessTranslate(p.guess.value),
+              transform: buildGuessTranslate(player.value),
             }}
           >
-            <Needle player={p} />
+            <Needle player={player} />
           </div>
         ))}
 

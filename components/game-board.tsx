@@ -23,6 +23,7 @@ const GameBoard = ({ roomUrl }: Props) => {
     target,
     target_width,
     playerGuesses,
+    playerDirections,
     currentPlayer,
     psychic,
     averageGuess,
@@ -90,6 +91,7 @@ const GameBoard = ({ roomUrl }: Props) => {
             isGuessing={isGuessing}
             currentPlayer={currentPlayer}
             players={playerGuesses}
+            directions={playerDirections}
             onGuessChange={handleGuessChange}
           ></Meter>
         </div>

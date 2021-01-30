@@ -11,9 +11,7 @@ export interface Player {
   psychic_count: number
 }
 
-export interface PlayerWithGuess extends Player {
-  guess: Guess
-}
+export type PlayerWithGuess = Player & Guess
 export interface Clue {
   left: string
   right: string
@@ -101,6 +99,7 @@ export interface GameView extends Game, CommandsView {
   currentPlayer?: Player
   cluesToShow: Clue[]
   playerGuesses: PlayerWithGuess[]
+  playerDirections: PlayerWithGuess[]
   averageGuess?: number
   canChangePsychicTo: 'any' | 'same_team' | 'none'
 }

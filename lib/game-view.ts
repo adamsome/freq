@@ -46,7 +46,7 @@ function createPlayerNeedleGuesses(
   const guessEntries = Object.entries(game.guesses ?? {})
   const guesses = guessEntries.map(([playerID, guess]) => {
     const player = playerDict[playerID]
-    const playerWithGuess: PlayerWithGuess = { ...player, guess }
+    const playerWithGuess: PlayerWithGuess = { ...player, ...guess }
     return playerWithGuess
   })
 
@@ -58,10 +58,25 @@ function createPlayerNeedleGuesses(
     currentPlayer.team === game.team_turn &&
     !guesses.find((p) => p.id === currentPlayer.id)
   ) {
-    guesses.push({ ...currentPlayer, guess: { value: 0.5 } })
+    guesses.push({ ...currentPlayer, value: 0.5 })
   }
 
   return guesses
+}
+
+function createPlayerDirectionGuesses(game: Game): PlayerWithGuess[] {
+  if (game.phase === 'choose' || game.phase === 'prep') {
+    return []
+  }
+
+  const playerDict = getPlayerDict(game.players)
+
+  const guessEntries = Object.entries(game.directions ?? {})
+  return guessEntries.map(([playerID, guess]) => {
+    const player = playerDict[playerID]
+    const playerWithGuess: PlayerWithGuess = { ...player, ...guess }
+    return playerWithGuess
+  })
 }
 
 function createCluesToShow(
@@ -334,9 +349,7 @@ export function toGameView(
   const { phase, clues, clue_selected, players, guesses } = game
 
   const currentPlayer = players.find((p) => p.id === userID)
-
   const averageGuess = calculateAverageNeedleGuess(guesses)
-
   const commandsView = createCommands(game, currentPlayer, averageGuess)
 
   const view: GameView & Partial<HasObjectID> = {
@@ -345,6 +358,7 @@ export function toGameView(
     currentPlayer,
     cluesToShow: createCluesToShow(phase, clues, clue_selected),
     playerGuesses: createPlayerNeedleGuesses(game, currentPlayer),
+    playerDirections: createPlayerDirectionGuesses(game),
     canChangePsychicTo: canChangePsychicTo(game.phase),
   }
 
