@@ -12,7 +12,7 @@ export default withSession(
         const user = req.session.get('user')
 
         if (!user || !user.connected) {
-          const message = 'Cannot fetch game with no user session.'
+          const message = 'Cannot fetch game state with no user session.'
           return res.status(500).json({ message })
         }
 

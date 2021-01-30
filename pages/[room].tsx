@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import Container from '../components/container'
 import GameBoard from '../components/game-board'
 import { useGameWithError } from '../hooks/use-game'
@@ -19,14 +20,22 @@ const defaultProps = {}
 
 const RoomPage = ({ cookie, game: initGame, roomUrl }: Props) => {
   const [game, error] = useGameWithError(initGame)
+  const router = useRouter()
 
-  if (error) return <div>🤷‍♀️ Sorry... ({error})</div>
-  if (!game) return <div>Loading...</div>
+  const msg = error
+    ? error?.data?.message ?? error?.message ?? String(error)
+    : ''
+  if (error) {
+    console.error('Game state error', msg, { error })
+    router.push(`/?error=${msg}`)
+  }
 
   return (
-    <Container title={game.room} cookie={cookie} game={game}>
+    <Container title={game?.room} cookie={cookie} game={game}>
       <main>
-        <GameBoard roomUrl={roomUrl} />
+        {error && <label className="error">🤷‍♀️ Sorry... ({msg})</label>}
+        {!game && <label>Loading...</label>}
+        {game && <GameBoard roomUrl={roomUrl} />}
       </main>
 
       <style jsx>{`
@@ -38,6 +47,12 @@ const RoomPage = ({ cookie, game: initGame, roomUrl }: Props) => {
           display: flex;
           flex-direction: column;
           align-items: center;
+        }
+
+        label {
+          display: block;
+          text-align: center;
+          color: var(--subtle);
         }
       `}</style>
     </Container>
