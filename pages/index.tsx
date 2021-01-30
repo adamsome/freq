@@ -34,7 +34,7 @@ export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
       timer = window.setTimeout(() => {
         setFetching(delayedFetching)
         setDelayedFetching(null)
-      }, 1000)
+      }, 3000)
     }
     return () => {
       if (timer != null) clearTimeout(timer)

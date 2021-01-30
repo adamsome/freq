@@ -61,7 +61,9 @@ const GameBoard = ({ roomUrl }: Props) => {
       {phase === 'prep' && roomUrl && (
         <div className="link section">
           <div>Other players can use this link to join:</div>
-          <div className="url">{roomUrl}</div>
+          <a className="url" href={roomUrl} target="_blank" rel="noreferrer">
+            {roomUrl}
+          </a>
         </div>
       )}
 
@@ -139,8 +141,7 @@ const GameBoard = ({ roomUrl }: Props) => {
           font-size: var(--font-size-sm);
         }
 
-        .link .url {
-          color: var(--primary);
+        .link a {
           text-align: center;
           line-height: 1.15;
         }
