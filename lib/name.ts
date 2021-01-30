@@ -1,4 +1,4 @@
-import { randomItem } from '../util/array'
+import { randomItem } from '../util/random'
 
 /** If this retry attempt is 1 or more add a suffix, e.g. 'Name (3)` */
 function buildName(name: string, retry: number): string {

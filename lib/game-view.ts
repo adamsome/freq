@@ -12,6 +12,7 @@ import {
 } from '../types/game.types'
 import { HasObjectID } from '../types/io.types'
 import { range } from '../util/array'
+import { randomHourlyItem } from '../util/random'
 import { getTeamColor } from './color-dict'
 import {
   doesGameHaveEnoughPlayers,
@@ -98,13 +99,6 @@ function showTarget(game: Game, currentPlayer?: Player): boolean {
   return false
 }
 
-function getHourlyItem<T>(items: T[], index: number, changePerHour = 1): T {
-  const now = new Date()
-  const tick = now.getMinutes() + now.getHours() * 60 + now.getDate() * 24 * 60
-  const cycle = Math.floor(tick / (60 / changePerHour))
-  return items[(index + cycle) % items.length]
-}
-
 const SCORE_ICONS = [
   ['🤬', '🥵', '🥶', '😱', '😠', '😖', '😫'],
   ['🧐', '🤨', '😙'],
@@ -114,7 +108,7 @@ const SCORE_ICONS = [
 ]
 
 const getEmoji = (score: number, i: number) =>
-  getHourlyItem(SCORE_ICONS[score], i)
+  randomHourlyItem(SCORE_ICONS[score], i)
 
 function getScoreMessages(scores: [number, number], i: number): Header[] {
   const [score1, score2] = scores
@@ -179,7 +173,7 @@ function createCommands(
 
   switch (game.phase) {
     case 'prep': {
-      header.text = getHourlyItem(welcomeMessages, playerIndex)
+      header.text = randomHourlyItem(welcomeMessages, playerIndex)
 
       if (player.leader && enoughPlayers) {
         cmd.type = 'begin_round'

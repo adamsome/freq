@@ -21,6 +21,15 @@ class MyDocument extends Document {
           <ColorModeScript initialColorMode={'system'} />
           <Main />
           <NextScript />
+
+          <style jsx global>{`
+            #__next {
+              height: 100%;
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+            }
+          `}</style>
         </body>
       </Html>
     )

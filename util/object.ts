@@ -3,7 +3,6 @@
 // Source: https://github.com/chakra-ui/chakra-ui/blob/develop/packages/utils/src/object.ts
 
 import { Dict, StringOrNumber } from '../types/object.types'
-import { randomItem } from './array'
 
 interface OmitFn {
   <T, K extends [...(keyof T)[]]>(obj: T, ...keys: K): {
@@ -152,9 +151,3 @@ export const filterUndefined = (obj: Dict) =>
 
 export const objectKeys = <T extends Dict>(obj: T) =>
   (Object.keys(obj) as unknown) as (keyof T)[]
-
-export function randomProp<T>(obj: T) {
-  const keys = objectKeys(obj)
-  const key = randomItem(keys)
-  return obj[key]
-}

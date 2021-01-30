@@ -23,7 +23,7 @@ const RoomPage = ({ cookie, game: initGame }: Props) => {
   if (!game) return <div>Loading...</div>
 
   return (
-    <Container title={`Room ${game.room}`} cookie={cookie} game={game}>
+    <Container title={game.room} cookie={cookie} game={game}>
       <main>
         <GameBoard />
       </main>

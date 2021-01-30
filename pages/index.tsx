@@ -14,9 +14,11 @@ type Props = typeof defaultProps & {
   room: string
 }
 
-const defaultProps = {}
+const defaultProps = {
+  animate: true,
+}
 
-export const HomePage = ({ cookie, room: randomRoom }: Props) => {
+export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
   const [user, mutateUser] = useUser()
 
   const router = useRouter()
@@ -84,7 +86,7 @@ export const HomePage = ({ cookie, room: randomRoom }: Props) => {
   return (
     <Container cookie={cookie}>
       <main>
-        <Title animate={true} />
+        <Title animate={animate} />
 
         <p>
           Type an existing game&apos;s name to join or just click Start to
@@ -95,6 +97,7 @@ export const HomePage = ({ cookie, room: randomRoom }: Props) => {
           room={room}
           error={error}
           fetching={fetching}
+          animate={animate}
           onSubmit={handleStart}
         ></LoginForm>
       </main>
@@ -105,7 +108,7 @@ export const HomePage = ({ cookie, room: randomRoom }: Props) => {
 
       <style jsx>{`
         main {
-          padding: 5rem 1.5rem;
+          padding: var(--stack-md) 1.5rem;
           flex: 1;
           display: flex;
           flex-direction: column;

@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
 import { cx } from '../util/dom'
+import { styleLinearGradient } from '../util/dom-style'
 
 type Props = typeof defaultProps & {
   room?: string
   error?: string | null
   fetching?: boolean
+  animate?: boolean
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
 }
 
 const defaultProps = {}
 
-const LoginForm = ({ error, onSubmit, room: initRoom, fetching }: Props) => {
+const LoginForm = ({
+  error,
+  onSubmit,
+  room: initRoom,
+  fetching,
+  animate,
+}: Props) => {
   const [room, setRoom] = useState(initRoom ?? '')
 
   const handleRoomChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -33,7 +41,12 @@ const LoginForm = ({ error, onSubmit, room: initRoom, fetching }: Props) => {
           required
         />
 
-        <button className={cx({ fetching })} type="submit" disabled={fetching}>
+        <button
+          className={cx({ fetching, animate, 'animate-shift': animate })}
+          style={animate ? styleLinearGradient('Freq', '-60deg', '300%') : {}}
+          type="submit"
+          disabled={fetching}
+        >
           <span>Start</span>
         </button>
       </div>
@@ -43,26 +56,29 @@ const LoginForm = ({ error, onSubmit, room: initRoom, fetching }: Props) => {
       <style jsx>{`
         .wrapper {
           display: flex;
+          flex-direction: column;
           justify-content: center;
           align-items: center;
         }
 
         input {
           height: 3rem;
-          margin-right: 1rem;
           flex: 1;
           width: 100%;
-          max-width: 15rem;
+          max-width: 18rem;
         }
 
         input,
         button {
           font-size: var(--font-size-xl);
+          white-space: nowrap;
         }
 
         button {
           flex: 0 1 auto;
-          background: transparent;
+          height: 3rem;
+          width: 100%;
+          margin-top: var(--stack-md);
           color: var(--primary);
           border: 0;
           outline: 0;
@@ -71,13 +87,25 @@ const LoginForm = ({ error, onSubmit, room: initRoom, fetching }: Props) => {
           transition: 180ms color ease-in-out;
         }
 
+        button.animate {
+          color: var(--body-dark);
+        }
+
+        button.animate:hover {
+          color: var(--body-light);
+        }
+
         button:hover {
           color: var(--primary-lit);
         }
 
+        button:focus {
+          border-radius: var(--border-radius-md);
+        }
+
         button.fetching,
         button:disabled {
-          color: var(--hint);
+          opacity: 0.2;
         }
 
         .error {

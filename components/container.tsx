@@ -6,7 +6,7 @@ import useColorMode from '../hooks/use-color-mode'
 import useUser from '../hooks/use-user'
 import { GameView } from '../types/game.types'
 import { cx } from '../util/dom'
-import { styleColor } from '../util/dom-style'
+import { styleColor, styleLinearGradientText } from '../util/dom-style'
 import fetchJson from '../util/fetch-json'
 import DebugBar from './debug-bar'
 import DebugText from './debug-text'
@@ -49,7 +49,7 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
     <div className={cx('container', showDebug && 'show-debug')}>
       <Head>
         <meta charSet="utf-8" />
-        <title>{`${title ? `${title} | ` : ''}${appName}`}</title>
+        <title>{`${appName}${title ? ` / ${title}` : ''}`}</title>
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="viewport"
@@ -62,12 +62,14 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
 
         <div className="wrapper">
           <h1>
-            <div>{game ? `Freq` : ''}</div>
+            <div style={styleLinearGradientText('Freq', '-60deg', '300%')}>
+              {game ? `Freq` : ''}
+            </div>
             {game?.room && (
               <>
                 <div className="slash">/</div>
                 <div className="room">
-                  <div>{game.room.toLowerCase()}</div>
+                  <span>{game.room.toLowerCase()}</span>
                 </div>
               </>
             )}
@@ -120,13 +122,14 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
       <style jsx>{`
         .container {
           position: relative;
-          height: 100vh;
-          min-height: 100vh;
-          padding: 0;
+          flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          height: 100%;
+          min-height: 100%;
+          padding: 0;
           overflow: hidden;
         }
 
@@ -167,10 +170,15 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
 
         header > .wrapper > h1 {
           flex: 1;
+          overflow: hidden;
         }
 
         header > .wrapper > a,
         header > .wrapper > button {
+          flex: 0 0 auto;
+        }
+
+        header > .wrapper > h1 > * {
           flex: 0 0 auto;
         }
 
@@ -181,8 +189,12 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
         }
 
         .room {
+          flex: 1;
           font-weight: 500;
           color: var(--subtle);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         button:hover {
@@ -193,6 +205,8 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
           display: flex;
           align-items: center;
           padding-right: var(--inset-sm);
+          padding: 0 var(--inset-sm) 0 var(--inset-xs);
+          font-size: var(--font-size-lg);
         }
 
         button.icon div {
@@ -218,6 +232,16 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
 
         .show-debug .body {
           padding-top: 5em;
+        }
+
+        @media screen and (max-width: 480px) {
+          h1 {
+            font-size: var(--font-size-md);
+          }
+
+          button.icon {
+            font-size: var(--font-size-md);
+          }
         }
       `}</style>
     </div>

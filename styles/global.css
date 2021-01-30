@@ -16,10 +16,17 @@ body {
 }
 
 html {
+  height: -webkit-fill-available;
   -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
 body {
+  min-height: 100vh;
+  /* mobile viewport bug fix */
+  min-height: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
+
   word-break: break-word;
   font-kerning: auto;
   font-variant: normal;
@@ -186,6 +193,49 @@ body::-webkit-scrollbar {
 ::-webkit-scrollbar-corner {
   background-color: transparent;
   color: transparent;
+}
+
+/** Animation */
+
+@keyframes shift {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: skewX(-30deg);
+  }
+  5% {
+    transform: skewX(30deg);
+  }
+  10% {
+    transform: skewX(-30deg);
+  }
+  15% {
+    transform: skewX(30deg);
+  }
+  20% {
+    transform: skewX(0deg);
+  }
+  100% {
+    transform: skewX(0deg);
+  }
+}
+
+.animate-shift {
+  animation: shift 30s ease-in-out infinite;
+}
+
+.animate-shift-shake-hover:hover {
+  animation: shift 30s ease-in-out infinite, 0.8s shake;
 }
 
 /** Vendors */

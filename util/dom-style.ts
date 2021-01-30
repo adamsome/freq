@@ -19,13 +19,43 @@ export const styleColor = (
   }
 }
 
-export const styleLinearGradient = (gradient: string): CSSProperties => {
-  const colors = gradientDict[gradient]
+export const styleLinearGradient = (
+  gradient: string | undefined | false,
+  angleOrSide = 'to right',
+  backgroundSize = '120%'
+): CSSProperties => {
+  const colors = gradient ? gradientDict[gradient] : undefined
   const n = colors?.length
   if (!n || n === 0) {
     return { color: `var(--body)` }
   }
   const background =
-    n === 1 ? colors[0] : `linear-gradient(to right, ${colors.join(', ')})`
-  return { background, backgroundPosition: 'center', backgroundSize: '120%' }
+    n === 1
+      ? colors?.[0]
+      : `linear-gradient(${angleOrSide}, ${colors?.join(', ')})`
+  return { background, backgroundPosition: 'center', backgroundSize }
+}
+
+export const styleLinearGradientText = (
+  gradient: string | undefined | false,
+  angleOrSide = '-60deg',
+  backgroundSize = '300%'
+): CSSProperties => {
+  const colors = gradient ? gradientDict[gradient] : undefined
+  const n = colors?.length
+  if (!n || n === 0) {
+    return { color: `var(--body)` }
+  }
+  const background =
+    n === 1
+      ? colors?.[0]
+      : `linear-gradient(${angleOrSide}, ${colors?.join(', ')})`
+  return {
+    background,
+    backgroundPosition: 'center',
+    backgroundSize,
+    WebkitBackgroundClip: 'text',
+    backgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+  }
 }

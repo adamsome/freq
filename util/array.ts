@@ -52,11 +52,6 @@ export function partition<T>(
   return partitioned
 }
 
-export function randomItem<T>(arr: T[]): T {
-  const index = (arr.length * Math.random()) << 0
-  return arr[index]
-}
-
 export const range = (from: number, to: number): number[] => {
   const result = []
   let n = from
@@ -73,20 +68,6 @@ export const reject = <T>(arr: T[], fn: (value: T) => boolean): T[] => {
 
 export const rejectNil = <T>(list: Array<T | undefined | null>): T[] =>
   reject(list, isNil)
-
-/**
- * Shuffle an array using the Fisher-Yates algorithm.
- *
- * @see https://stackoverflow.com/questions/49555273/how-to-shuffle-an-array-of-objects-in-javascript/
- */
-export const shuffle = <T>(array: T[]) => {
-  let i = array.length
-  while (i--) {
-    const ri = Math.floor(Math.random() * (i + 1))
-    ;[array[i], array[ri]] = [array[ri], array[i]]
-  }
-  return array
-}
 
 export function reverse(arrayOrElement: null | undefined): undefined
 export function reverse<T>(arrayOrElement: T | T[]): T[]

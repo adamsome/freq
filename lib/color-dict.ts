@@ -1,6 +1,6 @@
 import { Dict } from '../types/object.types'
-import { randomItem } from '../util/array'
 import { objectKeys } from '../util/object'
+import { randomItem } from '../util/random'
 
 export type ColorHue = 'red' | 'blue'
 

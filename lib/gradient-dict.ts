@@ -3,8 +3,8 @@
 // Source: https://github.com/ghosh/uiGradients/blob/master/gradients.json
 
 import { Dict } from '../types/object.types'
-import { randomItem } from '../util/array'
 import { objectKeys } from '../util/object'
+import { randomItem } from '../util/random'
 
 export function randomGradient() {
   return randomItem(objectKeys(gradientDict))
@@ -86,6 +86,7 @@ export const gradientLightTextDict: Dict<boolean[]> = {
  * Also @see https://colorfulgradients.tumblr.com for more
  */
 const gradientDict: Dict<string[]> = {
+  Freq: ['#c02425', '#f0cb35', '#38ef7d'],
   Omolon: ['#091e3a', '#2f80ed', '#2d9ee0'],
   Farhan: ['#9400d3', '#4b0082'],
   Purple: ['#c84e89', '#f15f79'],
