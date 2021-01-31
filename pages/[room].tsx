@@ -41,8 +41,8 @@ const RoomPage = ({ cookie, game: initGame, roomUrl }: Props) => {
       <style jsx>{`
         main {
           width: 100%;
-          max-width: 40rem;
-          padding: var(--stack-md) var(--inset-sm);
+          max-width: 768px;
+          padding: var(--stack-lg) var(--inset-sm);
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -53,6 +53,12 @@ const RoomPage = ({ cookie, game: initGame, roomUrl }: Props) => {
           display: block;
           text-align: center;
           color: var(--subtle);
+        }
+
+        @media screen and (max-width: 768px) {
+          main {
+            padding: 0 0 var(--stack-md);
+          }
         }
       `}</style>
     </Container>

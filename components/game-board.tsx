@@ -164,7 +164,7 @@ const GameBoard = ({ roomUrl }: Props) => {
         }
 
         .section.top {
-          margin-bottom: var(--stack-sm);
+          margin-bottom: var(--stack-lg);
         }
 
         pre {
@@ -177,6 +177,12 @@ const GameBoard = ({ roomUrl }: Props) => {
             width: 100%;
             height: calc(8em - var(--stack-xl));
             margin-bottom: var(--stack-md);
+          }
+        }
+
+        @media screen and (max-width: 768px) {
+          .section.top {
+            margin-bottom: 16px;
           }
         }
       `}</style>

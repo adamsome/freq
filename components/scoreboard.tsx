@@ -113,7 +113,7 @@ const Scoreboard = ({ game }: Props) => {
           align-items: baseline;
           font-weight: 900;
           border-bottom: 1px solid var(--border-3);
-          padding: 0 0;
+          padding: 0 var(--inset-sm);
           white-space: nowrap;
         }
 
@@ -163,8 +163,8 @@ const Scoreboard = ({ game }: Props) => {
           color: var(--body);
           padding-top: var(--stack-xs);
           padding-bottom: var(--stack-xs) 0.87em;
-          padding-left: 0em;
-          padding-right: 0.87em;
+          padding-left: var(--inset-sm);
+          padding-right: 0.67em;
           margin-right: 3px;
           white-space: nowrap;
           overflow: hidden;
@@ -177,8 +177,8 @@ const Scoreboard = ({ game }: Props) => {
         .column.right .player {
           margin-right: 0;
           margin-left: 3px;
-          padding-left: 0.87em;
-          padding-right: 0;
+          padding-left: 0.67em;
+          padding-right: var(--inset-sm);
           flex-direction: row-reverse;
         }
 

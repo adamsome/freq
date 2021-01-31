@@ -78,6 +78,7 @@ export type CommandType =
 export interface Header {
   text: string
   color?: string
+  colorLit?: number
 }
 export interface Command {
   text: string

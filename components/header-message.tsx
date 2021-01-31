@@ -8,14 +8,15 @@ const HeaderMessage = () => {
   return (
     <div className="wrapper">
       {game.headers.map((h, i) => (
-        <div key={h.text + i} style={styleColor(h.color)}>
-          {h.text}
+        <div key={h.text + i} style={styleColor(h.color, h.colorLit)}>
+          <div>{h.text}</div>
         </div>
       ))}
 
       <style jsx>{`
         .wrapper {
           display: flex;
+          flex-direction: column;
           justify-content: center;
           align-items: center;
           align-content: center;
@@ -24,17 +25,44 @@ const HeaderMessage = () => {
           font-size: var(--font-size-lg);
           font-weight: 600;
           min-height: 76px;
+          padding: 0 15px;
         }
 
         .wrapper > * {
-          flex: 0 1 auto;
+          flex: 1 1 auto;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          background: var(--bg-1);
           text-align: center;
           line-height: 28px;
-          margin-bottom: var(--stack-sm);
+          border-radius: 0;
         }
 
-        .wrapper > *:not(:last-child) {
-          margin-right: var(--inset-sm);
+        .wrapper > *:first-child {
+          border-top-left-radius: var(--border-radius-md);
+          border-top-right-radius: var(--border-radius-md);
+        }
+
+        .wrapper > *:last-child {
+          border-bottom-left-radius: var(--border-radius-md);
+          border-bottom-right-radius: var(--border-radius-md);
+        }
+
+        @media screen and (max-width: 768px) {
+          .wrapper {
+            padding: 0;
+          }
+
+          .wrapper > * {
+            border-radius: 0;
+          }
+
+          .wrapper > *:last-child {
+            border-bottom: 1px solid var(--border);
+          }
         }
       `}</style>
     </div>

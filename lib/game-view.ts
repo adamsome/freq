@@ -188,6 +188,7 @@ function createCommands(
   switch (game.phase) {
     case 'prep': {
       header.text = randomHourlyItem(welcomeMessages, playerIndex)
+      header.colorLit = 0.25
 
       if (player.leader && enoughPlayers) {
         cmd.type = 'begin_round'
@@ -207,6 +208,7 @@ function createCommands(
       const psychic = getPsychic(game) ?? player
       if (psychic.id === player.id) {
         header.text = 'Choose a card & think of a clue!'
+        header.colorLit = 0.25
 
         cmd.type = 'confirm_clue'
         cmd.text = 'Confirm card'
@@ -234,7 +236,7 @@ function createCommands(
       const count = `(${numSet}/${numNeeded})`
 
       if (psychic.id === player.id) {
-        header.text = 'Your team is guessing!'
+        header.text = 'Your teammates are guessing!'
 
         cmd.text = 'Team is guessing...'
         cmd.info = count
@@ -247,6 +249,7 @@ function createCommands(
 
       if (player.team === game.team_turn) {
         header.text = 'Guess where the target is!'
+        header.colorLit = 0.25
 
         cmd.type = 'lock_guess'
         cmd.info = locked
@@ -274,6 +277,8 @@ function createCommands(
         : `${otherTeamName} is guessing the direction...`
       if (!isGuessing) {
         header.color = 'Gray'
+      } else {
+        header.colorLit = 0.25
       }
 
       const numSet = getGuessesLocked(game.directions).length
@@ -330,6 +335,7 @@ function createCommands(
 
         header.text = `${icons} ${winningTeamName} team wins! ${icons}`
         header.color = getTeamColor(winningTeam)
+        header.colorLit = 0.25
       }
 
       const next = game.phase === 'reveal' ? 'round' : 'match'
