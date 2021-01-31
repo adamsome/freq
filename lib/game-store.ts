@@ -53,11 +53,11 @@ export async function leaveGame(room: string, userID: string) {
 
   // Find existing game if it exists
   const game = await fetchGame(room)
-
   if (!game) return
 
   const filter = { room: room.toLowerCase() }
 
+  // If psychic change to teammate
   if (game.psychic === userID) {
     const team = getTeamPlayers(game.players, game.team_turn, userID)
     const psychic = head(team) ?? head(game.players)
@@ -66,20 +66,21 @@ export async function leaveGame(room: string, userID: string) {
       await collection.updateOne(filter, { $set: update })
     }
   }
+  // If next psychic, change to the next psychic who is not the user
   if (game.next_psychic === userID) {
-    const nextPsychic = getNextPsychic(game) ?? head(game.players)
+    const nextPsychic = getNextPsychic(game, userID) ?? head(game.players)
     if (nextPsychic) {
       const update = { next_psychic: nextPsychic.id }
       await collection.updateOne(filter, { $set: update })
     }
   }
-  if (game.guesses?.[userID] != null) {
+  if (game.guesses?.[userID]?.locked !== true) {
     const needles = { ...game.guesses }
     delete needles[userID]
     const update = { guesses: needles }
     await collection.updateOne(filter, { $set: update })
   }
-  if (game.directions?.[userID] != null) {
+  if (game.directions?.[userID]?.locked !== true) {
     const needles = { ...game.directions }
     delete needles[userID]
     const update = { directions: needles }

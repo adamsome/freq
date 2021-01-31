@@ -50,10 +50,13 @@ export function getPsychic(game: Game): Player | undefined {
   return game.players.find((p) => p.id === game.psychic)
 }
 
-export function getNextPsychic(game: Game): Player | undefined {
+export function getNextPsychic(
+  game: Game,
+  ...ignorePlayers: (string | { id: string })[]
+): Player | undefined {
   const { next_psychic, team_turn, players } = game
 
-  if (next_psychic) {
+  if (next_psychic && !ignorePlayers.includes(next_psychic)) {
     const next = players.find((p) => p.id === next_psychic)
     if (next) return next
   }
@@ -63,8 +66,9 @@ export function getNextPsychic(game: Game): Player | undefined {
   let leastPsychic: Player | undefined
   for (const player of teamPlayers) {
     if (
-      !leastPsychic ||
-      (player.psychic_count ?? 0) < (leastPsychic.psychic_count ?? 0)
+      !ignorePlayers.includes(player.id) &&
+      (!leastPsychic ||
+        (player.psychic_count ?? 0) < (leastPsychic.psychic_count ?? 0))
     ) {
       leastPsychic = player
     }
