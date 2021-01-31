@@ -59,6 +59,10 @@ export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
       return setError('Room code must be two words separated by a dash.')
     }
 
+    if (name && name.length < 3) {
+      return setError('Username must be at least 3 letters long.')
+    }
+
     try {
       const body: any = { room }
       if (name) body.name = name.substr(0, 15)

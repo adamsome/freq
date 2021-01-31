@@ -11,6 +11,7 @@ import fetchJson from '../util/fetch-json'
 import DebugBar from './debug-bar'
 import DebugText from './debug-text'
 import PlayerButton from './player-button'
+import PlayerEdit from './player-edit'
 import PlayerOptions from './player-options'
 
 type Props = typeof defaultProps & {
@@ -31,9 +32,9 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
   const [showDebug, setShowDebug] = useState(false)
 
   // Player Options modal state
-  const [modelOpen, setModelOpen] = useState(false)
-  const handleModalOpen = () => setModelOpen(true)
-  const handleModalClose = () => setModelOpen(false)
+  const [modelOptionsOpen, setModelOptionsOpen] = useState(false)
+  const [modelEditOpen, setModelEditOpen] = useState(false)
+
   const handleDebugToggle = () => setShowDebug(!showDebug)
   const handleToggleColorMode = (_e?: React.MouseEvent) => toggleColorMode()
   const handleLogout = async () => {
@@ -80,7 +81,7 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
           {game?.currentPlayer ? (
             <PlayerButton
               player={game.currentPlayer}
-              onClick={handleModalOpen}
+              onClick={() => setModelOptionsOpen(true)}
             />
           ) : (
             <button onClick={handleToggleColorMode}>
@@ -98,8 +99,8 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
 
       {game && user?.connected && (
         <Modal
-          open={modelOpen}
-          onClose={handleModalClose}
+          open={modelOptionsOpen}
+          onClose={() => setModelOptionsOpen(false)}
           center
           classNames={{ modal: 'freq-model-reset-sm' }}
         >
@@ -108,8 +109,26 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
             colorMode={colorMode}
             onDebugToggle={handleDebugToggle}
             onColorModeToggle={handleToggleColorMode}
+            onEditPlayer={() => {
+              setModelOptionsOpen(false)
+              setModelEditOpen(true)
+            }}
             onLogout={handleLogout}
-            onClose={handleModalClose}
+            onClose={() => setModelOptionsOpen(false)}
+          />
+        </Modal>
+      )}
+
+      {game?.currentPlayer && user?.connected && (
+        <Modal
+          open={modelEditOpen}
+          onClose={() => setModelEditOpen(false)}
+          center
+          classNames={{ modal: 'freq-model-reset-sm' }}
+        >
+          <PlayerEdit
+            player={game.currentPlayer}
+            onClose={() => setModelEditOpen(false)}
           />
         </Modal>
       )}

@@ -222,7 +222,7 @@ function createCommands(
       header.color = psychic.color ?? 'Gray'
 
       cmd.text = 'Waiting on the Psychic...'
-      cmd.info = `${psychicLabel} is picking & thinking of a clue...`
+      cmd.info = `${psychicLabel} is picking a card & coming up with a clue...`
       cmd.infoColor = header.color
       cmd.disabled = true
       return view

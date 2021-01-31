@@ -11,15 +11,22 @@ type Props = typeof defaultProps & {
   colorMode?: ColorMode
   onDebugToggle?: () => void
   onColorModeToggle?: () => void
+  onEditPlayer?: () => void
   onLogout?: () => void
   onClose?: () => void
 }
 
 const defaultProps = {}
 
-const PlayerOptions = (props: Props) => {
-  const { player, colorMode } = props
-  const { onDebugToggle, onColorModeToggle, onLogout, onClose } = props
+const PlayerOptions = ({
+  player,
+  colorMode,
+  onDebugToggle,
+  onColorModeToggle,
+  onEditPlayer,
+  onLogout,
+  onClose,
+}: Props) => {
   if (!player) return null
 
   const debugModeVal: any =
@@ -50,6 +57,10 @@ const PlayerOptions = (props: Props) => {
           {colorMode === 'light' ? 'Dark' : 'Light'} mode
         </button>
 
+        <button style={styleColor(player)} onClick={onEditPlayer}>
+          Change name and icon
+        </button>
+
         {player.leader && (
           <button
             style={styleColor(player)}
@@ -64,12 +75,12 @@ const PlayerOptions = (props: Props) => {
             style={styleColor(player)}
             onClick={handleCommand('prep_new_match')}
           >
-            Prepare new match
+            Start a new match
           </button>
         )}
 
-        <button style={styleColor(player)} onClick={onLogout}>
-          Exit game
+        <button className="leave" onClick={onLogout}>
+          Leave the game
         </button>
 
         <button className="close" onClick={onClose}>
@@ -123,6 +134,10 @@ const PlayerOptions = (props: Props) => {
 
         button.close:hover {
           color: var(--body);
+        }
+
+        .leave {
+          color: brown;
         }
       `}</style>
     </>
