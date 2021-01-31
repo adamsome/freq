@@ -73,6 +73,18 @@ export async function leaveGame(room: string, userID: string) {
       await collection.updateOne(filter, { $set: update })
     }
   }
+  if (game.guesses?.[userID] != null) {
+    const needles = { ...game.guesses }
+    delete needles[userID]
+    const update = { guesses: needles }
+    await collection.updateOne(filter, { $set: update })
+  }
+  if (game.directions?.[userID] != null) {
+    const needles = { ...game.directions }
+    delete needles[userID]
+    const update = { directions: needles }
+    await collection.updateOne(filter, { $set: update })
+  }
   const playerIndex = game.players.findIndex((p) => p.id === userID)
   if (playerIndex >= 0) {
     const players = game.players.filter((p) => p.id !== userID)

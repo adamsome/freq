@@ -250,6 +250,13 @@ body::-webkit-scrollbar {
   max-width: 400px;
   margin: var(--inset-md);
   padding: 0;
+  overflow-x: hidden;
+}
+
+@media screen and (max-width: 480px) {
+  .freq-model-reset-sm {
+    max-width: 320px;
+  }
 }
 
 .freq-model-reset-sm svg {

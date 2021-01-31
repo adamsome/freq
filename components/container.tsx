@@ -6,11 +6,11 @@ import useColorMode from '../hooks/use-color-mode'
 import useUser from '../hooks/use-user'
 import { GameView } from '../types/game.types'
 import { cx } from '../util/dom'
-import { styleColor, styleLinearGradientText } from '../util/dom-style'
+import { styleLinearGradientText } from '../util/dom-style'
 import fetchJson from '../util/fetch-json'
 import DebugBar from './debug-bar'
 import DebugText from './debug-text'
-import IconSvg from './icon-svg'
+import PlayerButton from './player-button'
 import PlayerOptions from './player-options'
 
 type Props = typeof defaultProps & {
@@ -78,17 +78,10 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
           </h1>
 
           {game?.currentPlayer ? (
-            <button
-              className="icon"
-              style={styleColor(game.currentPlayer)}
+            <PlayerButton
+              player={game.currentPlayer}
               onClick={handleModalOpen}
-            >
-              {game.currentPlayer.icon}&nbsp;&nbsp;
-              {game.currentPlayer.name ?? 'Noname'}
-              <div>
-                <IconSvg name="dropdown" />
-              </div>
-            </button>
+            />
           ) : (
             <button onClick={handleToggleColorMode}>
               {colorMode === 'light' ? 'Dark' : 'Light'} Mode
@@ -204,18 +197,6 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
           background: var(--bg-1);
         }
 
-        button.icon {
-          display: flex;
-          align-items: center;
-          padding: 0 0 0 var(--inset-xs);
-          font-size: var(--font-size-lg);
-        }
-
-        button.icon div {
-          top: 2px;
-          position: relative;
-        }
-
         a {
           margin-right: var(--inset-md);
         }
@@ -238,10 +219,6 @@ const Container = ({ children, cookie, appName, title, game }: Props) => {
 
         @media screen and (max-width: 480px) {
           h1 {
-            font-size: var(--font-size-md);
-          }
-
-          button.icon {
             font-size: var(--font-size-md);
           }
         }

@@ -4,6 +4,7 @@ import { postCommand } from '../util/fetch-json'
 import CommandPanel from './command-panel'
 import HeaderMessage from './header-message'
 import Meter from './meter'
+import PlayerHero from './player-hero'
 import Scoreboard from './scoreboard'
 
 type Props = typeof defaultProps & {
@@ -60,12 +61,20 @@ const GameBoard = ({ roomUrl }: Props) => {
       </div>
 
       {phase === 'prep' && roomUrl && (
-        <div className="link section">
-          <div>Other players can use this link to join:</div>
-          <a className="url" href={roomUrl} target="_blank" rel="noreferrer">
-            {roomUrl}
-          </a>
-        </div>
+        <>
+          <div className="link section">
+            <div>Other players can use this link to join:</div>
+            <a className="url" href={roomUrl} target="_blank" rel="noreferrer">
+              {roomUrl}
+            </a>
+          </div>
+
+          {game.currentPlayer && (
+            <div className="section">
+              <PlayerHero player={game.currentPlayer} />
+            </div>
+          )}
+        </>
       )}
 
       {cluesToShow.map((clue, i) => (
@@ -135,10 +144,6 @@ const GameBoard = ({ roomUrl }: Props) => {
         }
 
         .link {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
           color: var(--subtle);
           font-size: var(--font-size-sm);
           font-weight: 300;
@@ -150,6 +155,10 @@ const GameBoard = ({ roomUrl }: Props) => {
         }
 
         .section {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
           width: 100%;
           margin-bottom: var(--stack-lg);
         }
@@ -161,6 +170,14 @@ const GameBoard = ({ roomUrl }: Props) => {
         pre {
           font-family: var(--font-family-mono);
           margin: 0;
+        }
+
+        @media screen and (max-width: 480px) {
+          .meter-wrapper {
+            width: 100%;
+            height: calc(8em - var(--stack-xl));
+            margin-bottom: var(--stack-md);
+          }
         }
       `}</style>
     </>

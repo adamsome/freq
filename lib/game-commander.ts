@@ -45,6 +45,18 @@ export class GameCommander
     await this.updatePath(`players.${index}.color`, color)
   }
 
+  async edit_player(player: Player) {
+    if (!this.player || this.player.id !== player.id)
+      throw new Error('Players can only change their own name.')
+
+    const index = this.game.players.findIndex((p) => p.id === player.id)
+    if (index < 0)
+      throw new Error('Cannot change player team when player index not found.')
+
+    const nextPlayer = { ...this.player, name: player.name, icon: player.icon }
+    await this.updatePath(`players.${index}`, nextPlayer)
+  }
+
   async toggle_player_leader(player: Player) {
     // TODO: Enable once development complete
     // if (!this.player.leader)

@@ -59,6 +59,7 @@ export interface Game {
 
 export type CommandType =
   | 'change_player_team'
+  | 'edit_player'
   | 'toggle_player_leader'
   | 'set_next_psychic'
   | 'set_current_psychic'

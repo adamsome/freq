@@ -99,7 +99,7 @@ const Scoreboard = ({ game }: Props) => {
       <style jsx>{`
         .wrapper {
           width: 100%;
-          padding: 0 6px;
+          padding: 0;
           white-space: nowrap;
         }
 
@@ -244,6 +244,13 @@ const Scoreboard = ({ game }: Props) => {
           .header .icon,
           .player {
             font-size: var(--font-size-sm);
+          }
+
+          .icon.right,
+          .player .icon,
+          .header .icon {
+            margin-left: 0;
+            margin-right: 0;
           }
         }
       `}</style>
