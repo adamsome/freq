@@ -1,5 +1,6 @@
 import { Game, GameView, Player } from '../types/game.types'
 import { UserConnected } from '../types/user.types'
+import { randomItem } from '../util/random'
 import { isFreePhase, isGuessingPhase } from './phase'
 import { createPlayer, getPlayersPerTeam, getTeamPlayers } from './player'
 
@@ -55,6 +56,7 @@ export function getNextPsychic(
   ...ignorePlayers: (string | { id: string })[]
 ): Player | undefined {
   const { next_psychic, team_turn, players } = game
+  const ignoreIDs = ignorePlayers.map((p) => (typeof p === 'string' ? p : p.id))
 
   if (next_psychic && !ignorePlayers.includes(next_psychic)) {
     const next = players.find((p) => p.id === next_psychic)
@@ -63,17 +65,28 @@ export function getNextPsychic(
 
   const otherTeam = team_turn === 1 ? 2 : 1
   const teamPlayers = getTeamPlayers(players, otherTeam)
-  let leastPsychic: Player | undefined
+  let leastPsychics: Player[] = []
+  let leastPsychicCount = 0
   for (const player of teamPlayers) {
-    if (
-      !ignorePlayers.includes(player.id) &&
-      (!leastPsychic ||
-        (player.psychic_count ?? 0) < (leastPsychic.psychic_count ?? 0))
-    ) {
-      leastPsychic = player
+    if (ignoreIDs.includes(player.id)) continue
+
+    const playerCount = game.psychic_counts?.[player.id] ?? 0
+
+    if (leastPsychics.length === 0) {
+      leastPsychics.push(player)
+      leastPsychicCount = playerCount
+    }
+
+    if (playerCount < leastPsychicCount) {
+      leastPsychics = [player]
+      leastPsychicCount = playerCount
+    } else if (playerCount === leastPsychicCount) {
+      leastPsychics.push(player)
     }
   }
-  return leastPsychic
+  return leastPsychics.length <= 1
+    ? leastPsychics[0]
+    : randomItem(leastPsychics)
 }
 
 export function isInvalidPlayerTeamChange(

@@ -21,8 +21,7 @@ export function createPlayer(
     const existingColors = existingPlayers?.map((p) => p.color)
     color = assignColor(team, existingColors)
   }
-  const psychic_count = 0
-  const player: Player = { id, name, icon, team, color, leader, psychic_count }
+  const player: Player = { id, name, icon, team, color, leader }
   return player
 }
 

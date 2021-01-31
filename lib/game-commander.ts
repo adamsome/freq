@@ -124,27 +124,23 @@ export class GameCommander
     if (!doesGameHaveEnoughPlayers(this.game))
       throw new Error('Must have at least 2 players per team to begin round.')
 
-    const players = this.game.players
-
     // Need to pick a the next psychic and set turn to their team
     const psychic = getNextPsychic(this.game) ?? this.game.players[0]
     await this.update('psychic', psychic.id)
     await this.update('team_turn', psychic.team ?? 1)
 
-    // Update the psychic player's psychic_count
-    const psychicIndex = players.findIndex((p) => p.id === psychic.id)
-    if (psychicIndex < 0) {
-      throw new Error('Unexpected error: no next psychic index found.')
-    }
-    const nextCount = (psychic.psychic_count ?? 0) + 1
-    await this.updatePath(`players.${psychicIndex}.psychic_count`, nextCount)
-
     if (this.game.phase !== 'reveal') {
+      // Reset the psychic counts between matches
+      await this.delete('psychic_counts')
       // Reset the scores based on which team is up (0); other team (1)
       await this.update('score_team_1', psychic.team === 1 ? 0 : 1)
       await this.update('score_team_2', psychic.team === 1 ? 1 : 0)
       await this.update('match_number', this.game.match_number + 1)
     }
+
+    // Increment the psychic count if we are mid-match
+    const nextCount = (this.game.psychic_counts?.[psychic.id] ?? 0) + 1
+    await this.updatePath(`psychic_counts.${psychic.id}`, nextCount)
 
     await this.delete('next_psychic')
     await this.delete('clue_selected')

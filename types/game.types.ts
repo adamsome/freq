@@ -8,7 +8,6 @@ export interface Player {
   icon?: string
   leader?: boolean
   score?: number
-  psychic_count: number
 }
 
 export type PlayerWithGuess = Player & Guess
@@ -40,8 +39,8 @@ export interface Game {
   next_psychic?: string
   clues: Clue[]
   clue_selected?: number
-  // TODO: Rename to 'needles'
-  guesses?: Dict<Guess>
+  psychic_counts?: Dict<number>
+  guesses?: Dict<Guess> // TODO: Rename to 'needles'
   directions?: Dict<Guess>
   target?: number
   target_width: number
