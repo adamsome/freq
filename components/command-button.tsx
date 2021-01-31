@@ -27,7 +27,7 @@ const CommandButton = ({ command: cmd, currentPlayer, onClick }: Props) => {
       >
         <button
           className="cmd"
-          style={styleColor(!cmd.disabled && currentPlayer, true)}
+          style={styleColor(!cmd.disabled && currentPlayer, 1)}
           disabled={cmd.disabled}
           onClick={onClick(cmd)}
         >
@@ -38,7 +38,7 @@ const CommandButton = ({ command: cmd, currentPlayer, onClick }: Props) => {
           <button
             className="cmd cmd-2"
             style={{
-              ...styleColor(!cmd.disabled && currentPlayer, true),
+              ...styleColor(!cmd.disabled && currentPlayer, 1),
               flex: `0 0 ${getCmdRightWidth(cmd)}`,
             }}
             disabled={cmd.disabled}

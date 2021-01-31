@@ -36,7 +36,7 @@ const PlayerEdit = ({ player, onClose }: Props) => {
 
   return (
     <>
-      <h2 style={styleColor(player, true)}>
+      <h2 style={styleColor(player, 1)}>
         <input
           ref={inputRef}
           type="text"

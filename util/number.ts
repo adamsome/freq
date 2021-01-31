@@ -5,6 +5,6 @@ export const randomFloat = (min = 0, max = 99) =>
   Math.random() * (max - min) + min
 
 export const roundTo = (val: number, decimals = 2) => {
-  const mult = 10 ^ decimals
+  const mult = 10 ** decimals
   return Math.round((val + Number.EPSILON) * mult) / mult
 }

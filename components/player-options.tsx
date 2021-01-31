@@ -38,7 +38,7 @@ const PlayerOptions = (props: Props) => {
 
   return (
     <>
-      <h2 style={styleColor(player, true)}>{player.name}</h2>
+      <h2 style={styleColor(player, 1)}>{player.name}</h2>
       <div>
         {allowDebugMode && (
           <button style={styleColor(player)} onClick={onDebugToggle}>

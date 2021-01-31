@@ -4,7 +4,7 @@ import gradientDict from '../lib/gradient-dict'
 
 export const styleColor = (
   colorOrHasColor?: string | { color?: string } | false | null,
-  lit = false
+  lit = 0
 ) => {
   if (!colorOrHasColor) return undefined
   const colorName =
@@ -12,10 +12,11 @@ export const styleColor = (
       ? colorOrHasColor
       : colorOrHasColor.color
 
-  const color = colorDict[colorName ?? 0]?.hex
+  const hex = colorDict[colorName ?? 0]?.hex
+  const alpha = lit * 255
   return {
-    color: lit ? 'var(--body-light)' : color,
-    background: lit ? color : undefined,
+    color: lit > 0.5 ? 'var(--body-light)' : hex,
+    background: lit > 0 ? `${hex}${alpha.toString(16)}` : undefined,
   }
 }
 

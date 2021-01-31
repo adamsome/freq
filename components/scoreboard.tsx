@@ -55,11 +55,15 @@ const Scoreboard = ({ game }: Props) => {
             {t.map((p) => (
               <div
                 key={p.id}
-                className={cx(
-                  'player',
-                  activePlayers.includes(p.id) && 'selected'
+                className="player"
+                style={styleColor(
+                  p.color,
+                  activePlayers.includes(p.id)
+                    ? 1
+                    : currentPlayer.id === p.id
+                    ? 0.25
+                    : 0
                 )}
-                style={styleColor(p, activePlayers.includes(p.id))}
                 onClick={() => handlePlayerSelect(p)}
               >
                 <div className="icon">{p.icon}</div>
@@ -68,10 +72,9 @@ const Scoreboard = ({ game }: Props) => {
                   <div
                     className={cx({
                       name: true,
-                      current: currentPlayer.id === p.id,
+                      leader: currentPlayer.leader,
                     })}
                   >{`${p.name ?? 'Unnamed'}`}</div>
-                  {p.leader && <div>🎩</div>}
                   {game.phase !== 'prep' &&
                     game.psychic === p.id &&
                     nextPsychic?.id !== p.id && <div>🧠</div>}
@@ -209,7 +212,7 @@ const Scoreboard = ({ game }: Props) => {
           white-space: nowrap;
         }
 
-        .player .name.current {
+        .player .name.leader {
           font-weight: 600;
         }
 
