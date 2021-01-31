@@ -16,7 +16,7 @@ export const styleColor = (
   const alpha = lit * 255
   return {
     color: lit > 0.5 ? 'var(--body-light)' : hex,
-    background: lit > 0 ? `${hex}${alpha.toString(16)}` : undefined,
+    background: lit > 0 ? `${hex}${Math.round(alpha).toString(16)}` : undefined,
   }
 }
 
