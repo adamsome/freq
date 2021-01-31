@@ -52,38 +52,38 @@ const Scoreboard = ({ game }: Props) => {
       <div className="grid">
         {teams.map((t, i) => (
           <div key={i} className={cx('column', i === 1 && 'right')}>
-            {t.map((p) => (
+            {t.map((player) => (
               <div
-                key={p.id}
+                key={player.id}
                 className="player"
                 style={styleColor(
-                  p.color,
-                  activePlayers.includes(p.id)
+                  player.color,
+                  activePlayers.includes(player.id)
                     ? 1
-                    : currentPlayer.id === p.id
+                    : currentPlayer.id === player.id
                     ? 0.25
                     : 0
                 )}
-                onClick={() => handlePlayerSelect(p)}
+                onClick={() => handlePlayerSelect(player)}
               >
-                <div className="icon">{p.icon}</div>
+                <div className="icon">{player.icon}</div>
 
                 <div className="name-wrapper">
                   <div
                     className={cx({
                       name: true,
-                      leader: currentPlayer.leader,
+                      leader: player.leader,
                     })}
-                  >{`${p.name ?? 'Unnamed'}`}</div>
+                  >{`${player.name ?? 'Unnamed'}`}</div>
                   {game.phase !== 'prep' &&
-                    game.psychic === p.id &&
-                    nextPsychic?.id !== p.id && <div>🧠</div>}
-                  {nextPsychic?.id === p.id && showNextPsychic && (
+                    game.psychic === player.id &&
+                    nextPsychic?.id !== player.id && <div>🧠</div>}
+                  {nextPsychic?.id === player.id && showNextPsychic && (
                     <div className="xs">🧠</div>
                   )}
                 </div>
 
-                <div className="score">{roundTo(p.score ?? 0)}</div>
+                <div className="score">{roundTo(player.score ?? 0)}</div>
               </div>
             ))}
           </div>

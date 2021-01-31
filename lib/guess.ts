@@ -3,12 +3,12 @@ import { Dict } from '../types/object.types'
 import { partition } from '../util/array'
 import { getTeamPlayers } from './player'
 
-export function getGuessesLocked(guessDict: Dict<Guess> = {}): Guess[] {
-  return Object.values(guessDict).filter((g) => g.locked == true)
+export function getGuessesLocked(dict: Dict<Guess> = {}): Guess[] {
+  return Object.values(dict).filter((g) => g.locked === true)
 }
 
-export function getGuessesSet(guessDict: Dict<Guess> = {}): Guess[] {
-  return Object.values(guessDict).filter((g) => g.value != null)
+export function getGuessesSet(dict: Dict<Guess> = {}): Guess[] {
+  return Object.values(dict).filter((g) => g.value != null)
 }
 
 // Needle Guesses
@@ -31,9 +31,9 @@ export function areAllNeedleGuessesLocked(
 }
 
 export function calculateAverageNeedleGuess(
-  needleGuessDict: Dict<Guess> = {}
+  dict: Dict<Guess> = {}
 ): number | undefined {
-  const guessVals = getGuessesSet(needleGuessDict).map((g) => g.value)
+  const guessVals = getGuessesSet(dict).map((g) => g.value)
   const sum = guessVals.reduce((acc, g) => acc + g, 0)
   return sum / guessVals.length
 }
@@ -49,27 +49,27 @@ export function getDirectionGuessesNeeded(
   return getTeamPlayers(players, team, ...ignorePlayers).length
 }
 
-export function areAllDirectionGuessesSet(
+export function areAllDirectionGuessesLocked(
   game: Game,
   ...ignorePlayers: (string | { id: string })[]
 ): boolean {
   const guessesNeeded = getDirectionGuessesNeeded(game, ...ignorePlayers)
-  const guesses = getGuessesSet(game.directions)
+  const guesses = getGuessesLocked(game.directions)
   return guesses.length >= guessesNeeded
 }
 
 export function getDirectionCounts(
-  guessDict: Dict<Guess> = {}
+  dict: Dict<Guess> = {},
+  locked = false
 ): [number, number] {
-  const guessVals = getGuessesSet(guessDict).map((g) => g.value)
+  const guesses = locked ? getGuessesLocked(dict) : getGuessesSet(dict)
+  const guessVals = guesses.map((g) => g.value)
   const [left, rest] = partition((val) => val === -1, guessVals)
   const right = rest.filter((val) => val === 1)
   return [left.length, right.length]
 }
 
-export function calculateAverageDirectionGuess(
-  guessDict: Dict<Guess> = {}
-): -1 | 1 {
-  const [left, right] = getDirectionCounts(guessDict)
+export function calculateAverageDirectionGuess(dict: Dict<Guess> = {}): -1 | 1 {
+  const [left, right] = getDirectionCounts(dict, true)
   return left > right ? -1 : 1
 }

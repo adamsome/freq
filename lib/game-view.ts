@@ -25,7 +25,6 @@ import {
   getDirectionCounts,
   getDirectionGuessesNeeded,
   getGuessesLocked,
-  getGuessesSet,
   getNeedleGuessesNeeded,
 } from './guess'
 import { getTeamIcon } from './icon'
@@ -259,7 +258,7 @@ function createCommands(
       }
 
       header.text = `${turnTeamName} team is guessing...`
-      header.color = getTeamColor(game.team_turn)
+      header.color = 'Gray'
 
       cmd.text = `Waiting on ${turnTeamName} team...`
       cmd.info = count
@@ -274,30 +273,46 @@ function createCommands(
         ? 'Guess the direction!'
         : `${otherTeamName} is guessing the direction...`
       if (!isGuessing) {
-        header.color = getTeamColor(guessingTeam)
+        header.color = 'Gray'
+      }
+
+      const numSet = getGuessesLocked(game.directions).length
+      const numNeeded = getDirectionGuessesNeeded(game)
+      const [numLeft, numRight] = getDirectionCounts(game.directions)
+      const count = `(${numSet}/${numNeeded})`
+
+      if (!isGuessing) {
+        cmd.disabled = true
+        cmd.text = `Waiting on ${turnTeamName} team...`
+        cmd.disabled = true
+        cmd.info = count
+        return view
       }
 
       const guess: Guess | undefined = game.directions?.[player.id]
-      cmd.disabled = guess?.value === -1 || guess?.value === 1 || !isGuessing
+      const locked = guess?.locked === true
+      const isValueSet = guess?.value === -1 || guess?.value === 1
 
-      const numSet = getGuessesSet(game.directions).length
-      const numNeeded = getDirectionGuessesNeeded(game)
-      const [numLeft, numRight] = getDirectionCounts(game.directions)
-
-      cmd.info = !isGuessing
-        ? `${otherTeamName} is guessing (${numSet}/${numNeeded})...`
-        : cmd.disabled
-        ? `Waiting for teammates' picks (${numSet}/${numNeeded})...`
-        : `Guess which side of ${turnTeamName}'s ` +
-          'average guess the real target is at'
       cmd.type = 'set_direction'
       cmd.text = cmd.disabled ? `Left (${numLeft})` : `⬅ Left (${numLeft})`
+      cmd.disabled = locked
       cmd.value = -1
       cmd.rightValue = 1
       cmd.rightWidth = 1 - (averageGuess ?? 0.5)
       cmd.rightText = cmd.disabled
         ? `(${numRight}) Right`
         : `(${numRight}) Right ➡`
+
+      const lockText = locked ? 'Locked in' : 'Lock it in'
+      const lockCmd: Command = { text: lockText }
+      lockCmd.type = 'lock_direction'
+      lockCmd.disabled = !isValueSet || locked
+      lockCmd.info = isValueSet
+        ? `Waiting for teammates' picks ${count}...`
+        : `Guess which side of ${turnTeamName}'s ` +
+          'average guess the real target is at'
+
+      view.commands = [cmd, lockCmd]
       return view
     }
     case 'reveal':

@@ -16,7 +16,10 @@ import {
   updateGamePath,
 } from './game-store'
 import { toGameView } from './game-view'
-import { areAllDirectionGuessesSet, areAllNeedleGuessesLocked } from './guess'
+import {
+  areAllDirectionGuessesLocked,
+  areAllNeedleGuessesLocked,
+} from './guess'
 import { isFreePhase, isGuessingPhase } from './phase'
 import { getRoundScores } from './score'
 
@@ -99,7 +102,7 @@ export class GameCommander
   async kick_player(player: Player) {
     if (!this.player?.leader) throw new Error('Only leaders can kick players.')
 
-    leaveGame(this.game.room, player.id)
+    await leaveGame(this.game.room, player.id)
     await this.updatePath(`kicked.${player.id}`, true)
   }
 
@@ -212,9 +215,8 @@ export class GameCommander
 
     await this.updatePath(`guesses.${this.player.id}.locked`, true)
 
-    if (!areAllNeedleGuessesLocked(this.game, this.player)) return
-
-    await this.update('phase', 'direction')
+    if (areAllNeedleGuessesLocked(this.game, this.player))
+      await this.update('phase', 'direction')
   }
 
   async set_direction(directionGuess: 1 | -1) {
@@ -226,18 +228,31 @@ export class GameCommander
     if (this.game.phase !== 'direction')
       throw new Error('Can only lock direction in the direction phase.')
 
-    if (this.game.directions?.[this.player.id]?.value != null)
+    if (this.game.directions?.[this.player.id]?.locked)
       throw new Error('Cannot set direction once its locked.')
 
     await this.updatePath(`directions.${this.player.id}.value`, directionGuess)
+  }
+
+  async lock_direction() {
+    if (!this.player) throw new Error('Player is not a member of the game.')
+
+    if (this.player.team === this.game.team_turn)
+      throw new Error('Only players not on turn team can lock direction.')
+
+    if (this.game.phase !== 'direction')
+      throw new Error('Can only lock direction in the direction phase.')
+
+    if (this.game.directions?.[this.player.id]?.value == null)
+      throw new Error('Can only lock direction once one is made.')
+
+    await this.updatePath(`directions.${this.player.id}.locked`, true)
 
     // Update the guess since we'll need the updated guesses to calculate
     // if guesses are set and the round scores in the reveal phase
     await this.refetch()
 
-    if (!areAllDirectionGuessesSet(this.game)) return
-
-    await this.reveal()
+    if (areAllDirectionGuessesLocked(this.game)) await this.reveal()
   }
 
   async reveal() {

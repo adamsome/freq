@@ -32,12 +32,13 @@ const CommandPanel = () => {
   return (
     <div className="wrapper">
       {commands.map((cmd) => (
-        <CommandButton
-          key={cmd.type + cmd.text + cmd.info + cmd.rightText}
-          command={cmd}
-          currentPlayer={currentPlayer}
-          onClick={handleCommandClick}
-        />
+        <div key={cmd.type + cmd.text + cmd.info + cmd.rightText}>
+          <CommandButton
+            command={cmd}
+            currentPlayer={currentPlayer}
+            onClick={handleCommandClick}
+          />
+        </div>
       ))}
 
       {error && <div className="error">{error}</div>}
@@ -46,6 +47,10 @@ const CommandPanel = () => {
         .wrapper {
           width: 100%;
           padding: 0 15px;
+        }
+
+        .wrapper > div:not(:last-child) {
+          margin-bottom: var(--stack-sm);
         }
 
         .error {

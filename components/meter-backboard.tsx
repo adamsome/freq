@@ -34,7 +34,7 @@ const MeterBackboard = ({
         <MeterTarget position={target * 100} width={target_width} />
       )}
 
-      <div className={cx({ clue: true, invert: lightLeft })}>{clue.left}</div>
+      <div className={cx('clue', { invert: lightLeft })}>{clue.left}</div>
 
       <div className={cx('clue', 'right', { invert: lightRight })}>
         <span>{clue.right}</span>
@@ -72,7 +72,7 @@ const MeterBackboard = ({
         }
 
         .clue {
-          max-width: 50%;
+          max-width: 47.5%;
           line-height: 24px;
         }
 

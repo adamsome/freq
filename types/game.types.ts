@@ -72,6 +72,7 @@ export type CommandType =
   | 'set_guess'
   | 'lock_guess'
   | 'set_direction'
+  | 'lock_direction'
   | 'reveal'
 
 export interface Header {
