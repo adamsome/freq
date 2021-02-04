@@ -32,6 +32,18 @@ const MeterTarget = ({ position, width }: Props) => {
       ))}
 
       <style jsx>{`
+        @keyframes fadeIn {
+          0% {
+            opacity: 0;
+          }
+          50% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+
         .target {
           position: absolute;
           top: 0;
@@ -40,6 +52,7 @@ const MeterTarget = ({ position, width }: Props) => {
           width: 15%;
           height: 100%;
           overflow: hidden;
+          animation: fadeIn 4s;
         }
 
         .target > * {
