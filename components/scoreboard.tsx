@@ -21,7 +21,7 @@ const Scoreboard = ({ game }: Props) => {
   const [modelOpen, setModelOpen] = useState<Player | null>(null)
   const [showScore, setShowScore] = useState(false)
 
-  const { currentPlayer, score_team_1, score_team_2 } = game
+  const { currentPlayer, score_team_1, score_team_2, activePlayers } = game
   if (!currentPlayer) return null
 
   const leader = currentPlayer.leader == true
@@ -32,8 +32,6 @@ const Scoreboard = ({ game }: Props) => {
   const icon2 = getTeamIcon(2)
   const team1 = getTeamName(1)
   const team2 = getTeamName(2)
-  // TODO: Add to game view state
-  const activePlayers: string[] = []
 
   const handlePlayerSelect = (p: Player) => leader && setModelOpen(p)
   const handleModalClose = () => setModelOpen(null)

@@ -29,7 +29,7 @@ import {
 } from './guess'
 import { getTeamIcon } from './icon'
 import { isFreePhase } from './phase'
-import { getPlayerDict } from './player'
+import { getPlayerDict, getTeamPlayers } from './player'
 import { getScoreState } from './score'
 
 function createPlayerNeedleGuesses(
@@ -370,6 +370,28 @@ function createCommands(
   }
 }
 
+function getActivePlayers(game: Game): string[] {
+  switch (game.phase) {
+    case 'choose': {
+      return [game.psychic]
+    }
+    case 'guess': {
+      const { players, team_turn, psychic } = game
+      return getTeamPlayers(players, team_turn, psychic)
+        .filter((p) => !game.guesses?.[p.id]?.locked)
+        .map((p) => p.id)
+    }
+    case 'direction': {
+      const { players, team_turn } = game
+      const otherTeam = team_turn === 1 ? 2 : 1
+      return getTeamPlayers(players, otherTeam)
+        .filter((p) => !game.directions?.[p.id]?.locked)
+        .map((p) => p.id)
+    }
+  }
+  return []
+}
+
 export function toGameView(
   userID: string,
   game: Game & Partial<HasObjectID>,
@@ -389,6 +411,7 @@ export function toGameView(
     playerGuesses: createPlayerNeedleGuesses(game, currentPlayer),
     playerDirections: createPlayerDirectionGuesses(game),
     canChangePsychicTo: canChangePsychicTo(game.phase),
+    activePlayers: getActivePlayers(game),
   }
 
   if (phase !== 'choose' && phase !== 'prep') {

@@ -106,4 +106,5 @@ export interface GameView extends Game, CommandsView {
   playerDirections: PlayerWithGuess[]
   averageGuess?: number
   canChangePsychicTo: 'any' | 'same_team' | 'none'
+  activePlayers: string[]
 }

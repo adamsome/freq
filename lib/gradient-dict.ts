@@ -362,7 +362,6 @@ const gradientDict: Dict<string[]> = {
   Summer: ['#22c1c3', '#fdbb2d'],
   'King Yna': ['#1a2a6c', '#b21f1f', '#fdbb2d'],
   'Velvet Sun': ['#e1eec3', '#f05053'],
-  Zinc: ['#ada996', '#f2f2f2', '#dbdbdb', '#eaeaea'],
   Hydrogen: ['#667db6', '#0082c8', '#0082c8', '#667db6'],
   Argon: ['#03001e', '#7303c0', '#ec38bc', '#fdeff9'],
   Lithium: ['#6d6027', '#d3cbb8'],
