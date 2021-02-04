@@ -266,8 +266,11 @@ export class GameCommander
     await this.update('score_team_2', total[1])
 
     for (let i = 0; i < perPlayer.length; i++) {
-      const { index, score } = perPlayer[i]
+      const { index, score, wins } = perPlayer[i]
       await this.updatePath(`players.${index}.score`, score)
+      if (win) {
+        await this.updatePath(`players.${index}.wins`, wins)
+      }
     }
 
     if (win) {

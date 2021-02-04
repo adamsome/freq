@@ -19,6 +19,7 @@ const defaultProps = {}
 const Scoreboard = ({ game }: Props) => {
   // Modal state
   const [modelOpen, setModelOpen] = useState<Player | null>(null)
+  const [showScore, setShowScore] = useState(false)
 
   const { currentPlayer, score_team_1, score_team_2 } = game
   if (!currentPlayer) return null
@@ -83,12 +84,18 @@ const Scoreboard = ({ game }: Props) => {
                   )}
                 </div>
 
-                <div className="score">{roundTo(player.score ?? 0)}</div>
+                <div className="score">
+                  {showScore ? roundTo(player.score ?? 0) : player.wins}
+                </div>
               </div>
             ))}
           </div>
         ))}
       </div>
+
+      <button onClick={() => setShowScore(!showScore)}>
+        Show {showScore ? 'Scores' : 'Wins'}
+      </button>
 
       <Modal
         open={modelOpen != null}
@@ -243,7 +250,13 @@ const Scoreboard = ({ game }: Props) => {
           font-size: var(--font-size-xs);
         }
 
+        button {
+          width: 100%;
+          margin-top: var(--stack-md);
+        }
+
         @media screen and (max-width: 480px) {
+          button,
           .header .icon,
           .player {
             font-size: var(--font-size-sm);

@@ -70,7 +70,7 @@ function getRoundScores({
 interface ScoreState {
   round: readonly [number, number]
   total: readonly [number, number]
-  perPlayer: { index: number; score: number }[]
+  perPlayer: { index: number; score: number; wins: number }[]
   win: boolean
   repeatTurn: boolean
 }
@@ -83,14 +83,21 @@ export function getScoreState(game: Game): ScoreState {
   const total2 = game.score_team_2 + round2
   const total = [total1, total2] as const
 
-  const perPlayer = game.players.map((p, index) => {
-    const score = (roundByPlayer[p.id] ?? 0) + (p.score ?? 0)
-    return { index, score }
-  })
-
-  const win = (total1 >= 10 || total2 >= 10) && total1 !== total2
+  const tied = total1 === total2
+  const win1 = !tied && total1 >= 10
+  const win2 = !tied && total2 >= 10
+  const win = win1 || win2
   const repeatTurn =
     (round1 === 4 && total1 < total2) || (round2 === 4 && total1 > total2)
+
+  const perPlayer = game.players.map((p, index) => {
+    let wins = p.wins
+    if ((p.team === 1 && win1) || (p.team === 2 && win2)) {
+      wins++
+    }
+    const score = (roundByPlayer[p.id] ?? 0) + (p.score ?? 0)
+    return { index, score, wins }
+  })
 
   return { round, total, perPlayer, win, repeatTurn }
 }

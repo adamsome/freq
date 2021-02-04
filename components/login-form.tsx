@@ -42,6 +42,7 @@ const LoginForm = ({
             placeholder="Room Code"
             value={room}
             onChange={handleRoomChange}
+            onFocus={(e) => e.currentTarget.select()}
             required
           />
 

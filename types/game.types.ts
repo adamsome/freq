@@ -8,6 +8,7 @@ export interface Player {
   icon?: string
   leader?: boolean
   score?: number
+  wins: number
 }
 
 export type PlayerWithGuess = Player & Guess
