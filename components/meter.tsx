@@ -151,6 +151,7 @@ const Meter = ({
         .average {
           position: absolute;
           top: 0px;
+          left: 0px;
           bottom: 32px;
         }
 
@@ -158,7 +159,8 @@ const Meter = ({
           position: absolute;
           top: 0px;
           left: calc(50% - 1px);
-          border-left: 2px solid var(--bg);
+          width: 2px;
+          background: var(--bg);
           height: calc(100% - var(--stack-xl));
           writing-mode: vertical-rl;
           text-orientation: mixed;
@@ -166,6 +168,11 @@ const Meter = ({
           font-size: var(--font-size-xs);
           text-align: right;
           line-height: 11px;
+        }
+
+        .average .line span {
+          position: relative;
+          left: 10px;
         }
 
         .needle-wrapper {
