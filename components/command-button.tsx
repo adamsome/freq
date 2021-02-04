@@ -6,12 +6,18 @@ import { styleColor } from '../util/dom-style'
 type Props = typeof defaultProps & {
   command: Command
   currentPlayer: Player
+  disable?: boolean
   onClick: (cmd: Command, i?: number) => (e: React.MouseEvent) => Promise<void>
 }
 
 const defaultProps = {}
 
-const CommandButton = ({ command: cmd, currentPlayer, onClick }: Props) => {
+const CommandButton = ({
+  command: cmd,
+  currentPlayer,
+  disable,
+  onClick,
+}: Props) => {
   const getCmdRightWidth = (cmd: Command) => {
     const w = (cmd.rightWidth ?? 0.5) * 100
     const min = '6.5em'
@@ -28,7 +34,7 @@ const CommandButton = ({ command: cmd, currentPlayer, onClick }: Props) => {
         <button
           className="cmd"
           style={styleColor(!cmd.disabled && currentPlayer, 1)}
-          disabled={cmd.disabled}
+          disabled={disable || cmd.disabled}
           onClick={onClick(cmd)}
         >
           {cmd.text}

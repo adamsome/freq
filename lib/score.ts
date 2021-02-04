@@ -1,4 +1,4 @@
-import { Game, Guess, Player } from '../types/game.types'
+import { Game } from '../types/game.types'
 import { Dict } from '../types/object.types'
 import {
   calculateAverageDirectionGuess,
@@ -6,64 +6,19 @@ import {
 } from './guess'
 import { getPlayersPerTeam } from './player'
 
-export function getRoundScores(game: Game): [number, number, Dict<number>]
-export function getRoundScores(
-  players: Player[],
-  psychic: string,
-  target_width: number,
-  team_turn: 1 | 2 | undefined,
-  needles: Dict<Guess> | undefined,
-  directions: Dict<Guess> | undefined,
-  target: number | undefined
-): [number, number, Dict<number>]
-export function getRoundScores(
-  gameOrPlayers: Player[] | Game,
-  psychic?: string,
-  target_width?: number,
-  team_turn?: 1 | 2 | undefined,
-  needles?: Dict<Guess> | undefined,
-  directions?: Dict<Guess> | undefined,
-  target?: number
-): [number, number, Dict<number>] {
-  if (Array.isArray(gameOrPlayers)) {
-    if (!psychic || !target_width) {
-      throw new TypeError('getRoundScores is missing required parameters.')
-    }
-    return _getRoundScores(
-      gameOrPlayers,
-      psychic,
-      target_width,
-      team_turn,
-      needles,
-      directions,
-      target
-    )
-  }
-  const g = gameOrPlayers
-  return _getRoundScores(
-    g.players,
-    g.psychic,
-    g.target_width,
-    g.team_turn,
-    g.guesses,
-    g.directions,
-    g.target
-  )
-}
-
-function _getRoundScores(
-  players: Player[],
-  psychic: string,
-  target_width: number,
-  team_turn: 1 | 2 | undefined,
-  needles: Dict<Guess> | undefined,
-  directions: Dict<Guess> | undefined,
-  target: number | undefined
-): [number, number, Dict<number>] {
+function getRoundScores({
+  players,
+  psychic,
+  target_width,
+  team_turn,
+  guesses,
+  directions,
+  target,
+}: Game): [number, number, Dict<number>] {
   if (!target)
     throw new Error('Unexpected error: no target while getting round scores.')
 
-  const averageGuess = calculateAverageNeedleGuess(needles) ?? 0.5
+  const averageGuess = calculateAverageNeedleGuess(guesses) ?? 0.5
 
   // Target width is as a percent vs guess & target, which are decimals
   // Target is broken up into 5 bands
@@ -110,4 +65,32 @@ function _getRoundScores(
   return team_turn === 1
     ? [guessScore, directionScore, scoreByPlayer]
     : [directionScore, guessScore, scoreByPlayer]
+}
+
+interface ScoreState {
+  round: readonly [number, number]
+  total: readonly [number, number]
+  perPlayer: { index: number; score: number }[]
+  win: boolean
+  repeatTurn: boolean
+}
+
+export function getScoreState(game: Game): ScoreState {
+  const [round1, round2, roundByPlayer] = getRoundScores(game)
+  const round = [round1, round2] as const
+
+  const total1 = game.score_team_1 + round1
+  const total2 = game.score_team_2 + round2
+  const total = [total1, total2] as const
+
+  const perPlayer = game.players.map((p, index) => {
+    const score = (roundByPlayer[p.id] ?? 0) + (p.score ?? 0)
+    return { index, score }
+  })
+
+  const win = (total1 >= 10 || total2 >= 10) && total1 !== total2
+  const repeatTurn =
+    (round1 === 4 && total1 < total2) || (round2 === 4 && total1 > total2)
+
+  return { round, total, perPlayer, win, repeatTurn }
 }

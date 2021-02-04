@@ -30,7 +30,7 @@ import {
 import { getTeamIcon } from './icon'
 import { isFreePhase } from './phase'
 import { getPlayerDict } from './player'
-import { getRoundScores } from './score'
+import { getScoreState } from './score'
 
 function createPlayerNeedleGuesses(
   game: Game,
@@ -124,15 +124,16 @@ const SCORE_ICONS = [
 const getEmoji = (score: number, i: number) =>
   randomHourlyItem(SCORE_ICONS[score], i)
 
-function getScoreMessages(scores: [number, number], i: number): Header[] {
-  const [score1, score2] = scores
-  const ss = scores.map((s) => (s === 1 ? '' : 's'))
-  const teams = scores.map((_, i) => (i + 1) as 1 | 2)
+function getScoreMessages(game: Game, i: number): Header[] {
+  const { round } = getScoreState(game)
+  const [score1, score2] = round
+  const ss = round.map((s) => (s === 1 ? '' : 's'))
+  const teams = round.map((_, i) => (i + 1) as 1 | 2)
   const names = teams.map(getTeamName)
   const colors = teams.map(getTeamColor)
 
   const [t1, t2] = names
-  const [h1, h2] = scores
+  const [h1, h2] = round
     .map((s, i) => `${names[i]} scored ${s} point${ss[i]} ${getEmoji(s, i)}!`)
     .map((text, i) => ({ text, color: colors[i] }))
 
@@ -141,10 +142,18 @@ function getScoreMessages(scores: [number, number], i: number): Header[] {
     h2.text = `Luckily neither did ${t2} 😆!`
   }
   if (score1 === 4 && score2 === 0) {
+    if (game.repeat_turn) {
+      h1.text = `${t2} got 4 and go again since they're still losing 😲!!`
+      return [h1]
+    }
     h1.text = `${t1} got the full 4 points ${getEmoji(4, i)}👍!`
     h2.text = `${t2} got nothing 😭😭😭!`
   }
   if (score1 === 0 && score2 === 4) {
+    if (game.repeat_turn) {
+      h2.text = `${t2} got 4 and go again since they're still losing 😲!!`
+      return [h2]
+    }
     h1.text = `${t2} got the full 4 points ${getEmoji(4, i)}👍!`
     h1.color = colors[1]
     h2.text = `${t1} got nothing 😭😭😭!`
@@ -323,8 +332,7 @@ function createCommands(
     case 'reveal':
     case 'win': {
       if (game.phase === 'reveal') {
-        const [score1, score2] = getRoundScores(game)
-        view.headers = getScoreMessages([score1, score2], playerIndex)
+        view.headers = getScoreMessages(game, playerIndex)
       } else {
         const winningTeam = game.score_team_1 > game.score_team_2 ? 1 : 2
         const winningTeamName = getTeamName(winningTeam)

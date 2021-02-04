@@ -48,6 +48,7 @@ export interface Game {
   round_number: number
   phase: Phase
   team_turn: 1 | 2
+  repeat_turn?: boolean
   score_team_1: number
   score_team_2: number
   game_started_at: string

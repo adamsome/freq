@@ -61,9 +61,9 @@ const LoginForm = ({
           disabled={fetching}
         >
           <span>Start</span>
-
-          {error && <p className="error">{error}</p>}
         </button>
+
+        {error && <p className="error">{error}</p>}
       </div>
 
       <style jsx>{`

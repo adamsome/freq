@@ -21,7 +21,7 @@ import {
   areAllNeedleGuessesLocked,
 } from './guess'
 import { isFreePhase, isGuessingPhase } from './phase'
-import { getRoundScores } from './score'
+import { getScoreState } from './score'
 
 export class GameCommander
   implements Record<CommandType, (val?: any) => Promise<void>> {
@@ -79,7 +79,9 @@ export class GameCommander
 
     if (
       allow === 'same_team' &&
-      player.team !== getNextPsychic(this.game)?.team
+      (this.game.repeat_turn
+        ? player.team === getNextPsychic(this.game)?.team
+        : player.team !== getNextPsychic(this.game)?.team)
     )
       throw new Error('Can only change psychic within same team during game')
 
@@ -142,6 +144,7 @@ export class GameCommander
     const nextCount = (this.game.psychic_counts?.[psychic.id] ?? 0) + 1
     await this.updatePath(`psychic_counts.${psychic.id}`, nextCount)
 
+    await this.delete('repeat_turn')
     await this.delete('next_psychic')
     await this.delete('clue_selected')
     await this.delete('guesses')
@@ -258,21 +261,22 @@ export class GameCommander
     await this.update('phase', 'reveal')
 
     // Get round scores and add to state scores
-    const scoreInfo = getRoundScores(this.game)
-    const [score1, score2, scoreByPlayer] = scoreInfo
-    const nextScore1 = this.game.score_team_1 + score1
-    const nextScore2 = this.game.score_team_2 + score2
-    await this.update('score_team_1', nextScore1)
-    await this.update('score_team_2', nextScore2)
+    const { total, perPlayer, win, repeatTurn } = getScoreState(this.game)
+    await this.update('score_team_1', total[0])
+    await this.update('score_team_2', total[1])
 
-    for (let i = 0; i < this.game.players.length; i++) {
-      const p = this.game.players[i]
-      const nextScore = (scoreByPlayer[p.id] ?? 0) + (p.score ?? 0)
-      await this.updatePath(`players.${i}.score`, nextScore)
+    for (let i = 0; i < perPlayer.length; i++) {
+      const { index, score } = perPlayer[i]
+      await this.updatePath(`players.${index}.score`, score)
     }
 
-    if ((nextScore1 >= 10 || nextScore2 >= 10) && nextScore1 !== nextScore2) {
+    if (win) {
       return await this.win()
+    }
+
+    if (repeatTurn) {
+      await this.delete('next_psychic')
+      await this.update('repeat_turn', true)
     }
   }
 

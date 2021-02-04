@@ -60,8 +60,13 @@ const HeaderMessage = () => {
             border-radius: 0;
           }
 
+          .wrapper > *:first-child {
+            border-radius: 0;
+          }
+
           .wrapper > *:last-child {
             border-bottom: 1px solid var(--border);
+            border-radius: 0;
           }
         }
       `}</style>

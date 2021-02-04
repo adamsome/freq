@@ -1,6 +1,6 @@
 import { Game, GameView, Player } from '../types/game.types'
 import { UserConnected } from '../types/user.types'
-import { randomItem } from '../util/random'
+import { randomHourlyItem } from '../util/random'
 import { isFreePhase, isGuessingPhase } from './phase'
 import { createPlayer, getPlayersPerTeam, getTeamPlayers } from './player'
 
@@ -55,7 +55,7 @@ export function getNextPsychic(
   game: Game,
   ...ignorePlayers: (string | { id: string })[]
 ): Player | undefined {
-  const { next_psychic, team_turn, players } = game
+  const { next_psychic, team_turn, repeat_turn, players } = game
   const ignoreIDs = ignorePlayers.map((p) => (typeof p === 'string' ? p : p.id))
 
   if (next_psychic && !ignorePlayers.includes(next_psychic)) {
@@ -63,7 +63,7 @@ export function getNextPsychic(
     if (next) return next
   }
 
-  const otherTeam = team_turn === 1 ? 2 : 1
+  const otherTeam = repeat_turn ? team_turn : team_turn === 1 ? 2 : 1
   const teamPlayers = getTeamPlayers(players, otherTeam)
   let leastPsychics: Player[] = []
   let leastPsychicCount = 0
@@ -86,7 +86,7 @@ export function getNextPsychic(
   }
   return leastPsychics.length <= 1
     ? leastPsychics[0]
-    : randomItem(leastPsychics)
+    : randomHourlyItem(leastPsychics, 0, 12)
 }
 
 export function isInvalidPlayerTeamChange(

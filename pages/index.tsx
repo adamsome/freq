@@ -56,10 +56,12 @@ export const HomePage = ({ cookie, room: randomRoom, animate }: Props) => {
     const name: string | undefined = e.currentTarget?.username?.value
 
     if (!isRoomValid(room)) {
+      setFetching(false)
       return setError('Room code must be two words separated by a dash.')
     }
 
     if (name && name.length < 3) {
+      setFetching(false)
       return setError('Username must be at least 3 letters long.')
     }
 

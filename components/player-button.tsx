@@ -37,6 +37,7 @@ const PlayerButton = ({ player, size, onClick }: Props) => {
           font-size: var(--font-size-xl);
           border: 1px solid var(--border);
           border-radius: var(--border-radius-md);
+          padding: 6px 2px 4px 14px;
         }
 
         button:hover {
@@ -48,13 +49,13 @@ const PlayerButton = ({ player, size, onClick }: Props) => {
           position: relative;
         }
 
+        button.xl div {
+          top: 0px;
+        }
+
         @media screen and (max-width: 480px) {
           button.icon {
             font-size: var(--font-size-md);
-          }
-
-          button.xl {
-            font-size: var(--font-size-xl);
           }
         }
       `}</style>

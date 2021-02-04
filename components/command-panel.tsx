@@ -9,6 +9,7 @@ const CommandPanel = () => {
   if (!game) return null
 
   const [error, setError] = useState<string | null>(null)
+  const [fetching, setFetching] = useState(false)
 
   const { currentPlayer, commands } = game
   if (!currentPlayer) return null
@@ -17,15 +18,25 @@ const CommandPanel = () => {
     e: React.MouseEvent
   ) => {
     e.preventDefault()
-    if (cmd.disabled) return
-    if (error) setError(null)
-    if (!cmd.type) return
+    if (cmd.disabled || fetching) return
+    setFetching(true)
+    if (error) {
+      setError(null)
+      setFetching(false)
+      return
+    }
+    if (!cmd.type) {
+      setFetching(false)
+      return
+    }
     const value = i > 0 ? cmd.rightValue : cmd.value
     try {
       await postCommand(cmd.type, value)
+      setFetching(false)
     } catch (err) {
       console.error(`Error posting command '${cmd.type}'.`, err.data ?? err)
       setError(String(err?.data?.message ?? err?.message))
+      setFetching(false)
     }
   }
 
@@ -36,6 +47,7 @@ const CommandPanel = () => {
           <CommandButton
             command={cmd}
             currentPlayer={currentPlayer}
+            disable={fetching}
             onClick={handleCommandClick}
           />
         </div>
