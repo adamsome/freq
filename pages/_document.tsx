@@ -5,7 +5,8 @@ import Document, {
   Main,
   NextScript,
 } from 'next/document'
-import { ColorModeScript } from '../components/color-mode-script'
+import React from 'react'
+import { DarkModeScript } from '../components/dark-mode-script'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -23,7 +24,7 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
-          <ColorModeScript initialColorMode={'system'} />
+          <DarkModeScript />
           <Main />
           <NextScript />
 

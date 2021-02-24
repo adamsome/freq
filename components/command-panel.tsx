@@ -31,7 +31,7 @@ const CommandPanel = () => {
     }
     const value = i > 0 ? cmd.rightValue : cmd.value
     try {
-      await postCommand(cmd.type, value)
+      await postCommand(game.room, cmd.type, value)
       setFetching(false)
     } catch (err) {
       console.error(`Error posting command '${cmd.type}'.`, err.data ?? err)

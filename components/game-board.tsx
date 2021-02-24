@@ -39,7 +39,7 @@ const GameBoard = ({ roomUrl }: Props) => {
   const handleGuessChange = async (guess: number) => {
     if (phase !== 'guess') return
     try {
-      await postCommand('set_guess', guess)
+      await postCommand(game.room, 'set_guess', guess)
     } catch (err) {
       console.error(`Error posting guess 'set_guess'.`, err.data ?? err)
     }
@@ -48,7 +48,7 @@ const GameBoard = ({ roomUrl }: Props) => {
   const handleClueSelect = (i: number) => async () => {
     if (!isChoosing || !isPsychic) return
     try {
-      await postCommand('select_clue', i)
+      await postCommand(game.room, 'select_clue', i)
     } catch (err) {
       console.error(`Error posting guess 'select_clue'.`, err.data ?? err)
     }
@@ -71,7 +71,7 @@ const GameBoard = ({ roomUrl }: Props) => {
 
           {game.currentPlayer && (
             <div className="section">
-              <PlayerHero player={game.currentPlayer} />
+              <PlayerHero room={game.room} player={game.currentPlayer} />
             </div>
           )}
         </>

@@ -1,13 +1,29 @@
-import { UserConnected, UserDisconnected } from '../../types/user.types'
-import withSession from '../../util/with-session'
+import {
+  getSession,
+  UserProfile,
+  withApiAuthRequired,
+} from '@auth0/nextjs-auth0'
+import { fetchUser } from '../../lib/user-store'
 
-export default withSession(async (req, res) => {
-  const user: UserConnected | null = req.session.get('user')
+export default withApiAuthRequired(async function getUser(req, res) {
+  try {
+    const session = getSession(req, res)
+    const userProfile: UserProfile | undefined = session?.user
 
-  if (user?.connected) {
-    res.json({ ...user })
-  } else {
-    const disconnectedUser: UserDisconnected = { connected: false }
-    res.json(disconnectedUser)
+    if (!userProfile?.sub) {
+      res.status(401).end('No auth user ID found.')
+      return
+    }
+
+    const user = await fetchUser(userProfile.sub)
+
+    if (!user) {
+      res.status(401).end('No user found.')
+      return
+    }
+
+    res.json(user)
+  } catch (error) {
+    res.status(error.status || 500).end(error.message)
   }
 })

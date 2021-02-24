@@ -1,13 +1,11 @@
-export interface UserConnected {
-  connected: true
+import { Dict } from './object.types'
+
+export interface User {
   id: string
-  room: string
-  name?: string
+  email: string
+  name: string
+  icon: string
+  rooms: Dict<string>
+  create_at: string
+  last_login_at: string
 }
-
-export interface UserDisconnected {
-  connected: false
-  name?: string
-}
-
-export type User = UserConnected | UserDisconnected

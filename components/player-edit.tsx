@@ -7,27 +7,28 @@ import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
 
 type Props = typeof defaultProps & {
+  room: string
   player: Player
   onClose?: () => void
 }
 
 const defaultProps = {}
 
-const PlayerEdit = ({ player, onClose }: Props) => {
+const PlayerEdit = ({ room, player, onClose }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null)
   useLayoutEffect(() => {
     inputRef.current?.select()
-  }, [inputRef.current])
+  }, [])
 
   const [icon, setIcon] = useState(player.icon ?? '')
   const [name, setName] = useState(player.name ?? '')
 
-  const handleCommand = async (e: React.MouseEvent) => {
+  const handleSave = async (e: React.MouseEvent) => {
     e.preventDefault()
-    if (name.length < 3) return
+    if (name.length < 2) return
     const cmd: CommandType = 'edit_player'
     try {
-      await postCommand(cmd, { ...player, name, icon })
+      await postCommand(room, cmd, { ...player, name, icon })
     } catch (err) {
       console.error(`Error posting command '${cmd}'.`, err.data ?? err)
     }
@@ -46,18 +47,20 @@ const PlayerEdit = ({ player, onClose }: Props) => {
         <div className="icon">{icon}</div>
       </h2>
       <div className="body">
-        <div className="grid">
-          {iconSet.map((i) => (
-            <div
-              key={i}
-              className={cx({ lit: i === icon })}
-              onClick={() => setIcon(i)}
-            >
-              {i}
-            </div>
-          ))}
+        <div className="grid-wrapper">
+          <div className="grid">
+            {iconSet.map((i) => (
+              <div
+                key={i}
+                className={cx({ lit: i === icon })}
+                onClick={() => setIcon(i)}
+              >
+                {i}
+              </div>
+            ))}
+          </div>
         </div>
-        <button className="save" onClick={handleCommand}>
+        <button className="save" onClick={handleSave}>
           Save
         </button>
       </div>
@@ -106,7 +109,7 @@ const PlayerEdit = ({ player, onClose }: Props) => {
           width: 100%;
         }
 
-        .grid {
+        .grid-wrapper {
           width: 100%;
           height: calc(100% - 2.3rem);
           display: flex;
@@ -116,6 +119,15 @@ const PlayerEdit = ({ player, onClose }: Props) => {
           background: var(--bg-2);
           padding-top: var(--stack-sm);
           font-size: var(--font-size-xl);
+          overflow: hidden;
+        }
+
+        .grid {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-wrap: wrap;
+          height: 100%;
           overflow: auto;
         }
 

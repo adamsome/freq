@@ -1,75 +1,56 @@
 import { GetServerSideProps } from 'next'
-import React from 'react'
-import Container from '../components/container'
-import LoginFormContainer from '../components/login-form-container'
-import Title from '../components/title'
-import { generateRoomKey } from '../lib/room'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
+import RoomFormContainer from '../components/room-form-container'
+import TitleMessage from '../components/title-message'
+import { ROOM_KEY, ROOM_REDIRECT_KEY } from '../lib/consts'
+import { generateRoomKey, isRoomValid } from '../lib/room'
+import { isBrowser } from '../util/dom'
 
 type Props = typeof defaultProps & {
-  cookie: string
   room: string
 }
 
 const defaultProps = {}
 
-export const HomePage = ({ cookie, room }: Props) => {
+export const HomePage = ({ room }: Props) => {
+  const router = useRouter()
+  const [showForm, setShowForm] = useState(false)
+
+  useEffect(() => {
+    if (isBrowser) {
+      const redirect = localStorage[ROOM_REDIRECT_KEY]
+      if (redirect) {
+        localStorage.removeItem(ROOM_REDIRECT_KEY)
+
+        const room = localStorage[ROOM_KEY]
+
+        if (isRoomValid(room) || room === 'profile') {
+          router.push(`/${room}`)
+          return
+        }
+      }
+
+      setShowForm(true)
+    }
+  }, [isBrowser])
+
+  const message = showForm
+    ? "Type an existing game's name to join or just click Start to create a new game."
+    : 'Loading...'
+
   return (
-    <Container cookie={cookie}>
-      <main>
-        <Title animate={true} />
-
-        <p>
-          Type an existing game&apos;s name to join or just click Start to
-          create a new game.
-        </p>
-
-        <LoginFormContainer room={room}></LoginFormContainer>
-      </main>
-
-      <footer>
-        <a
-          href="https://github.com/adamsome/freq"
-          target="_blank"
-          rel="noreferrer"
-        >
-          adamsome
-        </a>
-      </footer>
-
-      <style jsx>{`
-        main {
-          padding: var(--stack-md) 1.5rem;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        p {
-          margin-bottom: 1.7rem;
-          text-align: center;
-        }
-
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid var(--border);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-      `}</style>
-    </Container>
+    <TitleMessage subtle={!showForm} message={message}>
+      {showForm && <RoomFormContainer room={room}></RoomFormContainer>}
+    </TitleMessage>
   )
 }
 
 HomePage.defaultProps = defaultProps
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {
-      cookie: req.headers.cookie ?? '',
       room: generateRoomKey(),
     },
   }

@@ -40,7 +40,7 @@ const PlayerCard = ({ player, game, onClose }: Props) => {
   ) => {
     e.preventDefault()
     try {
-      await postCommand(type, player)
+      await postCommand(game.room, type, player)
     } catch (err) {
       console.error(`Error posting command '${type}'.`, err.data ?? err)
     }

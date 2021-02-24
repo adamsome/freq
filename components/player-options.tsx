@@ -1,16 +1,18 @@
 import React from 'react'
-import { ColorMode } from '../types/color-mode.types'
+import { DEBUG_MODE_KEY } from '../lib/consts'
 import { CommandType, Player } from '../types/game.types'
+import { User } from '../types/user.types'
 import { isBrowser } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
-import { localStorageManager } from '../util/storage-manager'
 
 type Props = typeof defaultProps & {
+  user: User
+  room?: string
   player?: Player | null
-  colorMode?: ColorMode
+  isDarkMode?: boolean
+  onDarkModeToggle?: () => void
   onDebugToggle?: () => void
-  onColorModeToggle?: () => void
   onEditPlayer?: () => void
   onLogout?: () => void
   onClose?: () => void
@@ -19,24 +21,25 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 const PlayerOptions = ({
+  user,
+  room,
   player,
-  colorMode,
+  isDarkMode,
+  onDarkModeToggle,
   onDebugToggle,
-  onColorModeToggle,
   onEditPlayer,
   onLogout,
   onClose,
 }: Props) => {
-  if (!player) return null
-
-  const debugModeVal: any =
-    isBrowser && localStorageManager().get('freq/debug-mode')
+  const debugModeVal: any = isBrowser && localStorage[DEBUG_MODE_KEY]
   const allowDebugMode = debugModeVal === true || debugModeVal === 'true'
 
   const handleCommand = (cmd: CommandType) => async (e: React.MouseEvent) => {
     e.preventDefault()
+    if (!player || !room) return
+
     try {
-      await postCommand(cmd, player)
+      await postCommand(room, cmd, player)
     } catch (err) {
       console.error(`Error posting command '${cmd}'.`, err.data ?? err)
     }
@@ -45,7 +48,7 @@ const PlayerOptions = ({
 
   return (
     <>
-      <h2 style={styleColor(player, 1)}>{player.name}</h2>
+      <h2 style={styleColor(player, 1)}>{user.name ?? 'Noname'}</h2>
       <div>
         {allowDebugMode && (
           <button style={styleColor(player)} onClick={onDebugToggle}>
@@ -53,15 +56,17 @@ const PlayerOptions = ({
           </button>
         )}
 
-        <button style={styleColor(player)} onClick={onColorModeToggle}>
-          {colorMode === 'light' ? 'Dark' : 'Light'} mode
+        <button style={styleColor(player)} onClick={onDarkModeToggle}>
+          {!isDarkMode ? 'Dark' : 'Light'} mode
         </button>
 
-        <button style={styleColor(player)} onClick={onEditPlayer}>
-          Change name and icon
-        </button>
+        {player && (
+          <button style={styleColor(player)} onClick={onEditPlayer}>
+            Change name and icon
+          </button>
+        )}
 
-        {player.leader && (
+        {player?.leader && (
           <button
             style={styleColor(player)}
             onClick={handleCommand('toggle_player_leader')}
@@ -70,7 +75,7 @@ const PlayerOptions = ({
           </button>
         )}
 
-        {player.leader && (
+        {player?.leader && (
           <button
             style={styleColor(player)}
             onClick={handleCommand('prep_new_match')}
@@ -80,7 +85,7 @@ const PlayerOptions = ({
         )}
 
         <button className="leave" onClick={onLogout}>
-          Leave the game
+          {player ? 'Leave' : 'Logout'}
         </button>
 
         <button className="close" onClick={onClose}>

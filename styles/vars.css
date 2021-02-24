@@ -50,8 +50,7 @@
   --translucent-inverse-2: #ffffffc7;
 }
 
-html[style*='freq-color-mode:dark'],
-html[style*='freq-color-mode: dark'] {
+html.dark {
   --body: #e5e5e5;
   --body-inverse: #151515;
   --subtle: #727272;

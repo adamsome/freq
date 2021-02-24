@@ -1,4 +1,5 @@
 import { mutate } from 'swr'
+import { API_GAME_COMMAND } from '../lib/consts'
 import { CommandType } from '../types/game.types'
 
 export default async function fetcher(input: RequestInfo, init?: RequestInit) {
@@ -25,15 +26,17 @@ export default async function fetcher(input: RequestInfo, init?: RequestInit) {
   }
 }
 
-export async function postJson<T>(input: RequestInfo, body: any): Promise<T> {
-  return await fetcher(input, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
+export async function postJson<T>(input: RequestInfo, body?: any): Promise<T> {
+  const headers = { 'Content-Type': 'application/json' }
+  const init: RequestInit = { method: 'POST', headers }
+  if (body) {
+    init.body = JSON.stringify(body)
+  }
+  return await fetcher(input, init)
 }
 
 export async function postCommand<T>(
+  room: string,
   type: CommandType,
   value?: any
 ): Promise<T> {
@@ -41,7 +44,8 @@ export async function postCommand<T>(
   if (value != null) {
     body.value = value
   }
-  const data = await postJson<T>('/api/command', body)
+  const path = API_GAME_COMMAND.replace('%0', room)
+  const data = await postJson<T>(path, body)
   mutate('/api/game')
   return data
 }

@@ -1,6 +1,5 @@
 import { CommandType, Game, GameView, Player } from '../types/game.types'
-import { RequestWithSession } from '../types/io.types'
-import { User, UserConnected } from '../types/user.types'
+import { User } from '../types/user.types'
 import { randomClues } from './clue'
 import { assignColor } from './color-dict'
 import {
@@ -22,6 +21,7 @@ import {
 } from './guess'
 import { isFreePhase, isGuessingPhase } from './phase'
 import { getScoreState } from './score'
+import { updateUser } from './user-store'
 
 export class GameCommander
   implements Record<CommandType, (val?: any) => Promise<void>> {
@@ -29,7 +29,7 @@ export class GameCommander
     return this.game.currentPlayer
   }
 
-  constructor(public game: GameView, private user: UserConnected) {}
+  constructor(public room: string, public game: GameView, private user: User) {}
 
   // Player Commands
 
@@ -56,8 +56,11 @@ export class GameCommander
     if (index < 0)
       throw new Error('Cannot change player team when player index not found.')
 
-    const nextPlayer = { ...this.player, name: player.name, icon: player.icon }
+    const changes = { name: player.name, icon: player.icon }
+    const nextPlayer = { ...this.player, ...changes }
     await this.updatePath(`players.${index}`, nextPlayer)
+
+    await updateUser(player.id, changes)
   }
 
   async toggle_player_leader(player: Player) {
@@ -303,31 +306,25 @@ export class GameCommander
   }
 
   private async refetch() {
-    const gameView = await GameCommander.fetchGameView(this.user)
+    const gameView = await GameCommander.fetchGameView(this.room, this.user)
     this.game = gameView
   }
 
-  private static async fetchGameView(user: UserConnected) {
-    const game = await fetchGame(user.room)
+  private static async fetchGameView(room: string, user: User) {
+    const game = await fetchGame(room)
 
     if (!game) {
       throw new Error(
         `Cannot create game commander when no game found for room ` +
-          `'${user.room}'.`
+          `'${room}'.`
       )
     }
 
     return toGameView(user.id, game, true)
   }
 
-  static async fromRequest(req: RequestWithSession): Promise<GameCommander> {
-    const user: User | undefined = req.session.get('user')
-
-    if (!user || !user.connected) {
-      throw new Error('Cannot create game commander with no user session.')
-    }
-
-    const gameView = await GameCommander.fetchGameView(user)
-    return new GameCommander(gameView, user)
+  static async fromRequest(room: string, user: User): Promise<GameCommander> {
+    const gameView = await GameCommander.fetchGameView(room, user)
+    return new GameCommander(room, gameView, user)
   }
 }

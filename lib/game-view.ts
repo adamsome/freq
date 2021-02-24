@@ -1,3 +1,4 @@
+import { OptionalId, WithId } from 'mongodb'
 import {
   Clue,
   Command,
@@ -10,7 +11,6 @@ import {
   Player,
   PlayerWithGuess,
 } from '../types/game.types'
-import { HasObjectID } from '../types/io.types'
 import { range } from '../util/array'
 import { randomHourlyItem } from '../util/random'
 import { getTeamColor } from './color-dict'
@@ -393,17 +393,17 @@ function getActivePlayers(game: Game): string[] {
 }
 
 export function toGameView(
-  userID: string,
-  game: Game & Partial<HasObjectID>,
+  id: string,
+  game: OptionalId<WithId<Game>>,
   forceTarget = false
 ): GameView {
   const { phase, clues, clue_selected, players, guesses } = game
 
-  const currentPlayer = players.find((p) => p.id === userID)
+  const currentPlayer = players.find((p) => p.id === id)
   const averageGuess = calculateAverageNeedleGuess(guesses)
   const commandsView = createCommands(game, currentPlayer, averageGuess)
 
-  const view: GameView & Partial<HasObjectID> = {
+  const view: OptionalId<WithId<GameView>> = {
     ...game,
     ...commandsView,
     currentPlayer,

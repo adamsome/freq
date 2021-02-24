@@ -1,3 +1,4 @@
+import { UserProvider } from '@auth0/nextjs-auth0'
 import { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
 import fetch from '../util/fetch-json'
@@ -18,7 +19,9 @@ export default function App({ Component, pageProps }: AppProps) {
         },
       }}
     >
-      <Component {...pageProps} />
+      <UserProvider>
+        <Component {...pageProps} />
+      </UserProvider>
     </SWRConfig>
   )
 }

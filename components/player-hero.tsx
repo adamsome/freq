@@ -5,12 +5,13 @@ import PlayerButton from './player-button'
 import PlayerEdit from './player-edit'
 
 type Props = typeof defaultProps & {
+  room: string
   player: Player
 }
 
 const defaultProps = {}
 
-const PlayerHero = ({ player }: Props) => {
+const PlayerHero = ({ room, player }: Props) => {
   const [modelOpen, setModelOpen] = useState(false)
   const handleModalOpen = () => setModelOpen(true)
   const handleModalClose = () => setModelOpen(false)
@@ -25,7 +26,7 @@ const PlayerHero = ({ player }: Props) => {
         center
         classNames={{ modal: 'freq-model-reset-sm' }}
       >
-        <PlayerEdit player={player} onClose={handleModalClose} />
+        <PlayerEdit room={room} player={player} onClose={handleModalClose} />
       </Modal>
     </>
   )

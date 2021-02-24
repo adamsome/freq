@@ -1,13 +1,13 @@
 import { Player } from '../types/game.types'
 import { Dict } from '../types/object.types'
-import { UserConnected } from '../types/user.types'
+import { User } from '../types/user.types'
 import { partition } from '../util/array'
 import { assignColor } from './color-dict'
 import { randomIcon } from './icon'
 import { randomName } from './name'
 
 export function createPlayer(
-  user: UserConnected,
+  user: User,
   team?: 1 | 2,
   leader = false,
   existingPlayers?: Player[]
@@ -15,7 +15,7 @@ export function createPlayer(
   const id = user.id
   const existingNames = existingPlayers?.map((p) => p.name ?? '')
   const name = user.name ?? randomName(existingNames)
-  const icon = randomIcon()
+  const icon = user.icon ?? randomIcon()
   let color: string | undefined
   if (team != null) {
     const existingColors = existingPlayers?.map((p) => p.color)
@@ -56,7 +56,7 @@ function getPlayerCountByTeam(players: Player[]): number[] {
   }, [] as number[])
 }
 
-export function addPlayer(players: Player[], user: UserConnected): Player[] {
+export function addPlayer(players: Player[], user: User): Player[] {
   const countByTeam = getPlayerCountByTeam(players)
   // Put new player on the smallest team
   const team = (countByTeam[1] ?? 0) > (countByTeam[2] ?? 0) ? 2 : 1

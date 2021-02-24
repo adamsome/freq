@@ -1,11 +1,13 @@
 import React from 'react'
 import { Player } from '../types/game.types'
+import { User } from '../types/user.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import IconSvg from './icon-svg'
 
 type Props = typeof defaultProps & {
-  player: Player
+  user?: User
+  player?: Player
   onClick: (e: React.MouseEvent) => void
 }
 
@@ -13,15 +15,15 @@ const defaultProps = {
   size: 'md' as 'md' | 'xl',
 }
 
-const PlayerButton = ({ player, size, onClick }: Props) => {
+const PlayerButton = ({ user, player, size, onClick }: Props) => {
   return (
     <button
       className={cx('icon', size)}
       style={styleColor(player)}
       onClick={onClick}
     >
-      {player.icon}&nbsp;&nbsp;
-      {player.name ?? 'Noname'}
+      {player?.icon ?? user?.icon ?? '🤠'}&nbsp;&nbsp;
+      {player?.name ?? user?.name ?? 'Noname'}
       <div>
         <IconSvg name="dropdown" />
       </div>

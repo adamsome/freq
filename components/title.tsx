@@ -14,7 +14,7 @@ const Title = ({ title, animate }: Props) => {
   return (
     <>
       <h1
-        style={styleLinearGradientText(animate && 'Freq')}
+        style={styleLinearGradientText('Freq')}
         className={cx({
           'animate-shift': animate,
           'animate-shift-shake-hover': animate,

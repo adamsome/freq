@@ -1,28 +1,25 @@
 import React from 'react'
 import { mutate } from 'swr'
+import { API_GAME_PHASE } from '../lib/consts'
 import { nextPhase } from '../lib/phase'
 import { GameView } from '../types/game.types'
-import { User } from '../types/user.types'
-import fetchJson, { postCommand } from '../util/fetch-json'
+import { postCommand, postJson } from '../util/fetch-json'
 
 type Props = typeof defaultProps & {
-  user?: User
   game?: GameView
 }
 
 const defaultProps = {}
 
-const DebugBar = ({ user, game }: Props) => {
+const DebugBar = ({ game }: Props) => {
   const handlePhaseNext = (offset: number) => async (e: React.MouseEvent) => {
     e.preventDefault()
+    if (!game) return
 
     const phase = nextPhase(game?.phase ?? 'prep', offset)
+
     try {
-      await fetchJson('/api/phase', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phase }),
-      })
+      await postJson(API_GAME_PHASE, { phase })
       mutate('/api/game')
     } catch (error) {
       console.error('Error updating phase.', error)
@@ -31,21 +28,18 @@ const DebugBar = ({ user, game }: Props) => {
 
   const handleReveal = async (e: React.MouseEvent) => {
     e.preventDefault()
-    await postCommand('reveal')
+    if (!game) return
+    await postCommand(game?.room, 'reveal')
   }
 
   return (
     <div className="debug wrapper">
-      {user?.connected && (
-        <>
-          <button onClick={handlePhaseNext(-1)}>&lt;</button>
-          <label>{game?.phase ?? 'No Phase'}</label>
-          <button onClick={handlePhaseNext(1)}>&gt;</button>
+      <button onClick={handlePhaseNext(-1)}>&lt;</button>
+      <label>{game?.phase ?? 'No Phase'}</label>
+      <button onClick={handlePhaseNext(1)}>&gt;</button>
 
-          {(game?.phase === 'guess' || game?.phase === 'direction') && (
-            <button onClick={handleReveal}>reveal</button>
-          )}
-        </>
+      {(game?.phase === 'guess' || game?.phase === 'direction') && (
+        <button onClick={handleReveal}>reveal</button>
       )}
 
       <style jsx>{`

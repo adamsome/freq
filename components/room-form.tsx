@@ -4,7 +4,6 @@ import { styleLinearGradient } from '../util/dom-style'
 
 type Props = typeof defaultProps & {
   room?: string
-  name?: string
   error?: string | null
   fetching?: boolean
   animate?: boolean
@@ -13,16 +12,14 @@ type Props = typeof defaultProps & {
 
 const defaultProps = {}
 
-const LoginForm = ({
+const RoomForm = ({
   error,
   onSubmit,
   room: initRoom,
-  name: initName,
   fetching,
   animate,
 }: Props) => {
-  const [room, setRoom] = useState(initRoom ?? '')
-  const [name, setName] = useState(initName ?? '')
+  const [room, setRoom] = useState<string | null>(null)
 
   const handleRoomChange = (e: React.FormEvent<HTMLInputElement>) => {
     const val = e.currentTarget.value.toLowerCase()
@@ -40,18 +37,10 @@ const LoginForm = ({
             type="text"
             name="room"
             placeholder="Room Code"
-            value={room}
+            value={room ?? initRoom}
             onChange={handleRoomChange}
             onFocus={(e) => e.currentTarget.select()}
             required
-          />
-
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={name}
-            onChange={(e) => setName(e.currentTarget.value.substr(0, 15))}
           />
         </div>
 
@@ -139,6 +128,6 @@ const LoginForm = ({
   )
 }
 
-LoginForm.defaultProps = defaultProps
+RoomForm.defaultProps = defaultProps
 
-export default LoginForm
+export default RoomForm
