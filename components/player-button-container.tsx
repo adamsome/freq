@@ -10,8 +10,8 @@ import PlayerOptions from './player-options'
 
 type Props = typeof defaultProps & {
   user: User
-  isDarkMode: boolean
-  onDarkModeToggle: () => void
+  theme?: string
+  onThemeToggle: () => void
   onDebugToggle: () => void
 }
 
@@ -19,8 +19,8 @@ const defaultProps = {}
 
 export default function PlayerButtonContainer({
   user,
-  isDarkMode,
-  onDarkModeToggle,
+  theme,
+  onThemeToggle,
   onDebugToggle,
 }: Props) {
   const router = useRouter()
@@ -49,9 +49,9 @@ export default function PlayerButtonContainer({
       >
         <PlayerOptions
           user={user}
-          isDarkMode={isDarkMode}
+          theme={theme}
           onDebugToggle={onDebugToggle}
-          onDarkModeToggle={onDarkModeToggle}
+          onThemeToggle={onThemeToggle}
           onEditPlayer={() => {
             setModelOptionsOpen(false)
             setModelEditOpen(true)

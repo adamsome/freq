@@ -11,8 +11,8 @@ import PlayerOptionButton from './player-option-button'
 
 type Props = typeof defaultProps & {
   user: User
-  isDarkMode?: boolean
-  onDarkModeToggle?: () => void
+  theme?: string
+  onThemeToggle?: () => void
   onDebugToggle?: () => void
   onEditPlayer?: () => void
   onLogout?: () => void
@@ -26,8 +26,8 @@ const Opt = PlayerOptionButton
 
 const PlayerOptions = ({
   user,
-  isDarkMode,
-  onDarkModeToggle,
+  theme,
+  onThemeToggle,
   onDebugToggle,
   onEditPlayer,
   onLogout,
@@ -40,7 +40,7 @@ const PlayerOptions = ({
   const debugModeVal: any = isBrowser && localStorage[DEBUG_MODE_KEY]
   const allowDebugMode = debugModeVal === true || debugModeVal === 'true'
 
-  const colorMode = `${!isDarkMode ? 'Dark' : 'Light'} mode`
+  const colorMode = `${theme === 'dark' ? 'Light' : 'Dark'} Mode`
   const leaveLabel = `${game ? 'Leave' : 'Log out'}`
   const handleLeave = game
     ? () => onLeave && onLeave(game.room)
@@ -75,7 +75,7 @@ const PlayerOptions = ({
       <ActionModalOptions>
         {allowDebugMode && <Opt onClick={onDebugToggle}>Debug mode</Opt>}
 
-        <Opt onClick={onDarkModeToggle}>{colorMode}</Opt>
+        <Opt onClick={onThemeToggle}>{colorMode}</Opt>
 
         {player && <Opt onClick={onEditPlayer}>Change name and icon</Opt>}
 

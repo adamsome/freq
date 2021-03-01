@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
-import React from 'react'
-import useDarkMode from '../hooks/use-dark-mode'
+import React, { useEffect, useState } from 'react'
 import { useFetchUser } from '../hooks/use-fetch-user'
+import { useTheme } from '../hooks/use-theme'
 import { API_LOGIN } from '../lib/consts'
 import Button from './button'
 import PlayerButtonContainer from './player-button-container'
@@ -15,7 +15,15 @@ const defaultProps = {}
 export default function HeaderActions({ onDebugToggle }: Props) {
   const router = useRouter()
   const { user, isLoading, error } = useFetchUser()
-  const { isDarkMode, toggleDarkMode } = useDarkMode()
+  const [mounted, setMounted] = useState(false)
+  const { theme, setTheme } = useTheme()
+
+  // Only show theme switcher after mounted to prevent rehydrate mismatch
+  useEffect(() => setMounted(true), [])
+
+  const handleThemeToggle = () => {
+    theme === 'dark' ? setTheme('light') : setTheme('dark')
+  }
 
   const handleLogin = () => {
     router.push(API_LOGIN)
@@ -29,7 +37,7 @@ export default function HeaderActions({ onDebugToggle }: Props) {
     )
   }
 
-  if (isLoading) {
+  if (isLoading || !mounted) {
     return <Button gray>Loading...</Button>
   }
 
@@ -37,8 +45,8 @@ export default function HeaderActions({ onDebugToggle }: Props) {
     return (
       <PlayerButtonContainer
         user={user}
-        isDarkMode={isDarkMode}
-        onDarkModeToggle={() => toggleDarkMode()}
+        theme={theme}
+        onThemeToggle={handleThemeToggle}
         onDebugToggle={onDebugToggle}
       ></PlayerButtonContainer>
     )
@@ -46,8 +54,8 @@ export default function HeaderActions({ onDebugToggle }: Props) {
 
   return (
     <>
-      <Button className="mr-1.5 text-xl" onClick={toggleDarkMode}>
-        {!isDarkMode ? 'Dark' : 'Light'} Mode
+      <Button className="mr-1.5 text-xl" onClick={handleThemeToggle}>
+        {theme === 'dark' ? 'Light' : 'Dark'} Mode
       </Button>
 
       <Button className="text-xl" onClick={handleLogin}>

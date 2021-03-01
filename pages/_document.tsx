@@ -6,7 +6,6 @@ import Document, {
   NextScript,
 } from 'next/document'
 import React from 'react'
-import { DarkModeScript } from '../components/dark-mode-script'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -25,7 +24,6 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
-          <DarkModeScript />
           <Main />
           <NextScript />
         </body>
