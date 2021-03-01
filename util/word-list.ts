@@ -1,7 +1,4 @@
-// From punkave/random-words
-// License: https://github.com/punkave/random-words/blob/master/LICENSE
-// Source: https://github.com/punkave/random-words/blob/master/index.js
-
+/*! punkave/random-words v1.1.1 | MIT License | https://github.com/punkave/random-words/blob/master/index.js */
 /** 2048 (2^11) simple words */
 const wordList = [
   'ability',

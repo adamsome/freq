@@ -1,7 +1,4 @@
-// From jaredLunde/react-hook
-// License: https://github.com/jaredLunde/react-hook/blob/master/LICENSE
-// Source: https://github.com/jaredLunde/react-hook/tree/master/packages/throttle#readme
-
+/*! @react-hook/throttle v2.2.0 | MIT License | https://github.com/jaredLunde/react-hook/tree/master/packages/throttle#readme */
 import * as React from 'react'
 import useLatest from './use-latest'
 

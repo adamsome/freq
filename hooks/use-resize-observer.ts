@@ -1,7 +1,4 @@
-// From jaredLunde/react-hook
-// License: https://github.com/jaredLunde/react-hook/blob/master/LICENSE
-// Source: https://github.com/jaredLunde/react-hook/blob/master/packages/resize-observer/src/index.tsx
-
+/*! @react-hook/resize-observer v1.2.0 | MIT License | https://github.com/jaredLunde/react-hook/blob/master/packages/resize-observer/src/index.tsx */
 import * as React from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import useLatest from './use-latest'

@@ -1,7 +1,4 @@
-// From diracdeltas/niceware
-// License: https://github.com/diracdeltas/niceware/blob/master/LICENSE
-// Source: https://github.com/diracdeltas/niceware/blob/master/lib/main.js
-
+/*! diracdeltas/niceware v2.0.1 | MIT License | https://github.com/diracdeltas/niceware/blob/master/lib/main.js */
 import * as crypto from 'crypto'
 import wordList from './word-list'
 

@@ -1,8 +1,7 @@
+/*! ant-design v4.12.3 | MIT License | https://github.com/ant-design/ant-design/blob/master/components/button/button.tsx */
 import React from 'react'
 import { cx } from '../util/dom'
 import { omit } from '../util/object'
-
-/*! ant-design v4.12.3 | MIT License | https://github.com/ant-design/ant-design/blob/master/components/button/button.tsx */
 
 const ButtonHTMLTypes = ['submit', 'button', 'reset'] as const
 export type ButtonHTMLType = typeof ButtonHTMLTypes[number]

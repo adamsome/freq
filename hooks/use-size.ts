@@ -1,7 +1,4 @@
-// From jaredLunde/react-hook
-// License: https://github.com/jaredLunde/react-hook/blob/master/LICENSE
-// Source: https://github.com/jaredLunde/react-hook/blob/master/packages/size/src/index.tsx
-
+/*! @react-hook/size v2.1.1 | MIT License | https://github.com/jaredLunde/react-hook/blob/master/packages/size/src/index.tsx */
 import * as React from 'react'
 import useResizeObserver from './use-resize-observer'
 import useLayoutEffect from './use-passive-layout-effect'

@@ -1,7 +1,4 @@
-// From jaredLunde/react-hook
-// License: https://github.com/jaredLunde/react-hook/blob/master/LICENSE
-// Source: https://github.com/jaredLunde/react-hook/blob/master/packages/debounce/src/index.tsx
-
+/*! @react-hook/debounce v3.0.0 | MIT License | https://github.com/jaredLunde/react-hook/blob/master/packages/debounce/src/index.tsx */
 import * as React from 'react'
 import useLatest from './use-latest'
 

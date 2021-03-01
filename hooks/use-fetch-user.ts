@@ -28,13 +28,11 @@ export function useFetchUser() {
 
   let user: User | undefined
   let error = authError
-  let isLoading = false
 
   if (authUser) {
     if (userError) error = userError
-    else if (!_user) isLoading = true
-    else user = _user
+    else if (_user) user = _user
   }
 
-  return { error, isLoading, user, isLoggedOut }
+  return { error, isLoading: !user && !error, user, isLoggedOut }
 }

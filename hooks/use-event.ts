@@ -1,7 +1,4 @@
-// From jaredLunde/react-hook
-// License: https://github.com/jaredLunde/react-hook/blob/master/LICENSE
-// Source: https://github.com/jaredLunde/react-hook/tree/master/packages/event#readme
-
+/*! @react-hook/event v1.2.3 | MIT License | https://github.com/jaredLunde/react-hook/tree/master/packages/event#readme */
 import * as React from 'react'
 import useLayoutEffect from './use-passive-layout-effect'
 

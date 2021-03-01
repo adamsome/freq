@@ -1,7 +1,4 @@
-// From ghosh/uiGradients
-// License: https://github.com/ghosh/uiGradients/blob/master/LICENSE.md
-// Source: https://github.com/ghosh/uiGradients/blob/master/gradients.json
-
+/*! From ghosh/uiGradients | MIT License | https://github.com/ghosh/uiGradients/blob/master/gradients.json */
 import { Dict } from '../types/object.types'
 import { objectKeys } from '../util/object'
 import { randomItem } from '../util/random'
