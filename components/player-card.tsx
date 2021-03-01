@@ -1,25 +1,32 @@
 import React from 'react'
+import useGame from '../hooks/use-game'
 import {
   getNextPsychic,
   getTeamName,
   isInvalidPlayerTeamChange,
 } from '../lib/game'
-import { CommandType, GameView, Player } from '../types/game.types'
+import { CommandType, Player } from '../types/game.types'
+import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
+import ActionModalOptions from './action-modal-options'
+import PlayerOptionButton from './player-option-button'
 
 type Props = typeof defaultProps & {
   player?: Player | null
-  game: GameView
   onClose?: () => void
 }
 
 const defaultProps = {}
 
-const PlayerCard = ({ player, game, onClose }: Props) => {
-  if (!player) return null
+const Opt = PlayerOptionButton
+
+const PlayerCard = ({ player, onClose }: Props) => {
+  const { game, mutate } = useGame()
+  if (!game || !player) return null
 
   const { phase, psychic, canChangePsychicTo, team_turn } = game
+
   const teamName = getTeamName(player.team)
   const opposingTeamName = getTeamName(player.team === 1 ? 2 : 1)
   const nextPsychic = getNextPsychic(game)
@@ -32,15 +39,13 @@ const PlayerCard = ({ player, game, onClose }: Props) => {
       : !nextPsychic || player.team === nextPsychic.team
 
   const canChangePsychic = phase === 'choose' && player.team === team_turn
-
   const canChangeTeam = !isInvalidPlayerTeamChange(game, player)
 
-  const handlePlayerCommand = (type: CommandType) => async (
-    e: React.MouseEvent
-  ) => {
+  const handleCommand = (type: CommandType) => async (e: React.MouseEvent) => {
     e.preventDefault()
     try {
       await postCommand(game.room, type, player)
+      mutate()
     } catch (err) {
       console.error(`Error posting command '${type}'.`, err.data ?? err)
     }
@@ -49,108 +54,52 @@ const PlayerCard = ({ player, game, onClose }: Props) => {
 
   return (
     <>
-      <h2 style={styleColor(player, 1)}>{player.name}</h2>
-      <div>
+      <h2
+        className={cx(
+          'bg-gray-400 dark:bg-gray-700',
+          'text-3xl text-white font-semibold',
+          'm-0 px-4 py-2'
+        )}
+        style={styleColor(player, 1)}
+      >
+        {player.name}
+      </h2>
+
+      <ActionModalOptions>
         {canChangeTeam && (
-          <button
-            style={styleColor(player)}
-            onClick={handlePlayerCommand('change_player_team')}
-          >
+          <Opt onClick={handleCommand('change_player_team')}>
             Move to {opposingTeamName} team
-          </button>
+          </Opt>
         )}
 
         {psychic !== player.id &&
           nextPsychic?.id !== player.id &&
           canChangeNextPsychic && (
-            <button
-              style={styleColor(player)}
-              onClick={handlePlayerCommand('set_next_psychic')}
-            >
+            <Opt onClick={handleCommand('set_next_psychic')}>
               Make next psychic
-            </button>
+            </Opt>
           )}
 
         {psychic !== player.id &&
           nextPsychic?.id !== player.id &&
           canChangePsychic && (
-            <button
-              style={styleColor(player)}
-              onClick={handlePlayerCommand('set_current_psychic')}
-            >
+            <Opt onClick={handleCommand('set_current_psychic')}>
               Change to current psychic
-            </button>
+            </Opt>
           )}
 
         {!player.leader && (
-          <button
-            style={styleColor(player)}
-            onClick={handlePlayerCommand('toggle_player_leader')}
-          >
+          <Opt onClick={handleCommand('toggle_player_leader')}>
             Make {teamName} leader
-          </button>
+          </Opt>
         )}
 
-        <button
-          style={styleColor(player)}
-          onClick={handlePlayerCommand('kick_player')}
-        >
-          Kick player
-        </button>
+        <Opt onClick={handleCommand('kick_player')}>Kick player</Opt>
 
-        <button className="close" onClick={onClose}>
+        <Opt close onClick={onClose}>
           Close
-        </button>
-      </div>
-
-      <style jsx>{`
-        h2 {
-          color: var(--body-light);
-          background: var(--translucent);
-          margin: 0;
-          padding: 0.2em calc(var(--inset-md) + 28px) 0.2em var(--inset-md);
-        }
-
-        div {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          padding: 0;
-          min-width: 16em;
-        }
-
-        div > * {
-          flex: 0;
-          width: 100%;
-        }
-
-        button {
-          text-align: left;
-          padding: var(--stack-sm) var(--inset-md);
-          color: var(--body);
-          border-radius: 0;
-        }
-
-        button:not(:last-child),
-        button:focus:not(:last-child) {
-          border: 0;
-          border-bottom: 1px solid var(--border-1);
-        }
-
-        button:hover {
-          background: var(--bg-2);
-        }
-
-        button.close {
-          background: var(--bg-2);
-          border: 0;
-          color: var(--subtle);
-        }
-
-        button.close:hover {
-          color: var(--body);
-        }
-      `}</style>
+        </Opt>
+      </ActionModalOptions>
     </>
   )
 }

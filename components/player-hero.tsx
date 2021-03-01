@@ -1,33 +1,26 @@
 import React, { useState } from 'react'
-import Modal from 'react-responsive-modal'
-import { Player } from '../types/game.types'
+import ActionModal from './action-modal'
 import PlayerButton from './player-button'
 import PlayerEdit from './player-edit'
 
-type Props = typeof defaultProps & {
-  room: string
-  player: Player
-}
+type Props = typeof defaultProps
 
 const defaultProps = {}
 
-const PlayerHero = ({ room, player }: Props) => {
+const PlayerHero = (_: Props) => {
   const [modelOpen, setModelOpen] = useState(false)
   const handleModalOpen = () => setModelOpen(true)
   const handleModalClose = () => setModelOpen(false)
 
   return (
     <>
-      <PlayerButton player={player} size="xl" onClick={handleModalOpen} />
+      <div className="mb-6">
+        <PlayerButton hero onClick={handleModalOpen} />
+      </div>
 
-      <Modal
-        open={modelOpen}
-        onClose={handleModalClose}
-        center
-        classNames={{ modal: 'freq-model-reset-sm' }}
-      >
-        <PlayerEdit room={room} player={player} onClose={handleModalClose} />
-      </Modal>
+      <ActionModal open={modelOpen} onClose={handleModalClose}>
+        <PlayerEdit onClose={handleModalClose} />
+      </ActionModal>
     </>
   )
 }

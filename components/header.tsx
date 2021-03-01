@@ -1,58 +1,33 @@
 import React, { useState } from 'react'
-import { GameView } from '../types/game.types'
+import { cx } from '../util/dom'
 import DebugBar from './debug-bar'
 import HeaderActions from './header-actions'
 import HeaderTitle from './header-title'
 
-type Props = typeof defaultProps & {
-  game?: GameView
-}
+type Props = typeof defaultProps
 
 const defaultProps = {}
 
-export default function Header({ game }: Props) {
+export default function Header(_: Props) {
   const [showDebug, setShowDebug] = useState(false)
 
   return (
-    <header>
-      {showDebug && <DebugBar game={game} />}
+    <header
+      className={cx(
+        'fixed left-0 top-0 flex-center flex-col',
+        'w-full z-30',
+        showDebug ? 'h-18' : 'h-12',
+        'bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-80 bg-blur',
+        'border-b border-gray-200 dark:border-gray-900'
+      )}
+    >
+      {showDebug && <DebugBar />}
 
-      <div className="wrapper">
-        <HeaderTitle game={game} />
+      <div className="flex-center w-full h-12 px-4">
+        <HeaderTitle />
 
-        <HeaderActions
-          game={game}
-          onDebugToggle={() => setShowDebug(!showDebug)}
-        />
+        <HeaderActions onDebugToggle={() => setShowDebug(!showDebug)} />
       </div>
-
-      <style jsx>{`
-        header {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          min-height: 3em;
-          flex: 0 0 3em;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          border-bottom: 1px solid var(--border);
-          background: var(--translucent-inverse-2);
-          backdrop-filter: blur(10px);
-          z-index: 100;
-        }
-
-        header .wrapper {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 3em;
-          width: 100%;
-          padding: 0 var(--inset-md);
-        }
-      `}</style>
     </header>
   )
 }

@@ -1,4 +1,4 @@
-export const API_GAME = '/api/games'
+export const API_GAME = '/api/games/%0'
 export const API_GAME_COMMAND = '/api/games/%0/command'
 export const API_GAME_LEAVE = '/api/games/%0/leave'
 export const API_GAME_JOIN = '/api/games/%0/join'

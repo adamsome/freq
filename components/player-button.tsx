@@ -1,24 +1,33 @@
 import React from 'react'
-import { Player } from '../types/game.types'
+import useGame from '../hooks/use-game'
 import { User } from '../types/user.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
+import Button from './button'
 import IconSvg from './icon-svg'
 
 type Props = typeof defaultProps & {
   user?: User
-  player?: Player
+  hero?: boolean
   onClick: (e: React.MouseEvent) => void
 }
 
-const defaultProps = {
-  size: 'md' as 'md' | 'xl',
-}
+const defaultProps = {}
 
-const PlayerButton = ({ user, player, size, onClick }: Props) => {
+const PlayerButton = ({ user, hero, onClick }: Props) => {
+  const { game } = useGame()
+  const player = game?.currentPlayer
+
   return (
-    <button
-      className={cx('icon', size)}
+    <Button
+      className={cx('flex pr-2 text-center', {
+        'text-xl': !hero,
+        'text-3xl': hero,
+        'border border-gray-300 dark:border-gray-700': hero,
+        'focus:border-blue-700 dark:focus:border-blue-700': hero,
+        'pt-1.5 pr-0.5 pb-1 pl-3.5': hero,
+      })}
+      gray={player?.team != null}
       style={styleColor(player)}
       onClick={onClick}
     >
@@ -27,41 +36,7 @@ const PlayerButton = ({ user, player, size, onClick }: Props) => {
       <div>
         <IconSvg name="dropdown" />
       </div>
-      <style jsx>{`
-        button {
-          display: flex;
-          align-items: center;
-          padding: 0 0 0 var(--inset-xs);
-          font-size: var(--font-size-lg);
-        }
-
-        button.xl {
-          font-size: var(--font-size-xl);
-          border: 1px solid var(--border);
-          border-radius: var(--border-radius-md);
-          padding: 6px 2px 4px 14px;
-        }
-
-        button:hover {
-          background: var(--bg-1);
-        }
-
-        button div {
-          top: 2px;
-          position: relative;
-        }
-
-        button.xl div {
-          top: 0px;
-        }
-
-        @media screen and (max-width: 480px) {
-          button.icon {
-            font-size: var(--font-size-md);
-          }
-        }
-      `}</style>
-    </button>
+    </Button>
   )
 }
 

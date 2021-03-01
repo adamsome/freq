@@ -1,17 +1,15 @@
 import React from 'react'
-import { mutate } from 'swr'
+import useGame from '../hooks/use-game'
 import { API_GAME_PHASE } from '../lib/consts'
 import { nextPhase } from '../lib/phase'
-import { GameView } from '../types/game.types'
 import { postCommand, postJson } from '../util/fetch-json'
-
-type Props = typeof defaultProps & {
-  game?: GameView
-}
+import Button from './button'
 
 const defaultProps = {}
 
-const DebugBar = ({ game }: Props) => {
+const DebugBar = () => {
+  const { game } = useGame()
+
   const handlePhaseNext = (offset: number) => async (e: React.MouseEvent) => {
     e.preventDefault()
     if (!game) return
@@ -20,7 +18,6 @@ const DebugBar = ({ game }: Props) => {
 
     try {
       await postJson(API_GAME_PHASE, { phase })
-      mutate('/api/game')
     } catch (error) {
       console.error('Error updating phase.', error)
     }
@@ -33,32 +30,18 @@ const DebugBar = ({ game }: Props) => {
   }
 
   return (
-    <div className="debug wrapper">
-      <button onClick={handlePhaseNext(-1)}>&lt;</button>
+    <div className="h-6 pt-2">
+      <Button className="mx-1" onClick={handlePhaseNext(-1)}>
+        &lt;
+      </Button>
       <label>{game?.phase ?? 'No Phase'}</label>
-      <button onClick={handlePhaseNext(1)}>&gt;</button>
+      <Button className="mx-1" onClick={handlePhaseNext(1)}>
+        &gt;
+      </Button>
 
       {(game?.phase === 'guess' || game?.phase === 'direction') && (
-        <button onClick={handleReveal}>reveal</button>
+        <Button onClick={handleReveal}>reveal</Button>
       )}
-
-      <style jsx>{`
-        .debug.wrapper {
-          font-size: var(--font-size-sm);
-          min-height: 2em;
-        }
-
-        .debug button,
-        .debug a {
-          padding: 0 2px;
-          margin: 0 2px;
-        }
-
-        .debug label {
-          width: 4.2em;
-          text-align: center;
-        }
-      `}</style>
     </div>
   )
 }

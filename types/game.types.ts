@@ -108,3 +108,5 @@ export interface GameView extends Game, CommandsView {
   canChangePsychicTo: 'any' | 'same_team' | 'none'
   activePlayers: string[]
 }
+
+export type ScoreType = 'points' | 'wins'

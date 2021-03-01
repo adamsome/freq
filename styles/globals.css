@@ -1,0 +1,146 @@
+:root {
+  /* Colors */
+  --text: #000;
+  --input-bg: #fff;
+  --input-border: #d5d5d5;
+}
+
+html.dark {
+  --text: #fff;
+  --input-bg: #151515;
+  --input-border: #151515;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-white;
+
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+  }
+
+  html.dark {
+    @apply bg-black;
+  }
+
+  body {
+    text-rendering: optimizeLegibility;
+    -webkit-overflow-scrolling: touch;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  }
+
+  /* Selection */
+
+  ::selection {
+    @apply bg-blue-200;
+    @apply text-black;
+  }
+
+  ::-moz-selection {
+    @apply bg-blue-200;
+    @apply text-black;
+  }
+
+  ::-webkit-selection {
+    @apply bg-blue-200;
+    @apply text-black;
+  }
+
+  /* Scrollbars */
+
+  ::-webkit-scrollbar {
+    @apply bg-transparent;
+    @apply w-3.5;
+    @apply h-3.5;
+  }
+
+  /* Prevent white scrollbar when dialog open */
+  ::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    @apply bg-gray-200;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-900;
+  }
+
+  ::-webkit-scrollbar-corner {
+    @apply bg-transparent;
+    @apply text-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    @apply bg-gray-700;
+  }
+
+  ::-webkit-scrollbar-thumb:horizontal,
+  ::-webkit-scrollbar-thumb:vertical {
+    @apply bg-clip-padding;
+  }
+
+  /* Dark-mode overrides */
+
+  /* Selection */
+
+  .dark ::selection {
+    @apply bg-blue-800;
+    @apply text-white;
+  }
+
+  .dark ::-moz-selection {
+    @apply bg-blue-800;
+    @apply text-white;
+  }
+
+  .dark ::-webkit-selection {
+    @apply bg-blue-800;
+    @apply text-white;
+  }
+
+  /* Scrollbars */
+
+  .dark::-webkit-scrollbar,
+  .dark body::-webkit-scrollbar {
+    @apply bg-black;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-gray-900;
+  }
+}
+
+@layer utilities {
+  .bg-blur {
+    backdrop-filter: blur(10px);
+  }
+
+  .flex-start {
+    @apply flex justify-start items-start;
+  }
+
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+
+  .modal {
+    @apply max-w-md m-4 p-0 overflow-hidden;
+  }
+
+  .vertical-rl {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+}
+
+/** Vendors */
+
+.react-responsive-modal-modal {
+  @apply bg-input-bg rounded-lg shadow-2xl;
+}
+
+.react-responsive-modal-modal svg {
+  @apply text-white fill-current;
+}

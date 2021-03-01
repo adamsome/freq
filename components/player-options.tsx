@@ -1,45 +1,58 @@
 import React from 'react'
+import useGame from '../hooks/use-game'
 import { DEBUG_MODE_KEY } from '../lib/consts'
-import { CommandType, Player } from '../types/game.types'
+import { CommandType } from '../types/game.types'
 import { User } from '../types/user.types'
-import { isBrowser } from '../util/dom'
+import { cx, isBrowser } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
+import ActionModalOptions from './action-modal-options'
+import PlayerOptionButton from './player-option-button'
 
 type Props = typeof defaultProps & {
   user: User
-  room?: string
-  player?: Player | null
   isDarkMode?: boolean
   onDarkModeToggle?: () => void
   onDebugToggle?: () => void
   onEditPlayer?: () => void
   onLogout?: () => void
+  onLeave?: (room: string) => void
   onClose?: () => void
 }
 
 const defaultProps = {}
 
+const Opt = PlayerOptionButton
+
 const PlayerOptions = ({
   user,
-  room,
-  player,
   isDarkMode,
   onDarkModeToggle,
   onDebugToggle,
   onEditPlayer,
   onLogout,
+  onLeave,
   onClose,
 }: Props) => {
+  const { game, mutate } = useGame()
+  const player = game?.currentPlayer
+
   const debugModeVal: any = isBrowser && localStorage[DEBUG_MODE_KEY]
   const allowDebugMode = debugModeVal === true || debugModeVal === 'true'
 
+  const colorMode = `${!isDarkMode ? 'Dark' : 'Light'} mode`
+  const leaveLabel = `${game ? 'Leave' : 'Log out'}`
+  const handleLeave = game
+    ? () => onLeave && onLeave(game.room)
+    : () => onLogout && onLogout()
+
   const handleCommand = (cmd: CommandType) => async (e: React.MouseEvent) => {
     e.preventDefault()
-    if (!player || !room) return
+    if (!game || !player) return
 
     try {
-      await postCommand(room, cmd, player)
+      await postCommand(game.room, cmd, player)
+      mutate()
     } catch (err) {
       console.error(`Error posting command '${cmd}'.`, err.data ?? err)
     }
@@ -48,103 +61,42 @@ const PlayerOptions = ({
 
   return (
     <>
-      <h2 style={styleColor(player, 1)}>{user.name ?? 'Noname'}</h2>
-      <div>
-        {allowDebugMode && (
-          <button style={styleColor(player)} onClick={onDebugToggle}>
-            Debug mode
-          </button>
+      <h2
+        className={cx(
+          'bg-gray-400 dark:bg-gray-700',
+          'text-3xl text-white font-semibold',
+          'm-0 px-4 py-2'
         )}
+        style={styleColor(player, 1)}
+      >
+        {user.name ?? 'Noname'}
+      </h2>
 
-        <button style={styleColor(player)} onClick={onDarkModeToggle}>
-          {!isDarkMode ? 'Dark' : 'Light'} mode
-        </button>
+      <ActionModalOptions>
+        {allowDebugMode && <Opt onClick={onDebugToggle}>Debug mode</Opt>}
 
-        {player && (
-          <button style={styleColor(player)} onClick={onEditPlayer}>
-            Change name and icon
-          </button>
-        )}
+        <Opt onClick={onDarkModeToggle}>{colorMode}</Opt>
+
+        {player && <Opt onClick={onEditPlayer}>Change name and icon</Opt>}
 
         {player?.leader && (
-          <button
-            style={styleColor(player)}
-            onClick={handleCommand('toggle_player_leader')}
-          >
+          <Opt onClick={handleCommand('toggle_player_leader')}>
             Remove as leader
-          </button>
+          </Opt>
         )}
 
         {player?.leader && (
-          <button
-            style={styleColor(player)}
-            onClick={handleCommand('prep_new_match')}
-          >
-            Start a new match
-          </button>
+          <Opt onClick={handleCommand('prep_new_match')}>Start a new match</Opt>
         )}
 
-        <button className="leave" onClick={onLogout}>
-          {player ? 'Leave' : 'Logout'}
-        </button>
+        <Opt leave onClick={handleLeave}>
+          {leaveLabel}
+        </Opt>
 
-        <button className="close" onClick={onClose}>
+        <Opt close onClick={onClose}>
           Close
-        </button>
-      </div>
-
-      <style jsx>{`
-        h2 {
-          color: var(--body-light);
-          background: var(--translucent);
-          margin: 0;
-          padding: 0.2em calc(var(--inset-md) + 28px) 0.2em var(--inset-md);
-        }
-
-        div {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          padding: 0;
-          min-width: 16em;
-        }
-
-        div > * {
-          flex: 0;
-          width: 100%;
-        }
-
-        button {
-          text-align: left;
-          padding: var(--stack-sm) var(--inset-md);
-          color: var(--body);
-          border-radius: 0;
-        }
-
-        button:not(:last-child),
-        button:focus:not(:last-child) {
-          border: 0;
-          border-bottom: 1px solid var(--border-1);
-        }
-
-        button:hover {
-          background: var(--bg-2);
-        }
-
-        button.close {
-          background: var(--bg-2);
-          border: 0;
-          color: var(--subtle);
-        }
-
-        button.close:hover {
-          color: var(--body);
-        }
-
-        .leave {
-          color: brown;
-        }
-      `}</style>
+        </Opt>
+      </ActionModalOptions>
     </>
   )
 }

@@ -1,20 +1,24 @@
 import React, { useRef, useState } from 'react'
+import useGame from '../hooks/use-game'
 import useLayoutEffect from '../hooks/use-passive-layout-effect'
 import iconSet from '../lib/icon'
-import { CommandType, Player } from '../types/game.types'
+import { CommandType } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
+import PlayerOptionButton from './player-option-button'
 
 type Props = typeof defaultProps & {
-  room: string
-  player: Player
   onClose?: () => void
 }
 
 const defaultProps = {}
 
-const PlayerEdit = ({ room, player, onClose }: Props) => {
+const PlayerEdit = ({ onClose }: Props) => {
+  const { game, mutate } = useGame()
+  const player = game?.currentPlayer
+  if (!game || !player) return null
+
   const inputRef = useRef<HTMLInputElement>(null)
   useLayoutEffect(() => {
     inputRef.current?.select()
@@ -28,7 +32,8 @@ const PlayerEdit = ({ room, player, onClose }: Props) => {
     if (name.length < 2) return
     const cmd: CommandType = 'edit_player'
     try {
-      await postCommand(room, cmd, { ...player, name, icon })
+      await postCommand(game.room, cmd, { ...player, name, icon })
+      mutate()
     } catch (err) {
       console.error(`Error posting command '${cmd}'.`, err.data ?? err)
     }
@@ -37,150 +42,55 @@ const PlayerEdit = ({ room, player, onClose }: Props) => {
 
   return (
     <>
-      <h2 style={styleColor(player, 1)}>
+      <h2
+        className={cx(
+          'bg-gray-400 dark:bg-gray-700',
+          'text-3xl text-white font-semibold'
+        )}
+        style={styleColor(player, 1)}
+      >
         <input
+          className={cx(
+            'xx w-full px-12 py-2 focus:outline-none',
+            'bg-transparent',
+            'font-semibold'
+          )}
           ref={inputRef}
           type="text"
           value={name}
-          onChange={(e) => setName(e.currentTarget.value.substr(0, 15))}
+          onChange={(e) => setName(e.currentTarget.value.substr(0, 16))}
         />
-        <div className="icon">{icon}</div>
+        <div className="absolute top-2 left-2.5">{icon}</div>
       </h2>
-      <div className="body">
-        <div className="grid-wrapper">
-          <div className="grid">
-            {iconSet.map((i) => (
-              <div
-                key={i}
-                className={cx({ lit: i === icon })}
-                onClick={() => setIcon(i)}
-              >
-                {i}
-              </div>
-            ))}
-          </div>
+
+      <div className="flex-start flex-col p-0 w-full h-96 overflow-hidden">
+        <div className="flex-1 flex-center flex-wrap pt-2 overflow-auto">
+          {iconSet.map((i) => (
+            <div
+              key={i}
+              className={cx(
+                'flex-center align-middle transition-colors',
+                'text-3xl h-11 px-1.5 cursor-pointer',
+                'hover:bg-gray-200 dark:hover:bg-black',
+                'border border-transparent',
+                'hover:border-blue-700 rounded-lg',
+                { 'bg-gray-200 dark:bg-black': i === icon }
+              )}
+              onClick={() => setIcon(i)}
+            >
+              {i}
+            </div>
+          ))}
         </div>
-        <button className="save" onClick={handleSave}>
-          Save
-        </button>
       </div>
 
-      <style jsx>{`
-        h2 {
-          position: relative;
-          color: var(--body-light);
-          background: var(--translucent);
-          margin: 0;
-          padding: 0;
-        }
-
-        input {
-          background: transparent;
-          height: 100%;
-          max-width: 100%;
-          width: 100%;
-          margin: 0;
-          padding-left: 3rem;
-          font-weight: 600;
-          border-color: transparent;
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-
-        .icon {
-          position: absolute;
-          top: 0;
-          left: 0.7rem;
-          font-size: var(--font-size-xl);
-        }
-
-        .body {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          padding: 0;
-          min-width: 16em;
-          height: 400px;
-          overflow: hidden;
-        }
-
-        .body > * {
-          flex: 0 0 auto;
-          width: 100%;
-        }
-
-        .grid-wrapper {
-          width: 100%;
-          height: calc(100% - 2.3rem);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-wrap: wrap;
-          background: var(--bg-2);
-          padding-top: var(--stack-sm);
-          font-size: var(--font-size-xl);
-          overflow: hidden;
-        }
-
-        .grid {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-wrap: wrap;
-          height: 100%;
-          overflow: auto;
-        }
-
-        .grid > * {
-          padding: 0 0.4rem;
-          height: 2.65rem;
-          border: 1px solid transparent;
-          border-radius: var(--border-radius-md);
-          cursor: pointer;
-        }
-
-        .grid > *.lit {
-          background: var(--bg);
-        }
-
-        .grid > *:hover {
-          background: var(--bg);
-          border: 1px solid var(--primary);
-        }
-
-        button {
-          text-align: left;
-          padding: var(--stack-sm) var(--inset-md);
-          color: var(--body);
-          border-radius: 0;
-        }
-
-        button:not(:last-child),
-        button:focus:not(:last-child) {
-          border: 0;
-          border-bottom: 1px solid var(--border-1);
-        }
-
-        button:hover {
-          background: var(--bg-2);
-        }
-
-        button.save {
-          background: var(--primary);
-          border: 0;
-          color: var(--body-light);
-          border-bottom-left-radius: var(--border-radius-sm);
-          border-bottom-right-radius: var(--border-radius-sm);
-        }
-
-        button.save:hover {
-          background: var(--primary-lit);
-        }
-
-        button.close:hover {
-          color: var(--body);
-        }
-      `}</style>
+      <PlayerOptionButton
+        noDivider
+        className="bg-blue-700 hover:bg-blue-900 dark:hover:bg-blue-600 text-white text-2xl"
+        onClick={handleSave}
+      >
+        Save
+      </PlayerOptionButton>
     </>
   )
 }

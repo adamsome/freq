@@ -1,19 +1,15 @@
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import Modal from 'react-responsive-modal'
-import { mutate } from 'swr'
-import { API_GAME_LEAVE, API_LOGOUT, API_USER } from '../lib/consts'
-import { Player } from '../types/game.types'
+import { API_GAME_LEAVE, API_LOGOUT } from '../lib/consts'
 import { User } from '../types/user.types'
 import { postJson } from '../util/fetch-json'
+import ActionModal from './action-modal'
 import PlayerButton from './player-button'
 import PlayerEdit from './player-edit'
 import PlayerOptions from './player-options'
 
 type Props = typeof defaultProps & {
   user: User
-  room?: string
-  player?: Player
   isDarkMode: boolean
   onDarkModeToggle: () => void
   onDebugToggle: () => void
@@ -23,8 +19,6 @@ const defaultProps = {}
 
 export default function PlayerButtonContainer({
   user,
-  room,
-  player,
   isDarkMode,
   onDarkModeToggle,
   onDebugToggle,
@@ -36,33 +30,24 @@ export default function PlayerButtonContainer({
   const [modelEditOpen, setModelEditOpen] = useState(false)
 
   const handleLogout = async () => {
-    if (player && room) {
-      await postJson(API_GAME_LEAVE.replace('%0', room))
-      mutate(API_USER)
-      router.push('/')
-    } else {
-      router.push(API_LOGOUT)
-    }
+    router.push(API_LOGOUT)
+  }
+
+  const handleLeave = async (room: string) => {
+    router.push('/')
+    await postJson(API_GAME_LEAVE.replace('%0', room))
   }
 
   return (
     <>
-      <PlayerButton
-        user={user}
-        player={player}
-        onClick={() => setModelOptionsOpen(true)}
-      />
+      <PlayerButton user={user} onClick={() => setModelOptionsOpen(true)} />
 
-      <Modal
+      <ActionModal
         open={modelOptionsOpen}
         onClose={() => setModelOptionsOpen(false)}
-        center
-        classNames={{ modal: 'freq-model-reset-sm' }}
       >
         <PlayerOptions
           user={user}
-          room={room}
-          player={player}
           isDarkMode={isDarkMode}
           onDebugToggle={onDebugToggle}
           onDarkModeToggle={onDarkModeToggle}
@@ -71,24 +56,14 @@ export default function PlayerButtonContainer({
             setModelEditOpen(true)
           }}
           onLogout={handleLogout}
+          onLeave={handleLeave}
           onClose={() => setModelOptionsOpen(false)}
         />
-      </Modal>
+      </ActionModal>
 
-      {player && room && (
-        <Modal
-          open={modelEditOpen}
-          onClose={() => setModelEditOpen(false)}
-          center
-          classNames={{ modal: 'freq-model-reset-sm' }}
-        >
-          <PlayerEdit
-            room={room}
-            player={player}
-            onClose={() => setModelEditOpen(false)}
-          />
-        </Modal>
-      )}
+      <ActionModal open={modelEditOpen} onClose={() => setModelEditOpen(false)}>
+        <PlayerEdit onClose={() => setModelEditOpen(false)} />
+      </ActionModal>
     </>
   )
 }

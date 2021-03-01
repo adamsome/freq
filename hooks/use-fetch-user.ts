@@ -7,9 +7,16 @@ import { isBrowser } from '../util/dom'
 
 export function useFetchUser() {
   const { user: authUser, error: authError, isLoading: authLoading } = useUser()
-  const { data: _user, error: userError, mutate } = useSWR(API_USER)
+  const { data: _user, error: userError } = useSWR(() =>
+    authUser ? API_USER : null
+  )
 
   const [isLoggedOut, setIsLoggedOut] = useState(false)
+
+  if (authError) {
+    // eslint-disable-next-line no-console
+    console.log('xerror', { authError, userError })
+  }
 
   useEffect(() => {
     if ((authUser && !authError) || authLoading || !isBrowser) {
@@ -29,5 +36,5 @@ export function useFetchUser() {
     else user = _user
   }
 
-  return { error, isLoading, user, isLoggedOut, mutate }
+  return { error, isLoading, user, isLoggedOut }
 }

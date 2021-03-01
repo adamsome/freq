@@ -5,7 +5,7 @@ import { postCommand } from '../util/fetch-json'
 import CommandButton from './command-button'
 
 const CommandPanel = () => {
-  const [game] = useGame()
+  const { game, mutate } = useGame()
   if (!game) return null
 
   const [error, setError] = useState<string | null>(null)
@@ -32,6 +32,7 @@ const CommandPanel = () => {
     const value = i > 0 ? cmd.rightValue : cmd.value
     try {
       await postCommand(game.room, cmd.type, value)
+      mutate()
       setFetching(false)
     } catch (err) {
       console.error(`Error posting command '${cmd.type}'.`, err.data ?? err)
@@ -41,9 +42,12 @@ const CommandPanel = () => {
   }
 
   return (
-    <div className="wrapper">
+    <div className="w-full px-4 mb-6">
       {commands.map((cmd) => (
-        <div key={cmd.type + cmd.text + cmd.info + cmd.rightText}>
+        <div
+          className="mb-2 last:mb-0"
+          key={cmd.type + cmd.text + cmd.info + cmd.rightText}
+        >
           <CommandButton
             command={cmd}
             currentPlayer={currentPlayer}
@@ -53,25 +57,7 @@ const CommandPanel = () => {
         </div>
       ))}
 
-      {error && <div className="error">{error}</div>}
-
-      <style jsx>{`
-        .wrapper {
-          width: 100%;
-          padding: 0 15px;
-        }
-
-        .wrapper > div:not(:last-child) {
-          margin-bottom: var(--stack-sm);
-        }
-
-        .error {
-          font-size: var(--font-size-sm);
-          color: brown;
-          text-align: center;
-          margin-top: var(--stack-sm);
-        }
-      `}</style>
+      {error && <div className="text-red-700 text-center mt-2">{error}</div>}
     </div>
   )
 }

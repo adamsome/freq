@@ -19,7 +19,7 @@ export default function RoomJoin({ room }: Props) {
       try {
         const game: GameView = await postJson(API_GAME_JOIN.replace('%0', room))
         mutate(API_USER)
-        mutate(API_GAME, game)
+        mutate(API_GAME.replace('%0', room), game)
       } catch (error) {
         console.error('Error joining room', error)
         setError('Error joining room.')

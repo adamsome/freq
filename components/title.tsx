@@ -15,23 +15,13 @@ const Title = ({ title, animate }: Props) => {
     <>
       <h1
         style={styleLinearGradientText('Freq')}
-        className={cx({
+        className={cx('m-0 text-7xl font-extrabold text-center', {
           'animate-shift': animate,
-          'animate-shift-shake-hover': animate,
+          'hover:animate-shake': animate,
         })}
       >
         {title}
       </h1>
-
-      <style jsx>{`
-        h1 {
-          margin: 0;
-          line-height: 1.15;
-          font-size: var(--font-size-xxl);
-          font-weight: 800;
-          text-align: center;
-        }
-      `}</style>
     </>
   )
 }

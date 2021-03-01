@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { cx } from '../util/dom'
 import { styleLinearGradient } from '../util/dom-style'
+import Button from './button'
 
 type Props = typeof defaultProps & {
   room?: string
@@ -30,100 +31,45 @@ const RoomForm = ({
   }
 
   return (
-    <form onSubmit={onSubmit}>
-      <div className="wrapper">
-        <div className="field">
-          <input
-            type="text"
-            name="room"
-            placeholder="Room Code"
-            value={room ?? initRoom}
-            onChange={handleRoomChange}
-            onFocus={(e) => e.currentTarget.select()}
-            required
-          />
-        </div>
+    <form className="flex-center flex-col" onSubmit={onSubmit}>
+      <div className="w-72 max-w-full">
+        <input
+          className={cx(
+            'xx w-full h-12 mb-4 px-3 py-1 whitespace-nowrap',
+            'bg-input-bg border border-input-border rounded-lg',
+            'hover:border-blue-700 focus:border-blue-700 focus:outline-none',
+            'focus:ring-4 focus:ring-blue-400 focus:ring-opacity-25',
+            'dark:focus:ring-blue-500 dark:focus:ring-opacity-25',
+            'text-3xl font-medium transition',
+            'text-black dark:text-white',
+            'placeholder-gray-400 dark:placeholder-gray-600',
+            'disabled:cursor-not-allowed disabled:color-gray-500'
+          )}
+          type="text"
+          name="room"
+          placeholder="Room Code"
+          value={room ?? initRoom}
+          onChange={handleRoomChange}
+          onFocus={(e) => e.currentTarget.select()}
+          required
+        />
 
-        <button
-          className={cx({ fetching, animate, 'animate-shift': animate })}
+        <Button
+          className={cx('w-full h-12 font-bold text-3xl text-center', {
+            'opacity-20': fetching,
+            'text-black hover:text-white': animate,
+            'animate-shift': animate,
+          })}
           style={animate ? styleLinearGradient('Freq', '-60deg', '300%') : {}}
-          type="submit"
+          blue={!animate}
+          htmlType="submit"
           disabled={fetching}
         >
-          <span>Start</span>
-        </button>
-
-        {error && <p className="error">{error}</p>}
+          Start
+        </Button>
       </div>
 
-      <style jsx>{`
-        .wrapper {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .field {
-          flex: 1;
-          width: 100%;
-          max-width: 18rem;
-        }
-
-        input {
-          height: 3rem;
-          width: 100%;
-          font-weight: 500;
-          border-radius: var(--border-radius-lg);
-          margin-bottom: var(--stack-md);
-        }
-
-        input,
-        button {
-          font-size: var(--font-size-xl);
-          white-space: nowrap;
-        }
-
-        button {
-          flex: 0 1 auto;
-          height: 3rem;
-          width: 100%;
-          font-weight: 700;
-          margin-top: 2px;
-          color: var(--primary);
-          border: 0;
-          outline: 0;
-          white-space: nowrap;
-          cursor: pointer;
-          transition: 180ms color ease-in-out;
-        }
-
-        button.animate {
-          color: var(--body-dark);
-        }
-
-        button.animate:hover {
-          color: var(--body-light);
-        }
-
-        button:hover {
-          color: var(--primary-lit);
-        }
-
-        button:focus {
-          border-radius: var(--border-radius-md);
-        }
-
-        button.fetching,
-        button:disabled {
-          opacity: 0.2;
-        }
-
-        .error {
-          color: brown;
-          margin: var(--stack-sm) 0 0;
-        }
-      `}</style>
+      {error && <p className="mt-6 text-red-700 text-xl">{error}</p>}
     </form>
   )
 }

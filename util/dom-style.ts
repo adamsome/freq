@@ -15,7 +15,7 @@ export const styleColor = (
   const hex = colorDict[colorName ?? 0]?.hex
   const alpha = lit * 255
   return {
-    color: lit > 0.5 ? 'var(--body-light)' : hex,
+    color: lit > 0.5 ? '#fff' : hex,
     background: lit > 0 ? `${hex}${Math.round(alpha).toString(16)}` : undefined,
   }
 }
@@ -28,7 +28,7 @@ export const styleLinearGradient = (
   const colors = gradient ? gradientDict[gradient] : undefined
   const n = colors?.length
   if (!n || n === 0) {
-    return { color: `var(--body)` }
+    return { color: `var(--text)` }
   }
   const background =
     n === 1
@@ -45,7 +45,7 @@ export const styleLinearGradientText = (
   const colors = gradient ? gradientDict[gradient] : undefined
   const n = colors?.length
   if (!n || n === 0) {
-    return { color: `var(--body)` }
+    return { color: `var(--text)` }
   }
   const background =
     n === 1

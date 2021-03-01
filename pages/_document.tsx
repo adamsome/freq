@@ -16,8 +16,9 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html className="dark bg-black">
         <Head>
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
             href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap"
             rel="stylesheet"
@@ -27,15 +28,6 @@ class MyDocument extends Document {
           <DarkModeScript />
           <Main />
           <NextScript />
-
-          <style jsx global>{`
-            #__next {
-              height: 100%;
-              flex: 1;
-              display: flex;
-              flex-direction: column;
-            }
-          `}</style>
         </body>
       </Html>
     )
