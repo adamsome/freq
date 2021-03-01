@@ -141,6 +141,6 @@ html.dark {
   @apply bg-input-bg rounded-lg shadow-2xl;
 }
 
-.react-responsive-modal-modal svg {
+.react-responsive-modal-modal .react-responsive-modal-closeButton svg {
   @apply text-white fill-current;
 }

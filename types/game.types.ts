@@ -9,6 +9,7 @@ export interface Player {
   leader?: boolean
   score?: number
   wins: number
+  fetching?: boolean
 }
 
 export type PlayerWithGuess = Player & Guess
@@ -94,6 +95,7 @@ export interface Command {
   rightColor?: string
   info?: string
   infoColor?: string
+  fetching?: boolean
 }
 
 export interface CommandsView {

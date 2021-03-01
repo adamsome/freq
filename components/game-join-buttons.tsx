@@ -52,6 +52,7 @@ export default function GameJoinButtons({ room }: Props) {
     rightText: `Join Blue`,
     rightWidth: preferredTeam === 1 ? 1 / 8 : 7 / 8,
     rightColor: getTeamColor(2),
+    fetching,
   }
 
   return (
@@ -60,7 +61,7 @@ export default function GameJoinButtons({ room }: Props) {
         <CommandButton
           command={cmd}
           currentPlayer={game.currentPlayer}
-          disable={fetching}
+          fetching={fetching}
           onClick={(_, i = 0) => handleJoinClick(i + 1)}
         />
       </div>

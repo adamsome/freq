@@ -1,12 +1,14 @@
-import React from 'react'
+import produce from 'immer'
+import React, { useState } from 'react'
 import useGame from '../hooks/use-game'
 import { DEBUG_MODE_KEY } from '../lib/consts'
-import { CommandType } from '../types/game.types'
+import { CommandType, GameView } from '../types/game.types'
 import { User } from '../types/user.types'
 import { cx, isBrowser } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
 import ActionModalOptions from './action-modal-options'
+import IconSvg from './icon-svg'
 import PlayerOptionButton from './player-option-button'
 
 type Props = typeof defaultProps & {
@@ -34,6 +36,7 @@ const PlayerOptions = ({
   onLeave,
   onClose,
 }: Props) => {
+  const [fetching, setFetching] = useState(false)
   const { game, mutate } = useGame()
   const player = game?.currentPlayer
 
@@ -48,15 +51,23 @@ const PlayerOptions = ({
 
   const handleCommand = (cmd: CommandType) => async (e: React.MouseEvent) => {
     e.preventDefault()
-    if (!game || !player) return
+    if (!game || !player || fetching || player.fetching) return
 
+    setFetching(true)
     try {
       await postCommand(game.room, cmd, player)
-      mutate()
+      mutate(
+        produce((game: GameView | undefined) => {
+          if (game && game.currentPlayer) {
+            game.currentPlayer.fetching = true
+          }
+        })
+      )
     } catch (err) {
       console.error(`Error posting command '${cmd}'.`, err.data ?? err)
     }
-    if (onClose) onClose()
+    setFetching(false)
+    onClose?.()
   }
 
   return (
@@ -93,8 +104,16 @@ const PlayerOptions = ({
           {leaveLabel}
         </Opt>
 
-        <Opt close onClick={onClose}>
-          Close
+        <Opt
+          close
+          disabled={fetching || player?.fetching}
+          className="inline-flex items-center"
+          onClick={onClose}
+        >
+          {fetching || player?.fetching ? 'Processing' : 'Close'}
+          {(fetching || player?.fetching) && (
+            <IconSvg name="spinner" className="w-5 h-5 ml-3 text-white" />
+          )}
         </Opt>
       </ActionModalOptions>
     </>

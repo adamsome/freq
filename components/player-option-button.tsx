@@ -23,6 +23,7 @@ export default function PlayerOptionButton({
   close,
   leave,
   noDivider,
+  disabled,
   ...props
 }: Props) {
   return (
@@ -44,6 +45,7 @@ export default function PlayerOptionButton({
       red={leave}
       round={false}
       ring={false}
+      disabled={disabled}
       style={styleColor(player)}
       {...props}
     >

@@ -3,6 +3,7 @@ import { Command, Player } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import Button from './button'
+import IconSvg from './icon-svg'
 
 type Props = typeof defaultProps & {
   command: Command
@@ -11,10 +12,15 @@ type Props = typeof defaultProps & {
 }
 
 const defaultProps = {
-  disable: false,
+  fetching: false,
 }
 
-const CommandButton = ({ command, currentPlayer, disable, onClick }: Props) => {
+const CommandButton = ({
+  command,
+  currentPlayer,
+  fetching,
+  onClick,
+}: Props) => {
   const cmd = command
 
   const getCmdRightWidth = (cmd: Command) => {
@@ -37,14 +43,21 @@ const CommandButton = ({ command, currentPlayer, disable, onClick }: Props) => {
         className={cx(
           'flex-1 bg-gray-500 w-full text-xl py-2 px-2',
           'opacity-80 hover:opacity-100 transition-opacity',
+          'inline-flex justify-center items-center',
           { 'ml-2': right }
         )}
         blue={false}
         style={style}
-        disabled={disable || cmd.disabled}
+        disabled={fetching || cmd.disabled || cmd.fetching}
         onClick={onClick(cmd, right ? 1 : 0)}
       >
-        {right ? cmd.rightText : cmd.text}
+        {fetching || cmd.fetching ? (
+          <IconSvg name="spinner" className="w-7 h-7 text-white" />
+        ) : right ? (
+          cmd.rightText
+        ) : (
+          cmd.text
+        )}
       </Button>
     )
   }

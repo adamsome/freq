@@ -86,7 +86,7 @@ export default function Button({
     },
     'border border-transparent',
     'font-semibold focus:outline-none',
-    'disabled:cursor-not-allowed disabled:opacity-20',
+    'disabled:cursor-not-allowed disabled:opacity-40',
     className
   )
 

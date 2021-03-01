@@ -34,7 +34,10 @@ const PlayerButton = ({ user, hero, onClick }: Props) => {
       {player?.icon ?? user?.icon ?? '🤠'}&nbsp;&nbsp;
       {player?.name ?? user?.name ?? 'Noname'}
       <div>
-        <IconSvg name="dropdown" />
+        <IconSvg
+          name="dropdown"
+          className={cx('items-center', { 'w-6 h-6': !hero, 'w-8 h-8': hero })}
+        />
       </div>
     </Button>
   )

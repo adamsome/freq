@@ -26,8 +26,7 @@ export default function NeedleAverage({ transform }: Props) {
       </div>
       <IconSvg
         name="caret-down"
-        className="text-white dark:text-black"
-        size="32"
+        className="w-8 h-4 text-white dark:text-black"
       />
     </div>
   )

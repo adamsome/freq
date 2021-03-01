@@ -1,11 +1,13 @@
+import produce from 'immer'
 import React, { useRef, useState } from 'react'
 import useGame from '../hooks/use-game'
 import useLayoutEffect from '../hooks/use-passive-layout-effect'
 import iconSet from '../lib/icon'
-import { CommandType } from '../types/game.types'
+import { CommandType, GameView } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
+import IconSvg from './icon-svg'
 import PlayerOptionButton from './player-option-button'
 
 type Props = typeof defaultProps & {
@@ -16,28 +18,38 @@ const defaultProps = {}
 
 const PlayerEdit = ({ onClose }: Props) => {
   const { game, mutate } = useGame()
-  const player = game?.currentPlayer
-  if (!game || !player) return null
+  if (!game || !game.currentPlayer) return null
+  const player = game.currentPlayer
 
   const inputRef = useRef<HTMLInputElement>(null)
   useLayoutEffect(() => {
     inputRef.current?.select()
   }, [])
 
+  const [fetching, setFetching] = useState(false)
   const [icon, setIcon] = useState(player.icon ?? '')
   const [name, setName] = useState(player.name ?? '')
 
   const handleSave = async (e: React.MouseEvent) => {
     e.preventDefault()
-    if (name.length < 2) return
+    if (name.length < 2 || fetching || player?.fetching) return
+
+    setFetching(true)
     const cmd: CommandType = 'edit_player'
     try {
       await postCommand(game.room, cmd, { ...player, name, icon })
-      mutate()
+      mutate(
+        produce((game: GameView | undefined) => {
+          if (game && game.currentPlayer) {
+            game.currentPlayer.fetching = true
+          }
+        })
+      )
     } catch (err) {
       console.error(`Error posting command '${cmd}'.`, err.data ?? err)
     }
-    if (onClose) onClose()
+    setFetching(false)
+    onClose?.()
   }
 
   return (
@@ -86,10 +98,18 @@ const PlayerEdit = ({ onClose }: Props) => {
 
       <PlayerOptionButton
         noDivider
-        className="bg-blue-700 hover:bg-blue-900 dark:hover:bg-blue-600 text-white text-2xl"
+        className={cx(
+          'inline-flex items-center',
+          'bg-blue-700 hover:bg-blue-900 dark:hover:bg-blue-600',
+          'text-white text-2xl'
+        )}
+        disabled={fetching || player.fetching}
         onClick={handleSave}
       >
         Save
+        {(fetching || player.fetching) && (
+          <IconSvg name="spinner" className="w-5 h-5 ml-3 text-white" />
+        )}
       </PlayerOptionButton>
     </>
   )
