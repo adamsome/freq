@@ -56,10 +56,17 @@ function getPlayerCountByTeam(players: Player[]): number[] {
   }, [] as number[])
 }
 
-export function addPlayer(players: Player[], user: User): Player[] {
+export function getPreferredTeam(players: Player[]): 1 | 2 {
   const countByTeam = getPlayerCountByTeam(players)
   // Put new player on the smallest team
-  const team = (countByTeam[1] ?? 0) > (countByTeam[2] ?? 0) ? 2 : 1
+  return (countByTeam[1] ?? 0) > (countByTeam[2] ?? 0) ? 2 : 1
+}
+
+export function addPlayer(
+  players: Player[],
+  user: User,
+  team: 1 | 2 = getPreferredTeam(players)
+): Player[] {
   // Make leader if team has none
   const leader = !players.some((p) => p.team === team && p.leader)
   // Return game w/ new player added

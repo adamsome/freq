@@ -34,11 +34,6 @@ export default withApiAuthRequired(async (req, res) => {
         return res.status(500).json({ message })
       }
 
-      if (!user.rooms[room]) {
-        const message = `User (${user.email}) not in room (${room}).`
-        return res.status(500).json({ message })
-      }
-
       const game = await fetchGame(room)
 
       if (!game) {

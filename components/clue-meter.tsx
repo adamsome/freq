@@ -19,8 +19,7 @@ const CHANGE_FPS = 2
 
 const ClueMeter = ({ children, onGuessChange }: Props) => {
   const { game } = useGame()
-  const player = game?.currentPlayer
-  if (!game || !player) return null
+  if (!game) return null
 
   const meterWrapperRef = useRef<HTMLDivElement>(null)
   const needleRef = useRef<HTMLDivElement>(null)
@@ -33,13 +32,14 @@ const ClueMeter = ({ children, onGuessChange }: Props) => {
     if (guess != null) onGuessChange(guess)
   }, [guess])
 
-  const isGuessing = game.phase === 'guess'
   const guesses = game.playerGuesses
-  const partitionedPlayers = partition((p) => p.id === player.id, guesses)
+  const player = game?.currentPlayer
+  const partitionedPlayers = partition((p) => p.id === player?.id, guesses)
   const [currentPlayerGuesses, otherPlayerGueses] = partitionedPlayers
 
   const initialGuess = currentPlayerGuesses[0]?.value ?? 0.5
   const hasGuesses = guesses.length > 0
+  const isGuessing = game.phase === 'guess'
   const disable =
     !hasGuesses || currentPlayerGuesses[0]?.locked === true || !isGuessing
 

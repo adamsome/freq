@@ -6,11 +6,11 @@ import { createPlayer, getPlayersPerTeam, getTeamPlayers } from './player'
 
 const DEFAULT_TARGET_WIDTH = 22.5
 
-export function createNewGame(room: string, user: User): Game {
+export function createNewGame(room: string, user: User, team?: 1 | 2): Game {
   // Assign player to random team
-  const team = Math.random() < 0.5 ? 1 : 2
+  const team_turn = team ?? Math.random() < 0.5 ? 1 : 2
   // Since new game, player gets made leader
-  const player = createPlayer(user, team, true)
+  const player = createPlayer(user, team_turn, true)
   const game: Game = {
     room: room.toLowerCase(),
     target_width: DEFAULT_TARGET_WIDTH,
@@ -23,7 +23,7 @@ export function createNewGame(room: string, user: User): Game {
     match_number: 0,
     round_number: 0,
     phase: 'prep',
-    team_turn: team,
+    team_turn,
     score_team_1: 0,
     score_team_2: 0,
     game_started_at: new Date().toISOString(),

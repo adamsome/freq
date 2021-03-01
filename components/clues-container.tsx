@@ -45,7 +45,7 @@ export default function CluesContainer(_: Props) {
   const card = (clue: Clue, i: number) => {
     const label = isChoosing ? i + 1 : undefined
     return (
-      <ClueCard clue={clue} label={label} hasSlider={hasSlider}>
+      <ClueCard key={i} clue={clue} label={label} hasSlider={hasSlider}>
         {game.target != null && (
           <ClueTarget position={game.target * 100} width={game.target_width} />
         )}

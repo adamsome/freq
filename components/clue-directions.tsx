@@ -19,8 +19,8 @@ const ClueDirections = ({ hasSlider }: Props) => {
 
   const column = (directions: PlayerWithGuess[]) => (
     <div className="flex-center flex-col w-7 h-full text-center text-xl">
-      {directions.slice(0, 4).map((d) => (
-        <div key={d.id}>{d.icon}</div>
+      {directions.slice(0, 4).map((d, i) => (
+        <div key={d.id + i}>{d.icon}</div>
       ))}
     </div>
   )

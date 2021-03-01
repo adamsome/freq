@@ -187,9 +187,7 @@ function createCommands(
   const cmd: Command = { text: '' }
   const view: CommandsView = { headers: [header], commands: [cmd] }
 
-  if (!player) return view
-
-  const playerIndex = game.players.findIndex((p) => p.id === player.id) ?? 0
+  const playerIndex = game.players.findIndex((p) => p.id === player?.id) ?? 0
   const turnTeamName = getTeamName(game.team_turn)
   const otherTeamName = getTeamName(game.team_turn === 1 ? 2 : 1)
   const enoughPlayers = doesGameHaveEnoughPlayers(game)
@@ -198,6 +196,8 @@ function createCommands(
     case 'prep': {
       header.text = randomHourlyItem(welcomeMessages, playerIndex)
       header.colorLit = 0.25
+
+      if (!player) return view
 
       if (player.leader && enoughPlayers) {
         cmd.type = 'begin_round'
@@ -215,7 +215,7 @@ function createCommands(
     }
     case 'choose': {
       const psychic = getPsychic(game) ?? player
-      if (psychic.id === player.id) {
+      if (psychic?.id === player?.id) {
         header.text = 'Choose a card & think of a clue!'
         header.colorLit = 0.25
 
@@ -228,9 +228,11 @@ function createCommands(
         return view
       }
 
-      const psychicLabel = `${psychic.icon} ${psychic.name}`
+      const psychicLabel = `${psychic?.icon} ${psychic?.name ?? 'Noname'}`
       header.text = `${psychicLabel} is thinking...!`
-      header.color = psychic.color ?? 'Gray'
+      header.color = psychic?.color ?? 'Gray'
+
+      if (!player) return view
 
       cmd.text = 'Waiting on the Psychic...'
       cmd.info = `${psychicLabel} is picking a card & coming up with a clue...`
@@ -244,7 +246,7 @@ function createCommands(
       const numNeeded = getNeedleGuessesNeeded(game)
       const count = `(${numSet}/${numNeeded})`
 
-      if (psychic.id === player.id) {
+      if (psychic?.id === player?.id) {
         header.text = 'Your teammates are guessing!'
 
         cmd.text = 'Team is guessing...'
@@ -253,10 +255,12 @@ function createCommands(
         return view
       }
 
-      const guess: Guess | undefined = game.guesses?.[player.id]
+      const guess: Guess | undefined = player
+        ? game.guesses?.[player.id]
+        : undefined
       const locked = guess?.locked === true
 
-      if (player.team === game.team_turn) {
+      if (player?.team === game.team_turn) {
         header.text = 'Guess where the target is!'
         header.colorLit = 0.25
 
@@ -272,6 +276,8 @@ function createCommands(
       header.text = `${turnTeamName} team is guessing...`
       header.color = 'Gray'
 
+      if (!player) return view
+
       cmd.text = `Waiting on ${turnTeamName} team...`
       cmd.info = count
       cmd.disabled = true
@@ -279,7 +285,7 @@ function createCommands(
     }
     case 'direction': {
       const guessingTeam = game.team_turn === 1 ? 2 : 1
-      const isGuessing = player.team === guessingTeam
+      const isGuessing = player?.team === guessingTeam
 
       header.text = isGuessing
         ? 'Guess the direction!'
@@ -289,6 +295,8 @@ function createCommands(
       } else {
         header.colorLit = 0.25
       }
+
+      if (!player) return view
 
       const numSet = getGuessesLocked(game.directions).length
       const numNeeded = getDirectionGuessesNeeded(game)
@@ -345,6 +353,8 @@ function createCommands(
         header.color = getTeamColor(winningTeam)
         header.colorLit = 0.25
       }
+
+      if (!player) return view
 
       const next = game.phase === 'reveal' ? 'round' : 'match'
       const nextPsychic = getNextPsychic(game) ?? getPsychic(game) ?? player

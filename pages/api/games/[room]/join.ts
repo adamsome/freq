@@ -27,13 +27,14 @@ export default withApiAuthRequired(async (req, res) => {
       }
 
       const room = head(req.query?.room)?.toLowerCase()
+      const { team } = await req.body
 
       if (!isRoomValid(room)) {
         const message = `Valid room required to join ('${room}').`
         return res.status(500).json({ message })
       }
 
-      const game = await joinGame(room, user)
+      const game = await joinGame(room, user, team)
       await addUserRoom(user.id, room)
 
       return res.json(game)

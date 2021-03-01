@@ -6,7 +6,7 @@ import Button from './button'
 
 type Props = typeof defaultProps & {
   command: Command
-  currentPlayer: Player
+  currentPlayer?: Player
   onClick: (cmd: Command, i?: number) => (e: React.MouseEvent) => Promise<void>
 }
 
@@ -26,8 +26,9 @@ const CommandButton = ({ command, currentPlayer, disable, onClick }: Props) => {
 
   const button = ({ right }: { right?: boolean } = {}) => {
     const flex = `0 0 ${getCmdRightWidth(cmd)}`
-    const player = !cmd.disabled && currentPlayer
-    const style: React.CSSProperties | undefined = styleColor(player, 1)
+    const player = !cmd.disabled ? currentPlayer : undefined
+    const color = (right ? cmd.rightColor : cmd.color) ?? player
+    const style: React.CSSProperties | undefined = styleColor(color, 1)
     if (style && right) {
       style.flex = flex
     }

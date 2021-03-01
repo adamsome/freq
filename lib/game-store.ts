@@ -17,7 +17,11 @@ export async function fetchGame(room?: string): Promise<Game | null> {
   return await fromGames(db).findOne({ room: room.toLowerCase() })
 }
 
-export async function joinGame(room: string, user: User): Promise<GameView> {
+export async function joinGame(
+  room: string,
+  user: User,
+  team?: 1 | 2
+): Promise<GameView> {
   const { db } = await connectToDatabase()
   const games = fromGames(db)
 
@@ -25,13 +29,13 @@ export async function joinGame(room: string, user: User): Promise<GameView> {
   let game = await fetchGame(room)
   if (!game) {
     // Create new game
-    game = createNewGame(room, user)
+    game = createNewGame(room, user, team)
 
     await games.insertOne(game)
   } else {
     // Add player to game if not already
     if (!hasPlayer(game.players, user.id)) {
-      game.players = addPlayer(game.players, user)
+      game.players = addPlayer(game.players, user, team)
 
       const filter = { room: game.room.toLowerCase() }
       const update = { players: game.players }

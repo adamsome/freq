@@ -4,7 +4,6 @@ import { useFetchUser } from '../hooks/use-fetch-user'
 import { API_LOGIN, ROOM_KEY, ROOM_REDIRECT_KEY } from '../lib/consts'
 import { isRoomValid } from '../lib/room'
 import { head } from '../util/array'
-import RoomJoin from './room-join'
 import TitleMessage from './title-message'
 
 type Props = typeof defaultProps & {
@@ -44,10 +43,6 @@ export default function UserRoomGuard({ children }: Props) {
 
   if (!room || !isRoomValid(room)) {
     return <TitleMessage error>Room ({room}) is invalid.</TitleMessage>
-  }
-
-  if (!user.rooms[room]) {
-    return <RoomJoin room={room} />
   }
 
   return <>{children}</>
