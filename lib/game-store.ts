@@ -38,7 +38,9 @@ export async function joinGame(
       game.players = addPlayer(game.players, user, team)
 
       const filter = { room: game.room.toLowerCase() }
-      const update = { players: game.players }
+      const kicked = { ...game.kicked }
+      delete kicked[user.id]
+      const update = { players: game.players, kicked }
       await games.updateOne(filter, { $set: update })
     }
   }

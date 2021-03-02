@@ -1,10 +1,16 @@
+import { useFetchUser } from '../hooks/use-fetch-user'
 import useGame from '../hooks/use-game'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 
 const HeaderMessage = () => {
   const { game } = useGame()
+  const { user } = useFetchUser()
   if (!game) return null
+
+  const id = user?.id
+  const isKicked = id && game?.kicked?.[id] === true
+  const headers = isKicked ? [{ text: "You've been kicked!" }] : game.headers
 
   return (
     <div
@@ -14,7 +20,7 @@ const HeaderMessage = () => {
         'text-xl font-semibold'
       )}
     >
-      {game.headers.map((h, i) => (
+      {headers.map((h, i) => (
         <div
           className={cx(
             'flex-1 flex-center w-full h-full',

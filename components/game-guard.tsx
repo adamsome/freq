@@ -1,6 +1,5 @@
 import React from 'react'
 import useGame from '../hooks/use-game'
-import useKickUser from '../hooks/use-kick-user'
 import TitleMessage from './title-message'
 
 type Props = typeof defaultProps & {
@@ -10,7 +9,6 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 export default function GameGuard({ children }: Props) {
-  useKickUser()
   const { loading, error } = useGame()
 
   if (loading) {

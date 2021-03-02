@@ -11,12 +11,9 @@ export function useFetchUser() {
     authUser ? API_USER : null
   )
 
-  const [isLoggedOut, setIsLoggedOut] = useState(false)
+  const isLoading = authLoading || (authUser && !_user && !userError)
 
-  if (authError) {
-    // eslint-disable-next-line no-console
-    console.log('xerror', { authError, userError })
-  }
+  const [isLoggedOut, setIsLoggedOut] = useState(false)
 
   useEffect(() => {
     if ((authUser && !authError) || authLoading || !isBrowser) {
@@ -34,5 +31,5 @@ export function useFetchUser() {
     else if (_user) user = _user
   }
 
-  return { error, isLoading: !user && !error, user, isLoggedOut }
+  return { error, isLoading, user, isLoggedOut }
 }
