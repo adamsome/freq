@@ -20,8 +20,8 @@ const PlayerButton = ({ user, hero, onClick }: Props) => {
 
   return (
     <Button
-      className={cx('flex pr-2 text-center', {
-        'text-xl': !hero,
+      className={cx('flex text-center', {
+        'text-xl pl-1 sm:pl-3 pr-0 sm:pr-2': !hero,
         'text-3xl': hero,
         'border border-gray-300 dark:border-gray-700': hero,
         'focus:border-blue-700 dark:focus:border-blue-700': hero,
@@ -36,7 +36,11 @@ const PlayerButton = ({ user, hero, onClick }: Props) => {
       <div>
         <IconSvg
           name="dropdown"
-          className={cx('items-center', { 'w-6 h-6': !hero, 'w-8 h-8': hero })}
+          top={hero ? '0' : '1px'}
+          className={cx('items-center', {
+            'w-6 h-6': !hero,
+            'w-8 h-8': hero,
+          })}
         />
       </div>
     </Button>
