@@ -7,9 +7,44 @@ export interface Player {
   color?: string
   icon?: string
   leader?: boolean
-  score?: number
-  wins: number
   fetching?: boolean
+}
+
+export interface PlayerStats {
+  /** User ID */
+  id: string
+  /** Games played */
+  gp: number
+  /** Wins */
+  w: number
+  /** Rounds as psychic */
+  pn: number
+  /** Rounds as psychic where team gets 4 points */
+  p4: number
+  /** Rounds as psychic where team gets 3 points */
+  p3: number
+  /** Rounds as psychic where team gets 2 points */
+  p2: number
+  /** Total number of guesses */
+  gn: number
+  /** Number of player 4 point guesses */
+  g4: number
+  /** Number of player 3 point guesses */
+  g3: number
+  /** Number of player 2 point guesses */
+  g2: number
+  /** Number of team 4 point guesses */
+  gt4: number
+  /** Number of team 3 point guesses */
+  gt3: number
+  /** Number of team 2 point guesses */
+  gt2: number
+  /** Total number of direction guesses */
+  dn: number
+  /** Number of correct player direction guesses */
+  d1: number
+  /** Number of correct team direction guesses */
+  dt1: number
 }
 
 export type PlayerWithGuess = Player & Guess
@@ -53,6 +88,7 @@ export interface Game {
   repeat_turn?: boolean
   score_team_1: number
   score_team_2: number
+  stats?: Dict<PlayerStats>
   game_started_at: string
   game_finished_at?: string
   round_started_at?: string
@@ -75,7 +111,8 @@ export type CommandType =
   | 'lock_guess'
   | 'set_direction'
   | 'lock_direction'
-  | 'reveal'
+  | 'reveal_round_results'
+  | 'reveal_match_results'
 
 export interface Header {
   text: string
@@ -111,6 +148,10 @@ export interface GameView extends Game, CommandsView {
   averageGuess?: number
   canChangePsychicTo: 'any' | 'same_team' | 'none'
   activePlayers: string[]
+}
+
+export type CurrentGameView = Omit<GameView, 'currentPlayer'> & {
+  currentPlayer: Player
 }
 
 export type ScoreType = 'points' | 'wins'

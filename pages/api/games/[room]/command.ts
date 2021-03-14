@@ -3,10 +3,10 @@ import {
   UserProfile,
   withApiAuthRequired,
 } from '@auth0/nextjs-auth0'
-import { GameCommander } from '../../../../lib/game-commander'
+import commandGame from '../../../../lib/game-command'
+import { fetchCurrentGameView } from '../../../../lib/game-store'
 import { isRoomValid } from '../../../../lib/room'
 import { fetchUser } from '../../../../lib/user-store'
-import { CommandType } from '../../../../types/game.types'
 import { head } from '../../../../util/array'
 
 export default withApiAuthRequired(async (req, res) => {
@@ -38,8 +38,10 @@ export default withApiAuthRequired(async (req, res) => {
         return res.status(500).json({ message })
       }
 
-      const commander = await GameCommander.fromRequest(room, user)
-      await callCommand(commander, type, value)
+      const game = await fetchCurrentGameView(room, user.id)
+
+      await commandGame(game, type, value)
+
       return res.json(true)
     } catch (error) {
       const { response } = error
@@ -50,17 +52,3 @@ export default withApiAuthRequired(async (req, res) => {
   }
   return res.status(404).send('')
 })
-
-async function callCommand(
-  commander: GameCommander,
-  cmd: CommandType,
-  ...args: any[]
-) {
-  const cmdFn = commander[cmd]
-  if (!cmdFn) {
-    const msg = `Command '${cmd}' not yet implemented.`
-    console.warn(msg)
-    throw new Error(msg)
-  }
-  return cmdFn.call(commander, ...args)
-}

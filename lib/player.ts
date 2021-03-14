@@ -6,6 +6,10 @@ import { assignColor } from './color-dict'
 import { randomIcon } from './icon'
 import { randomName } from './name'
 
+export function isPlayer(player: any): player is Player {
+  return player.id && player.name
+}
+
 export function createPlayer(
   user: User,
   team?: 1 | 2,
@@ -21,7 +25,7 @@ export function createPlayer(
     const existingColors = existingPlayers?.map((p) => p.color)
     color = assignColor(team, existingColors)
   }
-  const player: Player = { id, name, icon, team, color, leader, wins: 0 }
+  const player: Player = { id, name, icon, team, color, leader }
   return player
 }
 

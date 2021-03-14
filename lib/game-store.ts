@@ -1,13 +1,14 @@
 import { Db, WithId } from 'mongodb'
-import { Game, GameView } from '../types/game.types'
+import { CurrentGameView, Game, GameView } from '../types/game.types'
 import { User } from '../types/user.types'
 import { head } from '../util/array'
 import { connectToDatabase } from '../util/mongodb'
 import { createNewGame, getNextPsychic } from './game'
-import { toGameView } from './game-view'
+import { isCurrentGameView, toGameView } from './game-view'
 import { addPlayer, getTeamPlayers, hasPlayer } from './player'
+import { fromUsers } from './user-store'
 
-const fromGames = (db: Db) => db.collection<WithId<Game>>('games')
+export const fromGames = (db: Db) => db.collection<WithId<Game>>('games')
 
 export async function fetchGame(room?: string): Promise<Game | null> {
   const { db } = await connectToDatabase()
@@ -37,11 +38,22 @@ export async function joinGame(
     if (!hasPlayer(game.players, user.id)) {
       game.players = addPlayer(game.players, user, team)
 
-      const filter = { room: game.room.toLowerCase() }
+      const gameFilter = { room: game.room.toLowerCase() }
       const kicked = { ...game.kicked }
       delete kicked[user.id]
-      const update = { players: game.players, kicked }
-      await games.updateOne(filter, { $set: update })
+      await games.updateOne(gameFilter, {
+        $set: {
+          players: game.players,
+          kicked,
+        },
+      })
+
+      const userFilter = { id: user.id }
+      await fromUsers(db).updateOne(userFilter, {
+        $set: {
+          [`rooms.${room}`]: new Date().toISOString(),
+        },
+      })
     }
   }
   return toGameView(user.id, game)
@@ -96,6 +108,27 @@ export async function leaveGame(room: string, userID: string) {
       await games.deleteOne(filter)
     }
   }
+}
+
+export async function fetchCurrentGameView(
+  room: string,
+  userID: string
+): Promise<CurrentGameView> {
+  const game = await fetchGame(room)
+
+  if (!game) {
+    const message = `Cannot command non-existant game (room '${room}').`
+    throw new Error(message)
+  }
+
+  const gameView = toGameView(userID, game, { forceTarget: true })
+
+  if (!isCurrentGameView(gameView)) {
+    const message = `Cannot command game w/ no current user.`
+    throw new Error(message)
+  }
+
+  return gameView
 }
 
 export async function updateGamePath(room: string, path: string, value: any) {

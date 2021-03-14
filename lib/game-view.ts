@@ -3,6 +3,7 @@ import {
   Clue,
   Command,
   CommandsView,
+  CurrentGameView,
   Game,
   GameView,
   Guess,
@@ -30,7 +31,7 @@ import {
 import { getTeamIcon } from './icon'
 import { isFreePhase } from './phase'
 import { getPlayerDict, getTeamPlayers } from './player'
-import { getScoreState } from './score'
+import { generateRoundStats } from './player-stats'
 
 function createPlayerNeedleGuesses(
   game: Game,
@@ -125,8 +126,8 @@ const getEmoji = (score: number, i: number) =>
   randomHourlyItem(SCORE_ICONS[score], i)
 
 function getScoreMessages(game: Game, i: number): Header[] {
-  const { round } = getScoreState(game)
-  const [score1, score2] = round
+  const { scoreTeam1, scoreTeam2 } = generateRoundStats(game)
+  const round = [scoreTeam1, scoreTeam2]
   const ss = round.map((s) => (s === 1 ? '' : 's'))
   const teams = round.map((_, i) => (i + 1) as 1 | 2)
   const names = teams.map(getTeamName)
@@ -137,11 +138,11 @@ function getScoreMessages(game: Game, i: number): Header[] {
     .map((s, i) => `${names[i]} scored ${s} point${ss[i]} ${getEmoji(s, i)}!`)
     .map((text, i) => ({ text, color: colors[i] }))
 
-  if (score1 === 0 && score2 === 0) {
+  if (scoreTeam1 === 0 && scoreTeam2 === 0) {
     h1.text = `${t1} didn't score any points 😉!`
     h2.text = `Luckily neither did ${t2} 😆!`
   }
-  if (score1 === 4 && score2 === 0) {
+  if (scoreTeam1 === 4 && scoreTeam2 === 0) {
     if (game.repeat_turn) {
       h1.text = `${t2} got 4 and go again since they're still losing 😲!!`
       return [h1]
@@ -149,7 +150,7 @@ function getScoreMessages(game: Game, i: number): Header[] {
     h1.text = `${t1} got the full 4 points ${getEmoji(4, i)}👍!`
     h2.text = `${t2} got nothing 😭😭😭!`
   }
-  if (score1 === 0 && score2 === 4) {
+  if (scoreTeam1 === 0 && scoreTeam2 === 4) {
     if (game.repeat_turn) {
       h2.text = `${t2} got 4 and go again since they're still losing 😲!!`
       return [h2]
@@ -405,7 +406,7 @@ function getActivePlayers(game: Game): string[] {
 export function toGameView(
   id: string,
   game: OptionalId<WithId<Game>>,
-  forceTarget = false
+  { forceTarget }: { forceTarget?: boolean } = {}
 ): GameView {
   const { phase, clues, clue_selected, players, guesses } = game
 
@@ -434,4 +435,8 @@ export function toGameView(
 
   delete view._id
   return view
+}
+
+export function isCurrentGameView(game: GameView): game is CurrentGameView {
+  return game.currentPlayer != null
 }

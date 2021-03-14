@@ -69,7 +69,9 @@ export function getDirectionCounts(
   return [left.length, right.length]
 }
 
-export function calculateAverageDirectionGuess(dict: Dict<Guess> = {}): -1 | 1 {
+export function calculateAverageDirectionGuess(
+  dict: Dict<Guess> = {}
+): -1 | 1 | 0 {
   const [left, right] = getDirectionCounts(dict, true)
-  return left > right ? -1 : 1
+  return left > right ? -1 : left < right ? 1 : 0
 }

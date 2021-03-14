@@ -26,7 +26,7 @@ const DebugBar = () => {
   const handleReveal = async (e: React.MouseEvent) => {
     e.preventDefault()
     if (!game) return
-    await postCommand(game?.room, 'reveal')
+    await postCommand(game?.room, 'reveal_round_results')
   }
 
   return (

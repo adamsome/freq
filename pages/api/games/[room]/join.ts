@@ -5,7 +5,7 @@ import {
 } from '@auth0/nextjs-auth0'
 import { joinGame } from '../../../../lib/game-store'
 import { isRoomValid } from '../../../../lib/room'
-import { addUserRoom, fetchUser } from '../../../../lib/user-store'
+import { fetchUser } from '../../../../lib/user-store'
 import { head } from '../../../../util/array'
 
 export default withApiAuthRequired(async (req, res) => {
@@ -35,7 +35,6 @@ export default withApiAuthRequired(async (req, res) => {
       }
 
       const game = await joinGame(room, user, team)
-      await addUserRoom(user.id, room)
 
       return res.json(game)
     } catch (error) {

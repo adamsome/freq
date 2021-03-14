@@ -3,6 +3,7 @@ import useGame from '../hooks/use-game'
 import { getNextPsychic } from '../lib/game'
 import { isFreePhase } from '../lib/phase'
 import { getPlayersPerTeam } from '../lib/player'
+import { calculatePlayerPoints } from '../lib/player-stats'
 import { Player, ScoreType } from '../types/game.types'
 import ScoreboardIcon from './scoreboard-icon'
 import ScoreboardPlayerName from './scoreboard-player-name'
@@ -30,6 +31,9 @@ export default function ScoreboardGrid({ scoreType, onPlayerClick }: Props) {
 
   const Player = (right = false) => (player: Player) => {
     const isNextPsychic = nextPsychic?.id === player.id
+    const stats = game.stats?.[player.id]
+    const score =
+      scoreType === 'points' ? calculatePlayerPoints(stats) : stats?.w ?? 0
     return (
       <ScoreboardPlayerRow
         key={player.id}
@@ -47,7 +51,7 @@ export default function ScoreboardGrid({ scoreType, onPlayerClick }: Props) {
           psychic={showPsychic && !isNextPsychic && game.psychic === player.id}
           nextPsychic={showNextPsychic && isNextPsychic}
         />
-        <ScoreboardPlayerScore scoreType={scoreType} player={player} />
+        <ScoreboardPlayerScore score={score} />
       </ScoreboardPlayerRow>
     )
   }

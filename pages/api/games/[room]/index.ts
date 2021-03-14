@@ -3,7 +3,7 @@ import {
   UserProfile,
   withApiAuthRequired,
 } from '@auth0/nextjs-auth0'
-import { fetchGame } from '../../../../lib/game-store'
+import { fetchGame, joinGame } from '../../../../lib/game-store'
 import { toGameView } from '../../../../lib/game-view'
 import { isRoomValid } from '../../../../lib/room'
 import { fetchUser } from '../../../../lib/user-store'
@@ -34,11 +34,10 @@ export default withApiAuthRequired(async (req, res) => {
         return res.status(500).json({ message })
       }
 
-      const game = await fetchGame(room)
+      let game = await fetchGame(room)
 
       if (!game) {
-        const message = 'Cannot fetch non-existant game.'
-        return res.status(500).json({ message })
+        game = await joinGame(room, user)
       }
 
       return res.json(toGameView(user.id, game))

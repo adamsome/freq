@@ -1,4 +1,4 @@
-import { Db, MongoClient } from 'mongodb'
+import { Db, MongoClient, OnlyFieldsOfType, WithId } from 'mongodb'
 
 const { MONGODB_URI, MONGODB_DB } = process.env
 
@@ -58,4 +58,12 @@ export async function connectToDatabase() {
   }
   cached.conn = await cached.promise
   return cached.conn
+}
+
+export function toMongoUnset<T>(deletes: (keyof T)[]) {
+  const deletions = deletes.reduce(
+    (acc, prop) => ({ ...acc, [prop]: '' as const }),
+    {} as OnlyFieldsOfType<WithId<T>, any, true | '' | 1>
+  )
+  return deletions
 }

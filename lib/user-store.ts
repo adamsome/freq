@@ -5,7 +5,7 @@ import { connectToDatabase } from '../util/mongodb'
 import { randomIcon } from './icon'
 import { randomName } from './name'
 
-const fromUsers = (db: Db) => db.collection<WithId<User>>('users')
+export const fromUsers = (db: Db) => db.collection<WithId<User>>('users')
 
 export async function fetchUser(id?: string): Promise<WithId<User> | null> {
   const { db } = await connectToDatabase()
