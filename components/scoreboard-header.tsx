@@ -1,16 +1,19 @@
 import React from 'react'
-import useGame from '../hooks/use-game'
 import { getTeamName } from '../lib/game'
 import { getTeamIcon } from '../lib/icon'
+import { GameView } from '../types/game.types'
 import { cx } from '../util/dom'
 import ScoreboardIcon from './scoreboard-icon'
 
-type Props = typeof defaultProps
+type Props = typeof defaultProps & {
+  game?: GameView
+}
 
-const defaultProps = {}
+const defaultProps = {
+  readonly: false,
+}
 
-export default function ScoreboardHeader(_: Props) {
-  const { game } = useGame()
+export default function ScoreboardHeader({ game, readonly }: Props) {
   if (!game) return null
 
   const { score_team_1, score_team_2 } = game
@@ -28,15 +31,19 @@ export default function ScoreboardHeader(_: Props) {
         'text-2xl whitespace-nowrap'
       )}
     >
-      <ScoreboardIcon xl>{icon1}</ScoreboardIcon>
-      <div className="w-20 whitespace-nowrap">{team1}</div>
+      {!readonly && <ScoreboardIcon xl>{icon1}</ScoreboardIcon>}
+      {!readonly && <div className="w-20 whitespace-nowrap">{team1}</div>}
       <div className="flex-1 text-center text-3xl">
         {score_team_1} &mdash; {score_team_2}
       </div>
-      <div className="w-20 whitespace-nowrap text-right">{team2}</div>
-      <ScoreboardIcon xl right>
-        {icon2}
-      </ScoreboardIcon>
+      {!readonly && (
+        <div className="w-20 whitespace-nowrap text-right">{team2}</div>
+      )}
+      {!readonly && (
+        <ScoreboardIcon xl right>
+          {icon2}
+        </ScoreboardIcon>
+      )}
     </div>
   )
 }

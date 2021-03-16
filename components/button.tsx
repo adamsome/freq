@@ -18,6 +18,7 @@ const defaultProps = {
   solid: false,
   round: true,
   ring: true,
+  bg: true,
 }
 
 type AnchorProps = {
@@ -44,6 +45,7 @@ export default function Button({
   solid,
   round,
   ring,
+  bg,
   htmlType = 'button' as Props['htmlType'],
   ...props
 }: Props) {
@@ -66,19 +68,20 @@ export default function Button({
     'bg-transparent transition',
     {
       'text-white': solid,
-      'bg-blue-700 hover:bg-blue-900 dark:hover:bg-blue-600': blue && solid,
+      'bg-blue-700 hover:bg-blue-900 dark:hover:bg-blue-600':
+        blue && solid && bg,
       'bg-gray-500 dark:bg-gray-700 hover:bg-gray-600 dark:hover:bg-gray-600':
-        gray && solid,
-      'bg-red-700 hover:bg-red-900 dark:hover:bg-red-600': red && solid,
+        gray && solid && bg,
+      'bg-red-700 hover:bg-red-900 dark:hover:bg-red-600': red && solid && bg,
       'text-blue-600 hover:text-blue-800': blue && !solid,
       'dark:text-blue-700 dark:hover:text-blue-600': blue && !solid,
       'text-gray-500 hover:text-gray-700': gray && !solid,
       'dark:text-gray-500 dark:hover:text-gray-400': gray && !solid,
       'text-red-700 hover:text-red-900': red && !solid,
       'dark:text-red-800 dark:hover:text-red-700': red && !solid,
-      'hover:bg-blue-100 dark:hover:bg-blue-950': blue && !solid,
-      'hover:bg-gray-100 dark:hover:bg-gray-900': gray && !solid,
-      'hover:bg-red-100 dark:hover:bg-red-950': red && !solid,
+      'hover:bg-blue-100 dark:hover:bg-blue-950': blue && !solid && bg,
+      'hover:bg-gray-100 dark:hover:bg-gray-900': gray && !solid && bg,
+      'hover:bg-red-100 dark:hover:bg-red-950': red && !solid && bg,
       'rounded-md': round,
       'focus:ring-4 focus:ring-blue-400 focus:ring-opacity-25': ring,
       'dark:focus:ring-blue-500 dark:focus:ring-opacity-25': ring,
@@ -87,6 +90,7 @@ export default function Button({
     'border border-transparent',
     'font-semibold focus:outline-none',
     'disabled:cursor-not-allowed disabled:opacity-40',
+    'disabled:hover:bg-transparent disabled:hover:dark:bg-transparent',
     className
   )
 

@@ -14,6 +14,7 @@ const defaultProps = {
   active: false,
   current: false,
   leader: false,
+  readonly: false,
 }
 
 export default function ScoreboardPlayerRow({
@@ -23,6 +24,7 @@ export default function ScoreboardPlayerRow({
   active,
   current,
   leader,
+  readonly,
   onClick,
 }: Props) {
   return (
@@ -34,7 +36,8 @@ export default function ScoreboardPlayerRow({
         {
           'flex-row pl-2 pr-3 ml-0 mr-1': !right,
           'flex-row-reverse pl-3 pr-2 ml-1 mr-0': right,
-          'cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900': leader,
+          'cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900':
+            !readonly && leader,
         }
       )}
       style={styleColor(player.color, active ? 1 : current ? 0.25 : 0)}

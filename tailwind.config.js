@@ -71,6 +71,15 @@ module.exports = {
   variants: {
     extend: {
       animation: ['responsive', 'hover'],
+      backgroundColor: [
+        'responsive',
+        'dark',
+        'group-hover',
+        'focus-within',
+        'hover',
+        'focus',
+        'disabled',
+      ],
       borderRadius: ['responsive', 'first', 'last'],
       borderWidth: ['responsive', 'first', 'last'],
       cursor: ['disabled'],

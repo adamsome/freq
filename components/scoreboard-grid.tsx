@@ -1,24 +1,31 @@
 import React from 'react'
-import useGame from '../hooks/use-game'
 import { getNextPsychic } from '../lib/game'
 import { isFreePhase } from '../lib/phase'
 import { getPlayersPerTeam } from '../lib/player'
 import { calculatePlayerPoints } from '../lib/player-stats'
-import { Player, ScoreType } from '../types/game.types'
+import { GameView, Player, ScoreType } from '../types/game.types'
+import { cx } from '../util/dom'
 import ScoreboardIcon from './scoreboard-icon'
 import ScoreboardPlayerName from './scoreboard-player-name'
 import ScoreboardPlayerRow from './scoreboard-player-row'
 import ScoreboardPlayerScore from './scoreboard-player-score'
 
 type Props = typeof defaultProps & {
+  game?: GameView
   scoreType: ScoreType
   onPlayerClick: (player: Player) => void
 }
 
-const defaultProps = {}
+const defaultProps = {
+  readonly: false,
+}
 
-export default function ScoreboardGrid({ scoreType, onPlayerClick }: Props) {
-  const { game } = useGame()
+export default function ScoreboardGrid({
+  game,
+  scoreType,
+  readonly,
+  onPlayerClick,
+}: Props) {
   if (!game) return null
 
   const { currentPlayer, activePlayers } = game
@@ -42,6 +49,7 @@ export default function ScoreboardGrid({ scoreType, onPlayerClick }: Props) {
         active={activePlayers.includes(player.id)}
         current={currentPlayer?.id === player.id}
         leader={leader}
+        readonly={readonly}
         onClick={() => leader && onPlayerClick(player)}
       >
         <ScoreboardIcon right={right}>{player.icon}</ScoreboardIcon>
@@ -59,7 +67,9 @@ export default function ScoreboardGrid({ scoreType, onPlayerClick }: Props) {
   const Team = (team: Player[], i: number) => (
     <div
       key={i}
-      className="pt-1 border-r border-black dark:border-white last:border-r-0"
+      className={cx('pt-1', {
+        'border-r border-black dark:border-white last:border-r-0': !readonly,
+      })}
     >
       {team.map(Player(i === 1))}
     </div>

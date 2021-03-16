@@ -18,6 +18,16 @@ export async function fetchGame(room?: string): Promise<Game | null> {
   return await fromGames(db).findOne({ room: room.toLowerCase() })
 }
 
+export async function findManyGames(rooms: string[]): Promise<Game[]> {
+  const { db } = await connectToDatabase()
+
+  return await fromGames(db)
+    .find({ room: { $in: rooms } })
+    .sort({ round_started_at: -1 })
+    .limit(10)
+    .toArray()
+}
+
 export async function joinGame(
   room: string,
   user: User,
@@ -26,6 +36,15 @@ export async function joinGame(
   const { db } = await connectToDatabase()
   const games = fromGames(db)
 
+  const updateUserRoom = async () => {
+    const userFilter = { id: user.id }
+    await fromUsers(db).updateOne(userFilter, {
+      $set: {
+        [`rooms.${room}`]: new Date().toISOString(),
+      },
+    })
+  }
+
   // Find existing game if it exists
   let game = await fetchGame(room)
   if (!game) {
@@ -33,6 +52,7 @@ export async function joinGame(
     game = createNewGame(room, user, team)
 
     await games.insertOne(game)
+    await updateUserRoom()
   } else {
     // Add player to game if not already
     if (!hasPlayer(game.players, user.id)) {
@@ -48,18 +68,17 @@ export async function joinGame(
         },
       })
 
-      const userFilter = { id: user.id }
-      await fromUsers(db).updateOne(userFilter, {
-        $set: {
-          [`rooms.${room}`]: new Date().toISOString(),
-        },
-      })
+      await updateUserRoom()
     }
   }
   return toGameView(user.id, game)
 }
 
-export async function leaveGame(room: string, userID: string) {
+export async function leaveGame(
+  room: string,
+  userID: string,
+  opts: { deleteEmpty?: boolean } = {}
+) {
   const { db } = await connectToDatabase()
   const games = fromGames(db)
 
@@ -104,7 +123,7 @@ export async function leaveGame(room: string, userID: string) {
     const update = { players }
     await games.updateOne(filter, { $set: update })
 
-    if (players.length === 0) {
+    if (opts.deleteEmpty && players.length === 0) {
       await games.deleteOne(filter)
     }
   }

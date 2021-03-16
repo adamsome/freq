@@ -1,11 +1,14 @@
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import useSWR from 'swr'
+import RoomList from '../components/room-list'
 import RoomFormContainer from '../components/room-form-container'
 import TitleMessage from '../components/title-message'
-import { ROOM_KEY, ROOM_REDIRECT_KEY } from '../lib/consts'
+import { API_USER_ROOMS, ROOM_KEY, ROOM_REDIRECT_KEY } from '../lib/consts'
 import { generateRoomKey, isRoomValid } from '../lib/room'
-import { isBrowser } from '../util/dom'
+import { cx, isBrowser } from '../util/dom'
+import Button from '../components/button'
 
 type Props = typeof defaultProps & {
   room: string
@@ -14,7 +17,9 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 export const HomePage = ({ room }: Props) => {
+  const { data: rooms, error, isValidating, mutate } = useSWR(API_USER_ROOMS)
   const router = useRouter()
+  const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
 
   useEffect(() => {
@@ -31,18 +36,54 @@ export const HomePage = ({ room }: Props) => {
         }
       }
 
-      setShowForm(true)
+      setLoading(false)
     }
   }, [isBrowser])
 
-  const message = showForm
-    ? "Type an existing game's name to join or just click Start to create a new game."
-    : 'Loading...'
+  const handleToggleFormClick = () => {
+    setShowForm(!showForm)
+  }
+
+  const handleRefresh = () => {
+    mutate()
+  }
+
+  if (error) {
+    return <TitleMessage error>🤷‍♀️ Failed to load your rooms...</TitleMessage>
+  }
+
+  if (loading || !rooms) {
+    return <TitleMessage subtle>Loading...</TitleMessage>
+  }
+
+  if (rooms.length === 0 || showForm) {
+    return (
+      <TitleMessage message="Type an existing game's name to join or just click Start to create a new game.">
+        <RoomFormContainer room={room}></RoomFormContainer>
+
+        {showForm && (
+          <div
+            className={cx(
+              'w-full my-4 pt-4',
+              'border-t border-gray-200 dark:border-gray-800'
+            )}
+          >
+            <Button className="text-2xl" onClick={handleToggleFormClick}>
+              ← Recent Games
+            </Button>
+          </div>
+        )}
+      </TitleMessage>
+    )
+  }
 
   return (
-    <TitleMessage subtle={!showForm} message={message}>
-      {showForm && <RoomFormContainer room={room}></RoomFormContainer>}
-    </TitleMessage>
+    <RoomList
+      rooms={rooms}
+      loading={isValidating}
+      onToggleFormClick={handleToggleFormClick}
+      onRefresh={handleRefresh}
+    ></RoomList>
   )
 }
 

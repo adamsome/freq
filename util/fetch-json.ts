@@ -1,4 +1,3 @@
-import { mutate } from 'swr'
 import { API_GAME_COMMAND } from '../lib/consts'
 import { CommandType } from '../types/game.types'
 
@@ -44,8 +43,7 @@ export async function postCommand<T>(
   if (value != null) {
     body.value = value
   }
+
   const path = API_GAME_COMMAND.replace('%0', room)
-  const data = await postJson<T>(path, body)
-  mutate('/api/game')
-  return data
+  return await postJson<T>(path, body)
 }

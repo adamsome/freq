@@ -2,7 +2,12 @@ import { useState } from 'react'
 import { mutate } from 'swr'
 import useGame from '../hooks/use-game'
 import { getTeamColor } from '../lib/color-dict'
-import { API_GAME, API_GAME_JOIN, API_USER } from '../lib/consts'
+import {
+  API_GAME,
+  API_GAME_JOIN,
+  API_USER,
+  API_USER_ROOMS,
+} from '../lib/consts'
 import { getPreferredTeam } from '../lib/player'
 import { Command, GameView } from '../types/game.types'
 import { postJson } from '../util/fetch-json'
@@ -37,6 +42,7 @@ export default function GameJoinButtons({ room }: Props) {
       const game: GameView = await postJson(path, { team })
       mutate(API_USER)
       mutate(API_GAME.replace('%0', room), game)
+      mutate(API_USER_ROOMS)
       setFetching(false)
     } catch (err) {
       console.error(`Error posting command '${cmd.type}'.`, err.data ?? err)

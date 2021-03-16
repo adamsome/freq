@@ -33,7 +33,7 @@ export default withApiAuthRequired(async (req, res) => {
         return res.status(500).json({ message })
       }
 
-      await leaveGame(room, user.id)
+      await leaveGame(room, user.id, { deleteEmpty: true })
       await removeUserRoom(user.id, room)
 
       return res.json(user)

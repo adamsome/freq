@@ -6,6 +6,7 @@ export const API_GAME_PHASE = '/api/games/%0/phase'
 export const API_LOGIN = '/api/auth/login'
 export const API_LOGOUT = '/api/auth/logout'
 export const API_USER = '/api/user'
+export const API_USER_ROOMS = '/api/user/rooms'
 
 export const DEBUG_MODE_KEY = 'freq/debug-mode'
 export const ROOM_KEY = 'freq/room'

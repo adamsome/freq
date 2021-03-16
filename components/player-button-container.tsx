@@ -1,6 +1,12 @@
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { API_GAME_LEAVE, API_LOGOUT, ROOM_KEY } from '../lib/consts'
+import { mutate } from 'swr'
+import {
+  API_GAME_LEAVE,
+  API_LOGOUT,
+  API_USER_ROOMS,
+  ROOM_KEY,
+} from '../lib/consts'
 import { User } from '../types/user.types'
 import { postJson } from '../util/fetch-json'
 import ActionModal from './action-modal'
@@ -37,6 +43,7 @@ export default function PlayerButtonContainer({
     localStorage[ROOM_KEY] = room
     router.push('/')
     await postJson(API_GAME_LEAVE.replace('%0', room))
+    mutate(API_USER_ROOMS)
   }
 
   return (

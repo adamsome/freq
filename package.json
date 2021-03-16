@@ -30,6 +30,7 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.0.0",
     "autoprefixer": "^10.0.4",
+    "date-fns": "^2.19.0",
     "immer": "^8.0.1",
     "mongodb": "^3.5.9",
     "next": "latest",

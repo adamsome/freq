@@ -31,46 +31,48 @@ const RoomForm = ({
   }
 
   return (
-    <form className="flex-center flex-col" onSubmit={onSubmit}>
-      <div className="w-72 max-w-full">
-        <input
-          className={cx(
-            'xx w-full h-12 mb-4 px-3 py-1 whitespace-nowrap',
-            'bg-input-bg border border-input-border rounded-lg',
-            'hover:border-blue-700 focus:border-blue-700 focus:outline-none',
-            'focus:ring-4 focus:ring-blue-400 focus:ring-opacity-25',
-            'dark:focus:ring-blue-500 dark:focus:ring-opacity-25',
-            'text-3xl font-medium transition',
-            'text-black dark:text-white',
-            'placeholder-gray-400 dark:placeholder-gray-600',
-            'disabled:cursor-not-allowed disabled:color-gray-500'
-          )}
-          type="text"
-          name="room"
-          placeholder="Room Code"
-          value={room ?? initRoom}
-          onChange={handleRoomChange}
-          onFocus={(e) => e.currentTarget.select()}
-          required
-        />
+    <>
+      <form className="flex-center flex-col" onSubmit={onSubmit}>
+        <div className="w-72 max-w-full">
+          <input
+            className={cx(
+              'w-full h-12 mb-4 px-3 py-1 whitespace-nowrap',
+              'bg-input-bg border border-input-border rounded-lg',
+              'hover:border-blue-700 focus:border-blue-700 focus:outline-none',
+              'focus:ring-4 focus:ring-blue-400 focus:ring-opacity-25',
+              'dark:focus:ring-blue-500 dark:focus:ring-opacity-25',
+              'text-3xl font-medium transition',
+              'text-black dark:text-white',
+              'placeholder-gray-400 dark:placeholder-gray-600',
+              'disabled:cursor-not-allowed disabled:color-gray-500'
+            )}
+            type="text"
+            name="room"
+            placeholder="Room Code"
+            value={room ?? initRoom}
+            onChange={handleRoomChange}
+            onFocus={(e) => e.currentTarget.select()}
+            required
+          />
 
-        <Button
-          className={cx('w-full h-12 font-bold text-3xl text-center', {
-            'opacity-20': fetching,
-            'text-black hover:text-white': animate,
-            'animate-shift': animate,
-          })}
-          style={animate ? styleLinearGradient('Freq', '-60deg', '300%') : {}}
-          blue={!animate}
-          htmlType="submit"
-          disabled={fetching}
-        >
-          Start
-        </Button>
-      </div>
+          <Button
+            className={cx('w-full h-12 font-bold text-3xl text-center', {
+              'opacity-20': fetching,
+              'text-black hover:text-white': animate,
+              'animate-shift': animate,
+            })}
+            style={animate ? styleLinearGradient('Freq', '-60deg', '300%') : {}}
+            blue={!animate}
+            htmlType="submit"
+            disabled={fetching}
+          >
+            Start
+          </Button>
+        </div>
 
-      {error && <p className="mt-6 text-red-700 text-xl">{error}</p>}
-    </form>
+        {error && <p className="mt-6 text-red-700 text-xl">{error}</p>}
+      </form>
+    </>
   )
 }
 

@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import React from 'react'
 import useGame from '../hooks/use-game'
 import { cx } from '../util/dom'
@@ -8,7 +9,12 @@ type Props = typeof defaultProps
 const defaultProps = {}
 
 export default function HeaderTitle(_: Props) {
+  const router = useRouter()
   const { game } = useGame()
+
+  const handleTitleClick = () => {
+    router.push('/')
+  }
 
   return (
     <h1
@@ -17,7 +23,13 @@ export default function HeaderTitle(_: Props) {
         'text-xl font-extrabold whitespace-nowrap'
       )}
     >
-      <div style={styleLinearGradientText('Freq')}>{game ? `Freq` : ''}</div>
+      <div
+        className="cursor-pointer"
+        style={styleLinearGradientText('Freq')}
+        onClick={handleTitleClick}
+      >
+        Freq
+      </div>
 
       {game?.room && (
         <>
