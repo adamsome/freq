@@ -7,6 +7,7 @@ import {
 
 export function createPlayerStats(id: string): PlayerStats {
   return {
+    updated_at: new Date().toISOString(),
     id,
     gp: 0,
     w: 0,
@@ -30,11 +31,13 @@ export function createPlayerStats(id: string): PlayerStats {
 export function sumPlayerStats(a: PlayerStats, b: PlayerStats): PlayerStats {
   return Object.keys(a).reduce(
     (acc, key) => {
-      const k = key as keyof Omit<PlayerStats, 'id'>
-      acc[k] = (a[k] ?? 0) + (b[k] ?? 0)
+      const k = key as keyof PlayerStats
+      if (k !== 'id' && k !== 'updated_at') {
+        acc[k] = (a[k] ?? 0) + (b[k] ?? 0)
+      }
       return acc
     },
-    { id: a.id } as PlayerStats
+    { id: a.id, updated_at: new Date().toISOString() } as PlayerStats
   )
 }
 
@@ -83,7 +86,7 @@ const makeGetDirectionScore = (
 }
 
 export interface RoundStats {
-  stats: Dict<PlayerStats>
+  roundStats: Dict<PlayerStats>
   scoreTeam1: number
   scoreTeam2: number
 }
@@ -113,7 +116,7 @@ export function generateRoundStats({
   )
   const teamDirectionScore = getDirectionScore(averageDirection)
 
-  const stats = players.reduce((acc, p) => {
+  const roundStats = players.reduce((acc, p) => {
     const stats = createPlayerStats(p.id)
 
     if (p.id === psychic) {
@@ -150,7 +153,7 @@ export function generateRoundStats({
   }, {} as Dict<PlayerStats>)
 
   return {
-    stats,
+    roundStats,
     scoreTeam1: team_turn === 1 ? teamGuessScore : teamDirectionScore,
     scoreTeam2: team_turn === 2 ? teamGuessScore : teamDirectionScore,
   }

@@ -1,14 +1,15 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import useSWR from 'swr'
-import RoomList from '../components/room-list'
+import Button from '../components/button'
 import RoomFormContainer from '../components/room-form-container'
+import RoomList from '../components/room-list'
 import TitleMessage from '../components/title-message'
 import { API_USER_ROOMS, ROOM_KEY, ROOM_REDIRECT_KEY } from '../lib/consts'
 import { generateRoomKey, isRoomValid } from '../lib/room'
 import { cx, isBrowser } from '../util/dom'
-import Button from '../components/button'
 
 type Props = typeof defaultProps & {
   room: string
@@ -17,7 +18,10 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 export const HomePage = ({ room }: Props) => {
-  const { data: rooms, error, isValidating, mutate } = useSWR(API_USER_ROOMS)
+  const { user } = useUser()
+  const { data: rooms, error, isValidating, mutate } = useSWR(() =>
+    user ? API_USER_ROOMS : null
+  )
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
@@ -52,11 +56,11 @@ export const HomePage = ({ room }: Props) => {
     return <TitleMessage error>🤷‍♀️ Failed to load your rooms...</TitleMessage>
   }
 
-  if (loading || !rooms) {
+  if (loading || (user && !rooms)) {
     return <TitleMessage subtle>Loading...</TitleMessage>
   }
 
-  if (rooms.length === 0 || showForm) {
+  if (!rooms?.length || showForm) {
     return (
       <TitleMessage message="Type an existing game's name to join or just click Start to create a new game.">
         <RoomFormContainer room={room}></RoomFormContainer>

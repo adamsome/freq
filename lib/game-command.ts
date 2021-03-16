@@ -3,6 +3,7 @@ import beginRound from './commands/begin-round'
 import changePlayerTeam from './commands/change-player-team'
 import confirmClue from './commands/confirm-clue'
 import editPlayer from './commands/edit-player'
+import kickPlayer from './commands/kick-player'
 import lockDirection from './commands/lock-direction'
 import lockGuess from './commands/lock-guess'
 import prepNewMatch from './commands/prep-new-match'
@@ -32,6 +33,8 @@ export default async function commandGame(
       return await setNextPsychic(game, value)
     case 'set_current_psychic':
       return await setCurrentPsychic(game, value)
+    case 'kick_player':
+      return await kickPlayer(game, value)
     // Phase Commands
     case 'prep_new_match':
       return await prepNewMatch(game)

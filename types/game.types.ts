@@ -11,6 +11,7 @@ export interface Player {
 }
 
 export interface PlayerStats {
+  updated_at: string
   /** User ID */
   id: string
   /** Games played */

@@ -8,6 +8,10 @@ import {
   createPlayerStats,
   generateRoundStats,
 } from '../player-stats'
+import {
+  findManyPlayerStatsByID,
+  upsertManyPlayerStatsByID,
+} from '../player-stats-store'
 import revealMatchResults from './reveal-match-results'
 
 export default async function (game: CurrentGameView) {
@@ -22,7 +26,7 @@ export default async function (game: CurrentGameView) {
   changes.phase = 'reveal'
 
   // Get round scores and add to state scores
-  const { stats, scoreTeam1, scoreTeam2 } = generateRoundStats(game)
+  const { roundStats, scoreTeam1, scoreTeam2 } = generateRoundStats(game)
 
   const totalTeam1 = game.score_team_1 + scoreTeam1
   const totalTeam2 = game.score_team_2 + scoreTeam2
@@ -35,26 +39,45 @@ export default async function (game: CurrentGameView) {
     (scoreTeam1 === 4 && totalTeam1 < totalTeam2) ||
     (scoreTeam2 === 4 && totalTeam1 > totalTeam2)
 
+  // Update team scores
   changes.score_team_1 = totalTeam1
   changes.score_team_2 = totalTeam2
 
-  changes.stats = Object.keys(stats).reduce((acc, playerID) => {
-    const inc = stats[playerID]
+  const playerIDs = Object.keys(roundStats)
 
-    const player = game.players.find((p) => p.id === playerID)
-    if (
-      player &&
-      ((player.team === 1 && win1) || (player.team === 2 && win2))
-    ) {
-      inc.w++
+  const totalStats = await findManyPlayerStatsByID(playerIDs)
+
+  // Increment room stats with round stats for each player
+  const { room, total } = playerIDs.reduce(
+    (acc, id) => {
+      const roundPlayerStats = roundStats[id]
+
+      const player = game.players.find((p) => p.id === id)
+      if (
+        player &&
+        ((player.team === 1 && win1) || (player.team === 2 && win2))
+      ) {
+        roundPlayerStats.w++
+      }
+
+      const roomPlayerStats = game.stats?.[id] ?? createPlayerStats(id)
+      const totalPlayerStats = totalStats[id] ?? createPlayerStats(id)
+
+      acc.room[id] = sumPlayerStats(roomPlayerStats, roundPlayerStats)
+      acc.total[id] = sumPlayerStats(totalPlayerStats, roundPlayerStats)
+      return acc
+    },
+    { room: {}, total: {} } as {
+      room: Dict<PlayerStats>
+      total: Dict<PlayerStats>
     }
+  )
 
-    const prev = game.stats?.[playerID] ?? createPlayerStats(playerID)
-    acc[playerID] = sumPlayerStats(prev, inc)
-    return acc
-  }, {} as Dict<PlayerStats>)
+  changes.stats = room
 
   await fromGames(db).updateOne(filter, { $set: changes })
+
+  await upsertManyPlayerStatsByID(total)
 
   if (win) {
     return await revealMatchResults(game)
