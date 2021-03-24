@@ -1,9 +1,17 @@
 import { CurrentGameView, Game } from '../../types/game.types'
 import { connectToDatabase, toMongoUnset } from '../../util/mongodb'
-import { randomClues } from '../clue'
+import { randomCluePair } from '../clue'
 import { doesGameHaveEnoughPlayers, getNextPsychic } from '../game'
 import { fromGames } from '../game-store'
 import { isFreePhase } from '../phase'
+
+function updateClueHistory(game: CurrentGameView, index: number): number[] {
+  let history = game.clue_history ?? []
+  const len = history.length
+  history = len >= 16 ? history.slice(len - 15, len - 1) : history.slice()
+  history.push(index)
+  return history
+}
 
 export default async function (game: CurrentGameView) {
   if (!isFreePhase(game.phase))
@@ -43,7 +51,11 @@ export default async function (game: CurrentGameView) {
   const minWidth = game.target_width / 5 / 2 / 100
   const target = Math.max(minWidth, Math.min(Math.random(), 1 - minWidth))
   changes.target = target
-  changes.clues = randomClues()
+
+  const { pair, index } = randomCluePair({ excludeIndices: game.clue_history })
+  changes.clues = pair
+  changes.clue_history = updateClueHistory(game, index)
+
   changes.round_number = game.round_number + 1
   changes.round_started_at = new Date().toISOString()
 

@@ -77,6 +77,7 @@ export interface Game {
   next_psychic?: string
   clues: Clue[]
   clue_selected?: number
+  clue_history?: number[]
   psychic_counts?: Dict<number>
   guesses?: Dict<Guess> // TODO: Rename to 'needles'
   directions?: Dict<Guess>

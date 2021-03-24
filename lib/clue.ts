@@ -1,5 +1,4 @@
 import { Clue } from '../types/game.types'
-import { randomInt } from '../util/number'
 import { randomGradient } from './gradient-dict'
 
 type Language = 'en'
@@ -52,9 +51,29 @@ function createClue(clues: string[]): Clue {
   return { left: clues[0], right: clues[1], gradient }
 }
 
-export function randomClues(language: Language = 'en'): Clue[] {
-  const i = randomInt(0, clues.en.length - 2)
-  const c1 = createClue(clues[language][i])
-  const c2 = createClue(clues[language][i + 1])
-  return [c1, c2]
+interface RandomClueOptions {
+  language?: Language
+  excludeIndices?: number[]
+}
+
+function buildAvailableIndices(
+  length: number,
+  excludeIndices: number[] = []
+): number[] {
+  const indices = []
+  for (let i = 0; i < length; i++) {
+    if (!excludeIndices.includes(i)) indices.push(i)
+  }
+  return indices
+}
+
+export function randomCluePair(options: RandomClueOptions = {}) {
+  const { language = 'en', excludeIndices = [] } = options
+  const availableClues = clues[language]
+  const cluePairCount = availableClues.length / 2
+  const indices = buildAvailableIndices(cluePairCount, excludeIndices)
+  const index = indices[Math.floor(Math.random() * indices.length)]
+  const clue1 = createClue(availableClues[index * 2])
+  const clue2 = createClue(availableClues[index * 2 + 1])
+  return { pair: [clue1, clue2], index }
 }
