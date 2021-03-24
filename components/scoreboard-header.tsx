@@ -1,12 +1,12 @@
 import React from 'react'
 import { getTeamName } from '../lib/game'
 import { getTeamIcon } from '../lib/icon'
-import { GameView } from '../types/game.types'
+import { FreqGameView } from '../types/freq.types'
 import { cx } from '../util/dom'
 import ScoreboardIcon from './scoreboard-icon'
 
 type Props = typeof defaultProps & {
-  game?: GameView
+  game?: FreqGameView
 }
 
 const defaultProps = {

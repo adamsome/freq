@@ -1,5 +1,5 @@
 import React from 'react'
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
 import TitleMessage from './title-message'
 
 type Props = typeof defaultProps & {
@@ -9,7 +9,7 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 export default function GameGuard({ children }: Props) {
-  const { loading, error } = useGame()
+  const { loading, error } = useFreqGame()
 
   if (loading) {
     return <TitleMessage subtle>Loading room...</TitleMessage>

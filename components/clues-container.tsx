@@ -1,19 +1,19 @@
 import React from 'react'
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
 import { postCommand } from '../util/fetch-json'
 import ClueOption from './clue-option'
 import ClueMeter from './clue-meter'
 import ClueCard from './clue-card'
 import ClueDirections from './clue-directions'
 import ClueTarget from './clue-target'
-import { Clue } from '../types/game.types'
+import { FreqClue } from '../types/freq.types'
 
 type Props = typeof defaultProps
 
 const defaultProps = {}
 
 export default function CluesContainer(_: Props) {
-  const { game, mutate } = useGame()
+  const { game, mutate } = useFreqGame()
   if (!game) return null
 
   const isPsychic = game.currentPlayer?.id === game.psychic
@@ -42,7 +42,7 @@ export default function CluesContainer(_: Props) {
     }
   }
 
-  const card = (clue: Clue, i: number) => {
+  const card = (clue: FreqClue, i: number) => {
     const label = isChoosing ? i + 1 : undefined
     return (
       <ClueCard key={i} clue={clue} label={label} hasSlider={hasSlider}>

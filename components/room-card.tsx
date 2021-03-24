@@ -1,11 +1,11 @@
 import { formatDistanceWithOptions, formatISO9075, parseISO } from 'date-fns/fp'
 import React from 'react'
-import { GameView } from '../types/game.types'
+import { FreqGameView } from '../types/freq.types'
 import { cx } from '../util/dom'
 import Scoreboard from './scoreboard'
 
 type Props = typeof defaultProps & {
-  game: GameView
+  game: FreqGameView
   onClick: (room: string) => void
 }
 

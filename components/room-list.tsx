@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import { GameView } from '../types/game.types'
+import { ROUTE_FREQ_ROOM } from '../lib/consts'
+import { FreqGameView } from '../types/freq.types'
 import { cx } from '../util/dom'
 import Button from './button'
 import IconSvg from './icon-svg'
@@ -9,7 +10,7 @@ import LayoutMain from './layout-main'
 import RoomCard from './room-card'
 
 type Props = typeof defaultProps & {
-  rooms: GameView[]
+  rooms: FreqGameView[]
   onToggleFormClick?: () => void
   onRefresh?: () => void
 }
@@ -27,7 +28,7 @@ export default function RoomList({
   const router = useRouter()
 
   const handleClick = (room: string) => {
-    router.push(`/${room}`)
+    router.push(ROUTE_FREQ_ROOM.replace('%0', room))
   }
 
   return (

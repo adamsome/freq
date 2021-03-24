@@ -1,4 +1,4 @@
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
 import { PlayerWithGuess } from '../types/game.types'
 import { partition } from '../util/array'
 import { cx } from '../util/dom'
@@ -10,7 +10,7 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 const ClueDirections = ({ hasSlider }: Props) => {
-  const { game } = useGame()
+  const { game } = useFreqGame()
   if (!game) return null
 
   const directions = game.playerDirections

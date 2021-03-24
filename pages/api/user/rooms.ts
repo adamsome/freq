@@ -3,8 +3,8 @@ import {
   UserProfile,
   withApiAuthRequired,
 } from '@auth0/nextjs-auth0'
-import { findManyGames } from '../../../lib/game-store'
-import { toGameView } from '../../../lib/game-view'
+import { findManyFreqGames } from '../../../lib/freq/freq-game-store'
+import { toFreqGameView } from '../../../lib/freq/freq-game-view'
 import { fetchUser } from '../../../lib/user-store'
 
 export default withApiAuthRequired(async function getUser(req, res) {
@@ -22,9 +22,9 @@ export default withApiAuthRequired(async function getUser(req, res) {
       return res.json([])
     }
 
-    const games = await findManyGames(Object.keys(user.rooms))
+    const games = await findManyFreqGames(Object.keys(user.rooms))
 
-    const views = games.map((g) => toGameView(user.id, g))
+    const views = games.map((g) => toFreqGameView(user.id, g))
 
     res.json(views)
   } catch (error) {

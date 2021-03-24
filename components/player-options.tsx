@@ -1,8 +1,8 @@
 import produce from 'immer'
 import React, { useState } from 'react'
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
 import { DEBUG_MODE_KEY } from '../lib/consts'
-import { CommandType, GameView } from '../types/game.types'
+import { FreqCommandType, FreqGameView } from '../types/freq.types'
 import { User } from '../types/user.types'
 import { cx, isBrowser } from '../util/dom'
 import { styleColor } from '../util/dom-style'
@@ -37,7 +37,7 @@ const PlayerOptions = ({
   onClose,
 }: Props) => {
   const [fetching, setFetching] = useState(false)
-  const { game, mutate } = useGame()
+  const { game, mutate } = useFreqGame()
   const player = game?.currentPlayer
 
   const debugModeVal: any = isBrowser && localStorage[DEBUG_MODE_KEY]
@@ -49,7 +49,9 @@ const PlayerOptions = ({
     ? () => onLeave && onLeave(game.room)
     : () => onLogout && onLogout()
 
-  const handleCommand = (cmd: CommandType) => async (e: React.MouseEvent) => {
+  const handleCommand = (cmd: FreqCommandType) => async (
+    e: React.MouseEvent
+  ) => {
     e.preventDefault()
     if (!game || !player || fetching || player.fetching) return
 
@@ -57,7 +59,7 @@ const PlayerOptions = ({
     try {
       await postCommand(game.room, cmd, player)
       mutate(
-        produce((game: GameView | undefined) => {
+        produce((game: FreqGameView | undefined) => {
           if (game && game.currentPlayer) {
             game.currentPlayer.fetching = true
           }

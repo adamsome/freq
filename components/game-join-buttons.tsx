@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { mutate } from 'swr'
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
 import { getTeamColor } from '../lib/color-dict'
 import {
-  API_GAME,
-  API_GAME_JOIN,
+  API_FREQ_GAME,
+  API_FREQ_JOIN,
   API_USER,
   API_USER_ROOMS,
 } from '../lib/consts'
 import { getPreferredTeam } from '../lib/player'
-import { Command, GameView } from '../types/game.types'
+import { FreqCommand, FreqGameView } from '../types/freq.types'
 import { postJson } from '../util/fetch-json'
 import CommandButton from './command-button'
 
@@ -20,7 +20,7 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 export default function GameJoinButtons({ room }: Props) {
-  const { game } = useGame()
+  const { game } = useFreqGame()
   if (!game) return null
 
   const [error, setError] = useState<string | null>(null)
@@ -38,10 +38,10 @@ export default function GameJoinButtons({ room }: Props) {
     }
 
     try {
-      const path = API_GAME_JOIN.replace('%0', room)
-      const game: GameView = await postJson(path, { team })
+      const path = API_FREQ_JOIN.replace('%0', room)
+      const game: FreqGameView = await postJson(path, { team })
       mutate(API_USER)
-      mutate(API_GAME.replace('%0', room), game)
+      mutate(API_FREQ_GAME.replace('%0', room), game)
       mutate(API_USER_ROOMS)
       setFetching(false)
     } catch (err) {
@@ -52,7 +52,7 @@ export default function GameJoinButtons({ room }: Props) {
   }
 
   const preferredTeam = getPreferredTeam(game.players)
-  const cmd: Command = {
+  const cmd: FreqCommand = {
     text: `Join Red`,
     color: getTeamColor(1),
     rightText: `Join Blue`,

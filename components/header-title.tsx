@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
+import { ROUTE_FREQ_HOME } from '../lib/consts'
 import { cx } from '../util/dom'
 import { styleLinearGradientText } from '../util/dom-style'
 
@@ -10,10 +11,10 @@ const defaultProps = {}
 
 export default function HeaderTitle(_: Props) {
   const router = useRouter()
-  const { game } = useGame()
+  const { game } = useFreqGame()
 
   const handleTitleClick = () => {
-    router.push('/')
+    router.push(ROUTE_FREQ_HOME)
   }
 
   return (

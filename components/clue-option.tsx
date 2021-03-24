@@ -1,5 +1,5 @@
 import React from 'react'
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
 import { cx } from '../util/dom'
 
 type Props = typeof defaultProps & {
@@ -23,7 +23,7 @@ export default function ClueOption({
   notSelected,
   onSelect: onClueSelect,
 }: Props) {
-  const { game } = useGame()
+  const { game } = useFreqGame()
   if (!game) return null
 
   return (

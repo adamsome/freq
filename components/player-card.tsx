@@ -1,12 +1,13 @@
 import produce from 'immer'
 import React, { useState } from 'react'
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
 import {
   getNextPsychic,
-  getTeamName,
   isInvalidPlayerTeamChange,
-} from '../lib/game'
-import { CommandType, GameView, Player } from '../types/game.types'
+} from '../lib/freq/freq-game'
+import { getTeamName } from '../lib/game'
+import { FreqCommandType, FreqGameView } from '../types/freq.types'
+import { Player } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
@@ -23,7 +24,7 @@ const defaultProps = {}
 
 const PlayerCard = ({ player, onClose }: Props) => {
   const [fetching, setFetching] = useState(false)
-  const { game, mutate } = useGame()
+  const { game, mutate } = useFreqGame()
   if (!game || !player) return null
 
   const { phase, psychic, canChangePsychicTo, team_turn } = game
@@ -42,7 +43,9 @@ const PlayerCard = ({ player, onClose }: Props) => {
   const canChangePsychic = phase === 'choose' && player.team === team_turn
   const canChangeTeam = !isInvalidPlayerTeamChange(game, player)
 
-  const handleCommand = (type: CommandType) => async (e: React.MouseEvent) => {
+  const handleCommand = (type: FreqCommandType) => async (
+    e: React.MouseEvent
+  ) => {
     e.preventDefault()
     if (fetching || player.fetching) return
 
@@ -50,7 +53,7 @@ const PlayerCard = ({ player, onClose }: Props) => {
     try {
       await postCommand(game.room, type, player)
       mutate(
-        produce((game?: GameView) => {
+        produce((game?: FreqGameView) => {
           if (game) {
             const i = game.players.findIndex((p) => p.id === player.id)
             if (i >= 0) {
@@ -66,7 +69,7 @@ const PlayerCard = ({ player, onClose }: Props) => {
     onClose?.()
   }
 
-  const opt = (type: CommandType, text: string) => (
+  const opt = (type: FreqCommandType, text: string) => (
     <PlayerOptionButton
       disabled={fetching || player.fetching}
       onClick={handleCommand(type)}

@@ -1,5 +1,5 @@
 import React from 'react'
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
 import CluesContainer from './clues-container'
 import CommandPanel from './command-panel'
 import GameJoinButtons from './game-join-buttons'
@@ -15,7 +15,7 @@ type Props = typeof defaultProps
 const defaultProps = {}
 
 export default function GameBoard(_props: Props) {
-  const { game } = useGame()
+  const { game } = useFreqGame()
   if (!game) return null
 
   const roomUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${game.room}`

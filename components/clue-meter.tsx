@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { useDrag1D } from '../hooks/use-drag-1d'
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
 import { useThrottle } from '../hooks/use-throttle'
 import { partition } from '../util/array'
 import Needle from './needle'
@@ -18,7 +18,7 @@ const NEEDLE_TEAMMATE_WIDTH = 24
 const CHANGE_FPS = 2
 
 const ClueMeter = ({ children, onGuessChange }: Props) => {
-  const { game } = useGame()
+  const { game } = useFreqGame()
   if (!game) return null
 
   const meterWrapperRef = useRef<HTMLDivElement>(null)

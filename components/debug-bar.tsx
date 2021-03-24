@@ -1,23 +1,23 @@
 import React from 'react'
-import useGame from '../hooks/use-game'
-import { API_GAME_PHASE } from '../lib/consts'
-import { nextPhase } from '../lib/phase'
+import useFreqGame from '../hooks/use-freq-game'
+import { API_FREQ_PHASE } from '../lib/consts'
+import { nextFreqPhase } from '../lib/freq/freq-phase'
 import { postCommand, postJson } from '../util/fetch-json'
 import Button from './button'
 
 const defaultProps = {}
 
 const DebugBar = () => {
-  const { game } = useGame()
+  const { game } = useFreqGame()
 
   const handlePhaseNext = (offset: number) => async (e: React.MouseEvent) => {
     e.preventDefault()
     if (!game) return
 
-    const phase = nextPhase(game?.phase ?? 'prep', offset)
+    const phase = nextFreqPhase(game?.phase ?? 'prep', offset)
 
     try {
-      await postJson(API_GAME_PHASE, { phase })
+      await postJson(API_FREQ_PHASE, { phase })
     } catch (error) {
       console.error('Error updating phase.', error)
     }

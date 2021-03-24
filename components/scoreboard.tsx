@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { GameView, Player, ScoreType } from '../types/game.types'
+import { FreqGameView } from '../types/freq.types'
+import { Player, ScoreType } from '../types/game.types'
 import { cx } from '../util/dom'
 import ActionModal from './action-modal'
 import PlayerCard from './player-card'
@@ -8,7 +9,7 @@ import ScoreboardHeader from './scoreboard-header'
 import ScoreboardSettings from './scoreboard-settings'
 
 type Props = typeof defaultProps & {
-  game?: GameView
+  game?: FreqGameView
 }
 
 const defaultProps = {

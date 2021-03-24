@@ -1,12 +1,12 @@
 import React from 'react'
 import { gradientLightTextDict } from '../lib/gradient-dict'
-import { Clue } from '../types/game.types'
+import { FreqClue } from '../types/freq.types'
 import { cx } from '../util/dom'
 import { styleLinearGradient } from '../util/dom-style'
 
 type Props = typeof defaultProps & {
   children: React.ReactNode
-  clue: Clue
+  clue: FreqClue
   label?: number
   hasSlider: boolean
 }

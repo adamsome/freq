@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useDebounce } from '../hooks/use-debounce'
+import { ROUTE_FREQ_ROOM } from '../lib/consts'
 import { isRoomValid } from '../lib/room'
 import { head } from '../util/array'
 import RoomForm from './room-form'
@@ -41,7 +42,7 @@ export default function RoomFormContainer({ room }: Props) {
       return setError('Room code must be two words separated by a dash.')
     }
 
-    router.push(`/${targetRoom}`)
+    router.push(ROUTE_FREQ_ROOM.replace('%0', targetRoom))
     setDebouncedFetching(false)
   }
 

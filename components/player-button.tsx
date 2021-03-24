@@ -1,5 +1,5 @@
 import React from 'react'
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
 import { User } from '../types/user.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
@@ -15,7 +15,7 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 const PlayerButton = ({ user, hero, onClick }: Props) => {
-  const { game } = useGame()
+  const { game } = useFreqGame()
   const player = game?.currentPlayer
 
   return (

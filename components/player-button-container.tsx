@@ -2,10 +2,11 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { mutate } from 'swr'
 import {
-  API_GAME_LEAVE,
+  API_FREQ_LEAVE,
   API_LOGOUT,
   API_USER_ROOMS,
   ROOM_KEY,
+  ROUTE_FREQ_HOME,
 } from '../lib/consts'
 import { User } from '../types/user.types'
 import { postJson } from '../util/fetch-json'
@@ -41,8 +42,8 @@ export default function PlayerButtonContainer({
 
   const handleLeave = async (room: string) => {
     localStorage[ROOM_KEY] = room
-    router.push('/')
-    await postJson(API_GAME_LEAVE.replace('%0', room))
+    router.push(ROUTE_FREQ_HOME)
+    await postJson(API_FREQ_LEAVE.replace('%0', room))
     mutate(API_USER_ROOMS)
   }
 

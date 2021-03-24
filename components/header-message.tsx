@@ -1,10 +1,10 @@
 import { useFetchUser } from '../hooks/use-fetch-user'
-import useGame from '../hooks/use-game'
+import useFreqGame from '../hooks/use-freq-game'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 
 const HeaderMessage = () => {
-  const { game } = useGame()
+  const { game } = useFreqGame()
   const { user } = useFetchUser()
   if (!game) return null
 

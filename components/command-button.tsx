@@ -1,14 +1,18 @@
 import React from 'react'
-import { Command, Player } from '../types/game.types'
+import { FreqCommand } from '../types/freq.types'
+import { Player } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import Button from './button'
 import IconSvg from './icon-svg'
 
 type Props = typeof defaultProps & {
-  command: Command
+  command: FreqCommand
   currentPlayer?: Player
-  onClick: (cmd: Command, i?: number) => (e: React.MouseEvent) => Promise<void>
+  onClick: (
+    cmd: FreqCommand,
+    i?: number
+  ) => (e: React.MouseEvent) => Promise<void>
 }
 
 const defaultProps = {
@@ -23,7 +27,7 @@ const CommandButton = ({
 }: Props) => {
   const cmd = command
 
-  const getCmdRightWidth = (cmd: Command) => {
+  const getCmdRightWidth = (cmd: FreqCommand) => {
     const w = (cmd.rightWidth ?? 0.5) * 100
     const min = '6.5em'
     const rawWidth = `calc(${w}% - 0.25rem)`
