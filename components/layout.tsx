@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import React from 'react'
 import { GameType } from '../types/game.types'
+import { __DEV__ } from '../util/assertion'
 import { cx } from '../util/dom'
 import Header from './header'
 
@@ -39,7 +40,19 @@ export default function Layout({
       <Head>
         <meta charSet="utf-8" />
         <title>{fullTitle}</title>
-        <link rel="icon" href="/favicon.ico" />
+
+        <link
+          rel="icon"
+          href={__DEV__ ? '/favicon-invert.ico' : '/favicon.ico'}
+        />
+        <link
+          rel="icon"
+          href={__DEV__ ? '/icon-invert.svg' : '/icon.svg'}
+          type="image/svg+xml"
+        />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+
         <meta
           name="viewport"
           content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"

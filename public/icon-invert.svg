@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 210 297">
+  <style>
+    path {
+      fill: white;
+      stroke: white;
+    }
+
+    path.inner {
+      fill: black;
+      stroke: transparent;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      path {
+        fill: black;
+        stroke: black;
+      }
+
+      path.inner {
+        fill: white;
+        stroke: transparent;
+      }
+    }
+  </style>
+  <path fill="black" stroke="black" stroke-width="20" stroke-miterlimit="4" stroke-dasharray="none" d="M 182.71107,203.76249 33.486632,203.05479 108.71174,74.176483 Z" />
+  <path stroke="black" stroke-width="28" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-dasharray="none" d="m 11.550336,148.28197 c 192.968534,0 192.968534,0 192.968534,0" />
+  <path class="inner" fill="white" stroke="transparent" stroke-width="0" d="m 92,135.5 63,0 15,26 H 77 Z" />
+</svg>
