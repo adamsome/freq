@@ -7,10 +7,11 @@ import {
 import { User } from '../../types/user.types'
 import { head } from '../../util/array'
 import { connectToDatabase } from '../../util/mongodb'
-import { createNewFreqGame, getNextPsychic } from './freq-game'
-import { isCurrentFreqGameView, toFreqGameView } from './freq-game-view'
 import { addPlayer, getTeamPlayers, hasPlayer } from '../player'
 import { fromUsers } from '../user-store'
+import createNewFreqGame from './create-new-freq-game'
+import { isCurrentFreqGameView, toFreqGameView } from './freq-game-view'
+import { getNextPsychic } from './freq-psychic'
 
 export const fromGames = (db: Db) => db.collection<WithId<FreqGame>>('games')
 

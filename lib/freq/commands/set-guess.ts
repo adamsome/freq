@@ -9,7 +9,7 @@ export default async function (game: CurrentFreqGameView, guess: unknown) {
     throw new Error('Only non-psychic players on turn team can set guess.')
 
   if (game.phase !== 'guess')
-    throw new Error('Can only lock guess in the guess phase.')
+    throw new Error('Can only set guess in the guess phase.')
 
   if (player && game.guesses?.[player.id]?.locked)
     throw new Error('Cannot set guess once its locked.')

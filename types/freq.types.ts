@@ -1,11 +1,11 @@
-import { Dict } from './object.types'
 import {
+  CommonGame,
+  CommonGameView,
+  CommonPhase,
+  PlayerView,
   PlayerWithGuess,
-  Guess,
-  Player,
-  Command,
-  CommandsView,
 } from './game.types'
+import { Dict } from './object.types'
 
 export interface FreqPlayerStats {
   updated_at: string
@@ -51,7 +51,7 @@ export interface FreqClue {
   gradient: string
 }
 
-export const FREQ_PHASES = [
+export const FREQ_PHASES: readonly CommonPhase[] = [
   'prep',
   'choose',
   'guess',
@@ -62,72 +62,28 @@ export const FREQ_PHASES = [
 
 export type FreqPhase = typeof FREQ_PHASES[number]
 
-export interface FreqGame {
-  room: string
-  players: Player[]
+export interface FreqGame extends CommonGame {
   psychic: string
   next_psychic?: string
+  psychic_counts?: Dict<number>
   clues: FreqClue[]
   clue_selected?: number
   clue_history?: number[]
-  psychic_counts?: Dict<number>
-  guesses?: Dict<Guess> // TODO: Rename to 'needles'
-  directions?: Dict<Guess>
   target?: number
   target_width: number
-  match_number: number
-  round_number: number
   phase: FreqPhase
-  team_turn: 1 | 2
-  repeat_turn?: boolean
-  score_team_1: number
-  score_team_2: number
   stats?: Dict<FreqPlayerStats>
-  game_started_at: string
-  game_finished_at?: string
-  round_started_at?: string
-  kicked?: Dict<boolean>
 }
 
-export type FreqCommandType =
-  | 'change_player_team'
-  | 'edit_player'
-  | 'toggle_player_leader'
-  | 'set_next_psychic'
-  | 'set_current_psychic'
-  | 'kick_player'
-  // Phases
-  | 'prep_new_match'
-  | 'begin_round'
-  | 'select_clue'
-  | 'confirm_clue'
-  | 'set_guess'
-  | 'lock_guess'
-  | 'set_direction'
-  | 'lock_direction'
-  | 'reveal_round_results'
-  | 'reveal_match_results'
-
-export interface Header {
-  text: string
-  color?: string
-  colorLit?: number
-}
-
-export type FreqCommand = Command<FreqCommandType>
-
-export type FreqCommandsView = CommandsView<FreqCommandType>
-
-export interface FreqGameView extends FreqGame, FreqCommandsView {
-  currentPlayer?: Player
+export interface FreqGameView
+  extends CommonGameView,
+    Omit<FreqGame, 'players'> {
   cluesToShow: FreqClue[]
   playerGuesses: PlayerWithGuess[]
   playerDirections: PlayerWithGuess[]
   averageGuess?: number
-  canChangePsychicTo: 'any' | 'same_team' | 'none'
-  activePlayers: string[]
 }
 
 export type CurrentFreqGameView = Omit<FreqGameView, 'currentPlayer'> & {
-  currentPlayer: Player
+  currentPlayer: PlayerView
 }

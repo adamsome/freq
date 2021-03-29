@@ -1,18 +1,26 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useDebounce } from '../hooks/use-debounce'
-import { ROUTE_FREQ_ROOM } from '../lib/consts'
+import { ROUTE_GAME_ROOM } from '../lib/consts'
 import { isRoomValid } from '../lib/room'
+import { GameType } from '../types/game.types'
 import { head } from '../util/array'
 import RoomForm from './room-form'
 
 type Props = typeof defaultProps & {
-  room: string
+  type?: GameType
+  generatedRoom?: string
 }
 
-const defaultProps = {}
+const defaultProps = {
+  classNames: '',
+}
 
-export default function RoomFormContainer({ room }: Props) {
+export default function RoomFormContainer({
+  generatedRoom,
+  type,
+  classNames,
+}: Props) {
   const router = useRouter()
 
   const { error: queryError } = router.query
@@ -32,7 +40,7 @@ export default function RoomFormContainer({ room }: Props) {
 
   const handleStart = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (fetching) return
+    if (fetching || !type) return
     setFetching(true)
 
     const targetRoom = e.currentTarget?.room?.value?.toLowerCase()
@@ -42,16 +50,18 @@ export default function RoomFormContainer({ room }: Props) {
       return setError('Room code must be two words separated by a dash.')
     }
 
-    router.push(ROUTE_FREQ_ROOM.replace('%0', targetRoom))
+    router.push(ROUTE_GAME_ROOM.replace('%0', type).replace('%1', targetRoom))
     setDebouncedFetching(false)
   }
 
   return (
     <RoomForm
-      room={room}
+      type={type}
+      generatedRoom={generatedRoom}
       error={error}
       fetching={fetching}
       animate={true}
+      classNames={classNames}
       onSubmit={handleStart}
     ></RoomForm>
   )

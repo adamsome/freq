@@ -9,7 +9,7 @@ export default async function (game: CurrentFreqGameView) {
   await fromGames(db).updateOne(filter, {
     $set: {
       phase: 'win',
-      game_finished_at: new Date().toISOString(),
+      match_finished_at: new Date().toISOString(),
     },
   })
 }

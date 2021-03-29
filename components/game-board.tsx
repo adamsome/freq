@@ -1,7 +1,8 @@
 import React from 'react'
-import useFreqGame from '../hooks/use-freq-game'
-import CluesContainer from './clues-container'
+import useGame from '../hooks/use-game'
+import { getGameTitle } from '../lib/game'
 import CommandPanel from './command-panel'
+import CluesContainer from './freq/clues-container'
 import GameJoinButtons from './game-join-buttons'
 import GameLink from './game-link'
 import HeaderMessage from './header-message'
@@ -14,14 +15,15 @@ type Props = typeof defaultProps
 
 const defaultProps = {}
 
-export default function GameBoard(_props: Props) {
-  const { game } = useFreqGame()
+export default function GameBoard(_: Props) {
+  const { game } = useGame()
   if (!game) return null
 
-  const roomUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${game.room}`
+  const title = getGameTitle(game.type)
+  const roomUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${game.type}/${game.room}`
 
   return (
-    <Layout title={game?.room}>
+    <Layout type={game.type} title={title} room={game?.room}>
       <LayoutMain>
         <HeaderMessage />
 
@@ -32,7 +34,7 @@ export default function GameBoard(_props: Props) {
           </>
         )}
 
-        <CluesContainer />
+        {game.type === 'freq' ? <CluesContainer /> : <div>Cwd</div>}
 
         {game.currentPlayer ? (
           <CommandPanel />

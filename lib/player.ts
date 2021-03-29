@@ -29,23 +29,23 @@ export function createPlayer(
   return player
 }
 
-export function getPlayersPerTeam(players: Player[]): [Player[], Player[]] {
+export function getPlayersPerTeam<T extends Player>(players: T[]): [T[], T[]] {
   const [, teamPlayers] = partition((p) => p.team == null, players)
   return partition((p) => p.team === 1, teamPlayers)
 }
 
-export function getTeamPlayers(
-  players: Player[],
+export function getTeamPlayers<T extends Player>(
+  players: T[],
   team: 1 | 2 | undefined,
   ...ignorePlayers: (string | { id: string })[]
-): Player[] {
+): T[] {
   const ignoreIDs = ignorePlayers.map((p) => (typeof p === 'string' ? p : p.id))
   return players
     .filter((p) => p.team === team)
     .filter((p) => !ignoreIDs.includes(p.id))
 }
 
-export function hasPlayer(players: Player[], userID: string) {
+export function hasPlayer<T extends Player>(players: T[], userID: string) {
   return players.some((p) => p.id === userID)
 }
 
@@ -78,9 +78,9 @@ export function addPlayer(
   return [...players, player]
 }
 
-export function getPlayerDict(players: Player[]): Dict<Player> {
+export function getPlayerDict<T extends Player>(players: T[]): Dict<T> {
   return players.reduce((acc, p) => {
     acc[p.id] = p
     return acc
-  }, {} as Dict<Player>)
+  }, {} as Dict<T>)
 }

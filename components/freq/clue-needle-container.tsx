@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react'
-import { useDrag1D } from '../hooks/use-drag-1d'
-import useFreqGame from '../hooks/use-freq-game'
-import { useThrottle } from '../hooks/use-throttle'
-import { partition } from '../util/array'
+import { useDrag1D } from '../../hooks/use-drag-1d'
+import { useFreqGame } from '../../hooks/use-game'
+import { useThrottle } from '../../hooks/use-throttle'
+import { partition } from '../../util/array'
 import Needle from './needle'
 import NeedleAverage from './needle-average'
 
@@ -17,7 +17,7 @@ const NEEDLE_WIDTH = 32
 const NEEDLE_TEAMMATE_WIDTH = 24
 const CHANGE_FPS = 2
 
-const ClueMeter = ({ children, onGuessChange }: Props) => {
+const ClueNeedleContainer = ({ children, onGuessChange }: Props) => {
   const { game } = useFreqGame()
   if (!game) return null
 
@@ -104,6 +104,6 @@ const ClueMeter = ({ children, onGuessChange }: Props) => {
   )
 }
 
-ClueMeter.defaultProps = defaultProps
+ClueNeedleContainer.defaultProps = defaultProps
 
-export default ClueMeter
+export default ClueNeedleContainer

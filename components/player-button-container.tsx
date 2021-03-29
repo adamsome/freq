@@ -2,13 +2,15 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { mutate } from 'swr'
 import {
-  API_FREQ_LEAVE,
+  API_GAME_LEAVE,
   API_LOGOUT,
   API_USER_ROOMS,
-  ROOM_KEY,
-  ROUTE_FREQ_HOME,
+  KEY_ROOM,
+  ROUTE_HOME,
 } from '../lib/consts'
+import { GameType } from '../types/game.types'
 import { User } from '../types/user.types'
+import { head } from '../util/array'
 import { postJson } from '../util/fetch-json'
 import ActionModal from './action-modal'
 import PlayerButton from './player-button'
@@ -31,6 +33,7 @@ export default function PlayerButtonContainer({
   onDebugToggle,
 }: Props) {
   const router = useRouter()
+  const type = head(router.query?.game) as GameType | undefined
 
   // Player Options modal state
   const [modelOptionsOpen, setModelOptionsOpen] = useState(false)
@@ -41,9 +44,11 @@ export default function PlayerButtonContainer({
   }
 
   const handleLeave = async (room: string) => {
-    localStorage[ROOM_KEY] = room
-    router.push(ROUTE_FREQ_HOME)
-    await postJson(API_FREQ_LEAVE.replace('%0', room))
+    if (!type || !room) return
+
+    localStorage[KEY_ROOM] = room
+    router.push(ROUTE_HOME)
+    await postJson(API_GAME_LEAVE.replace('%0', type).replace('%1', room))
     mutate(API_USER_ROOMS)
   }
 

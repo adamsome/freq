@@ -1,8 +1,8 @@
 import produce from 'immer'
 import React, { useState } from 'react'
-import useFreqGame from '../hooks/use-freq-game'
-import { DEBUG_MODE_KEY } from '../lib/consts'
-import { FreqCommandType, FreqGameView } from '../types/freq.types'
+import useGame from '../hooks/use-game'
+import { KEY_DEBUG_MODE } from '../lib/consts'
+import { CommandType, CommonGameView } from '../types/game.types'
 import { User } from '../types/user.types'
 import { cx, isBrowser } from '../util/dom'
 import { styleColor } from '../util/dom-style'
@@ -37,10 +37,10 @@ const PlayerOptions = ({
   onClose,
 }: Props) => {
   const [fetching, setFetching] = useState(false)
-  const { game, mutate } = useFreqGame()
+  const { game, mutate } = useGame()
   const player = game?.currentPlayer
 
-  const debugModeVal: any = isBrowser && localStorage[DEBUG_MODE_KEY]
+  const debugModeVal: any = isBrowser && localStorage[KEY_DEBUG_MODE]
   const allowDebugMode = debugModeVal === true || debugModeVal === 'true'
 
   const colorMode = `${theme === 'dark' ? 'Light' : 'Dark'} Mode`
@@ -49,17 +49,15 @@ const PlayerOptions = ({
     ? () => onLeave && onLeave(game.room)
     : () => onLogout && onLogout()
 
-  const handleCommand = (cmd: FreqCommandType) => async (
-    e: React.MouseEvent
-  ) => {
+  const handleCommand = (cmd: CommandType) => async (e: React.MouseEvent) => {
     e.preventDefault()
     if (!game || !player || fetching || player.fetching) return
 
     setFetching(true)
     try {
-      await postCommand(game.room, cmd, player)
+      await postCommand(game.type, game.room, cmd, player)
       mutate(
-        produce((game: FreqGameView | undefined) => {
+        produce((game: CommonGameView | undefined) => {
           if (game && game.currentPlayer) {
             game.currentPlayer.fetching = true
           }
@@ -91,12 +89,6 @@ const PlayerOptions = ({
         <Opt onClick={onThemeToggle}>{colorMode}</Opt>
 
         {player && <Opt onClick={onEditPlayer}>Change name and icon</Opt>}
-
-        {player?.leader && (
-          <Opt onClick={handleCommand('toggle_player_leader')}>
-            Remove as leader
-          </Opt>
-        )}
 
         {player?.leader && (
           <Opt onClick={handleCommand('prep_new_match')}>Start a new match</Opt>

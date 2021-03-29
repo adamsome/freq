@@ -1,12 +1,12 @@
 import produce from 'immer'
 import { useState } from 'react'
-import useFreqGame from '../hooks/use-freq-game'
-import { FreqCommand, FreqGameView } from '../types/freq.types'
+import useGame from '../hooks/use-game'
+import { Command, CommonGameView } from '../types/game.types'
 import { postCommand } from '../util/fetch-json'
 import CommandButton from './command-button'
 
 const CommandPanel = () => {
-  const { game, mutate } = useFreqGame()
+  const { game, mutate } = useGame()
   if (!game) return null
 
   const [error, setError] = useState<string | null>(null)
@@ -15,7 +15,7 @@ const CommandPanel = () => {
   const { currentPlayer, commands } = game
   if (!currentPlayer) return null
 
-  const handleCommandClick = (i: number) => (cmd: FreqCommand, j = 0) => async (
+  const handleCommandClick = (i: number) => (cmd: Command, j = 0) => async (
     e: React.MouseEvent
   ) => {
     e.preventDefault()
@@ -32,9 +32,9 @@ const CommandPanel = () => {
     }
     const value = j > 0 ? cmd.rightValue : cmd.value
     try {
-      await postCommand(game.room, cmd.type, value)
+      await postCommand(game.type, game.room, cmd.type, value)
       mutate(
-        produce((game: FreqGameView | undefined) => {
+        produce((game: CommonGameView | undefined) => {
           if (game) game.commands[i].fetching = true
         })
       )

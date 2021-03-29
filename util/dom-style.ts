@@ -30,11 +30,11 @@ export const styleLinearGradient = (
   if (!n || n === 0) {
     return { color: `var(--text)` }
   }
-  const background =
+  const backgroundImage =
     n === 1
       ? colors?.[0]
       : `linear-gradient(${angleOrSide}, ${colors?.join(', ')})`
-  return { background, backgroundPosition: 'center', backgroundSize }
+  return { backgroundImage, backgroundPosition: 'center', backgroundSize }
 }
 
 export const styleLinearGradientText = (
@@ -47,12 +47,12 @@ export const styleLinearGradientText = (
   if (!n || n === 0) {
     return { color: `var(--text)` }
   }
-  const background =
+  const backgroundImage =
     n === 1
       ? colors?.[0]
       : `linear-gradient(${angleOrSide}, ${colors?.join(', ')})`
   return {
-    background,
+    backgroundImage,
     backgroundPosition: 'center',
     backgroundSize,
     WebkitBackgroundClip: 'text',

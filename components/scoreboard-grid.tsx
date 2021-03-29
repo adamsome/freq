@@ -1,10 +1,6 @@
 import React from 'react'
-import { getNextPsychic } from '../lib/freq/freq-game'
-import { isFreeFreqPhase } from '../lib/freq/freq-phase'
 import { getPlayersPerTeam } from '../lib/player'
-import { calculateFreqPlayerPoints } from '../lib/freq/freq-player-stats'
-import { FreqGameView } from '../types/freq.types'
-import { Player, ScoreType } from '../types/game.types'
+import { PlayerView, ScoreType } from '../types/game.types'
 import { cx } from '../util/dom'
 import ScoreboardIcon from './scoreboard-icon'
 import ScoreboardPlayerName from './scoreboard-player-name'
@@ -12,9 +8,10 @@ import ScoreboardPlayerRow from './scoreboard-player-row'
 import ScoreboardPlayerScore from './scoreboard-player-score'
 
 type Props = typeof defaultProps & {
-  game?: FreqGameView
+  currentPlayer?: PlayerView
+  players?: PlayerView[]
   scoreType: ScoreType
-  onPlayerClick: (player: Player) => void
+  onPlayerClick: (player: PlayerView) => void
 }
 
 const defaultProps = {
@@ -22,51 +19,42 @@ const defaultProps = {
 }
 
 export default function ScoreboardGrid({
-  game,
+  currentPlayer,
+  players,
   scoreType,
   readonly,
   onPlayerClick,
 }: Props) {
-  if (!game) return null
+  if (!players) return null
 
-  const { currentPlayer, activePlayers } = game
+  const teams = getPlayersPerTeam(players)
 
-  const leader = currentPlayer?.leader == true
-  const teams = getPlayersPerTeam(game.players)
-  const nextPsychic = getNextPsychic(game)
-  const showPsychic = game.phase !== 'prep'
-  const showNextPsychic =
-    isFreeFreqPhase(game.phase) || game.next_psychic != null
-
-  const Player = (right = false) => (player: Player) => {
-    const isNextPsychic = nextPsychic?.id === player.id
-    const stats = game.stats?.[player.id]
-    const score =
-      scoreType === 'points' ? calculateFreqPlayerPoints(stats) : stats?.w ?? 0
+  const Player = (right = false) => (player: PlayerView) => {
+    const score = (scoreType === 'points' ? player.points : player.wins) ?? 0
     return (
       <ScoreboardPlayerRow
         key={player.id}
         player={player}
         right={right}
-        active={activePlayers.includes(player.id)}
-        current={currentPlayer?.id === player.id}
-        leader={leader}
+        active={player.active}
+        current={player.current}
+        leader={currentPlayer?.leader}
         readonly={readonly}
-        onClick={() => leader && onPlayerClick(player)}
+        onClick={() => currentPlayer?.leader && onPlayerClick(player)}
       >
         <ScoreboardIcon right={right}>{player.icon}</ScoreboardIcon>
         <ScoreboardPlayerName
           player={player}
           right={right}
-          psychic={showPsychic && !isNextPsychic && game.psychic === player.id}
-          nextPsychic={showNextPsychic && isNextPsychic}
+          psychic={player.showPsychic}
+          nextPsychic={player.showNextPsychic}
         />
         <ScoreboardPlayerScore score={score} />
       </ScoreboardPlayerRow>
     )
   }
 
-  const Team = (team: Player[], i: number) => (
+  const Team = (team: PlayerView[], i: number) => (
     <div
       key={i}
       className={cx('pt-1', {

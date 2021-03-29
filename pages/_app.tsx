@@ -3,7 +3,7 @@ import { AppProps } from 'next/app'
 import 'react-responsive-modal/styles.css'
 import { SWRConfig } from 'swr'
 import { ThemeProvider } from '../hooks/use-theme'
-import { THEME_KEY } from '../lib/consts'
+import { KEY_THEME } from '../lib/consts'
 import '../styles/globals.css'
 import fetch from '../util/fetch-json'
 
@@ -21,7 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
         defaultTheme="dark"
         enableSystem={false}
         attribute="class"
-        storageKey={THEME_KEY}
+        storageKey={KEY_THEME}
       >
         <UserProvider>
           <Component {...pageProps} />

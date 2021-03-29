@@ -1,8 +1,8 @@
 import React from 'react'
-import { gradientLightTextDict } from '../lib/gradient-dict'
-import { FreqClue } from '../types/freq.types'
-import { cx } from '../util/dom'
-import { styleLinearGradient } from '../util/dom-style'
+import { gradientLightTextDict } from '../../lib/gradient-dict'
+import { FreqClue } from '../../types/freq.types'
+import { cx } from '../../util/dom'
+import { styleLinearGradient } from '../../util/dom-style'
 
 type Props = typeof defaultProps & {
   children: React.ReactNode

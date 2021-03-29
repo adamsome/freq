@@ -1,4 +1,5 @@
 import React from 'react'
+import { GameType } from '../types/game.types'
 import { cx } from '../util/dom'
 import Button from './button'
 import Layout from './layout'
@@ -6,6 +7,7 @@ import Title from './title'
 
 type Props = typeof defaultProps & {
   children: React.ReactNode
+  type?: GameType
   message?: string
   invisible?: boolean
   subtle?: boolean
@@ -16,6 +18,7 @@ const defaultProps = {}
 
 export default function TitleMessage({
   children,
+  type,
   message,
   invisible,
   subtle,
@@ -29,7 +32,7 @@ export default function TitleMessage({
           'text-black dark:text-white'
         )}
       >
-        <Title animate={true} />
+        <Title type={type} animate={true} />
 
         <div
           className={cx('flex flex-col items-center text-center h-96', {

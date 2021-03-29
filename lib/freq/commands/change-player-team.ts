@@ -1,9 +1,9 @@
 import { CurrentFreqGameView } from '../../../types/freq.types'
 import { connectToDatabase } from '../../../util/mongodb'
 import { assignColor } from '../../color-dict'
-import { isInvalidPlayerTeamChange } from '../freq-game'
-import { fromGames } from '../freq-game-store'
 import { isPlayer } from '../../player'
+import { fromGames } from '../freq-game-store'
+import isInvalidPlayerTeamChange from '../is-freq-team-change-invalid'
 
 export default async function (game: CurrentFreqGameView, player: unknown) {
   if (!isPlayer(player))

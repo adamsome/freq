@@ -1,6 +1,6 @@
 import React from 'react'
-import { cx } from '../util/dom'
-import IconSvg from './icon-svg'
+import { cx } from '../../util/dom'
+import IconSvg from '../icon-svg'
 
 type Props = typeof defaultProps & {
   transform: string

@@ -1,18 +1,33 @@
 import Head from 'next/head'
 import React from 'react'
+import { GameType } from '../types/game.types'
 import { cx } from '../util/dom'
 import Header from './header'
 
 type Props = typeof defaultProps & {
   children: React.ReactNode
+  type?: GameType
   title?: string
+  room?: string
+  big?: boolean
+  onLogoClick?: () => void
+  onTitleClick?: () => void
 }
 
-const defaultProps = {
-  appName: 'Freq',
-}
+const defaultProps = {}
 
-const Layout = ({ children, appName, title }: Props) => {
+export default function Layout({
+  children,
+  type,
+  title,
+  room,
+  big,
+  onLogoClick,
+  onTitleClick,
+}: Props) {
+  const titlePrefix = `${title ?? ''}${room ? ` / ${room}` : ''}`
+  const fullTitle = `${titlePrefix}${titlePrefix ? ' / ' : ''}adamsome`
+
   return (
     <div
       className={cx(
@@ -23,7 +38,7 @@ const Layout = ({ children, appName, title }: Props) => {
     >
       <Head>
         <meta charSet="utf-8" />
-        <title>{`${appName}${title ? ` / ${title}` : ''}`}</title>
+        <title>{fullTitle}</title>
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="viewport"
@@ -31,12 +46,18 @@ const Layout = ({ children, appName, title }: Props) => {
         />
       </Head>
 
-      <Header />
+      <Header
+        type={type}
+        big={big}
+        onLogoClick={onLogoClick}
+        onTitleClick={onTitleClick}
+      />
 
       <div
         className={cx(
           'flex-1 flex flex-col items-center',
-          'w-full h-full pt-12 overflow-auto'
+          'w-full h-full overflow-auto',
+          big ? 'pt-16' : 'pt-12'
         )}
       >
         {children}
@@ -46,5 +67,3 @@ const Layout = ({ children, appName, title }: Props) => {
 }
 
 Layout.defaultProps = defaultProps
-
-export default Layout

@@ -1,19 +1,15 @@
-import useFreqGame from '../hooks/use-freq-game'
-import { PlayerWithGuess } from '../types/game.types'
-import { partition } from '../util/array'
-import { cx } from '../util/dom'
+import { PlayerWithGuess } from '../../types/game.types'
+import { partition } from '../../util/array'
+import { cx } from '../../util/dom'
 
 type Props = typeof defaultProps & {
+  directions: PlayerWithGuess[]
   hasSlider: boolean
 }
 
 const defaultProps = {}
 
-const ClueDirections = ({ hasSlider }: Props) => {
-  const { game } = useFreqGame()
-  if (!game) return null
-
-  const directions = game.playerDirections
+const ClueDirections = ({ directions, hasSlider }: Props) => {
   const [leftDirections, rest] = partition((d) => d.value === -1, directions)
   const rightDirections = rest.filter((d) => d.value === 1)
 

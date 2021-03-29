@@ -1,4 +1,5 @@
-import { FreqCommandType, CurrentFreqGameView } from '../../types/freq.types'
+import { CurrentFreqGameView } from '../../types/freq.types'
+import { CommandType } from '../../types/game.types'
 import beginRound from './commands/begin-round'
 import changePlayerTeam from './commands/change-player-team'
 import confirmClue from './commands/confirm-clue'
@@ -18,10 +19,10 @@ import togglePlayerLeader from './commands/toggle-player-leader'
 
 export default async function handleFreqCommand(
   game: CurrentFreqGameView,
-  type: FreqCommandType,
+  type: CommandType,
   value?: unknown
 ) {
-  switch (type as FreqCommandType) {
+  switch (type) {
     // Player Commands
     case 'change_player_team':
       return await changePlayerTeam(game, value)
@@ -56,5 +57,7 @@ export default async function handleFreqCommand(
       return await revealRoundResults(game)
     case 'reveal_match_results':
       return await revealMatchResults(game)
+    default:
+      throw TypeError(`Cannot handle unsupported CWD command '${type}'.`)
   }
 }

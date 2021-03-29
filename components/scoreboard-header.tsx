@@ -1,22 +1,21 @@
 import React from 'react'
 import { getTeamName } from '../lib/game'
 import { getTeamIcon } from '../lib/icon'
-import { FreqGameView } from '../types/freq.types'
 import { cx } from '../util/dom'
 import ScoreboardIcon from './scoreboard-icon'
 
 type Props = typeof defaultProps & {
-  game?: FreqGameView
+  scores?: readonly [number, number]
 }
 
 const defaultProps = {
   readonly: false,
 }
 
-export default function ScoreboardHeader({ game, readonly }: Props) {
-  if (!game) return null
+export default function ScoreboardHeader({ scores, readonly }: Props) {
+  if (!scores) return null
 
-  const { score_team_1, score_team_2 } = game
+  const [score1, score2] = scores
 
   const icon1 = getTeamIcon(1)
   const icon2 = getTeamIcon(2)
@@ -34,7 +33,7 @@ export default function ScoreboardHeader({ game, readonly }: Props) {
       {!readonly && <ScoreboardIcon xl>{icon1}</ScoreboardIcon>}
       {!readonly && <div className="w-20 whitespace-nowrap">{team1}</div>}
       <div className="flex-1 text-center text-3xl">
-        {score_team_1} &mdash; {score_team_2}
+        {score1} &mdash; {score2}
       </div>
       {!readonly && (
         <div className="w-20 whitespace-nowrap text-right">{team2}</div>

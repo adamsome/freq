@@ -1,5 +1,5 @@
-import { API_FREQ_COMMAND } from '../lib/consts'
-import { FreqCommandType } from '../types/freq.types'
+import { API_GAME_COMMAND } from '../lib/consts'
+import { CommandType, GameType } from '../types/game.types'
 
 export default async function fetcher(input: RequestInfo, init?: RequestInit) {
   try {
@@ -35,15 +35,16 @@ export async function postJson<T>(input: RequestInfo, body?: any): Promise<T> {
 }
 
 export async function postCommand<T>(
+  game: GameType,
   room: string,
-  type: FreqCommandType,
+  command: CommandType,
   value?: any
 ): Promise<T> {
-  const body: any = { type }
+  const body: any = { type: command }
   if (value != null) {
     body.value = value
   }
 
-  const path = API_FREQ_COMMAND.replace('%0', room)
+  const path = API_GAME_COMMAND.replace('%0', game).replace('%1', room)
   return await postJson<T>(path, body)
 }

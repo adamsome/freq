@@ -1,6 +1,6 @@
 import React from 'react'
-import { reverse, tail } from '../util/array'
-import { cx } from '../util/dom'
+import { reverse, tail } from '../../util/array'
+import { cx } from '../../util/dom'
 
 const TARGET_BANDS: Array<[number, number]> = [
   [2, 0.3],
@@ -23,7 +23,10 @@ const ClueTarget = ({ position, width }: Props) => {
 
   return (
     <div
-      className="absolute top-0 left-0 flex w-1/6 h-full overflow-hidden animate-fadeIn"
+      className={cx(
+        'absolute top-0 left-0 flex w-1/6 h-full',
+        'overflow-hidden animate-fade-in-slow'
+      )}
       style={{ left: `${position - width / 2}%`, width: `${width}%` }}
     >
       {bands.map(([n, opacity], i) => (

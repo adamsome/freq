@@ -1,12 +1,14 @@
 import { formatDistanceWithOptions, formatISO9075, parseISO } from 'date-fns/fp'
 import React from 'react'
-import { FreqGameView } from '../types/freq.types'
+import { getGameTitle } from '../lib/game'
+import { CommonGameView } from '../types/game.types'
 import { cx } from '../util/dom'
+import { styleLinearGradientText } from '../util/dom-style'
 import Scoreboard from './scoreboard'
 
 type Props = typeof defaultProps & {
-  game: FreqGameView
-  onClick: (room: string) => void
+  game: CommonGameView
+  onClick: (game: CommonGameView) => void
 }
 
 const defaultProps = {
@@ -18,12 +20,15 @@ const formatDate = formatDistanceWithOptions({ addSuffix: true })
 export default function RoomCard({ game, className, onClick }: Props) {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    onClick?.(game.room)
+    onClick?.(game)
   }
 
-  const timestamp = game.round_started_at ?? game.game_started_at
+  const timestamp =
+    game.round_started_at ?? game?.match_started_at ?? game?.room_started_at
+
   let lastUpdatedISO = ''
   let lastUpdated = ''
+
   if (timestamp) {
     const date = parseISO(timestamp)
     lastUpdated = formatDate(new Date(), date)
@@ -48,14 +53,7 @@ export default function RoomCard({ game, className, onClick }: Props) {
       )}
       onClick={handleClick}
     >
-      <div
-        className={cx(
-          'flex items-center w-full min-w-full overflow-hidden',
-          'px-4 md:px-0 pb-3 mb-3 transition-colors',
-          'border-b border-gray-100 dark:border-gray-800',
-          'group-hover:border-gray-200 dark:group-hover:border-gray-700'
-        )}
-      >
+      <div className="flex items-center w-full min-w-full overflow-hidden px-4 md:px-0">
         <h2
           className={cx(
             'flex flex-1 items-center',
@@ -64,11 +62,23 @@ export default function RoomCard({ game, className, onClick }: Props) {
             'whitespace-nowrap overflow-hidden overflow-ellipsis'
           )}
         >
+          <div
+            className="font-extrabold"
+            style={styleLinearGradientText(game.type)}
+          >
+            {getGameTitle(game.type)}
+          </div>
+
+          <div className="text-gray-300 dark:text-gray-700 font-light ml-2 mr-1.5">
+            /
+          </div>
+
           {game.room}
 
           <div
             title={lastUpdatedISO}
             className={cx(
+              'hidden sm:block font-light',
               'flex-1 ml-4 text-gray-500 text-sm md:text-base text-left',
               'whitespace-nowrap overflow-hidden overflow-ellipsis'
             )}
@@ -87,10 +97,53 @@ export default function RoomCard({ game, className, onClick }: Props) {
         </div>
       </div>
 
-      <div className="w-full pr-2 md:pr-0 opacity-70 group-hover:opacity-100 transition-opacity">
+      <div
+        title={lastUpdatedISO}
+        className={cx(
+          'block sm:hidden font-light self-start',
+          'flex-1 ml-4 text-gray-500 text-sm md:text-base text-left',
+          'whitespace-nowrap overflow-hidden overflow-ellipsis'
+        )}
+      >
+        {lastUpdated}
+      </div>
+
+      <div
+        className={cx(
+          'w-full pr-2 md:pr-0 opacity-70 group-hover:opacity-100 transition-opacity',
+          'pt-3 mt-3 transition-colors',
+          'border-t border-gray-100 dark:border-gray-800',
+          'group-hover:border-gray-200 dark:group-hover:border-gray-700'
+        )}
+      >
         <Scoreboard game={game} readonly></Scoreboard>
       </div>
     </button>
+  )
+}
+
+type SkeletonProps = typeof defaultSkeletonProps
+
+const defaultSkeletonProps = {
+  className: '',
+}
+
+export function RoomCardSkeleton({ className }: SkeletonProps) {
+  return (
+    <button
+      type="button"
+      className={cx(
+        'w-full h-40',
+        'bg-gray-50 dark:bg-gray-950',
+        'animate-shine bg-gradient-to-r bg-skeleton bg-no-repeat',
+        'from-gray-50 via-white to-gray-50',
+        'dark:from-gray-950 dark:via-gray-900 dark:to-gray-950',
+        'border-t border-b border-transparent',
+        'md:border-l md:border-r md:rounded-lg',
+        'focus:outline-none cursor-default',
+        className
+      )}
+    ></button>
   )
 }
 

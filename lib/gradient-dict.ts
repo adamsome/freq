@@ -83,7 +83,9 @@ export const gradientLightTextDict: Dict<boolean[]> = {
  * Also @see https://colorfulgradients.tumblr.com for more
  */
 const gradientDict: Dict<string[]> = {
-  Freq: ['#c02425', '#f0cb35', '#38ef7d'],
+  games: ['#feac5e', '#c779d0', '#4bc0c8'],
+  freq: ['#c02425', '#f0cb35', '#38ef7d'],
+  cwd: ['#eb0000', '#95008a', '#3300fc'],
   Omolon: ['#091e3a', '#2f80ed', '#2d9ee0'],
   Farhan: ['#9400d3', '#4b0082'],
   Purple: ['#c84e89', '#f15f79'],
@@ -217,7 +219,6 @@ const gradientDict: Dict<string[]> = {
   'Endless River': ['#43cea2', '#185a9d'],
   'Pastel Orange at the Sun': ['#ffb347', '#ffcc33'],
   Twitch: ['#6441a5', '#2a0845'],
-  Atlas: ['#feac5e', '#c779d0', '#4bc0c8'],
   Instagram: ['#833ab4', '#fd1d1d', '#fcb045'],
   Flickr: ['#ff0084', '#33001b'],
   Vine: ['#00bf8f', '#001510'],
@@ -438,7 +439,6 @@ const gradientDict: Dict<string[]> = {
   Moonwalker: ['#152331', '#000000'],
   Whinehouse: ['#f7f7f7', '#b9a0a0', '#794747', '#4e2020', '#111111'],
   'Hyper Blue': ['#59cde9', '#0a2a88'],
-  Racker: ['#eb0000', '#95008a', '#3300fc'],
   'After the Rain': [
     '#ff75c3',
     '#ffa647',

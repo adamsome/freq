@@ -2,7 +2,7 @@ import { CurrentFreqGameView, FreqPlayerStats } from '../../../types/freq.types'
 import { Dict } from '../../../types/object.types'
 import { connectToDatabase } from '../../../util/mongodb'
 import { fromGames } from '../freq-game-store'
-import { isGuessingFreqPhase } from '../freq-phase'
+import { isGuessingPhase } from '../../phase'
 import {
   sumFreqPlayerStats,
   createFreqPlayerStats,
@@ -15,7 +15,7 @@ import {
 import revealMatchResults from './reveal-match-results'
 
 export default async function (game: CurrentFreqGameView) {
-  if (!isGuessingFreqPhase(game.phase))
+  if (!isGuessingPhase(game.phase))
     throw new Error('Can only reveal from a guessing phase.')
 
   const { db } = await connectToDatabase()
@@ -59,6 +59,7 @@ export default async function (game: CurrentFreqGameView) {
       ) {
         roundPlayerStats.w++
       }
+      roundPlayerStats.gp++
 
       const roomPlayerStats = game.stats?.[id] ?? createFreqPlayerStats(id)
       const totalPlayerStats = totalStats[id] ?? createFreqPlayerStats(id)
@@ -74,6 +75,7 @@ export default async function (game: CurrentFreqGameView) {
   )
 
   changes.stats = room
+  changes.round_finished_at = new Date().toISOString()
 
   await fromGames(db).updateOne(filter, { $set: changes })
 

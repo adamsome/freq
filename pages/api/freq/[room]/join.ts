@@ -1,38 +1,18 @@
-import {
-  getSession,
-  UserProfile,
-  withApiAuthRequired,
-} from '@auth0/nextjs-auth0'
+import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { joinFreqGame } from '../../../../lib/freq/freq-game-store'
-import { isRoomValid } from '../../../../lib/room'
-import { fetchUser } from '../../../../lib/user-store'
-import { head } from '../../../../util/array'
+import getRoomUser from '../../../../lib/get-room-user'
 
 export default withApiAuthRequired(async (req, res) => {
   if (req.method === 'POST') {
     try {
-      const session = getSession(req, res)
-      const userProfile: UserProfile | undefined = session?.user
+      const roomUser = await getRoomUser(req, res)
 
-      if (!userProfile?.sub) {
-        const message = 'No auth user ID found.'
-        return res.status(401).json({ message })
+      if (roomUser.status === 'error') {
+        return res.status(401).json({ message: roomUser.error })
       }
 
-      const user = await fetchUser(userProfile.sub)
-
-      if (!user) {
-        const message = 'No user found.'
-        return res.status(401).json({ message })
-      }
-
-      const room = head(req.query?.room)?.toLowerCase()
+      const { room, user } = roomUser
       const { team } = await req.body
-
-      if (!isRoomValid(room)) {
-        const message = `Valid room required to join ('${room}').`
-        return res.status(500).json({ message })
-      }
 
       const game = await joinFreqGame(room, user, team)
 

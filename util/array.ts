@@ -11,9 +11,23 @@ export function head<T>(arrayOrElement?: T | T[] | null): T | undefined {
   return array != null && array.length ? array[0] : undefined
 }
 
+export function insertLimited<T>(
+  it: T | (T | undefined | null)[] | undefined | null,
+  arr: T[] | undefined,
+  limit = 10
+): T[] {
+  let _arr = arr ? [...arr] : []
+  if (it == null) return _arr
+  if (Array.isArray(it)) {
+    _arr = [...rejectNil(it), ..._arr]
+    return _arr.slice(0, limit)
+  }
+  return [it, ..._arr].slice(0, limit)
+}
+
 export function nth(offset: number, arr: string): string
-export function nth<T>(offset: number, arr: T[]): T
-export function nth<T>(offset: number, arr: string | T[]): T | string {
+export function nth<T>(offset: number, arr: readonly T[]): T
+export function nth<T>(offset: number, arr: string | readonly T[]): T | string {
   const idx = offset < 0 ? arr.length + offset : offset
   return typeof arr === 'string' ? arr.charAt(idx) : arr[idx]
 }

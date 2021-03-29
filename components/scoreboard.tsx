@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { FreqGameView } from '../types/freq.types'
-import { Player, ScoreType } from '../types/game.types'
+import { PlayerView, ScoreType } from '../types/game.types'
 import { cx } from '../util/dom'
 import ActionModal from './action-modal'
 import PlayerCard from './player-card'
@@ -8,8 +7,15 @@ import ScoreboardGrid from './scoreboard-grid'
 import ScoreboardHeader from './scoreboard-header'
 import ScoreboardSettings from './scoreboard-settings'
 
+interface HasScoreboardProps {
+  currentPlayer?: PlayerView
+  score_team_1?: number
+  score_team_2?: number
+  players: PlayerView[]
+}
+
 type Props = typeof defaultProps & {
-  game?: FreqGameView
+  game?: HasScoreboardProps
 }
 
 const defaultProps = {
@@ -17,17 +23,20 @@ const defaultProps = {
 }
 
 export default function Scoreboard({ game, readonly }: Props) {
-  const [playerOpen, setPlayerOpen] = useState<Player | null>(null)
+  const [playerOpen, setPlayerOpen] = useState<PlayerView | null>(null)
   const [scoreType, setScoreType] = useState<ScoreType>('wins')
 
   const handleModalClose = () => setPlayerOpen(null)
 
+  const scores = [game?.score_team_1 ?? 0, game?.score_team_2 ?? 0] as const
+
   return (
     <div className={cx('w-full whitespace-nowrap', { 'mb-6': !readonly })}>
-      {!readonly && <ScoreboardHeader game={game} readonly={readonly} />}
+      {!readonly && <ScoreboardHeader scores={scores} readonly={readonly} />}
 
       <ScoreboardGrid
-        game={game}
+        currentPlayer={game?.currentPlayer}
+        players={game?.players}
         scoreType={scoreType}
         readonly={readonly}
         onPlayerClick={setPlayerOpen}

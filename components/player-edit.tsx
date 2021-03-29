@@ -1,9 +1,9 @@
 import produce from 'immer'
 import React, { useRef, useState } from 'react'
-import useFreqGame from '../hooks/use-freq-game'
+import useGame from '../hooks/use-game'
 import useLayoutEffect from '../hooks/use-passive-layout-effect'
 import iconSet from '../lib/icon'
-import { FreqCommandType, FreqGameView } from '../types/freq.types'
+import { CommandType, CommonGameView } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
 import { postCommand } from '../util/fetch-json'
@@ -17,7 +17,7 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 const PlayerEdit = ({ onClose }: Props) => {
-  const { game, mutate } = useFreqGame()
+  const { game, mutate } = useGame()
   if (!game || !game.currentPlayer) return null
   const player = game.currentPlayer
 
@@ -35,11 +35,11 @@ const PlayerEdit = ({ onClose }: Props) => {
     if (name.length < 2 || fetching || player?.fetching) return
 
     setFetching(true)
-    const cmd: FreqCommandType = 'edit_player'
+    const cmd: CommandType = 'edit_player'
     try {
-      await postCommand(game.room, cmd, { ...player, name, icon })
+      await postCommand(game.type, game.room, cmd, { ...player, name, icon })
       mutate(
-        produce((game: FreqGameView | undefined) => {
+        produce((game: CommonGameView | undefined) => {
           if (game && game.currentPlayer) {
             game.currentPlayer.fetching = true
           }

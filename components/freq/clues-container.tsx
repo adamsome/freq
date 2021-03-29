@@ -1,12 +1,12 @@
 import React from 'react'
-import useFreqGame from '../hooks/use-freq-game'
-import { postCommand } from '../util/fetch-json'
-import ClueOption from './clue-option'
-import ClueMeter from './clue-meter'
+import { useFreqGame } from '../../hooks/use-game'
+import { FreqClue } from '../../types/freq.types'
+import { postCommand } from '../../util/fetch-json'
 import ClueCard from './clue-card'
 import ClueDirections from './clue-directions'
+import ClueNeedleContainer from './clue-needle-container'
+import ClueOption from './clue-option'
 import ClueTarget from './clue-target'
-import { FreqClue } from '../types/freq.types'
 
 type Props = typeof defaultProps
 
@@ -24,7 +24,7 @@ export default function CluesContainer(_: Props) {
   const handleGuessChange = async (guess: number) => {
     if (!isGuessing) return
     try {
-      await postCommand(game.room, 'set_guess', guess)
+      await postCommand(game.type, game.room, 'set_guess', guess)
       mutate()
     } catch (err) {
       console.error(`Error posting guess 'set_guess'.`, err.data ?? err)
@@ -35,7 +35,7 @@ export default function CluesContainer(_: Props) {
     if (!isChoosing || !isPsychic) return
     try {
       mutate({ ...game, clue_selected: i }, false)
-      await postCommand(game.room, 'select_clue', i)
+      await postCommand(game.type, game.room, 'select_clue', i)
       mutate()
     } catch (err) {
       console.error(`Error posting guess 'select_clue'.`, err.data ?? err)
@@ -63,11 +63,14 @@ export default function CluesContainer(_: Props) {
       notSelected={game.clue_selected != null && game.clue_selected !== i}
       onSelect={() => handleClueSelect(i)}
     >
-      <ClueMeter onGuessChange={handleGuessChange}>
+      <ClueNeedleContainer onGuessChange={handleGuessChange}>
         {card(clue, i)}
 
-        <ClueDirections hasSlider={hasSlider} />
-      </ClueMeter>
+        <ClueDirections
+          directions={game.playerDirections}
+          hasSlider={hasSlider}
+        />
+      </ClueNeedleContainer>
     </ClueOption>
   ))
 

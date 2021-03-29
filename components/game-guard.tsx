@@ -1,26 +1,36 @@
 import React from 'react'
-import useFreqGame from '../hooks/use-freq-game'
+import useGame from '../hooks/use-game'
+import { GameType } from '../types/game.types'
 import TitleMessage from './title-message'
 
 type Props = typeof defaultProps & {
   children: React.ReactNode
+  type?: GameType
 }
 
 const defaultProps = {}
 
-export default function GameGuard({ children }: Props) {
-  const { loading, error } = useFreqGame()
+export default function GameGuard({ children, type }: Props) {
+  const { loading, error } = useGame()
 
   if (loading) {
-    return <TitleMessage subtle>Loading room...</TitleMessage>
+    return (
+      <TitleMessage type={type} subtle>
+        Loading room...
+      </TitleMessage>
+    )
   }
 
   if (error) {
     const msg = error
       ? error?.data?.message ?? error?.message ?? String(error)
       : ''
-    console.error('Game state error:', msg)
-    return <TitleMessage error>🤷‍♀️ Sorry... ({msg})</TitleMessage>
+
+    return (
+      <TitleMessage type={type} error>
+        🤷‍♀️ Sorry... ({msg})
+      </TitleMessage>
+    )
   }
 
   return <>{children}</>

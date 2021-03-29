@@ -24,7 +24,7 @@ function buildAvailableIndices(
   return indices
 }
 
-function randomFreqCluePair(options: RandomClueOptions = {}) {
+export default function randomFreqCluePair(options: RandomClueOptions = {}) {
   const { language = 'en', excludeIndices = [] } = options
   const availableClues = FREQ_CLUES[language]
   const cluePairCount = availableClues.length / 2
@@ -34,5 +34,3 @@ function randomFreqCluePair(options: RandomClueOptions = {}) {
   const clue2 = createClue(availableClues[index * 2 + 1])
   return { pair: [clue1, clue2], index }
 }
-
-export default randomFreqCluePair

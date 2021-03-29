@@ -1,25 +1,33 @@
 import React, { useState } from 'react'
+import { GameType } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleLinearGradient } from '../util/dom-style'
 import Button from './button'
+import Input from './input'
+import SkeletonBox from './skeleton-box'
 
 type Props = typeof defaultProps & {
-  room?: string
+  type?: GameType
+  generatedRoom?: string
   error?: string | null
   fetching?: boolean
   animate?: boolean
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
 }
 
-const defaultProps = {}
+const defaultProps = {
+  classNames: '',
+}
 
-const RoomForm = ({
+export default function RoomForm({
+  type,
   error,
   onSubmit,
-  room: initRoom,
+  generatedRoom,
   fetching,
   animate,
-}: Props) => {
+  classNames,
+}: Props) {
   const [room, setRoom] = useState<string | null>(null)
 
   const handleRoomChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -32,28 +40,25 @@ const RoomForm = ({
 
   return (
     <>
-      <form className="flex-center flex-col" onSubmit={onSubmit}>
+      <form
+        className={cx('flex-center flex-col', classNames)}
+        onSubmit={onSubmit}
+      >
         <div className="w-72 max-w-full">
-          <input
-            className={cx(
-              'w-full h-12 mb-4 px-3 py-1 whitespace-nowrap',
-              'bg-input-bg border border-input-border rounded-lg',
-              'hover:border-blue-700 focus:border-blue-700 focus:outline-none',
-              'focus:ring-4 focus:ring-blue-400 focus:ring-opacity-25',
-              'dark:focus:ring-blue-500 dark:focus:ring-opacity-25',
-              'text-3xl font-medium transition',
-              'text-black dark:text-white',
-              'placeholder-gray-400 dark:placeholder-gray-600',
-              'disabled:cursor-not-allowed disabled:color-gray-500'
-            )}
-            type="text"
-            name="room"
-            placeholder="Room Code"
-            value={room ?? initRoom}
-            onChange={handleRoomChange}
-            onFocus={(e) => e.currentTarget.select()}
-            required
-          />
+          {generatedRoom == null ? (
+            <SkeletonBox className="w-full h-12 mb-4" />
+          ) : (
+            <Input
+              className="w-full h-12 mb-4 px-3 py-1 text-3xl font-medium"
+              htmlType="text"
+              name="room"
+              placeholder="Room Code"
+              value={room ?? generatedRoom}
+              required
+              onChange={handleRoomChange}
+              selectOnFocus
+            />
+          )}
 
           <Button
             className={cx('w-full h-12 font-bold text-3xl text-center', {
@@ -61,10 +66,14 @@ const RoomForm = ({
               'text-black hover:text-white': animate,
               'animate-shift': animate,
             })}
-            style={animate ? styleLinearGradient('Freq', '-60deg', '300%') : {}}
+            style={
+              animate
+                ? styleLinearGradient(type ?? 'freq', '-60deg', '300%')
+                : {}
+            }
             blue={!animate}
             htmlType="submit"
-            disabled={fetching}
+            disabled={fetching || !type}
           >
             Start
           </Button>
@@ -77,5 +86,3 @@ const RoomForm = ({
 }
 
 RoomForm.defaultProps = defaultProps
-
-export default RoomForm

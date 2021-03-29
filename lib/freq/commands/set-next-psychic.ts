@@ -1,8 +1,8 @@
 import { CurrentFreqGameView } from '../../../types/freq.types'
 import { connectToDatabase } from '../../../util/mongodb'
-import { getNextPsychic } from '../freq-game'
-import { fromGames } from '../freq-game-store'
 import { isPlayer } from '../../player'
+import { fromGames } from '../freq-game-store'
+import { getNextPsychic } from '../freq-psychic'
 
 export default async function (game: CurrentFreqGameView, player: unknown) {
   if (!isPlayer(player)) {
