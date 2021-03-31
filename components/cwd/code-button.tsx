@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useDebounceCallback } from '../../hooks/use-debounce'
-import usePrevious from '../../hooks/use-previous'
+import React from 'react'
+import useConditionalDebounce from '../../hooks/use-conditional-debounce'
 import { useTheme } from '../../hooks/use-theme'
 import { cwdCodeEquals } from '../../lib/cwd/build-cwd-code-views'
 import { CwdCodeState, CwdCodeView } from '../../types/cwd.types'
@@ -13,35 +12,35 @@ type Props = typeof defaultProps & {
   psychic1?: PlayerView
   psychic2?: PlayerView
   code?: CwdCodeView
+  turn?: 1 | 2
   onClick: () => void
 }
 
 const defaultProps = {}
 
+const isRevealed = (
+  prev?: CwdCodeView,
+  next?: CwdCodeView
+): boolean | undefined => prev && next && prev?.revealed !== next?.revealed
+
+const equalsFn = cwdCodeEquals
+
 export default function CodeButton({
   psychic1,
   psychic2,
-  code: nextCode,
+  code: rawCode,
+  turn,
   onClick,
 }: Props) {
   const { resolvedTheme } = useTheme()
 
   // If this code was just revealed, delay the unveiling
-  const [code, setCode] = useState<CwdCodeView | undefined>()
-  const prevCode = usePrevious(nextCode)
-  const setCodeDebounced = useDebounceCallback(setCode, 2000)
-  useEffect(() => {
-    if (cwdCodeEquals(prevCode, nextCode)) return
-
-    const revealed =
-      prevCode && nextCode && prevCode?.revealed !== nextCode?.revealed
-
-    if (revealed) {
-      setCodeDebounced(nextCode)
-    } else {
-      setCode(nextCode)
-    }
-  }, [prevCode, nextCode])
+  const code = useConditionalDebounce(rawCode, isRevealed, {
+    equalsFn,
+    // Add extra reveal delay if we're revealing a scratch, less if correct
+    debounceTime: () =>
+      rawCode?.state === -1 ? 4000 : rawCode?.state === turn ? 500 : 2000,
+  })
 
   if (!code)
     return (
@@ -101,7 +100,7 @@ export default function CodeButton({
       <span
         className={cx('relative hidden md:inline', {
           'animate-bounce-5': code.lit,
-          'animate-pulse': nextCode?.lit,
+          'animate-pulse': rawCode?.lit,
         })}
       >
         {code.word}
@@ -113,7 +112,7 @@ export default function CodeButton({
           'relative inline md:hidden leading-none sm:leading-none',
           {
             'animate-bounce-5': code.lit,
-            'animate-pulse': nextCode?.lit,
+            'animate-pulse': rawCode?.lit,
           }
         )}
       >

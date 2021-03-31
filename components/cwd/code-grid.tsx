@@ -34,6 +34,7 @@ export default function CodeGrid({ game, onCodeClick }: Props) {
         <CodeButton
           key={code?.word ?? i}
           code={code}
+          turn={game?.team_turn}
           psychic1={psyhic1}
           psychic2={psyhic2}
           onClick={() => onCodeClick(i)}
