@@ -63,7 +63,9 @@ export default function RoomCard({ game, className, onClick }: Props) {
           )}
         >
           <div
-            className="font-extrabold"
+            className={cx('font-extrabold', {
+              'font-mono': game.type === 'cwd',
+            })}
             style={styleLinearGradientText(game.type)}
           >
             {getGameTitle(game.type)}

@@ -38,6 +38,7 @@ export interface CwdCodeView {
   icons: string[]
   revealed?: CwdCodeState
   state?: CwdCodeState
+  selected?: boolean
   clickable?: boolean
   level?: number
   lit?: boolean

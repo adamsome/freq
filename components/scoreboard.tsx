@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { PlayerView, ScoreType } from '../types/game.types'
+import { GameType, PlayerView, ScoreType } from '../types/game.types'
 import { cx } from '../util/dom'
 import ActionModal from './action-modal'
 import PlayerCard from './player-card'
@@ -8,6 +8,7 @@ import ScoreboardHeader from './scoreboard-header'
 import ScoreboardSettings from './scoreboard-settings'
 
 interface HasScoreboardProps {
+  type: GameType
   currentPlayer?: PlayerView
   score_team_1?: number
   score_team_2?: number
@@ -35,6 +36,7 @@ export default function Scoreboard({ game, readonly }: Props) {
       {!readonly && <ScoreboardHeader scores={scores} readonly={readonly} />}
 
       <ScoreboardGrid
+        type={game?.type}
         currentPlayer={game?.currentPlayer}
         players={game?.players}
         scoreType={scoreType}

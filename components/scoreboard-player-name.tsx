@@ -1,8 +1,9 @@
 import React from 'react'
-import { Player } from '../types/game.types'
+import { GameType, Player } from '../types/game.types'
 import { cx } from '../util/dom'
 
 type Props = typeof defaultProps & {
+  type?: GameType
   player: Player
 }
 
@@ -13,11 +14,13 @@ const defaultProps = {
 }
 
 export default function ScoreboardPlayerName({
+  type,
   player,
   right,
   psychic,
   nextPsychic,
 }: Props) {
+  const icon = type === 'cwd' ? '👁' : '🧠'
   return (
     <>
       <div
@@ -39,8 +42,8 @@ export default function ScoreboardPlayerName({
           {`${player.name ?? 'Unnamed'}`}
         </div>
 
-        {psychic && <div className="text-lg sm:text-xl">🧠</div>}
-        {nextPsychic && <div className="text-xs sm:text-sm">🧠</div>}
+        {psychic && <div className="text-lg sm:text-xl">{icon}</div>}
+        {nextPsychic && <div className="text-xs sm:text-sm">{icon}</div>}
       </div>
     </>
   )

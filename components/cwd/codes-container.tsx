@@ -21,6 +21,8 @@ export default function CodesContainer(_: Props) {
       mutate(
         produce((game: CwdGameView | undefined) => {
           if (!game || !game.currentPlayer?.icon) return
+
+          game.codes[index].selected = true
           const icon = game.currentPlayer.icon
           if (game.codes[index].icons?.find((it) => it === icon)) return
           if (!game.codes[index].icons) game.codes[index].icons = []

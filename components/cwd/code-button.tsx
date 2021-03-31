@@ -5,14 +5,15 @@ import { cwdCodeEquals } from '../../lib/cwd/build-cwd-code-views'
 import { CwdCodeState, CwdCodeView, CwdLastAct } from '../../types/cwd.types'
 import { PlayerView } from '../../types/game.types'
 import { cx } from '../../util/dom'
-import { styleColor } from '../../util/dom-style'
+import { styleBorder, styleColor } from '../../util/dom-style'
 import SkeletonBox from '../skeleton-box'
 
 type Props = typeof defaultProps & {
-  psychic1?: PlayerView
-  psychic2?: PlayerView
   code?: CwdCodeView
   guess?: CwdLastAct
+  currentPlayer?: PlayerView
+  psychic1?: PlayerView
+  psychic2?: PlayerView
   onClick: () => void
 }
 
@@ -24,10 +25,11 @@ const isRevealed = (
 ): boolean | undefined => prev && next && prev?.revealed !== next?.revealed
 
 export default function CodeButton({
-  psychic1,
-  psychic2,
   code: rawCode,
   guess,
+  currentPlayer,
+  psychic1,
+  psychic2,
   onClick,
 }: Props) {
   const { resolvedTheme } = useTheme()
@@ -88,6 +90,13 @@ export default function CodeButton({
       }}
       onClick={() => code.clickable && onClick()}
     >
+      {code.selected && (
+        <div
+          className={cx('absolute w-full h-full border-2')}
+          style={styleBorder(currentPlayer?.color)}
+        ></div>
+      )}
+
       <div className="absolute w-full bottom-0 text-sm sm:text-base md:text-2xl">
         {code.icons.slice(0, 3).map((icon, i) => (
           <div key={i + icon}>{icon}</div>

@@ -13,6 +13,7 @@ export function cwdCodeEquals(a?: CwdCodeView, b?: CwdCodeView): boolean {
     a.brokenLength === b.brokenLength &&
     a.brokenWord === b.brokenWord &&
     a.clickable === b.clickable &&
+    a.selected === b.selected &&
     arrayEquals(a.icons, b.icons) &&
     a.level === b.level &&
     a.lit === b.lit &&
@@ -50,15 +51,15 @@ export default function buildCwdCodeViews(
   return game.code_words.map((rawWord, i) => {
     const word = toTitleCase(rawWord)
 
-    const icons = rejectNil(
-      Object.entries(game.guesses ?? {})
-        .filter(([_, guess]) => guess.value === i)
-        .map(([id]) => playerMap[id]?.icon)
-    )
+    const allGuesses = Object.entries(game.guesses ?? {})
+    const guesses = allGuesses.filter(([_, guess]) => guess.value === i)
+    const icons = rejectNil(guesses.map(([pid]) => playerMap[pid]?.icon))
+    const selected = guesses.some(([pid]) => pid === id)
 
     const view: CwdCodeView = {
       word,
       icons,
+      selected,
       lit: lastRevealed === i,
       ...buildBrokenWordInfo(word, CWD_CODE_WORD_BREAKS[word.toLowerCase()]),
     }

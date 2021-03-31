@@ -69,7 +69,7 @@ export default function HeaderTitle({
         <div
           className={cx(
             'cursor-pointer animate-fade-in opacity-80 hover:opacity-100 transition-opacity',
-            { 'sm:text-3xl': big }
+            { 'sm:text-3xl': big, 'font-mono': type === 'cwd' }
           )}
           style={styleLinearGradientText(type)}
           onClick={handleTitleClick}
@@ -83,7 +83,7 @@ export default function HeaderTitle({
           <div
             className={cx(
               'text-gray-300 dark:text-gray-700',
-              'font-light ml-2 mr-1.5 animate-fade-in'
+              'font-light ml-1.5 mr-1 animate-fade-in'
             )}
           >
             /

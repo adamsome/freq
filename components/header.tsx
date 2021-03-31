@@ -39,7 +39,7 @@ export default function Header({
     >
       {showDebug && <DebugBar />}
 
-      <div className="flex-center w-full h-12 pl-4 pr-2 sm:pr-4">
+      <div className="flex-center w-full h-12 pl-2 sm:pl-4 pr-2 sm:pr-4">
         <HeaderTitle
           type={type}
           big={big}

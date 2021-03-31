@@ -39,6 +39,7 @@ export default function CodeGrid({ game, onCodeClick }: Props) {
           key={code?.word ?? i}
           code={code}
           guess={game?.last_act}
+          currentPlayer={game?.currentPlayer}
           psychic1={psyhic1}
           psychic2={psyhic2}
           onClick={() => onCodeClick(i)}

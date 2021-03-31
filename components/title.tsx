@@ -21,6 +21,7 @@ export default function Title({ classNames, type, title, animate }: Props) {
       className={cx('m-0 text-7xl font-extrabold text-center', classNames, {
         'animate-shift': animate,
         'hover:animate-shake': animate,
+        'font-mono': type === 'cwd',
       })}
     >
       {title || (type ? getGameTitle(type) : <span>&nbsp;</span>)}

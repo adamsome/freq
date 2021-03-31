@@ -1,6 +1,6 @@
 import React from 'react'
 import { getPlayersPerTeam } from '../lib/player'
-import { PlayerView, ScoreType } from '../types/game.types'
+import { GameType, PlayerView, ScoreType } from '../types/game.types'
 import { range } from '../util/array'
 import { cx } from '../util/dom'
 import ScoreboardIcon from './scoreboard-icon'
@@ -10,6 +10,7 @@ import ScoreboardPlayerScore from './scoreboard-player-score'
 import SkeletonBox from './skeleton-box'
 
 type Props = typeof defaultProps & {
+  type?: GameType
   currentPlayer?: PlayerView
   players?: PlayerView[]
   scoreType: ScoreType
@@ -21,6 +22,7 @@ const defaultProps = {
 }
 
 export default function ScoreboardGrid({
+  type,
   currentPlayer,
   players,
   scoreType,
@@ -53,6 +55,7 @@ export default function ScoreboardGrid({
       >
         <ScoreboardIcon right={right}>{player.icon}</ScoreboardIcon>
         <ScoreboardPlayerName
+          type={type}
           player={player}
           right={right}
           psychic={player.showPsychic}
