@@ -82,7 +82,7 @@ function showTarget(game: FreqGame, currentPlayer?: Player): boolean {
 }
 
 export function toFreqGameView(
-  id: string,
+  id: string | undefined,
   game: OptionalId<WithId<FreqGame>>,
   { forceTarget }: { forceTarget?: boolean } = {}
 ): FreqGameView {

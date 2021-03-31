@@ -69,10 +69,13 @@ export function getPreferredTeam(players: Player[]): 1 | 2 {
 export function addPlayer(
   players: Player[],
   user: User,
-  team: 1 | 2 = getPreferredTeam(players)
+  team: 1 | 2 = getPreferredTeam(players),
+  forceLeader = false
 ): Player[] {
   // Make leader if team has none
-  const leader = !players.some((p) => p.team === team && p.leader)
+  const leader =
+    forceLeader || !players.some((p) => p.team === team && p.leader)
+
   // Return game w/ new player added
   const player = createPlayer(user, team, leader, players)
   return [...players, player]

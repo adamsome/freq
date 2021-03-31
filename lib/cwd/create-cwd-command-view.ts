@@ -125,7 +125,7 @@ export default function createCwdCommandView(
         cmd.info =
           psychic === player?.id
             ? 'Team is guessing the codes using your clue word & number.'
-            : `Tap a code & lock it in --or-- end the round and pass.`
+            : `Tap a code & lock it in —or— end the round and pass.`
 
         view.commands = [cmd]
         return view

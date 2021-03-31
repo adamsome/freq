@@ -20,8 +20,7 @@ export default function RoomRedirect({ children }: Props) {
 
   useEffect(() => {
     if (isBrowser) {
-      const redirect = localStorage[KEY_ROOM_REDIRECT]
-      if (redirect) {
+      if (localStorage[KEY_ROOM_REDIRECT]) {
         localStorage.removeItem(KEY_ROOM_REDIRECT)
 
         const room = localStorage[KEY_ROOM]

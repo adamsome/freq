@@ -17,8 +17,6 @@ const HeaderMessage = () => {
     headers = [{ text: "You've been kicked!" }]
   } else if (userLoading) {
     headers = [{ text: 'Loading player...', color: 'Gray' }]
-  } else if (!user) {
-    headers = [{ text: 'Signing player in...', color: 'Gray' }]
   } else if (gameLoading || !game) {
     headers = [{ text: 'Loading room...', color: 'Gray' }]
   } else {

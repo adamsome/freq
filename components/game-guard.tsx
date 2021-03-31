@@ -1,25 +1,19 @@
 import React from 'react'
 import useGame from '../hooks/use-game'
+import { isRoomValid } from '../lib/room'
 import { GameType } from '../types/game.types'
 import TitleMessage from './title-message'
 
 type Props = typeof defaultProps & {
   children: React.ReactNode
   type?: GameType
+  room?: string
 }
 
 const defaultProps = {}
 
-export default function GameGuard({ children, type }: Props) {
+export default function GameGuard({ children, type, room }: Props) {
   const { error } = useGame()
-
-  // if (loading) {
-  //   return (
-  //     <TitleMessage type={type} subtle>
-  //       Loading room...
-  //     </TitleMessage>
-  //   )
-  // }
 
   if (error) {
     const msg = error
@@ -29,6 +23,14 @@ export default function GameGuard({ children, type }: Props) {
     return (
       <TitleMessage type={type} error>
         🤷‍♀️ Sorry... ({msg})
+      </TitleMessage>
+    )
+  }
+
+  if (room && !isRoomValid(room)) {
+    return (
+      <TitleMessage type={type} error>
+        Room ({room}) is invalid.
       </TitleMessage>
     )
   }

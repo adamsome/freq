@@ -7,7 +7,7 @@ import createCwdPlayerViews from './create-cwd-player-views'
 import getCwdWinner from './get-cwd-winner'
 
 export function toCwdGameView(
-  id: string,
+  id: string | undefined,
   game: OptionalId<WithId<CwdGame>>
 ): CwdGameView {
   const players = createCwdPlayerViews(game, id)

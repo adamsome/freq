@@ -2,18 +2,16 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import GameBoard from '../../components/game-board'
 import GameGuard from '../../components/game-guard'
-import UserRoomGuard from '../../components/user-room-guard'
 import { GameType } from '../../types/game.types'
 import { head } from '../../util/array'
 
 export default function FreqRoomPage() {
   const router = useRouter()
-  const type = head(router.query?.game) as GameType | undefined
+  const type = head(router.query?.game)?.toLowerCase() as GameType | undefined
+  const room = head(router.query?.room as string | undefined)?.toLowerCase()
   return (
-    <UserRoomGuard>
-      <GameGuard type={type}>
-        <GameBoard type={type} />
-      </GameGuard>
-    </UserRoomGuard>
+    <GameGuard type={type} room={room}>
+      <GameBoard type={type} />
+    </GameGuard>
   )
 }
