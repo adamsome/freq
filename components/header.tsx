@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { GameType } from '../types/game.types'
 import { cx } from '../util/dom'
-import FreqDebugBar from './freq/freq-debug-bar'
+import DebugBar from './debug-bar'
 import HeaderActions from './header-actions'
 import HeaderTitle from './header-title'
 
@@ -37,7 +37,7 @@ export default function Header({
         hClass
       )}
     >
-      {showDebug && <FreqDebugBar />}
+      {showDebug && <DebugBar />}
 
       <div className="flex-center w-full h-12 pl-4 pr-2 sm:pr-4">
         <HeaderTitle

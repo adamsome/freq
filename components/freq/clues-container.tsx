@@ -2,6 +2,7 @@ import React from 'react'
 import { useFreqGame } from '../../hooks/use-game'
 import { FreqClue } from '../../types/freq.types'
 import { postCommand } from '../../util/fetch-json'
+import SkeletonBox from '../skeleton-box'
 import ClueCard from './clue-card'
 import ClueDirections from './clue-directions'
 import ClueNeedleContainer from './clue-needle-container'
@@ -14,7 +15,9 @@ const defaultProps = {}
 
 export default function CluesContainer(_: Props) {
   const { game, mutate } = useFreqGame()
-  if (!game) return null
+
+  if (!game)
+    return <SkeletonBox className="w-full h-32 sm:h-40 md:px-4 mb-4 sm:mb-5" />
 
   const isPsychic = game.currentPlayer?.id === game.psychic
   const isGuessing = game.phase === 'guess'

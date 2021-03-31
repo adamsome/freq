@@ -1,7 +1,9 @@
 import React from 'react'
 import useGame from '../hooks/use-game'
 import { getGameTitle } from '../lib/game'
+import { GameType } from '../types/game.types'
 import CommandPanel from './command-panel'
+import CodesContainer from './cwd/codes-container'
 import CluesContainer from './freq/clues-container'
 import GameJoinButtons from './game-join-buttons'
 import GameLink from './game-link'
@@ -10,33 +12,45 @@ import Layout from './layout'
 import LayoutMain from './layout-main'
 import PlayerHero from './player-hero'
 import Scoreboard from './scoreboard'
+import SkeletonBox from './skeleton-box'
 
-type Props = typeof defaultProps
+type Props = typeof defaultProps & {
+  type?: GameType
+}
 
 const defaultProps = {}
 
-export default function GameBoard(_: Props) {
+export default function GameBoard({ type }: Props) {
   const { game } = useGame()
-  if (!game) return null
 
-  const title = getGameTitle(game.type)
-  const roomUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${game.type}/${game.room}`
+  const title = getGameTitle(type)
+  const roomUrl =
+    type && game && `${process.env.NEXT_PUBLIC_BASE_URL}/${type}/${game.room}`
 
   return (
-    <Layout type={game.type} title={title} room={game?.room}>
+    <Layout type={type} title={title} room={game?.room}>
       <LayoutMain>
-        <HeaderMessage />
+        {type !== 'cwd' && <HeaderMessage />}
 
-        {game.phase === 'prep' && (
+        {game?.phase === 'prep' && (
           <>
             <GameLink url={roomUrl} />
+
             {game.currentPlayer && <PlayerHero />}
           </>
         )}
 
-        {game.type === 'freq' ? <CluesContainer /> : <div>Cwd</div>}
+        {!type ? (
+          <SkeletonBox className="w-full h-32 sm:h-40 md:px-4 mb-4 sm:mb-5" />
+        ) : type === 'freq' ? (
+          <CluesContainer />
+        ) : (
+          <CodesContainer />
+        )}
 
-        {game.currentPlayer ? (
+        {!game ? (
+          <SkeletonBox className="w-full h-14 mb-6 md:px-4" />
+        ) : game.currentPlayer ? (
           <CommandPanel />
         ) : (
           <GameJoinButtons room={game.room} />

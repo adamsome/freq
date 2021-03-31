@@ -16,7 +16,7 @@ export function getGameTitle(type: GameType | string | undefined) {
 
 export function doesGameHaveEnoughPlayers(game: HasPlayers) {
   const teams = getPlayersPerTeam(game.players)
-  return teams[0].length > 1 && teams[1].length > 1
+  return teams[0].length >= 1 && teams[1].length >= 1
 }
 
 export function getTeamName(team?: 1 | 2): string {

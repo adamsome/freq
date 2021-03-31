@@ -1,4 +1,4 @@
-import { CwdPhase } from '../types/cwd.types'
+import { CwdPhase, CWD_PHASES } from '../types/cwd.types'
 import { FreqPhase, FREQ_PHASES } from '../types/freq.types'
 import { CanChangePsychicTo, CommonPhase } from '../types/game.types'
 import { nth } from '../util/array'
@@ -7,6 +7,12 @@ export function nextFreqPhase(phase: FreqPhase, offset = 1): FreqPhase {
   const i = FREQ_PHASES.findIndex((p) => p === phase)
   const x = (i + offset) % FREQ_PHASES.length
   return nth(x, FREQ_PHASES)
+}
+
+export function nextCwdPhase(phase: CwdPhase, offset = 1): CwdPhase {
+  const i = CWD_PHASES.findIndex((p) => p === phase)
+  const x = (i + offset) % CWD_PHASES.length
+  return nth(x, CWD_PHASES)
 }
 
 const freePhases: (FreqPhase | CwdPhase)[] = ['prep', 'reveal', 'win']

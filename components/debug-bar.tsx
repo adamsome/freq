@@ -1,21 +1,24 @@
 import React from 'react'
-import { useFreqGame } from '../../hooks/use-game'
-import { API_GAME_PHASE } from '../../lib/consts'
-import { nextFreqPhase } from '../../lib/phase'
-import { postCommand, postJson } from '../../util/fetch-json'
-import Button from '../button'
+import useGame from '../hooks/use-game'
+import { API_GAME_PHASE } from '../lib/consts'
+import { nextCwdPhase, nextFreqPhase } from '../lib/phase'
+import { postCommand, postJson } from '../util/fetch-json'
+import Button from './button'
 
 const defaultProps = {}
 
-const FreqDebugBar = () => {
-  const { game } = useFreqGame()
-  if (game?.type !== 'freq') return null
+const DebugBar = () => {
+  const { game } = useGame()
+  if (!game) return null
 
   const handlePhaseNext = (offset: number) => async (e: React.MouseEvent) => {
     e.preventDefault()
     if (!game) return
 
-    const phase = nextFreqPhase(game?.phase ?? 'prep', offset)
+    const phase =
+      game.type === 'freq'
+        ? nextFreqPhase(game?.phase ?? 'prep', offset)
+        : nextCwdPhase((game?.phase ?? 'prep') as any, offset)
 
     try {
       await postJson(
@@ -50,6 +53,6 @@ const FreqDebugBar = () => {
   )
 }
 
-FreqDebugBar.defaultProps = defaultProps
+DebugBar.defaultProps = defaultProps
 
-export default FreqDebugBar
+export default DebugBar

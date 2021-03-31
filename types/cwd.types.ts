@@ -36,9 +36,13 @@ export type CwdCodeState =
 export interface CwdCodeView {
   word: string
   icons: string[]
+  revealed?: CwdCodeState
   state?: CwdCodeState
+  clickable?: boolean
   level?: number
   lit?: boolean
+  brokenWord: string
+  brokenLength: number
 }
 
 export interface CwdCodesInfo {
@@ -61,14 +65,26 @@ export interface CwdGame extends CommonGame, CwdCodesInfo {
   team_1_guesses: number[]
   /* List of code indices that have been guessed by team 2 this round */
   team_2_guesses: number[]
+  last_act?: CwdLastAct
   phase: CwdPhase
   stats?: Dict<CwdPlayerStats>
+}
+
+export interface CwdLastAct {
+  at: string
+  team: 1 | 2
+  word?: string
+  state?: CwdCodeState
+  correct?: boolean
+  win?: boolean
+  pass?: boolean
 }
 
 export interface CwdGameView
   extends Omit<CommonGameView, 'phase'>,
     Omit<CwdGame, keyof CwdCodesInfo | 'players'> {
   codes: CwdCodeView[]
+  winner?: 1 | 2
 }
 
 export type FullCwdGameView = Omit<CwdGameView, 'currentPlayer'> &

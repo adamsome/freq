@@ -16,7 +16,25 @@ export const styleColor = (
   const alpha = lit * 255
   return {
     color: lit > 0.5 ? '#fff' : hex,
-    background: lit > 0 ? `${hex}${Math.round(alpha).toString(16)}` : undefined,
+    backgroundColor:
+      lit > 0 ? `${hex}${Math.round(alpha).toString(16)}` : undefined,
+  }
+}
+
+export const styleBorder = (
+  colorOrHasColor?: string | { color?: string } | false | null,
+  lit = 1
+) => {
+  if (!colorOrHasColor) return undefined
+  const colorName =
+    typeof colorOrHasColor === 'string'
+      ? colorOrHasColor
+      : colorOrHasColor.color
+
+  const hex = colorDict[colorName ?? 0]?.hex
+  const alpha = lit * 255
+  return {
+    borderColor: `${hex}${Math.round(alpha).toString(16)}`,
   }
 }
 

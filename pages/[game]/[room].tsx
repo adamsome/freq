@@ -10,9 +10,9 @@ export default function FreqRoomPage() {
   const router = useRouter()
   const type = head(router.query?.game) as GameType | undefined
   return (
-    <UserRoomGuard type={type}>
+    <UserRoomGuard>
       <GameGuard type={type}>
-        <GameBoard />
+        <GameBoard type={type} />
       </GameGuard>
     </UserRoomGuard>
   )

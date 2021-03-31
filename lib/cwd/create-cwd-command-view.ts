@@ -11,6 +11,7 @@ import { randomHourlyItem } from '../../util/random'
 import { getTeamColor } from '../color-dict'
 import { doesGameHaveEnoughPlayers, getTeamName } from '../game'
 import { getTeamIcon } from '../icon'
+import getCwdWinner from './get-cwd-winner'
 
 export default function createCwdCommandView(
   game: CwdGame,
@@ -75,33 +76,58 @@ export default function createCwdCommandView(
       const icon =
         result && randomHourlyItem(GUESS_RESULT_ICONS[result], playerIndex)
 
-      if (psychic === player?.id) {
-        header.text = icon ?? '👁'
-
-        cmd.text = 'You are the Codemaster...'
-        cmd.info = 'Team is guessing the codes using your clue word & number.'
-        cmd.disabled = true
-        return view
-      }
-
       const guess: Guess | undefined = player
         ? game.guesses?.[player.id]
         : undefined
       const locked = guess?.locked === true
 
       if (player?.team === game.team_turn) {
-        header.text = icon ?? '🕵️'
+        if (psychic === player?.id) {
+          header.text = icon ?? '👁'
+        } else {
+          header.text = icon ?? '🕵️'
+        }
+
         header.colorLit = 0.25
 
-        cmd.type = 'lock_guess'
-        cmd.text = locked ? 'Locked in' : 'Lock it in'
-        cmd.disabled = locked || guess?.value == null
+        if (game.team_turn === 1) {
+          cmd.type = 'lock_guess'
+          cmd.text = locked ? 'Locked in' : 'Lock it in'
+          cmd.disabled = locked || guess?.value == null
 
-        const passCmd: Command = { text: `Pass to ${otherTeamName}` }
-        passCmd.type = 'begin_round'
-        passCmd.info = `Tap a code & lock it in --or-- end the round and pass.`
+          const otherPsychicColor = game.players.find(
+            (p) =>
+              p.id === (game.team_turn === 1 ? game.psychic_2 : game.psychic_1)
+          )?.color
 
-        view.commands = [cmd, passCmd]
+          cmd.rightText = `Pass to ${otherTeamName}`
+          cmd.rightType = 'begin_round'
+          cmd.rightColor = otherPsychicColor
+          cmd.rightWidth = 0.1
+          cmd.rightDisabled = false
+        } else {
+          cmd.rightType = 'lock_guess'
+          cmd.rightText = locked ? 'Locked in' : 'Lock it in'
+          cmd.rightDisabled = locked || guess?.value == null
+          cmd.rightWidth = 0.9
+
+          const otherPsychicColor = game.players.find(
+            (p) =>
+              p.id === (game.team_turn === 1 ? game.psychic_2 : game.psychic_1)
+          )?.color
+
+          cmd.text = `Pass to ${otherTeamName}`
+          cmd.type = 'begin_round'
+          cmd.color = otherPsychicColor
+          cmd.disabled = false
+        }
+
+        cmd.info =
+          psychic === player?.id
+            ? 'Team is guessing the codes using your clue word & number.'
+            : `Tap a code & lock it in --or-- end the round and pass.`
+
+        view.commands = [cmd]
         return view
       }
 
@@ -115,7 +141,7 @@ export default function createCwdCommandView(
       return view
     }
     case 'win': {
-      const winningTeam = game.score_team_1 === 0 ? 1 : 2
+      const winningTeam = getCwdWinner(game)
       const winningTeamName = getTeamName(winningTeam)
       const winningIcon = getTeamIcon(winningTeam)
       const icons = range(0, 3)

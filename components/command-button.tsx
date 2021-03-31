@@ -8,7 +8,7 @@ import IconSvg from './icon-svg'
 type Props = typeof defaultProps & {
   command: Command
   currentPlayer?: Player
-  onClick: (cmd: Command, i?: number) => (e: React.MouseEvent) => Promise<void>
+  onClick: (e: React.MouseEvent, cmd: Command, i?: number) => Promise<void>
 }
 
 const defaultProps = {
@@ -34,10 +34,16 @@ const CommandButton = ({
     const flex = `0 0 ${getCmdRightWidth(cmd)}`
     const player = !cmd.disabled ? currentPlayer : undefined
     const color = (right ? cmd.rightColor : cmd.color) ?? player
+    const disabled =
+      fetching ||
+      cmd.fetching ||
+      (right ? cmd.rightDisabled ?? cmd.disabled ?? false : cmd.disabled)
+
     const style: React.CSSProperties | undefined = styleColor(color, 1)
     if (style && right) {
       style.flex = flex
     }
+
     return (
       <Button
         className={cx(
@@ -48,8 +54,8 @@ const CommandButton = ({
         )}
         blue={false}
         style={style}
-        disabled={fetching || cmd.disabled || cmd.fetching}
-        onClick={onClick(cmd, right ? 1 : 0)}
+        disabled={disabled}
+        onClick={(e) => onClick(e, cmd, right ? 1 : 0)}
       >
         {fetching || cmd.fetching ? (
           <IconSvg name="spinner" className="w-7 h-7 text-white" />

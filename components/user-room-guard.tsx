@@ -14,16 +14,16 @@ import TitleMessage from './title-message'
 
 type Props = typeof defaultProps & {
   children: React.ReactNode
-  type?: GameType
 }
 
 const defaultProps = {}
 
-export default function UserRoomGuard({ children, type }: Props) {
-  const { error, isLoading, user, isLoggedOut } = useFetchUser()
+export default function UserRoomGuard({ children }: Props) {
+  const { error, isLoggedOut } = useFetchUser()
   const router = useRouter()
 
   const room = head(router.query?.room as string | undefined)?.toLowerCase()
+  const type = head(router.query?.game) as GameType | undefined
 
   useEffect(() => {
     if (!isLoggedOut || !room) return
@@ -40,28 +40,28 @@ export default function UserRoomGuard({ children, type }: Props) {
   if (error) {
     return (
       <TitleMessage type={type} error>
-        🤷‍♀️ Sorry...
+        🤷‍♀️ Sorry, we are having trouble finding you the in system...
       </TitleMessage>
     )
   }
 
-  if (isLoading) {
-    return (
-      <TitleMessage type={type} subtle>
-        Loading player...
-      </TitleMessage>
-    )
-  }
+  // if (isLoading) {
+  //   return (
+  //     <TitleMessage type={type} subtle>
+  //       Loading player...
+  //     </TitleMessage>
+  //   )
+  // }
 
-  if (!user) {
-    return (
-      <TitleMessage type={type} subtle>
-        Signing in...
-      </TitleMessage>
-    )
-  }
+  // if (!user) {
+  //   return (
+  //     <TitleMessage type={type} subtle>
+  //       Signing in...
+  //     </TitleMessage>
+  //   )
+  // }
 
-  if (!room || !isRoomValid(room)) {
+  if (room && !isRoomValid(room)) {
     return (
       <TitleMessage type={type} error>
         Room ({room}) is invalid.

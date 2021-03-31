@@ -4,6 +4,7 @@ import { canChangePsychicTo } from '../phase'
 import buildCwdCodeViews from './build-cwd-code-views'
 import createCwdCommandView from './create-cwd-command-view'
 import createCwdPlayerViews from './create-cwd-player-views'
+import getCwdWinner from './get-cwd-winner'
 
 export function toCwdGameView(
   id: string,
@@ -21,6 +22,7 @@ export function toCwdGameView(
     currentPlayer,
     players,
     codes,
+    winner: getCwdWinner(game),
     canChangePsychicTo: canChangePsychicTo(game.phase),
   }
 
@@ -66,7 +68,6 @@ function isFullCwdGameView(game: any): game is FullCwdGameView {
     game.code_reveals != null &&
     game.phase != null &&
     game.players != null &&
-    game.psychic != null &&
     game.room != null &&
     game.team_turn != null
   )

@@ -581,7 +581,7 @@ const CWD_CODES: Record<LanguageCode, string[]> = {
     'HAMMER',
     'CLOUD',
     'SPRAY',
-    'ST.PATRICK',
+    'ST. PATRICK',
     'KILT',
     'MONKEY',
     'FROG',

@@ -11,15 +11,15 @@ type Props = typeof defaultProps & {
 const defaultProps = {}
 
 export default function GameGuard({ children, type }: Props) {
-  const { loading, error } = useGame()
+  const { error } = useGame()
 
-  if (loading) {
-    return (
-      <TitleMessage type={type} subtle>
-        Loading room...
-      </TitleMessage>
-    )
-  }
+  // if (loading) {
+  //   return (
+  //     <TitleMessage type={type} subtle>
+  //       Loading room...
+  //     </TitleMessage>
+  //   )
+  // }
 
   if (error) {
     const msg = error

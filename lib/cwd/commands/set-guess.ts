@@ -5,8 +5,7 @@ import { fromCwdGames } from '../cwd-game-store'
 export default async function setGuess(game: FullCwdGameView, guess: unknown) {
   const player = game.currentPlayer
   const isPlayerTurn = player?.team === game.team_turn
-  const isPsychic = game.psychic_1 === player.id || game.psychic_2 === player.id
-  if (isPsychic || !isPlayerTurn)
+  if (!isPlayerTurn)
     throw new Error('Only non-psychic players on turn team can set guess.')
 
   if (game.phase !== 'guess')

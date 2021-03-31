@@ -98,10 +98,12 @@ export interface Command {
   color?: string
   rightText?: string
   value?: any
+  rightType?: CommandType
   rightValue?: any
   /** Percent width the right-side command should have */
   rightWidth?: number
   rightColor?: string
+  rightDisabled?: boolean
   info?: string
   infoColor?: string
   fetching?: boolean

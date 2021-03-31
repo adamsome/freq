@@ -2,13 +2,9 @@ import { FullCwdGameView } from '../../../types/cwd.types'
 import { insertLimited } from '../../../util/array'
 import { connectToDatabase } from '../../../util/mongodb'
 import { doesGameHaveEnoughPlayers } from '../../game'
-import { isFreePhase } from '../../phase'
 import { fromCwdGames } from '../cwd-game-store'
 
-export default async function beginRound(game: FullCwdGameView) {
-  if (!isFreePhase(game.phase))
-    throw new Error('Can only begin a round from the free phases.')
-
+export default async function beginRound(game: FullCwdGameView, auto = false) {
   if (!doesGameHaveEnoughPlayers(game))
     throw new Error('Must have at least 2 players per team to begin round.')
 
@@ -24,11 +20,16 @@ export default async function beginRound(game: FullCwdGameView) {
     changes.round_number = game.round_number + 1
     // Swap team turn
     changes.team_turn = game.team_turn === 1 ? 2 : 1
+
+    if (!auto) {
+      changes.last_act = { at: now, team: game.team_turn, pass: true }
+    }
   } else {
     // New match, reset round number and increment match number
     changes.round_number = 1
     changes.match_number = game.match_number + 1
     changes.match_started_at = now
+    changes.last_act = undefined
 
     // Update psychic history
     const history = game.psychic_history

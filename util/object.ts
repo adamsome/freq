@@ -159,3 +159,15 @@ export function toTruthMap<T, TKey extends string | number | symbol = string>(
     return acc
   }, {} as Record<TKey, boolean>)
 }
+
+export function toIDMap<T, TKey extends string | number | symbol = string>(
+  arr: T[] | undefined | null,
+  idAccessor?: (it: T) => TKey
+): Record<TKey, T> {
+  const keyFn =
+    idAccessor ?? ((it: T) => ((it as any).id ?? String(it)) as TKey)
+  return (arr ?? []).reduce((acc, it) => {
+    acc[keyFn(it)] = it
+    return acc
+  }, {} as Record<TKey, T>)
+}

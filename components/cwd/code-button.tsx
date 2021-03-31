@@ -1,0 +1,140 @@
+import React, { useEffect, useState } from 'react'
+import { useDebounceCallback } from '../../hooks/use-debounce'
+import usePrevious from '../../hooks/use-previous'
+import { useTheme } from '../../hooks/use-theme'
+import { cwdCodeEquals } from '../../lib/cwd/build-cwd-code-views'
+import { CwdCodeState, CwdCodeView } from '../../types/cwd.types'
+import { PlayerView } from '../../types/game.types'
+import { cx } from '../../util/dom'
+import { styleColor } from '../../util/dom-style'
+import SkeletonBox from '../skeleton-box'
+
+type Props = typeof defaultProps & {
+  psychic1?: PlayerView
+  psychic2?: PlayerView
+  code?: CwdCodeView
+  onClick: () => void
+}
+
+const defaultProps = {}
+
+export default function CodeButton({
+  psychic1,
+  psychic2,
+  code: nextCode,
+  onClick,
+}: Props) {
+  const { resolvedTheme } = useTheme()
+
+  // If this code was just revealed, delay the unveiling
+  const [code, setCode] = useState<CwdCodeView | undefined>()
+  const prevCode = usePrevious(nextCode)
+  const setCodeDebounced = useDebounceCallback(setCode, 2000)
+  useEffect(() => {
+    if (cwdCodeEquals(prevCode, nextCode)) return
+
+    const revealed =
+      prevCode && nextCode && prevCode?.revealed !== nextCode?.revealed
+
+    if (revealed) {
+      setCodeDebounced(nextCode)
+    } else {
+      setCode(nextCode)
+    }
+  }, [prevCode, nextCode])
+
+  if (!code)
+    return (
+      <SkeletonBox className="w-full h-16 sm:h-24 md:h-28" rounded={false} />
+    )
+
+  function getColor(state?: CwdCodeState) {
+    switch (state) {
+      case 0:
+        return resolvedTheme === 'dark' ? 'TaupeDark' : 'Taupe'
+      case 1:
+        return psychic1?.color
+      case 2:
+        return psychic2?.color
+      default:
+        return undefined
+    }
+  }
+
+  const textSize = getTextSize(code.word.length)
+  const brokenTextSize = getTextSize(code.brokenLength)
+  const borderColor = code.state !== -1 ? getColor(code.state) : undefined
+  const bgColor = getColor(code.revealed)
+  const scratch =
+    code.state === -1
+      ? 'radial-gradient(circle at 30% 107%, rgb(243 227 119) 0%, rgb(111 89 34) 5%, rgb(49 14 14) 45%, rgb(31 0 14) 60%, rgb(1 4 113) 90%)'
+      : undefined
+
+  return (
+    <div
+      className={cx(
+        'flex flex-center w-full h-18 sm:h-24 md:h-28 px-4 relative',
+        'bg-gray-100 dark:bg-gray-950',
+        'break-normal text-center font-semibold',
+        'border border-transparent select-none',
+        textSize,
+        {
+          'text-yellow-dark': code.state === -1,
+          'cursor-pointer hover:border-blue-700': code.clickable,
+          'cursor-default': !code.clickable,
+        }
+      )}
+      style={{
+        backgroundImage: scratch,
+        // fontFamily: '"Courier", monospace',
+        fontFamily: '"Space Mono", monospace',
+        ...styleColor(bgColor ?? borderColor, bgColor ? 1 : 0),
+      }}
+      onClick={() => code.clickable && onClick()}
+    >
+      <div className="absolute w-full bottom-0 text-sm sm:text-base md:text-2xl">
+        {code.icons.slice(0, 3).map((icon, i) => (
+          <div key={i + icon}>{icon}</div>
+        ))}
+      </div>
+
+      <span
+        className={cx('relative hidden md:inline', {
+          'animate-bounce-5': code.lit,
+          'animate-pulse': nextCode?.lit,
+        })}
+      >
+        {code.word}
+      </span>
+
+      <span
+        className={cx(
+          brokenTextSize,
+          'relative inline md:hidden leading-none sm:leading-none',
+          {
+            'animate-bounce-5': code.lit,
+            'animate-pulse': nextCode?.lit,
+          }
+        )}
+      >
+        {code.brokenWord}
+      </span>
+    </div>
+  )
+}
+
+CodeButton.defaultProps = defaultProps
+
+function getTextSize(n: number) {
+  return n < 4
+    ? 'text-3xl sm:text-4xl'
+    : n < 5
+    ? 'text-2xl sm:text-4xl'
+    : n < 6
+    ? 'text-xl sm:text-3xl'
+    : n < 7
+    ? 'text-lg sm:text-2xl md:text-3xl'
+    : n < 8
+    ? 'text-base sm:text-xl md:text-2xl'
+    : 'text-sm sm:text-xl md:text-xl'
+}

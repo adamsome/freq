@@ -1,5 +1,16 @@
 import { isNil } from './assertion'
 
+export function arrayEquals<T>(a?: T[], b?: T[]): boolean {
+  if (a === b) return true
+  if (!a || !b) return false
+  if (a.length !== b.length) return false
+
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false
+  }
+  return true
+}
+
 export function asArray<T>(arrayOrElement?: T | T[] | null): T[] | undefined {
   if (arrayOrElement != null) {
     return Array.isArray(arrayOrElement) ? arrayOrElement : [arrayOrElement]

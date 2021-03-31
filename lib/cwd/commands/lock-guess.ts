@@ -12,8 +12,7 @@ import beginRound from './begin-round'
 export default async function lockGuess(game: FullCwdGameView) {
   const player = game.currentPlayer
   const isPlayerTurn = player.team === game.team_turn
-  const isPsychic = game.psychic_1 === player.id || game.psychic_2 === player.id
-  if (isPsychic || !isPlayerTurn)
+  if (!isPlayerTurn)
     throw new Error('Only non-psychic players on turn team can lock guess.')
 
   if (game.phase !== 'guess')
@@ -134,7 +133,19 @@ export default async function lockGuess(game: FullCwdGameView) {
 
   changes.stats = newRoomStats
 
-  if (win[1] || win[2]) {
+  const hasWin = win[1] || win[2]
+
+  changes.last_act = {
+    at: new Date().toISOString(),
+    team: game.team_turn,
+    word: game.code_words[guess],
+    state,
+    correct: repeatTurn,
+    win: hasWin,
+    pass: false,
+  }
+
+  if (hasWin) {
     changes.phase = 'win'
     changes.match_finished_at = new Date().toISOString()
   }
@@ -143,8 +154,8 @@ export default async function lockGuess(game: FullCwdGameView) {
 
   await upsertManyCwdPlayerStatsByID(newAllTimeStats)
 
-  if (!repeatTurn) {
+  if (!repeatTurn && !hasWin) {
     const updatedGame = await fetchFullCwdGameView(game.room, player.id)
-    await beginRound(updatedGame)
+    await beginRound(updatedGame, true)
   }
 }

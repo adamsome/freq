@@ -63,14 +63,16 @@ export async function joinCwdGame(
       game.players = addPlayer(game.players, user, team)
 
       const gameFilter = { room: game.room.toLowerCase() }
+      const changes: Partial<CwdGame> = {}
       const kicked = { ...game.kicked }
       delete kicked[user.id]
-      await store.updateOne(gameFilter, {
-        $set: {
-          players: game.players,
-          kicked,
-        },
-      })
+      changes.kicked = kicked
+      changes.players = game.players
+
+      if (team === 1 && !game.psychic_1) changes.psychic_1 = user.id
+      if (team === 2 && !game.psychic_2) changes.psychic_2 = user.id
+
+      await store.updateOne(gameFilter, { $set: changes })
 
       await updateUserRoom()
     }

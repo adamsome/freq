@@ -15,11 +15,23 @@ const CommandPanel = () => {
   const { currentPlayer, commands } = game
   if (!currentPlayer) return null
 
-  const handleCommandClick = (i: number) => (cmd: Command, j = 0) => async (
-    e: React.MouseEvent
+  const handleCommandClick = async (
+    i: number,
+    e: React.MouseEvent,
+    cmd: Command,
+    j = 0
   ) => {
     e.preventDefault()
-    if (cmd.disabled || fetching) return
+
+    if (fetching) return
+
+    const isRight = j > 0
+    if (isRight) {
+      if (cmd.rightDisabled == null) {
+        if (cmd.disabled) return
+      } else if (cmd.rightDisabled === true) return
+    } else if (cmd.disabled) return
+
     setFetching(true)
     if (error) {
       setError(null)
@@ -30,9 +42,10 @@ const CommandPanel = () => {
       setFetching(false)
       return
     }
-    const value = j > 0 ? cmd.rightValue : cmd.value
+    const value = isRight ? cmd.rightValue : cmd.value
+    const cmdType = isRight ? cmd.rightType ?? cmd.type : cmd.type
     try {
-      await postCommand(game.type, game.room, cmd.type, value)
+      await postCommand(game.type, game.room, cmdType, value)
       mutate(
         produce((game: CommonGameView | undefined) => {
           if (game) game.commands[i].fetching = true
@@ -56,7 +69,7 @@ const CommandPanel = () => {
             command={cmd}
             currentPlayer={currentPlayer}
             fetching={fetching}
-            onClick={handleCommandClick(i)}
+            onClick={(e, cmd, j) => handleCommandClick(i, e, cmd, j)}
           />
         </div>
       ))}

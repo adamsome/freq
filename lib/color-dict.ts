@@ -67,6 +67,9 @@ const colorDict: Dict<ColorDef> = {
   'Cornflower Blue': { team: 2, hex: '#6495ED', list: 2, assign: 12 },
   Iris: { team: 2, hex: '#5A4FCF', list: 4, assign: 13 },
   Gray: { hex: '#727272' },
+  Taupe: { hex: '#AEA4B9' },
+  TaupeDark: { hex: '#655d63' },
+  CodeSuccess: { hex: '#00d28e' },
 }
 
 export default colorDict

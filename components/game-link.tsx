@@ -1,13 +1,18 @@
 import React from 'react'
 import Button from './button'
+import SkeletonBox from './skeleton-box'
 
 type Props = typeof defaultProps & {
-  url: string
+  url?: string
 }
 
 const defaultProps = {}
 
 export default function GameLink({ url }: Props) {
+  if (!url) {
+    return <SkeletonBox className="w-full h-8" />
+  }
+
   return (
     <div className="flex-center flex-col w-full mb-6 text-sm font-light">
       <div className="text-gray-500">

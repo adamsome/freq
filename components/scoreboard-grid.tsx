@@ -1,11 +1,13 @@
 import React from 'react'
 import { getPlayersPerTeam } from '../lib/player'
 import { PlayerView, ScoreType } from '../types/game.types'
+import { range } from '../util/array'
 import { cx } from '../util/dom'
 import ScoreboardIcon from './scoreboard-icon'
 import ScoreboardPlayerName from './scoreboard-player-name'
 import ScoreboardPlayerRow from './scoreboard-player-row'
 import ScoreboardPlayerScore from './scoreboard-player-score'
+import SkeletonBox from './skeleton-box'
 
 type Props = typeof defaultProps & {
   currentPlayer?: PlayerView
@@ -25,11 +27,18 @@ export default function ScoreboardGrid({
   readonly,
   onPlayerClick,
 }: Props) {
-  if (!players) return null
+  const teams = players
+    ? getPlayersPerTeam(players)
+    : // Build skeleton until players load
+      [range(0, 3).map(() => undefined), range(0, 3).map(() => undefined)]
 
-  const teams = getPlayersPerTeam(players)
+  const Player = (right = false) => (
+    player: PlayerView | undefined,
+    i: number
+  ) => {
+    if (!player)
+      return <SkeletonBox key={i} className="w-full h-8 mb-2" rounded={false} />
 
-  const Player = (right = false) => (player: PlayerView) => {
     const score = (scoreType === 'points' ? player.points : player.wins) ?? 0
     return (
       <ScoreboardPlayerRow
@@ -54,7 +63,7 @@ export default function ScoreboardGrid({
     )
   }
 
-  const Team = (team: PlayerView[], i: number) => (
+  const Team = (team: (PlayerView | undefined)[], i: number) => (
     <div
       key={i}
       className={cx('pt-1', {
