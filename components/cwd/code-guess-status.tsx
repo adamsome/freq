@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import usePrevious from '../../hooks/use-previous'
+import useTerminalAnimation, {
+  TerminalLine,
+  TypedTerminalLine,
+} from '../../hooks/use-terminal-animation'
 import { getTeamColor } from '../../lib/color-dict'
 import { getTeamName } from '../../lib/game'
 import { CwdLastAct } from '../../types/cwd.types'
@@ -13,17 +17,10 @@ type Props = typeof defaultProps & {
 
 const defaultProps = {}
 
-interface WordDef {
+export interface Word {
   text: string
   styleColor?: string
   className?: string
-}
-
-type Word = string | WordDef
-
-interface Line {
-  prefix?: Word[]
-  words: Word[]
 }
 
 const TAUPE = 'text-taupe dark:text-taupe-dark'
@@ -33,20 +30,13 @@ function createPrefix(team?: 1 | 2) {
   return [{ text: prefixText, styleColor: getTeamColor(team) }]
 }
 
-function toWord(
-  text: string,
-  {
-    styleColor,
-    className = TAUPE,
-  }: { styleColor?: string; className?: string } = {}
-) {
-  return { text, styleColor, className }
-}
+const body = (text: string): Word => ({ text })
+const taupe = (text: string, className = TAUPE): Word => ({ text, className })
 
-function createLines(guess?: CwdLastAct): Line[] {
+function createLines(guess?: CwdLastAct): TerminalLine<Word>[] {
   const prefix = createPrefix(guess?.team)
 
-  if (!guess) return [{ prefix, words: [''] }]
+  if (!guess) return [{ prefix, words: [taupe('')] }]
 
   const { team, word, correct, state, win, pass } = guess
 
@@ -61,12 +51,12 @@ function createLines(guess?: CwdLastAct): Line[] {
   if (pass) {
     const from = { text: name, styleColor: color }
     const to = { text: otherName, styleColor: otherColor }
-    const words = [toWord('Turn passed from '), from, toWord(' to '), to]
-    return [{ prefix, words: ['pass'] }, { words }]
+    const words = [taupe('Turn passed from '), from, taupe(' to '), to]
+    return [{ prefix, words: [body('pass')] }, { words }]
   }
 
   const wordWord = { text: `'${formattedWord}'`, className: 'font-bold' }
-  const line1 = { prefix, words: ['guess ', wordWord] }
+  const line1 = { prefix, words: [body('guess '), wordWord] }
 
   if (scratch) {
     const text = '[[CRITICAL ERROR]] Terminating...'
@@ -76,130 +66,71 @@ function createLines(guess?: CwdLastAct): Line[] {
 
   const status = correct
     ? { text: '[SUCCESS] ', styleColor: 'CodeSuccess' }
-    : toWord('[FAIL] ')
+    : taupe('[FAIL] ')
 
-  let msgWords: Word[] = ['']
+  let msgWords: Word[] = []
   if (win) {
     msgWords = correct
       ? [{ text: 'All codes cracked!', styleColor: 'CodeSuccess' }]
       : [{ text: `That's ${otherName}'s last code!`, styleColor: otherColor }]
   } else if (correct) {
-    msgWords = [toWord('May guess again.')]
+    msgWords = [taupe('May guess again.')]
   } else if (state === 0) {
-    msgWords = [toWord('Incorrect code.')]
+    msgWords = [taupe('Incorrect code.')]
   } else {
     const other = { text: `${otherName}'s`, styleColor: otherColor }
-    msgWords = [toWord("That's "), other, toWord(' code!')]
+    msgWords = [taupe("That's "), other, taupe(' code!')]
   }
 
   return [line1, { words: [status, ...msgWords] }]
 }
 
-const asWordDef = (word: Word): WordDef =>
-  typeof word === 'string' ? { text: word } : word
-
-const getLineCharCount = (line?: Line): number =>
-  line?.words.reduce((acc, w) => acc + asWordDef(w).text.length, 0) ?? -1
-
 export default function CodeGuessStatus({ guess, turn }: Props) {
-  const [lineIndex, setLineIndex] = useState(0)
-  const [lines, setLines] = useState<Line[]>(() => [
-    { prefix: createPrefix(turn), words: [''] },
-  ])
-  const [lineIndices, setLineIndices] = useState([0])
-  const [blink, setBlink] = useState(true)
-  const prevGuess = usePrevious(guess)
+  // Turn our guess status lines into a terminal 'typing'/'typewriter' effect
+  const [terminalLines, cursorBlink, setLines] = useTerminalAnimation<Word>(
+    () => [{ prefix: createPrefix(turn), words: [taupe('')] }],
+    // Delay the reveal of scratch guesses even longer
+    {
+      lineDelay: () =>
+        guess?.state === -1 ? 4000 : guess?.correct ? 200 : 1200,
+    }
+  )
 
+  // Only set the status lines (thus triggering the terminal typing
+  // animation) when the guess timestamp changes
+  const prevGuess = usePrevious(guess)
   useEffect(() => {
     if (prevGuess?.at === guess?.at) return
 
     const lines = createLines(guess)
-    setLineIndex(0)
     setLines(lines)
-    setLineIndices(lines.map(() => 0))
   }, [prevGuess, guess])
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setBlink((prev) => !prev)
-    }, 500)
+  const toWord = (key: React.Key, word: Word) => (
+    <span
+      key={key}
+      className={word.className ?? ''}
+      style={styleColor(word.styleColor)}
+    >
+      {word.text}
+    </span>
+  )
 
-    return () => clearTimeout(timeout)
-  }, [blink])
-
-  useEffect(() => {
-    const index = lineIndices[lineIndex]
-    const line = lines[lineIndex]
-
-    // If end of line is reached, move to next line if there is one
-    if (index >= getLineCharCount(line)) {
-      if (lineIndex < lines.length - 1) {
-        setLineIndex((prev) => prev + 1)
-      }
-    }
-
-    // Delay keystrokes b/w 75-100 ms; unless its the 1st char of
-    // the 2nd or greater line, then delay longer
-    const delay =
-      index === 0 && lineIndex !== 0 ? 1200 : Math.random() * 60 + 20
-
-    const timeout = setTimeout(() => {
-      setLineIndices((prev) => {
-        const next = [...prev]
-        next[lineIndex]++
-        return next
-      })
-    }, delay)
-
-    return () => clearTimeout(timeout)
-  }, [lineIndex, lines, lineIndices])
-
-  const writeMessage = (line: Line, index: number) => {
-    const words: WordDef[] = []
-    const lineCharIndex = lineIndices[index]
-
-    for (let w = 0; w < (line.prefix?.length ?? 0); w++) {
-      const word = asWordDef(line.prefix?.[w] ?? '')
-      if (word) words.push(word)
-    }
-
-    for (let w = 0, c = 0; w < line.words.length; w++) {
-      if (c >= lineCharIndex) break
-
-      const word = asWordDef(line.words[w])
-      const text = word.text.substr(0, lineCharIndex - c)
-      words.push({ ...word, text })
-      c += text.length
-    }
-
-    return (
+  const toLine = (line: TypedTerminalLine<Word>, i: number) => (
+    <div key={i} className="flex justify-start items-center px-2 sm:px-4">
       <span className="font-mono">
-        {words.map((w, i) => (
-          <span
-            key={i}
-            className={w.className ?? ''}
-            style={styleColor(w.styleColor)}
-          >
-            {w.text}
-          </span>
-        ))}
+        {line.words.map((word, j) => toWord(i + j, word))}
 
-        {index === lineIndex && <span>{blink ? '|' : ' '}</span>}
+        {i === terminalLines.length - 1 && (
+          <span>{cursorBlink ? '|' : ' '}</span>
+        )}
       </span>
-    )
-  }
-
-  const toLine = (line: Line, index: number) => {
-    return (
-      <div key={index} className="flex justify-start items-center px-2 sm:px-4">
-        {writeMessage(line, index)}
-      </div>
-    )
-  }
+    </div>
+  )
 
   return (
     <div className="flex flex-col w-full h-16 py-2">
-      {lines.slice(0, lineIndex + 1).map(toLine)}
+      {terminalLines.map(toLine)}
     </div>
   )
 }

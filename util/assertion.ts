@@ -15,4 +15,34 @@ export function isStringOrNumber(value: any): value is string | number {
   return type === 'string' || type === 'number'
 }
 
+/*! ramda v0.27.1 | MIT License | https://github.com/ramda/ramda/blob/v0.27.0/source/type.js */
+/**
+ * Gives a single-word string description of the (native) type of a value,
+ * returning such answers as 'Object', 'Number', 'Array', or 'Null'. Does not
+ * attempt to distinguish user Object types any further, reporting them all as
+ * 'Object'.
+ *
+ * @func
+ * @sig (* -> {*}) -> String
+ * @param {*} val The value to test
+ * @return {String}
+ * @example
+ *
+ *      R.type({}); //=> "Object"
+ *      R.type(1); //=> "Number"
+ *      R.type(false); //=> "Boolean"
+ *      R.type('s'); //=> "String"
+ *      R.type(null); //=> "Null"
+ *      R.type([]); //=> "Array"
+ *      R.type(/[A-z]/); //=> "RegExp"
+ *      R.type(() => {}); //=> "Function"
+ *      R.type(undefined); //=> "Undefined"
+ */
+export const type = (val: any) =>
+  val === null
+    ? 'Null'
+    : val === undefined
+    ? 'Undefined'
+    : Object.prototype.toString.call(val).slice(8, -1)
+
 export const __DEV__ = process.env.NODE_ENV !== 'production'
