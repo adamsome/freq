@@ -23,15 +23,19 @@ export interface Word {
   className?: string
 }
 
-const TAUPE = 'text-taupe dark:text-taupe-dark'
-
 function createPrefix(team?: 1 | 2) {
   const prefixText = `cwd:~ team_${getTeamName(team).toLowerCase()}$ `
-  return [{ text: prefixText, styleColor: getTeamColor(team) }]
+  const className = 'font-bold'
+  return [{ text: prefixText, styleColor: getTeamColor(team), className }]
 }
 
 const body = (text: string): Word => ({ text })
-const taupe = (text: string, className = TAUPE): Word => ({ text, className })
+const taupe = (text: string, className = ''): Word => ({
+  text,
+  className: `text-taupe dark:text-taupe-dark${
+    className ? ` ${className}` : ''
+  }`,
+})
 
 function createLines(guess?: CwdLastAct): TerminalLine<Word>[] {
   const prefix = createPrefix(guess?.team)
@@ -60,13 +64,16 @@ function createLines(guess?: CwdLastAct): TerminalLine<Word>[] {
 
   if (scratch) {
     const text = '[[CRITICAL ERROR]] Terminating...'
-    const word = { text, className: 'text-yellow dark:text-yellow-dark' }
+    const word = {
+      text,
+      className: 'font-bold text-yellow dark:text-yellow-dark',
+    }
     return [line1, { words: [word] }]
   }
 
   const status = correct
-    ? { text: '[SUCCESS] ', styleColor: 'CodeSuccess' }
-    : taupe('[FAIL] ')
+    ? { text: '[SUCCESS] ', styleColor: 'CodeSuccess', className: 'font-bold' }
+    : taupe('[FAIL] ', 'font-bold')
 
   let msgWords: Word[] = []
   if (win) {

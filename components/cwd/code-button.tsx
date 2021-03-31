@@ -84,8 +84,6 @@ export default function CodeButton({
       )}
       style={{
         backgroundImage: scratch,
-        // fontFamily: '"Courier", monospace',
-        fontFamily: '"Space Mono", monospace',
         ...styleColor(bgColor ?? borderColor, bgColor ? 1 : 0),
       }}
       onClick={() => code.clickable && onClick()}

@@ -19,7 +19,7 @@ module.exports = {
     },
     fontFamily: {
       sans: ['Rubik', ...defaultTheme.fontFamily.sans],
-      mono: ["'Anonymous Pro'", ...defaultTheme.fontFamily.mono],
+      mono: ["'Space Mono'", ...defaultTheme.fontFamily.mono],
     },
     extend: {
       animation: {

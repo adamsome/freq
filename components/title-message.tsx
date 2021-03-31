@@ -25,7 +25,7 @@ export default function TitleMessage({
   error,
 }: Props) {
   return (
-    <Layout>
+    <Layout type={type}>
       <main
         className={cx(
           'flex-1 flex-center flex-col px-6 py-4',
