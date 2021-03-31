@@ -92,7 +92,7 @@ export default function CodeGuessStatus({ guess, turn }: Props) {
     // Delay the reveal of scratch guesses even longer
     {
       lineDelay: () =>
-        guess?.state === -1 ? 4000 : guess?.correct ? 200 : 1200,
+        guess?.state === -1 ? 3500 : guess?.correct ? 200 : 1500,
     }
   )
 

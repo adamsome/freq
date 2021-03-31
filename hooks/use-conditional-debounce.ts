@@ -4,13 +4,22 @@ import { useDebounceCallback } from './use-debounce'
 import usePrevious from './use-previous'
 
 export interface UseConditionalDebounceOptions<T> {
-  /** Equality function that when true, prevents the value change */
+  /**
+   * Compares new value to previous; if true, debounces the value change.
+   * If omitted, value change is always debounced.
+   */
+  conditionFn?: (prev?: T, next?: T) => boolean | undefined
+  /**
+   * Equality function that, when true, prevents the value change.
+   * If omitted, reference equality is used.
+   */
   equalsFn?: (a?: T, b?: T) => boolean
   /** Time in milliseconds to conditionally debounce the value change. */
   debounceTime?: ValueFn<number>
 }
 
-const defaultEqualsFn = <T>(a?: T, b?: T) => a === b
+const defaultConditionFn = <T>(_prev?: T, _next?: T) => true
+const defaultEqualsFn = <T>(prev?: T, next?: T) => prev === next
 
 /**
  * Tracks a value and its previous value, when they differ output the new
@@ -25,11 +34,13 @@ const defaultEqualsFn = <T>(a?: T, b?: T) => a === b
  */
 export default function useConditionalDebounce<T>(
   value: T,
-  /** Compares new value; if true, debounces the value change */
-  conditionFn: (prev?: T, next?: T) => boolean | undefined,
   options: UseConditionalDebounceOptions<T> = {}
 ) {
-  const { equalsFn = defaultEqualsFn, debounceTime = 2000 } = options
+  const {
+    conditionFn = defaultConditionFn,
+    equalsFn = defaultEqualsFn,
+    debounceTime = 2000,
+  } = options
 
   const [nextValue, setNextValue] = useState<T | undefined>()
   const prevValue = usePrevious(nextValue)

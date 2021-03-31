@@ -2,7 +2,7 @@ import React from 'react'
 import useConditionalDebounce from '../../hooks/use-conditional-debounce'
 import { useTheme } from '../../hooks/use-theme'
 import { cwdCodeEquals } from '../../lib/cwd/build-cwd-code-views'
-import { CwdCodeState, CwdCodeView } from '../../types/cwd.types'
+import { CwdCodeState, CwdCodeView, CwdLastAct } from '../../types/cwd.types'
 import { PlayerView } from '../../types/game.types'
 import { cx } from '../../util/dom'
 import { styleColor } from '../../util/dom-style'
@@ -12,7 +12,7 @@ type Props = typeof defaultProps & {
   psychic1?: PlayerView
   psychic2?: PlayerView
   code?: CwdCodeView
-  turn?: 1 | 2
+  guess?: CwdLastAct
   onClick: () => void
 }
 
@@ -23,23 +23,22 @@ const isRevealed = (
   next?: CwdCodeView
 ): boolean | undefined => prev && next && prev?.revealed !== next?.revealed
 
-const equalsFn = cwdCodeEquals
-
 export default function CodeButton({
   psychic1,
   psychic2,
   code: rawCode,
-  turn,
+  guess,
   onClick,
 }: Props) {
   const { resolvedTheme } = useTheme()
 
   // If this code was just revealed, delay the unveiling
-  const code = useConditionalDebounce(rawCode, isRevealed, {
-    equalsFn,
+  const code = useConditionalDebounce(rawCode, {
+    conditionFn: isRevealed,
+    equalsFn: cwdCodeEquals,
     // Add extra reveal delay if we're revealing a scratch, less if correct
     debounceTime: () =>
-      rawCode?.state === -1 ? 4000 : rawCode?.state === turn ? 500 : 2000,
+      guess?.state === -1 ? 4000 : guess?.correct ? 500 : 2000,
   })
 
   if (!code)

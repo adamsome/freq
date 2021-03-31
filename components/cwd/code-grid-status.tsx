@@ -1,7 +1,9 @@
 import React from 'react'
+import useConditionalDebounce from '../../hooks/use-conditional-debounce'
 import { getTeamColor } from '../../lib/color-dict'
 import { getTeamName } from '../../lib/game'
 import { getTeamIcon } from '../../lib/icon'
+import { CwdLastAct } from '../../types/cwd.types'
 import { range } from '../../util/array'
 import { cx } from '../../util/dom'
 import { styleColor } from '../../util/dom-style'
@@ -10,12 +12,24 @@ import SkeletonBox from '../skeleton-box'
 type Props = typeof defaultProps & {
   winner?: 1 | 2
   turn?: 1 | 2
+  guess?: CwdLastAct
 }
 
 const defaultProps = {}
 
-export default function CodeGridStatus({ winner, turn }: Props) {
-  if (!winner && !turn)
+export default function CodeGridStatus({
+  winner: rawWinner,
+  turn: rawTurn,
+  guess,
+}: Props) {
+  // Scratch code reveals slow, whereas correct guesses reveal fast
+  const debounceTime = () =>
+    guess?.state === -1 ? 5000 : guess?.correct ? 200 : 2000
+
+  const turn = useConditionalDebounce(rawTurn, { debounceTime })
+  const winner = useConditionalDebounce(rawWinner, { debounceTime })
+
+  if (!turn && !winner)
     return <SkeletonBox className="w-full h-8 px-0 sm:px-4" />
 
   const team = winner ?? turn

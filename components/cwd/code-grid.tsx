@@ -27,14 +27,18 @@ export default function CodeGrid({ game, onCodeClick }: Props) {
       </div>
 
       <div className="col-span-5">
-        <CodeGridStatus winner={game?.winner} turn={game?.team_turn} />
+        <CodeGridStatus
+          winner={game?.winner}
+          turn={game?.team_turn}
+          guess={game?.last_act}
+        />
       </div>
 
       {codes.map((code, i) => (
         <CodeButton
           key={code?.word ?? i}
           code={code}
-          turn={game?.team_turn}
+          guess={game?.last_act}
           psychic1={psyhic1}
           psychic2={psyhic2}
           onClick={() => onCodeClick(i)}
