@@ -84,7 +84,7 @@ const CommandButton = ({
 
       {cmd.info && (
         <div
-          className="info text-center text-gray-500 font-light mt-1"
+          className="text-center text-gray-500 font-light mt-1 text-sm sm:text-base leading-tight"
           style={styleColor(cmd.infoColor)}
         >
           {cmd.info}

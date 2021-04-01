@@ -42,8 +42,8 @@ export default function CodeGridStatus({
     <div
       className={cx(
         'bg-gray-100 dark:bg-gray-950',
-        'text-lg font-mono font-bold',
-        'w-full px-2 sm:px-4 py-1',
+        'text-base sm:text-lg font-mono font-bold',
+        'w-full px-2 sm:px-4 py-0.5 sm:py-1',
         { 'text-center': winner }
       )}
       style={styleColor(color, winner ? 1 : 0)}
