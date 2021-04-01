@@ -114,8 +114,8 @@ export default function RoomCard({ game, className, onClick }: Props) {
         className={cx(
           'w-full pr-2 md:pr-0 opacity-70 group-hover:opacity-100 transition-opacity',
           'pt-3 mt-3 transition-colors',
-          'border-t border-gray-100 dark:border-gray-800',
-          'group-hover:border-gray-200 dark:group-hover:border-gray-700'
+          'border-t border-gray-300 dark:border-gray-800',
+          'group-hover:border-gray-300 dark:group-hover:border-gray-700'
         )}
       >
         <Scoreboard game={game} readonly></Scoreboard>

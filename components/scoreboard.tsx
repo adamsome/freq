@@ -41,6 +41,7 @@ export default function Scoreboard({ game, readonly }: Props) {
         <ScoreboardSpecialPlayer
           player={designatedPsychic}
           label="Designated Psychic"
+          readonly={readonly}
         />
       )}
 

@@ -9,11 +9,17 @@ type Props = typeof defaultProps & {
   label?: string
 }
 
-const defaultProps = {}
+const defaultProps = {
+  readonly: false,
+}
 
-export default function ScoreboardSpecialPlayer({ player, label }: Props) {
+export default function ScoreboardSpecialPlayer({
+  player,
+  label,
+  readonly,
+}: Props) {
   return (
-    <div className="flex flex-col flex-center mb-4">
+    <div className={cx('flex flex-col flex-center', { 'mb-4': !readonly })}>
       <div className="flex flex-center w-full">
         <div
           className={cx(
