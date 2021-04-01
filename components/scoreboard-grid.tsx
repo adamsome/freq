@@ -21,6 +21,9 @@ const defaultProps = {
   readonly: false,
 }
 
+const skeletonTeam = range(0, 3).map(() => undefined)
+const skeletonTeams = [skeletonTeam, skeletonTeam] as const
+
 export default function ScoreboardGrid({
   type,
   currentPlayer,
@@ -29,10 +32,12 @@ export default function ScoreboardGrid({
   readonly,
   onPlayerClick,
 }: Props) {
-  const teams = players
+  const teams: readonly [
+    (PlayerView | undefined)[],
+    (PlayerView | undefined)[]
+  ] = players
     ? getPlayersPerTeam(players.filter((p) => !p.designatedPsychic))
-    : // Build skeleton until players load
-      [range(0, 3).map(() => undefined), range(0, 3).map(() => undefined)]
+    : skeletonTeams
 
   const Player = (right = false) => (
     player: PlayerView | undefined,
