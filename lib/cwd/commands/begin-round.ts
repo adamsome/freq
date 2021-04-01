@@ -31,10 +31,12 @@ export default async function beginRound(game: FullCwdGameView, auto = false) {
     changes.match_started_at = now
     changes.last_act = undefined
 
-    // Update psychic history
-    const history = game.psychic_history
-    const psychics = [game.psychic_1, game.psychic_2]
-    changes.psychic_history = insertLimited(psychics, history, 16)
+    if (!game.settings?.designated_psychic) {
+      // Update psychic history
+      const history = game.psychic_history
+      const psychics = [game.psychic_1, game.psychic_2]
+      changes.psychic_history = insertLimited(psychics, history, 16)
+    }
   }
 
   // Reset player guesses and guessing team's guesses

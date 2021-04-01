@@ -30,7 +30,7 @@ export default function ScoreboardGrid({
   onPlayerClick,
 }: Props) {
   const teams = players
-    ? getPlayersPerTeam(players)
+    ? getPlayersPerTeam(players.filter((p) => !p.designatedPsychic))
     : // Build skeleton until players load
       [range(0, 3).map(() => undefined), range(0, 3).map(() => undefined)]
 

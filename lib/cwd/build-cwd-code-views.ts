@@ -76,7 +76,10 @@ export default function buildCwdCodeViews(
     if (isPsychic || game.phase === 'win') {
       view.state = state
     }
-    if (view.revealed == null && player?.team === game.team_turn) {
+    if (
+      view.revealed == null &&
+      (player?.team === game.team_turn || player?.designatedPsychic)
+    ) {
       view.clickable = true
     }
 

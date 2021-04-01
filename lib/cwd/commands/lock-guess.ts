@@ -12,7 +12,7 @@ import beginRound from './begin-round'
 export default async function lockGuess(game: FullCwdGameView) {
   const player = game.currentPlayer
   const isPlayerTurn = player.team === game.team_turn
-  if (!isPlayerTurn)
+  if (!isPlayerTurn && !player.designatedPsychic)
     throw new Error('Only non-psychic players on turn team can lock guess.')
 
   if (game.phase !== 'guess')
@@ -80,11 +80,13 @@ export default async function lockGuess(game: FullCwdGameView) {
   // Update each team's score and check win condition
   if (pts[1] === 1) {
     changes.score_team_1 = game.score_team_1 - 1
+
     if (changes.score_team_1 <= 0) win[1] = true
   }
 
   if (pts[2] === 1) {
     changes.score_team_2 = game.score_team_2 - 1
+
     if (changes.score_team_2 <= 0) win[2] = true
   }
 
@@ -97,22 +99,26 @@ export default async function lockGuess(game: FullCwdGameView) {
       const id = player.id
       const stats = createCwdPlayerStats(player.id)
 
-      if (id === psychic) {
-        // Update psychic's round and point counts
-        if (isFirstGuessInRound) stats.pn++
-        stats.pp += pts[game.team_turn]
-      } else if (player.team === game.team_turn) {
-        // Update guesser's round and point counts
-        if (isFirstGuessInRound) stats.gn++
-        stats.gp += pts[game.team_turn]
-      }
+      if (!game.settings?.designated_psychic || id !== psychic) {
+        // Only update stats if player is not designated psychic
 
-      // If a win occurred, update players' match and win counts
-      if (win[1] || win[2]) {
-        stats.g++
+        if (id === psychic) {
+          // Update psychic's round and point counts
+          if (isFirstGuessInRound) stats.pn++
+          stats.pp += pts[game.team_turn]
+        } else if (player.team === game.team_turn) {
+          // Update guesser's round and point counts
+          if (isFirstGuessInRound) stats.gn++
+          stats.gp += pts[game.team_turn]
+        }
 
-        if ((player.team === 1 && win[1]) || (player.team === 2 && win[2])) {
-          stats.w++
+        // If a win occurred, update players' match and win counts
+        if (win[1] || win[2]) {
+          stats.g++
+
+          if ((player.team === 1 && win[1]) || (player.team === 2 && win[2])) {
+            stats.w++
+          }
         }
       }
 

@@ -81,7 +81,7 @@ export default function createCwdCommandView(
         : undefined
       const locked = guess?.locked === true
 
-      if (player?.team === game.team_turn) {
+      if (player?.team === game.team_turn || player?.designatedPsychic) {
         if (psychic === player?.id) {
           header.text = icon ?? '👁'
         } else {

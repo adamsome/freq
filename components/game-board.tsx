@@ -4,6 +4,7 @@ import { getGameTitle } from '../lib/game'
 import { GameType } from '../types/game.types'
 import CommandPanel from './command-panel'
 import CodesContainer from './cwd/codes-container'
+import CwdSettings from './cwd/cwd-settings'
 import CluesContainer from './freq/clues-container'
 import GameJoinButtons from './game-join-buttons'
 import GameLink from './game-link'
@@ -36,7 +37,12 @@ export default function GameBoard({ type }: Props) {
           <>
             <GameLink url={roomUrl} />
 
-            {game.currentPlayer && <PlayerHero />}
+            {game.currentPlayer && (
+              <>
+                <PlayerHero />
+                {type === 'cwd' && <CwdSettings />}
+              </>
+            )}
           </>
         )}
 

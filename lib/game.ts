@@ -1,8 +1,11 @@
+import { CwdSettings } from '../types/cwd.types'
 import { GameType, Player } from '../types/game.types'
 import { getPlayersPerTeam } from './player'
 
 interface HasPlayers {
   players: Player[]
+  settings?: CwdSettings
+  psychic_1?: string
 }
 
 export function getGameTitle(type: GameType | string | undefined) {
@@ -15,6 +18,8 @@ export function getGameTitle(type: GameType | string | undefined) {
 }
 
 export function doesGameHaveEnoughPlayers(game: HasPlayers) {
+  if (game.settings?.designated_psychic) return game.psychic_1 != null
+
   const teams = getPlayersPerTeam(game.players)
   return teams[0].length >= 1 && teams[1].length >= 1
 }

@@ -7,6 +7,7 @@ import kickPlayer from './commands/kick-player'
 import lockGuess from './commands/lock-guess'
 import prepNewMatch from './commands/prep-new-match'
 import setCurrentPsychic from './commands/set-current-psychic'
+import setDesignatedPsychicMode from './commands/set-designated-psychic-mode'
 import setGuess from './commands/set-guess'
 
 export default async function handleFreqCommand(
@@ -24,6 +25,8 @@ export default async function handleFreqCommand(
       return await setCurrentPsychic(game, value)
     case 'kick_player':
       return await kickPlayer(game, value)
+    case 'set_designated_psychic_mode':
+      return await setDesignatedPsychicMode(game, value)
     // Phase Commands
     case 'prep_new_match':
       return await prepNewMatch(game)

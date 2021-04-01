@@ -15,6 +15,7 @@ export interface PlayerView extends Player {
   active?: boolean
   psychic?: boolean
   nextPsychic?: boolean
+  designatedPsychic?: boolean
   showPsychic?: boolean
   showNextPsychic?: boolean
   canSetPsychic?: boolean
@@ -62,6 +63,7 @@ export interface CommonGame {
   match_finished_at?: string
   round_started_at?: string
   round_finished_at?: string
+  fetching?: boolean
 }
 
 export type CommandType =
@@ -71,6 +73,7 @@ export type CommandType =
   | 'set_next_psychic'
   | 'set_current_psychic'
   | 'kick_player'
+  | 'set_designated_psychic_mode'
   // Phases
   | 'prep_new_match'
   | 'begin_round'

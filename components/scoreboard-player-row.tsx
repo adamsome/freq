@@ -6,7 +6,7 @@ import { styleColor } from '../util/dom-style'
 type Props = typeof defaultProps & {
   children: React.ReactNode
   player: Player
-  onClick: () => void
+  onClick?: () => void
 }
 
 const defaultProps = {

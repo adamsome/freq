@@ -22,7 +22,10 @@ export function createPrepCwdMatchChanges(
   const score_team_1 = codesInfo.code_states.filter((c) => c === 1).length
   const score_team_2 = codesInfo.code_states.filter((c) => c === 2).length
 
-  const psychicsInfo = getNextPsychicsInfo(game.psychic_history, game.players)
+  // Set the next 2 psychic, unless in designated psychic mode
+  const psychicsInfo = !game.settings?.designated_psychic
+    ? getNextPsychicsInfo(game.psychic_history, game.players)
+    : {}
 
   return {
     ...codesInfo,

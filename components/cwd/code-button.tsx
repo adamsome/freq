@@ -1,6 +1,7 @@
 import React from 'react'
 import useConditionalDebounce from '../../hooks/use-conditional-debounce'
 import { useTheme } from '../../hooks/use-theme'
+import { getTeamColor } from '../../lib/color-dict'
 import { cwdCodeEquals } from '../../lib/cwd/build-cwd-code-views'
 import { CwdCodeState, CwdCodeView, CwdLastAct } from '../../types/cwd.types'
 import { PlayerView } from '../../types/game.types'
@@ -48,14 +49,16 @@ export default function CodeButton({
       <SkeletonBox className="w-full h-16 sm:h-24 md:h-28" rounded={false} />
     )
 
+  const samePsychics = psychic1 === psychic2
+
   function getColor(state?: CwdCodeState) {
     switch (state) {
       case 0:
         return resolvedTheme === 'dark' ? 'TaupeDark' : 'Taupe'
       case 1:
-        return psychic1?.color
+        return samePsychics ? getTeamColor(1) : psychic1?.color
       case 2:
-        return psychic2?.color
+        return samePsychics ? getTeamColor(2) : psychic2?.color
       default:
         return undefined
     }

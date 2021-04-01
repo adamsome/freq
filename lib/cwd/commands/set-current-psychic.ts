@@ -19,8 +19,14 @@ export default async function setCurrentPsychic(
   const filter = { room: game.room.toLowerCase() }
 
   const changes: Partial<CwdGame> = {}
-  if (player.team === 1) changes.psychic_1 = player.id
-  if (player.team === 2) changes.psychic_2 = player.id
+
+  if (game.settings?.designated_psychic) {
+    changes.psychic_1 = player.id
+    changes.psychic_2 = player.id
+  } else {
+    if (player.team === 1) changes.psychic_1 = player.id
+    if (player.team === 2) changes.psychic_2 = player.id
+  }
 
   await fromCwdGames(db).updateOne(filter, { $set: changes })
 }

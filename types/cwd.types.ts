@@ -51,7 +51,22 @@ export interface CwdCodesInfo {
   code_states: CwdCodeState[]
 }
 
+export interface CwdSettings {
+  designated_psychic?: boolean
+}
+
+export interface CwdLastAct {
+  at: string
+  team: 1 | 2
+  word?: string
+  state?: CwdCodeState
+  correct?: boolean
+  win?: boolean
+  pass?: boolean
+}
+
 export interface CwdGame extends CommonGame, CwdCodesInfo {
+  settings?: CwdSettings
   /* Team 1's current psychic */
   psychic_1?: string
   /* Team 2's current psychic */
@@ -66,19 +81,10 @@ export interface CwdGame extends CommonGame, CwdCodesInfo {
   team_1_guesses: number[]
   /* List of code indices that have been guessed by team 2 this round */
   team_2_guesses: number[]
+  /* Info about the last action, which team, code word, state, win, pass etc. */
   last_act?: CwdLastAct
   phase: CwdPhase
   stats?: Dict<CwdPlayerStats>
-}
-
-export interface CwdLastAct {
-  at: string
-  team: 1 | 2
-  word?: string
-  state?: CwdCodeState
-  correct?: boolean
-  win?: boolean
-  pass?: boolean
 }
 
 export interface CwdGameView

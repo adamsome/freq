@@ -1,8 +1,8 @@
 import React from 'react'
 import { GameType } from '../types/game.types'
 import { cx } from '../util/dom'
-import Button from './button'
 import Layout from './layout'
+import RepoLink from './repo-link'
 import Title from './title'
 
 type Props = typeof defaultProps & {
@@ -45,14 +45,7 @@ export default function TitleMessage({
 
           {message && children}
 
-          <Button
-            href="https://github.com/adamsome/freq"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-6"
-          >
-            adamsome
-          </Button>
+          <RepoLink classNames="mt-6" />
         </div>
       </main>
     </Layout>

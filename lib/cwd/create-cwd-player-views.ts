@@ -17,6 +17,8 @@ export default function createCwdPlayerViews(
       active: activeByPlayerID[p.id],
       current: p.id === currentID,
       psychic: game.psychic_1 === p.id || game.psychic_2 === p.id,
+      designatedPsychic:
+        game.settings?.designated_psychic === true && game.psychic_1 === p.id,
       showPsychic: game.psychic_1 === p.id || game.psychic_2 === p.id,
       canSetPsychic: isPrep,
       canChangeTeam: isPrep,
