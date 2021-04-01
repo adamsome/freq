@@ -76,7 +76,7 @@ export default function CodeButton({
   return (
     <div
       className={cx(
-        'flex flex-center w-full h-18 sm:h-24 md:h-28 px-4 relative',
+        'flex flex-center w-full h-16 sm:h-24 md:h-28 px-4 relative',
         'bg-gray-100 dark:bg-gray-950',
         'break-normal text-center font-semibold',
         'border border-transparent select-none',

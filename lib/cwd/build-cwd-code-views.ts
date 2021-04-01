@@ -77,6 +77,7 @@ export default function buildCwdCodeViews(
       view.state = state
     }
     if (
+      game.phase === 'guess' &&
       view.revealed == null &&
       (player?.team === game.team_turn || player?.designatedPsychic)
     ) {

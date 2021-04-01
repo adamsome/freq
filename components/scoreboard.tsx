@@ -6,10 +6,8 @@ import ActionModal from './action-modal'
 import PlayerCard from './player-card'
 import ScoreboardGrid from './scoreboard-grid'
 import ScoreboardHeader from './scoreboard-header'
-import ScoreboardIcon from './scoreboard-icon'
-import ScoreboardPlayerName from './scoreboard-player-name'
-import ScoreboardPlayerRow from './scoreboard-player-row'
 import ScoreboardSettings from './scoreboard-settings'
+import ScoreboardSpecialPlayer from './scoreboard-special-player'
 
 interface HasScoreboardProps {
   type: GameType
@@ -40,22 +38,10 @@ export default function Scoreboard({ game, readonly }: Props) {
   return (
     <div className={cx('w-full whitespace-nowrap', { 'mb-6': !readonly })}>
       {designatedPsychic && (
-        <div className="flex flex-center w-full mb-2">
-          <span className="pl-2 pr-3 py-0.5 rounded font-semibold text-base bg-gray-900 text-gray-500">
-            👁 &nbsp;Designated Psychic&nbsp;👁
-          </span>
-          <ScoreboardPlayerRow
-            player={designatedPsychic}
-            leader={true}
-            readonly={true}
-          >
-            <ScoreboardIcon>{designatedPsychic.icon}</ScoreboardIcon>
-            <ScoreboardPlayerName
-              type={game?.type}
-              player={designatedPsychic}
-            />
-          </ScoreboardPlayerRow>
-        </div>
+        <ScoreboardSpecialPlayer
+          player={designatedPsychic}
+          label="Designated Psychic"
+        />
       )}
 
       {!readonly && <ScoreboardHeader scores={scores} readonly={readonly} />}
