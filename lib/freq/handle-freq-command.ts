@@ -15,6 +15,7 @@ import setCurrentPsychic from './commands/set-current-psychic'
 import setDirection from './commands/set-direction'
 import setGuess from './commands/set-guess'
 import setNextPsychic from './commands/set-next-psychic'
+import shuffleTeams from './commands/shuffle-teams'
 import togglePlayerLeader from './commands/toggle-player-leader'
 
 export default async function handleFreqCommand(
@@ -26,6 +27,8 @@ export default async function handleFreqCommand(
     // Player Commands
     case 'change_player_team':
       return await changePlayerTeam(game, value)
+    case 'shuffle_teams':
+      return await shuffleTeams(game)
     case 'edit_player':
       return await editPlayer(game, value)
     case 'toggle_player_leader':

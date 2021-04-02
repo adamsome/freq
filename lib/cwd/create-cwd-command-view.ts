@@ -6,7 +6,7 @@ import {
   Header,
   PlayerView,
 } from '../../types/game.types'
-import { range } from '../../util/array'
+import { partition, range } from '../../util/array'
 import { randomHourlyItem } from '../../util/random'
 import { getTeamColor } from '../color-dict'
 import { doesGameHaveEnoughPlayers, getTeamName } from '../game'
@@ -33,20 +33,35 @@ export default function createCwdCommandView(
 
       if (!player) return view
 
+      const shuffleCmd: Command = {
+        text: 'Shuffle Teams',
+        type: 'shuffle_teams',
+        color: 'Gray',
+      }
+
       if (enoughPlayers && game.psychic_1 && game.psychic_2) {
         cmd.type = 'begin_round'
         cmd.text = "Everyone's in"
-        cmd.info = 'Start game once all players have joined.'
+        shuffleCmd.info = 'Start game once all players have joined.'
+      } else {
+        cmd.text = 'Waiting for players...'
+        cmd.disabled = true
+        shuffleCmd.info = !enoughPlayers
+          ? 'You can begin the game once at least 2 players are on each team.'
+          : !game.psychic_1
+          ? 'Red team needs a psychic before the match can start.'
+          : 'Blue team needs a psychic before the match can start.'
+      }
+
+      const [teamPlayers] = partition((p) => p.team != null, game.players)
+      let playerCount = teamPlayers.length
+      playerCount -= game.settings?.designated_psychic ? 1 : 0
+      if (playerCount > 12) {
+        cmd.info = shuffleCmd.info
         return view
       }
 
-      cmd.text = 'Waiting for players...'
-      cmd.disabled = true
-      cmd.info = !enoughPlayers
-        ? 'You can begin the game once at least 2 players are on each team.'
-        : !game.psychic_1
-        ? 'Red team needs a psychic before the match can start.'
-        : 'Blue team needs a psychic before the match can start.'
+      view.commands = [cmd, shuffleCmd]
       return view
     }
     case 'guess': {

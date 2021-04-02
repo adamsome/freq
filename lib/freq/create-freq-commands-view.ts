@@ -6,7 +6,7 @@ import {
   Header,
   Player,
 } from '../../types/game.types'
-import { range } from '../../util/array'
+import { partition, range } from '../../util/array'
 import { randomHourlyItem } from '../../util/random'
 import { getTeamColor } from '../color-dict'
 import { doesGameHaveEnoughPlayers, getTeamName } from '../game'
@@ -41,18 +41,32 @@ export default function createFreqCommandsView(
 
       if (!player) return view
 
+      const shuffleCmd: Command = {
+        text: 'Shuffle Teams',
+        type: 'shuffle_teams',
+        color: 'Gray',
+      }
+
       if (player.leader && enoughPlayers) {
         cmd.type = 'begin_round'
         cmd.text = "Everyone's in"
-        cmd.info = 'Start game once all players have joined'
+        shuffleCmd.info = 'Start game once all players have joined'
+      } else {
+        cmd.text = 'Waiting for players...'
+        cmd.disabled = true
+        shuffleCmd.info = player.leader
+          ? 'You can begin the game once at least 2 players are on each team'
+          : "Leader will start game once everyone's in"
+      }
+
+      const [teamPlayers] = partition((p) => p.team != null, game.players)
+      const playerCount = teamPlayers.length
+      if (playerCount > 12) {
+        cmd.info = shuffleCmd.info
         return view
       }
 
-      cmd.text = 'Waiting for players...'
-      cmd.disabled = true
-      cmd.info = player.leader
-        ? 'You can begin the game once at least 2 players are on each team'
-        : "Leader will start game once everyone's in"
+      view.commands = [cmd, shuffleCmd]
       return view
     }
     case 'choose': {

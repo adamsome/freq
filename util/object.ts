@@ -149,17 +149,6 @@ export const filterUndefined = (obj: Dict) =>
 export const objectKeys = <T extends Dict>(obj: T) =>
   (Object.keys(obj) as unknown) as (keyof T)[]
 
-export function toTruthMap<T, TKey extends string | number | symbol = string>(
-  arr: T[] | undefined | null,
-  keyAccessor?: (it: T) => TKey
-): Record<TKey, boolean> {
-  const keyFn = keyAccessor ?? ((it: T) => String(it) as TKey)
-  return (arr ?? []).reduce((acc, it) => {
-    acc[keyFn(it)] = true
-    return acc
-  }, {} as Record<TKey, boolean>)
-}
-
 export function toIDMap<T, TKey extends string | number | symbol = string>(
   arr: T[] | undefined | null,
   idAccessor?: (it: T) => TKey
@@ -170,4 +159,15 @@ export function toIDMap<T, TKey extends string | number | symbol = string>(
     acc[keyFn(it)] = it
     return acc
   }, {} as Record<TKey, T>)
+}
+
+export function toTruthMap<T, TKey extends string | number | symbol = string>(
+  arr: T[] | undefined | null,
+  keyAccessor?: (it: T) => TKey
+): Record<TKey, boolean> {
+  const keyFn = keyAccessor ?? ((it: T) => String(it) as TKey)
+  return (arr ?? []).reduce((acc, it) => {
+    acc[keyFn(it)] = true
+    return acc
+  }, {} as Record<TKey, boolean>)
 }

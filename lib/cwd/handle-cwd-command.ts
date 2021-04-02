@@ -9,6 +9,7 @@ import prepNewMatch from './commands/prep-new-match'
 import setCurrentPsychic from './commands/set-current-psychic'
 import setDesignatedPsychicMode from './commands/set-designated-psychic-mode'
 import setGuess from './commands/set-guess'
+import shuffleTeams from './commands/shuffle-teams'
 
 export default async function handleFreqCommand(
   game: FullCwdGameView,
@@ -19,14 +20,16 @@ export default async function handleFreqCommand(
     // Player Commands
     case 'change_player_team':
       return await changePlayerTeam(game, value)
+    case 'shuffle_teams':
+      return await shuffleTeams(game)
     case 'edit_player':
       return await editPlayer(game, value)
     case 'set_current_psychic':
       return await setCurrentPsychic(game, value)
-    case 'kick_player':
-      return await kickPlayer(game, value)
     case 'set_designated_psychic_mode':
       return await setDesignatedPsychicMode(game, value)
+    case 'kick_player':
+      return await kickPlayer(game, value)
     // Phase Commands
     case 'prep_new_match':
       return await prepNewMatch(game)
