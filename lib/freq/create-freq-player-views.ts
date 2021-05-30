@@ -38,7 +38,7 @@ export default function createFreqPlayerViews(
         canSetNextPsychic: canChangeNextPsychic(game, p, nextPsychic),
         canChangeTeam: !isInvalidPlayerTeamChange(game, p),
         points: calculateFreqPlayerPoints(game.stats?.[p.id]),
-        wins: game.stats?.[p.id].w,
+        wins: game.stats?.[p.id]?.w ?? 0,
       }
     }
   )

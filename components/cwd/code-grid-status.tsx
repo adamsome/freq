@@ -29,8 +29,7 @@ export default function CodeGridStatus({
   const turn = useConditionalDebounce(rawTurn, { debounceTime })
   const winner = useConditionalDebounce(rawWinner, { debounceTime })
 
-  if (!turn && !winner)
-    return <SkeletonBox className="w-full h-8 px-0 sm:px-4" />
+  if (!turn && !winner) return <SkeletonBox className="w-full h-8 px-0" />
 
   const team = winner ?? turn
   const color = getTeamColor(team)
