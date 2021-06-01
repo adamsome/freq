@@ -11,7 +11,7 @@ export default async function (game: CurrentFreqGameView) {
   if (!isFreePhase(game.phase))
     throw new Error('Can only begin a round from the free phases.')
 
-  if (!doesGameHaveEnoughPlayers(game))
+  if (!doesGameHaveEnoughPlayers(game, 'freq'))
     throw new Error('Must have at least 2 players per team to begin round.')
 
   const { db } = await connectToDatabase()
@@ -23,16 +23,23 @@ export default async function (game: CurrentFreqGameView) {
   const now = new Date().toISOString()
 
   // Need to pick a the next psychic and set turn to their team
-  const psychic = getNextPsychic(game) ?? game.players[0]
-  changes.psychic = psychic.id
-  changes.team_turn = psychic.team ?? 1
+  if (!game.settings?.designated_psychic) {
+    const lastPsychic = game.psychic
+    const { psychic = game.players[0], psychic_history } = getNextPsychic(game)
+    changes.psychic = psychic.id
+    changes.psychic_history = insertLimited(lastPsychic, psychic_history, 16)
+    changes.team_turn = psychic.team ?? 1
+  } else {
+    changes.team_turn = game.team_turn === 1 ? 2 : 1
+  }
 
   if (game.phase !== 'reveal') {
+    // New Match
     // Reset the psychic counts between matches
     deletes.push('psychic_counts')
     // Reset the scores based on which team is up (0); other team (1)
-    changes.score_team_1 = psychic.team === 1 ? 0 : 1
-    changes.score_team_2 = psychic.team === 1 ? 1 : 0
+    changes.score_team_1 = changes.team_turn === 1 ? 0 : 1
+    changes.score_team_2 = changes.team_turn === 1 ? 1 : 0
     changes.match_number = game.match_number + 1
     changes.match_started_at = now
   }
@@ -50,6 +57,7 @@ export default async function (game: CurrentFreqGameView) {
   changes.target = target
 
   const { pair, index } = randomFreqCluePair({
+    difficulty: game.settings?.difficulty,
     excludeIndices: game.clue_history,
   })
   changes.clues = pair
@@ -63,11 +71,5 @@ export default async function (game: CurrentFreqGameView) {
   await fromGames(db).updateOne(filter, {
     $set: changes,
     $unset: toMongoUnset(deletes),
-  })
-
-  // Increment the psychic count if we are mid-match
-  const nextCount = (game.psychic_counts?.[psychic.id] ?? 0) + 1
-  await fromGames(db).updateOne(filter, {
-    $set: { [`psychic_counts.${psychic.id}`]: nextCount },
   })
 }

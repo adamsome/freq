@@ -24,7 +24,7 @@ export default function createCwdCommandView(
   const playerIndex = game.players.findIndex((p) => p.id === player?.id) ?? 0
   const turnTeamName = getTeamName(game.team_turn)
   const otherTeamName = getTeamName(game.team_turn === 1 ? 2 : 1)
-  const enoughPlayers = doesGameHaveEnoughPlayers(game)
+  const enoughPlayers = doesGameHaveEnoughPlayers(game, 'cwd')
 
   switch (game.phase) {
     case 'prep': {

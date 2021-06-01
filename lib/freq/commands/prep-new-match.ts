@@ -3,7 +3,7 @@ import { connectToDatabase } from '../../../util/mongodb'
 import { fromGames } from '../freq-game-store'
 
 export default async function (game: CurrentFreqGameView) {
-  if (!game.currentPlayer.leader)
+  if (!game.currentPlayer.leader && !game.currentPlayer.designatedPsychic)
     throw new Error('Only leaders can start new match')
 
   const { db } = await connectToDatabase()

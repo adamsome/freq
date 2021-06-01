@@ -90,7 +90,7 @@ const PlayerOptions = ({
 
         {player && <Opt onClick={onEditPlayer}>Change name and icon</Opt>}
 
-        {player?.leader && (
+        {(player?.leader || player?.designatedPsychic) && (
           <Opt onClick={handleCommand('prep_new_match')}>Start a new match</Opt>
         )}
 

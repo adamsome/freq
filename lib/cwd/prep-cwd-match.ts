@@ -1,5 +1,5 @@
 import { CwdGame } from '../../types/cwd.types'
-import getNextPsychicsInfo from './get-next-psychics-info'
+import getNextPsychicsInfo from '../get-next-psychics-info'
 import generateCwdCodesInfo from './generate-cwd-codes'
 
 /**

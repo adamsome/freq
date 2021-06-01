@@ -7,9 +7,9 @@ export default function isInvalidPlayerTeamChange(
   game: FreqGame,
   player: PlayerView
 ): string | undefined {
-  const nextPsychic = getNextPsychic(game)
+  const { psychic } = getNextPsychic(game)
   if (
-    player.id === nextPsychic?.id &&
+    player.id === psychic?.id &&
     game.phase !== 'prep' &&
     game.phase !== 'win'
   )

@@ -93,6 +93,7 @@ export interface FreqRoundStats {
 }
 
 export function generateFreqRoundStats({
+  settings,
   guesses,
   directions,
   target_width,
@@ -120,7 +121,7 @@ export function generateFreqRoundStats({
   const roundStats = players.reduce((acc, p) => {
     const stats = createFreqPlayerStats(p.id)
 
-    if (p.id === psychic) {
+    if (p.id === psychic && !settings?.designated_psychic) {
       stats.pn++
       if (teamGuessScore === 2) stats.p2++
       if (teamGuessScore === 3) stats.p3++

@@ -4,7 +4,7 @@ import {
   CommandsView,
   Guess,
   Header,
-  Player,
+  PlayerView,
 } from '../../types/game.types'
 import { partition, range } from '../../util/array'
 import { randomHourlyItem } from '../../util/random'
@@ -22,17 +22,24 @@ import { getNeedleGuessesNeeded } from './guess-needle'
 
 export default function createFreqCommandsView(
   game: FreqGame,
-  player?: Player,
+  player?: PlayerView,
   averageGuess?: number
 ): CommandsView {
-  const header: Header = { text: '', color: player?.color }
+  const color = player?.designatedPsychic
+    ? getTeamColor(game.team_turn)
+    : player?.color
+  const header: Header = { text: '', color }
   const cmd: Command = { text: '' }
   const view: CommandsView = { headers: [header], commands: [cmd] }
+
+  if (player?.designatedPsychic) {
+    cmd.color = getTeamColor(game.team_turn)
+  }
 
   const playerIndex = game.players.findIndex((p) => p.id === player?.id) ?? 0
   const turnTeamName = getTeamName(game.team_turn)
   const otherTeamName = getTeamName(game.team_turn === 1 ? 2 : 1)
-  const enoughPlayers = doesGameHaveEnoughPlayers(game)
+  const enoughPlayers = doesGameHaveEnoughPlayers(game, 'freq')
 
   switch (game.phase) {
     case 'prep': {
@@ -47,20 +54,22 @@ export default function createFreqCommandsView(
         color: 'Gray',
       }
 
-      if (player.leader && enoughPlayers) {
+      const leader = player.leader || player.designatedPsychic
+      if (leader && enoughPlayers) {
         cmd.type = 'begin_round'
         cmd.text = "Everyone's in"
         shuffleCmd.info = 'Start game once all players have joined'
       } else {
         cmd.text = 'Waiting for players...'
         cmd.disabled = true
-        shuffleCmd.info = player.leader
+        shuffleCmd.info = leader
           ? 'You can begin the game once at least 2 players are on each team'
           : "Leader will start game once everyone's in"
       }
 
       const [teamPlayers] = partition((p) => p.team != null, game.players)
-      const playerCount = teamPlayers.length
+      let playerCount = teamPlayers.length
+      playerCount -= game.settings?.designated_psychic ? 1 : 0
       if (playerCount > 12) {
         cmd.info = shuffleCmd.info
         return view
@@ -81,12 +90,16 @@ export default function createFreqCommandsView(
         cmd.info = cmd.disabled
           ? 'Tap an card above and think of a clue'
           : 'Have you thought of a good clue?'
+        cmd.infoColor = header.color
         return view
       }
 
       const psychicLabel = `${psychic?.icon} ${psychic?.name ?? 'Noname'}`
       header.text = `${psychicLabel} is thinking...!`
-      header.color = psychic?.color ?? 'Gray'
+      header.color =
+        (!game.settings?.designated_psychic
+          ? psychic?.color
+          : getTeamColor(game.team_turn)) ?? 'Gray'
 
       if (!player) return view
 
@@ -103,9 +116,15 @@ export default function createFreqCommandsView(
       const count = `(${numSet}/${numNeeded})`
 
       if (psychic?.id === player?.id) {
-        header.text = 'Your teammates are guessing!'
+        if (player?.designatedPsychic) {
+          header.text = `${turnTeamName} team is guessing...`
+          header.color = 'Gray'
+          cmd.text = `Waiting on ${turnTeamName} team...`
+        } else {
+          header.text = 'Your teammates are guessing!'
+          cmd.text = 'Team is guessing...'
+        }
 
-        cmd.text = 'Team is guessing...'
         cmd.info = count
         cmd.disabled = true
         return view
@@ -161,7 +180,7 @@ export default function createFreqCommandsView(
 
       if (!isGuessing) {
         cmd.disabled = true
-        cmd.text = `Waiting on ${turnTeamName} team...`
+        cmd.text = `Waiting on ${otherTeamName} team...`
         cmd.disabled = true
         cmd.info = count
         return view
@@ -213,10 +232,11 @@ export default function createFreqCommandsView(
       if (!player) return view
 
       const next = game.phase === 'reveal' ? 'round' : 'match'
-      const nextPsychic = getNextPsychic(game) ?? getPsychic(game) ?? player
-      const isNextPsychic = nextPsychic.id === player.id
-      const canStart = isNextPsychic || player.leader === true
-      const nextPsychicLabel = `${nextPsychic.icon} ${nextPsychic.name}`
+      const { psychic = getPsychic(game) ?? player } = getNextPsychic(game)
+      const isNextPsychic = psychic.id === player.id
+      const canStart =
+        isNextPsychic || player.leader === true || player.designatedPsychic
+      const nextPsychicLabel = `${psychic.icon} ${psychic.name}`
       const nextPsychicText = isNextPsychic
         ? 'You are'
         : `${nextPsychicLabel} is`
@@ -228,7 +248,12 @@ export default function createFreqCommandsView(
         canStart && !enoughPlayers
           ? `You can start next ${next} once at least 2 players are on each team`
           : `${nextPsychicText} the Psychic next ${next}!`
-      cmd.infoColor = nextPsychic.color ?? 'Gray'
+      cmd.infoColor =
+        (!game.settings?.designated_psychic ? psychic.color : 'Gray') ?? 'Gray'
+
+      if (player.designatedPsychic && !game.repeat_turn) {
+        cmd.color = getTeamColor(game.team_turn === 1 ? 2 : 1)
+      }
       return view
     }
     default:

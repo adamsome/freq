@@ -104,9 +104,10 @@ export async function leaveFreqGame(
   }
   // If next psychic, change to the next psychic who is not the user
   if (game.next_psychic === userID) {
-    const nextPsychic = getNextPsychic(game, userID) ?? head(game.players)
-    if (nextPsychic) {
-      const update = { next_psychic: nextPsychic.id }
+    const info = getNextPsychic(game, userID)
+    const { psychic = head(game.players), psychic_history } = info
+    if (psychic) {
+      const update = { next_psychic: psychic.id, psychic_history }
       await games.updateOne(filter, { $set: update })
     }
   }

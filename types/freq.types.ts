@@ -62,10 +62,23 @@ export const FREQ_PHASES: readonly CommonPhase[] = [
 
 export type FreqPhase = typeof FREQ_PHASES[number]
 
+export const freqClueDifficulties = ['easy', 'hard']
+export type FreqClueDifficulty = typeof freqClueDifficulties[number]
+export type FreqClueDifficultyOrAll = FreqClueDifficulty | 'all'
+
+export interface FreqSettings {
+  designated_psychic?: boolean
+  difficulty?: FreqClueDifficulty
+}
+
 export interface FreqGame extends CommonGame {
+  settings?: FreqSettings
+  /* Current turn team's psychic */
   psychic: string
   next_psychic?: string
   psychic_counts?: Dict<number>
+  /* List of the most recent psychics */
+  psychic_history: string[]
   clues: FreqClue[]
   clue_selected?: number
   clue_history?: number[]

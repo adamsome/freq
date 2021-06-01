@@ -100,6 +100,7 @@ export type CommandType =
   | 'set_next_psychic'
   | 'set_current_psychic'
   | 'set_designated_psychic_mode'
+  | 'set_difficulty'
   | 'kick_player'
   | 'shuffle_teams'
   // Phases

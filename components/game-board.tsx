@@ -6,6 +6,7 @@ import CommandPanel from './command-panel'
 import CodesContainer from './cwd/codes-container'
 import CwdSettings from './cwd/cwd-settings'
 import CluesContainer from './freq/clues-container'
+import FreqSettings from './freq/freq-settings'
 import GameJoinButtons from './game-join-buttons'
 import GameLink from './game-link'
 import HeaderMessage from './header-message'
@@ -40,6 +41,7 @@ export default function GameBoard({ type }: Props) {
             {game.currentPlayer && (
               <>
                 <PlayerHero />
+                {type === 'freq' && <FreqSettings />}
                 {type === 'cwd' && <CwdSettings />}
               </>
             )}

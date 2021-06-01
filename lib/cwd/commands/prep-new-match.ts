@@ -4,7 +4,7 @@ import { fromCwdGames } from '../cwd-game-store'
 import { createPrepCwdMatchChanges } from '../prep-cwd-match'
 
 export default async function prepNewMatch(game: FullCwdGameView) {
-  if (!game.currentPlayer.leader)
+  if (!game.currentPlayer.leader && !game.currentPlayer.designatedPsychic)
     throw new Error('Only leaders can start new match')
 
   const { db } = await connectToDatabase()

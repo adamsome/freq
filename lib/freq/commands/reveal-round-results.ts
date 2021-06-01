@@ -50,6 +50,11 @@ export default async function (game: CurrentFreqGameView) {
   // Increment room stats with round stats for each player
   const { room, total } = playerIDs.reduce(
     (acc, id) => {
+      if (id === game.psychic && game.settings?.designated_psychic === true) {
+        // Only update stats if player is not designated psychic
+        return acc
+      }
+
       const roundPlayerStats = roundStats[id]
 
       const player = game.players.find((p) => p.id === id)

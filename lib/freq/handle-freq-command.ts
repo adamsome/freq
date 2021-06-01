@@ -12,6 +12,8 @@ import revealMatchResults from './commands/reveal-match-results'
 import revealRoundResults from './commands/reveal-round-results'
 import selectClue from './commands/select-clue'
 import setCurrentPsychic from './commands/set-current-psychic'
+import setDesignatedPsychicMode from './commands/set-designated-psychic-mode'
+import setDifficulty from './commands/set-difficulty'
 import setDirection from './commands/set-direction'
 import setGuess from './commands/set-guess'
 import setNextPsychic from './commands/set-next-psychic'
@@ -37,6 +39,10 @@ export default async function handleFreqCommand(
       return await setNextPsychic(game, value)
     case 'set_current_psychic':
       return await setCurrentPsychic(game, value)
+    case 'set_designated_psychic_mode':
+      return await setDesignatedPsychicMode(game, value)
+    case 'set_difficulty':
+      return await setDifficulty(game, value)
     case 'kick_player':
       return await kickPlayer(game, value)
     // Phase Commands

@@ -17,8 +17,8 @@ export default async function (game: CurrentFreqGameView, player: unknown) {
   if (
     allow === 'same_team' &&
     (game.repeat_turn
-      ? player.team === getNextPsychic(game)?.team
-      : player.team !== getNextPsychic(game)?.team)
+      ? player.team === getNextPsychic(game)?.psychic?.team
+      : player.team !== getNextPsychic(game)?.psychic?.team)
   )
     throw new Error('Can only change psychic within same team during game')
 

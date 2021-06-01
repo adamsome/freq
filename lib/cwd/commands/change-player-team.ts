@@ -3,7 +3,7 @@ import { connectToDatabase } from '../../../util/mongodb'
 import { assignColor } from '../../color-dict'
 import { isPlayer } from '../../player'
 import { fromCwdGames } from '../cwd-game-store'
-import getNextPsychicsInfo from '../get-next-psychics-info'
+import getNextPsychicsInfo from '../../get-next-psychics-info'
 
 export default async function changePlayerTeam(
   game: FullCwdGameView,

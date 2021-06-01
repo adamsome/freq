@@ -10,10 +10,13 @@ export default async function (game: CurrentFreqGameView, player: unknown) {
     throw new TypeError(msg)
   }
 
-  if (game.phase !== 'choose')
+  const isPrepAndDesignated =
+    game.settings?.designated_psychic && game.phase === 'prep'
+
+  if (game.phase !== 'choose' && !isPrepAndDesignated)
     throw new Error('Can only change the psychic in the choose phase.')
 
-  if (player.team !== getPsychic(game)?.team)
+  if (player.team !== getPsychic(game)?.team && !isPrepAndDesignated)
     throw new Error('Can only change psychic within same team during game')
 
   const { db } = await connectToDatabase()

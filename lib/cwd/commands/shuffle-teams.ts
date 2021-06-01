@@ -6,7 +6,7 @@ import { partition, range } from '../../../util/array'
 import { assignColor } from '../../color-dict'
 import { Dict } from '../../../types/object.types'
 import { PlayerView } from '../../../types/game.types'
-import getNextPsychicsInfo from '../get-next-psychics-info'
+import getNextPsychicsInfo from '../../get-next-psychics-info'
 import { countBinaryOnes } from '../../../util/number'
 import { shuffle } from '../../../util/random'
 

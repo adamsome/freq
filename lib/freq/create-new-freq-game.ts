@@ -19,6 +19,7 @@ export default function createNewFreqGame(
     players: [player],
     psychic: user.id,
     next_psychic: user.id,
+    psychic_history: [],
     clues: [],
     guesses: {},
     directions: {},

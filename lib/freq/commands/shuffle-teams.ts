@@ -80,10 +80,12 @@ export default async function shuffleTeams(game: CurrentFreqGameView) {
     }
   )
 
-  const nextTurn: 1 | 2 = Math.random() < 0.5 ? 1 : 2
-  const nextGame = { ...game, players: nextPlayers, team_turn: nextTurn }
-  const psychic = getNextPsychic(nextGame)
-  if (psychic) changes.psychic = psychic.id
+  if (!game.settings?.designated_psychic) {
+    const nextTurn: 1 | 2 = Math.random() < 0.5 ? 1 : 2
+    const nextGame = { ...game, players: nextPlayers, team_turn: nextTurn }
+    const { psychic } = getNextPsychic(nextGame)
+    if (psychic) changes.psychic = psychic.id
+  }
 
   await fromGames(db).updateOne(filter, {
     $set: changes,

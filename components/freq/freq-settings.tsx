@@ -1,7 +1,11 @@
 import produce from 'immer'
 import React, { useState } from 'react'
-import { useCwdGame } from '../../hooks/use-game'
-import { CwdGameView } from '../../types/cwd.types'
+import { useFreqGame } from '../../hooks/use-game'
+import {
+  freqClueDifficulties,
+  FreqClueDifficultyOrAll,
+  FreqGameView,
+} from '../../types/freq.types'
 import { CommandType } from '../../types/game.types'
 import { cx } from '../../util/dom'
 import { postCommand } from '../../util/fetch-json'
@@ -17,8 +21,8 @@ type Props = typeof defaultProps
 
 const defaultProps = {}
 
-export default function CwdSettings(_: Props) {
-  const { game, mutate } = useCwdGame()
+export default function FreqSettings(_: Props) {
+  const { game, mutate } = useFreqGame()
   const [open, setOpen] = useState(false)
   const [fetching, setFetching] = useState(false)
 
@@ -26,6 +30,9 @@ export default function CwdSettings(_: Props) {
 
   const disabled = fetching || game?.fetching
   const designatedPsychic = game.settings?.designated_psychic === true
+  const difficulty: FreqClueDifficultyOrAll = game.settings?.difficulty ?? 'all'
+  let difficultyIndex = freqClueDifficulties.indexOf(difficulty)
+  if (difficultyIndex === -1) difficultyIndex = freqClueDifficulties.length
 
   const handleCommand = async (cmd: CommandType, value?: unknown) => {
     if (!game || fetching || game.fetching) return
@@ -34,7 +41,7 @@ export default function CwdSettings(_: Props) {
     try {
       await postCommand(game.type, game.room, cmd, value)
       mutate(
-        produce((game?: CwdGameView) => {
+        produce((game?: FreqGameView) => {
           if (game) game.fetching = true
         })
       )
@@ -81,6 +88,21 @@ export default function CwdSettings(_: Props) {
             />
           </Setting>
 
+          <Setting label="Difficulty">
+            <ButtonGroup
+              buttons={['Easy', 'Hard', 'All']}
+              selected={difficultyIndex}
+              disabled={disabled}
+              width={16}
+              onClick={(_, i) =>
+                handleCommand(
+                  'set_difficulty',
+                  freqClueDifficulties[i] ?? 'all'
+                )
+              }
+            />
+          </Setting>
+
           <PlayerOptionButton
             close
             disabled={disabled}
@@ -98,4 +120,4 @@ export default function CwdSettings(_: Props) {
   )
 }
 
-CwdSettings.defaultProps = defaultProps
+FreqSettings.defaultProps = defaultProps

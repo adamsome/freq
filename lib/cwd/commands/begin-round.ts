@@ -5,7 +5,7 @@ import { doesGameHaveEnoughPlayers } from '../../game'
 import { fromCwdGames } from '../cwd-game-store'
 
 export default async function beginRound(game: FullCwdGameView, auto = false) {
-  if (!doesGameHaveEnoughPlayers(game))
+  if (!doesGameHaveEnoughPlayers(game, 'cwd'))
     throw new Error('Must have at least 2 players per team to begin round.')
 
   const { db } = await connectToDatabase()

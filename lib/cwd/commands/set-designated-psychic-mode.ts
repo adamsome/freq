@@ -3,7 +3,7 @@ import { Dict } from '../../../types/object.types'
 import { connectToDatabase } from '../../../util/mongodb'
 import { getPlayersPerTeam } from '../../player'
 import { fromCwdGames } from '../cwd-game-store'
-import getNextPsychicsInfo from '../get-next-psychics-info'
+import getNextPsychicsInfo from '../../get-next-psychics-info'
 
 export default async function setDesignatedPsychicMode(
   game: FullCwdGameView,
