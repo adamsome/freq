@@ -1,4 +1,3 @@
-import React from 'react'
 import { GameType } from '../types/game.types'
 import GamePicker from './game-picker'
 import RoomFormContainer from './room-form-container'

@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react'
+import type { Key } from 'react'
+import { useEffect } from 'react'
 import usePrevious from '../../hooks/use-previous'
 import useTerminalAnimation, {
   TerminalLine,
@@ -113,7 +114,7 @@ export default function CodeGuessStatus({ guess, turn }: Props) {
     setLines(lines)
   }, [prevGuess, guess])
 
-  const toWord = (key: React.Key, word: Word) => (
+  const toWord = (key: Key, word: Word) => (
     <span
       key={key}
       className={word.className ?? ''}

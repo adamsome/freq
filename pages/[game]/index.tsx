@@ -1,4 +1,3 @@
-import React from 'react'
 import HomeContainer from '../../components/home-container'
 
 type Props = typeof defaultProps

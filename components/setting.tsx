@@ -1,8 +1,8 @@
-import React from 'react'
+import type { ReactNode } from 'react'
 import { cx } from '../util/dom'
 
 type Props = typeof defaultProps & {
-  children: React.ReactNode
+  children: ReactNode
   label: string
   onLabelClick?: () => void
 }

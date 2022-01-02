@@ -1,5 +1,5 @@
 import produce from 'immer'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useFreqGame } from '../../hooks/use-game'
 import {
   freqClueDifficulties,

@@ -1,4 +1,3 @@
-import React from 'react'
 import { getGameTitle } from '../lib/game'
 import { CommonGameView, GameType } from '../types/game.types'
 import HomeGames from './home-games'

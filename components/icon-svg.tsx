@@ -1,4 +1,3 @@
-import React from 'react'
 import { cx } from '../util/dom'
 
 export type IconSvgName = 'dropdown' | 'caret-down' | 'spinner'

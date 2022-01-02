@@ -1,4 +1,4 @@
-import React from 'react'
+import type { ReactNode } from 'react'
 import { GameType } from '../types/game.types'
 import { cx } from '../util/dom'
 import Layout from './layout'
@@ -6,7 +6,7 @@ import RepoLink from './repo-link'
 import Title from './title'
 
 type Props = typeof defaultProps & {
-  children: React.ReactNode
+  children: ReactNode
   type?: GameType
   message?: string
   invisible?: boolean

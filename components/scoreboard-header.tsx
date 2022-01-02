@@ -1,4 +1,3 @@
-import React from 'react'
 import { getTeamName } from '../lib/game'
 import { getTeamIcon } from '../lib/icon'
 import { cx } from '../util/dom'

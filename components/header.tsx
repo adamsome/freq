@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { GameType } from '../types/game.types'
 import { cx } from '../util/dom'
 import DebugBar from './debug-bar'

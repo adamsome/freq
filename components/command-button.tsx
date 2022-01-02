@@ -1,4 +1,4 @@
-import React from 'react'
+import type { MouseEvent } from 'react'
 import { Command, Player } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleColor } from '../util/dom-style'
@@ -8,7 +8,7 @@ import IconSvg from './icon-svg'
 type Props = typeof defaultProps & {
   command: Command
   currentPlayer?: Player
-  onClick: (e: React.MouseEvent, cmd: Command, i?: number) => Promise<void>
+  onClick: (e: MouseEvent, cmd: Command, i?: number) => Promise<void>
 }
 
 const defaultProps = {

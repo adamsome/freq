@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import ActionModal from './action-modal'
 import PlayerButton from './player-button'
 import PlayerEdit from './player-edit'

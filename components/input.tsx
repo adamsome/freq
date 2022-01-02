@@ -1,4 +1,8 @@
-import React from 'react'
+import type {
+  ChangeEventHandler,
+  FocusEventHandler,
+  InputHTMLAttributes,
+} from 'react'
 import { cx } from '../util/dom'
 
 const InputHTMLType = [
@@ -29,7 +33,7 @@ export type InputHTMLType = typeof InputHTMLType[number]
 
 type BaseProps = typeof defaultProps & {
   htmlType?: string
-  onChange?: React.ChangeEventHandler<HTMLInputElement>
+  onChange?: ChangeEventHandler<HTMLInputElement>
 }
 
 const defaultProps = {
@@ -39,9 +43,9 @@ const defaultProps = {
 
 type Props = {
   htmlType?: InputHTMLType
-  onChange?: React.ChangeEventHandler<HTMLInputElement>
+  onChange?: ChangeEventHandler<HTMLInputElement>
 } & BaseProps &
-  Omit<React.InputHTMLAttributes<any>, 'type' | 'onChange'>
+  Omit<InputHTMLAttributes<any>, 'type' | 'onChange'>
 
 export default function Input({
   className,
@@ -49,11 +53,11 @@ export default function Input({
   htmlType = 'text' as Props['htmlType'],
   ...props
 }: Props) {
-  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     props.onChange?.(e)
   }
 
-  const handleFocus: React.FocusEventHandler<HTMLInputElement> = (e) => {
+  const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
     if (selectOnFocus) {
       e.currentTarget.select()
     }

@@ -1,4 +1,3 @@
-import React from 'react'
 import { GameType, Player } from '../types/game.types'
 import { cx } from '../util/dom'
 

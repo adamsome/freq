@@ -1,5 +1,6 @@
 import produce from 'immer'
-import React, { useRef, useState } from 'react'
+import type { MouseEvent } from 'react'
+import { useRef, useState } from 'react'
 import useGame from '../hooks/use-game'
 import useLayoutEffect from '../hooks/use-passive-layout-effect'
 import iconSet from '../lib/icon'
@@ -30,7 +31,7 @@ const PlayerEdit = ({ onClose }: Props) => {
   const [icon, setIcon] = useState(player.icon ?? '')
   const [name, setName] = useState(player.name ?? '')
 
-  const handleSave = async (e: React.MouseEvent) => {
+  const handleSave = async (e: MouseEvent) => {
     e.preventDefault()
     if (name.length < 2 || fetching || player?.fetching) return
 

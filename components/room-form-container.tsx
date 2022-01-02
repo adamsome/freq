@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import type { FormEvent } from 'react'
+import { useEffect, useState } from 'react'
 import { useDebounce } from '../hooks/use-debounce'
 import { ROUTE_GAME_ROOM } from '../lib/consts'
 import { isRoomValid } from '../lib/room'
@@ -38,7 +39,7 @@ export default function RoomFormContainer({
     }
   }, [debouncedFetching])
 
-  const handleStart = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleStart = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (fetching || !type) return
     setFetching(true)

@@ -1,7 +1,7 @@
-import React from 'react'
+import type { ReactNode } from 'react'
 
 type Props = typeof defaultProps & {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const defaultProps = {}

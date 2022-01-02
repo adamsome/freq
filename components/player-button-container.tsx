@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { mutate } from 'swr'
 import {
   API_GAME_LEAVE,

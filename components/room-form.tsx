@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import type { FormEvent } from 'react'
+import { useState } from 'react'
 import { GameType } from '../types/game.types'
 import { cx } from '../util/dom'
 import { styleLinearGradient } from '../util/dom-style'
@@ -12,7 +13,7 @@ type Props = typeof defaultProps & {
   error?: string | null
   fetching?: boolean
   animate?: boolean
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void
 }
 
 const defaultProps = {
@@ -30,7 +31,7 @@ export default function RoomForm({
 }: Props) {
   const [room, setRoom] = useState<string | null>(null)
 
-  const handleRoomChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleRoomChange = (e: FormEvent<HTMLInputElement>) => {
     const val = e.currentTarget.value.toLowerCase()
     const re = /^[-a-zA-Z0-9\b]+$/
     if (val === '' || re.test(val)) {

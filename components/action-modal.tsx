@@ -1,4 +1,3 @@
-import React from 'react'
 import Modal, { ModalProps } from 'react-responsive-modal'
 
 type Props = typeof defaultProps & ModalProps

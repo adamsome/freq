@@ -1,4 +1,4 @@
-import React from 'react'
+import type { MouseEvent } from 'react'
 import useGame from '../hooks/use-game'
 import { User } from '../types/user.types'
 import { cx } from '../util/dom'
@@ -9,7 +9,7 @@ import IconSvg from './icon-svg'
 type Props = typeof defaultProps & {
   user?: User
   hero?: boolean
-  onClick: (e: React.MouseEvent) => void
+  onClick: (e: MouseEvent) => void
 }
 
 const defaultProps = {}

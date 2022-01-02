@@ -1,5 +1,6 @@
 import produce from 'immer'
-import React, { useState } from 'react'
+import type { MouseEvent } from 'react'
+import { useState } from 'react'
 import useGame from '../hooks/use-game'
 import { getTeamName } from '../lib/game'
 import { CommandType, CommonGameView, PlayerView } from '../types/game.types'
@@ -25,7 +26,7 @@ const PlayerCard = ({ player, onClose }: Props) => {
   const teamName = getTeamName(player.team)
   const opposingTeamName = getTeamName(player.team === 1 ? 2 : 1)
 
-  const handleCommand = (cmd: CommandType) => async (e: React.MouseEvent) => {
+  const handleCommand = (cmd: CommandType) => async (e: MouseEvent) => {
     e.preventDefault()
     if (fetching || player.fetching) return
 

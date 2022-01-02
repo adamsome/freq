@@ -1,5 +1,5 @@
 /*! ant-design v4.12.3 | MIT License | https://github.com/ant-design/ant-design/blob/master/components/button/button.tsx */
-import React from 'react'
+import type { ReactNode } from 'react'
 import { cx } from '../util/dom'
 import { omit } from '../util/object'
 
@@ -7,7 +7,7 @@ const ButtonHTMLTypes = ['submit', 'button', 'reset'] as const
 export type ButtonHTMLType = typeof ButtonHTMLTypes[number]
 
 type BaseProps = typeof defaultProps & {
-  children: React.ReactNode
+  children: ReactNode
   gray?: boolean
   red?: boolean
 }

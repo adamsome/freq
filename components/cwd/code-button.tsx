@@ -1,4 +1,3 @@
-import React from 'react'
 import useConditionalDebounce from '../../hooks/use-conditional-debounce'
 import { useTheme } from '../../hooks/use-theme'
 import { getTeamColor } from '../../lib/color-dict'

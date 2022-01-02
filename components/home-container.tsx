@@ -1,6 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import {
   API_ROOM_CODE,

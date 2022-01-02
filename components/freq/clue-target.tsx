@@ -1,4 +1,3 @@
-import React from 'react'
 import { reverse, tail } from '../../util/array'
 import { cx } from '../../util/dom'
 

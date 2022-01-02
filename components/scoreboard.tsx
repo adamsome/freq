@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { CwdSettings } from '../types/cwd.types'
 import { GameType, PlayerView, ScoreType } from '../types/game.types'
 import { cx } from '../util/dom'

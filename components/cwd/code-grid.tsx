@@ -1,4 +1,3 @@
-import React from 'react'
 import { CwdCodeView, CwdGameView } from '../../types/cwd.types'
 import { range } from '../../util/array'
 import CodeButton from './code-button'

@@ -1,11 +1,11 @@
-import React from 'react'
+import type { ReactNode } from 'react'
 import useGame from '../hooks/use-game'
 import { isRoomValid } from '../lib/room'
 import { GameType } from '../types/game.types'
 import TitleMessage from './title-message'
 
 type Props = typeof defaultProps & {
-  children: React.ReactNode
+  children: ReactNode
   type?: GameType
   room?: string
 }

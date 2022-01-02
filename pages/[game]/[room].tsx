@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import React from 'react'
 import GameBoard from '../../components/game-board'
 import GameGuard from '../../components/game-guard'
 import { GameType } from '../../types/game.types'

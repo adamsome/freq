@@ -1,4 +1,3 @@
-import React from 'react'
 import { getPlayersPerTeam } from '../lib/player'
 import { GameType, PlayerView, ScoreType } from '../types/game.types'
 import { range } from '../util/array'

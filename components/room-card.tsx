@@ -1,5 +1,5 @@
 import { formatDistanceWithOptions, formatISO9075, parseISO } from 'date-fns/fp'
-import React from 'react'
+import type { MouseEvent as ReactMouseEvent } from 'react'
 import { getGameTitle } from '../lib/game'
 import { CommonGameView } from '../types/game.types'
 import { cx } from '../util/dom'
@@ -18,7 +18,7 @@ const defaultProps = {
 const formatDate = formatDistanceWithOptions({ addSuffix: true })
 
 export default function RoomCard({ game, className, onClick }: Props) {
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleClick = (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     onClick?.(game)
   }

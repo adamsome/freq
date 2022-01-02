@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useFetchUser } from '../hooks/use-fetch-user'
 import { useTheme } from '../hooks/use-theme'
 import { API_LOGIN } from '../lib/consts'

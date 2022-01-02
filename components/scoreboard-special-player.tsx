@@ -1,4 +1,3 @@
-import React from 'react'
 import { PlayerView } from '../types/game.types'
 import { cx } from '../util/dom'
 import ScoreboardIcon from './scoreboard-icon'

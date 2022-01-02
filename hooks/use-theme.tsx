@@ -1,12 +1,14 @@
+import type { FC } from 'react'
 /*! pacocoursey/next-themes v0.0.12 | MIT License | https://github.com/pacocoursey/next-themes/blob/master/index.tsx */
-import React, {
+import {
   createContext,
+  memo,
   useCallback,
   useContext,
   useEffect,
   useState,
-  memo,
 } from 'react'
+
 import NextHead from 'next/head'
 
 interface UseThemeProps {
@@ -40,7 +42,7 @@ export interface ThemeProviderProps {
   value?: ValueObject
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({
+export const ThemeProvider: FC<ThemeProviderProps> = ({
   forcedTheme,
   disableTransitionOnChange = false,
   enableSystem = true,

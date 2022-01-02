@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import React from 'react'
 import useGame from '../hooks/use-game'
 import { ROUTE_GAME_HOME, ROUTE_HOME } from '../lib/consts'
 import { getGameTitle } from '../lib/game'

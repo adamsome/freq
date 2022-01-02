@@ -1,4 +1,3 @@
-import React from 'react'
 import { useFreqGame } from '../../hooks/use-game'
 import { FreqClue } from '../../types/freq.types'
 import { postCommand } from '../../util/fetch-json'

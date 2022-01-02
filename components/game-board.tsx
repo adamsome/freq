@@ -1,4 +1,3 @@
-import React from 'react'
 import useGame from '../hooks/use-game'
 import { getGameTitle } from '../lib/game'
 import { GameType } from '../types/game.types'

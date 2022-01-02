@@ -1,5 +1,5 @@
 import produce from 'immer'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useCwdGame } from '../../hooks/use-game'
 import { CwdGameView } from '../../types/cwd.types'
 import { CommandType } from '../../types/game.types'

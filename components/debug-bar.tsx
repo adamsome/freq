@@ -1,4 +1,4 @@
-import React from 'react'
+import type { MouseEvent } from 'react'
 import useGame from '../hooks/use-game'
 import { API_GAME_PHASE } from '../lib/consts'
 import { nextCwdPhase, nextFreqPhase } from '../lib/phase'
@@ -11,7 +11,7 @@ const DebugBar = () => {
   const { game } = useGame()
   if (!game) return null
 
-  const handlePhaseNext = (offset: number) => async (e: React.MouseEvent) => {
+  const handlePhaseNext = (offset: number) => async (e: MouseEvent) => {
     e.preventDefault()
     if (!game) return
 

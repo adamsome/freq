@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import type { ReactNode } from 'react'
+import { useEffect } from 'react'
 import {
   KEY_ROOM,
   KEY_ROOM_REDIRECT,
@@ -10,7 +11,7 @@ import { isRoomValid } from '../lib/room'
 import { isBrowser } from '../util/dom'
 
 type Props = typeof defaultProps & {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const defaultProps = {}

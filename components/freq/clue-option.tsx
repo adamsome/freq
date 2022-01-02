@@ -1,9 +1,9 @@
-import React from 'react'
+import type { ReactNode } from 'react'
 import useGame from '../../hooks/use-game'
 import { cx } from '../../util/dom'
 
 type Props = typeof defaultProps & {
-  children: React.ReactNode
+  children: ReactNode
   hasSlider: boolean
   selectable: boolean
   selecting: boolean

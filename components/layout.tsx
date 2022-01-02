@@ -1,12 +1,12 @@
 import Head from 'next/head'
-import React from 'react'
+import type { ReactNode } from 'react'
 import { GameType } from '../types/game.types'
 import { __DEV__ } from '../util/assertion'
 import { cx } from '../util/dom'
 import Header from './header'
 
 type Props = typeof defaultProps & {
-  children: React.ReactNode
+  children: ReactNode
   type?: GameType
   title?: string
   room?: string

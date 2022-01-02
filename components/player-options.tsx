@@ -1,5 +1,6 @@
 import produce from 'immer'
-import React, { useState } from 'react'
+import type { MouseEvent } from 'react'
+import { useState } from 'react'
 import useGame from '../hooks/use-game'
 import { KEY_DEBUG_MODE } from '../lib/consts'
 import { CommandType, CommonGameView } from '../types/game.types'
@@ -49,7 +50,7 @@ const PlayerOptions = ({
     ? () => onLeave && onLeave(game.room)
     : () => onLogout && onLogout()
 
-  const handleCommand = (cmd: CommandType) => async (e: React.MouseEvent) => {
+  const handleCommand = (cmd: CommandType) => async (e: MouseEvent) => {
     e.preventDefault()
     if (!game || !player || fetching || player.fetching) return
 

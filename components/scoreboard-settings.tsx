@@ -1,4 +1,3 @@
-import React from 'react'
 import { ScoreType } from '../types/game.types'
 import Button from './button'
 

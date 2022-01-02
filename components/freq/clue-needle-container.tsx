@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react'
+import type { ReactNode } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDrag1D } from '../../hooks/use-drag-1d'
 import { useFreqGame } from '../../hooks/use-game'
 import { useThrottle } from '../../hooks/use-throttle'
@@ -7,7 +8,7 @@ import Needle from './needle'
 import NeedleAverage from './needle-average'
 
 type Props = typeof defaultProps & {
-  children: React.ReactNode
+  children: ReactNode
   onGuessChange: (guess: number) => void
 }
 

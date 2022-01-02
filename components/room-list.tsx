@@ -1,4 +1,3 @@
-import React from 'react'
 import { CommonGameView } from '../types/game.types'
 import { range } from '../util/array'
 import { cx } from '../util/dom'
