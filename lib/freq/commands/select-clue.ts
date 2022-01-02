@@ -2,7 +2,10 @@ import { CurrentFreqGameView } from '../../types/freq.types'
 import { connectToDatabase } from '../../util/mongodb'
 import { fromGames } from '../freq-game-store'
 
-export default async function (game: CurrentFreqGameView, clueIndex: unknown) {
+export default async function selectClue(
+  game: CurrentFreqGameView,
+  clueIndex: unknown
+) {
   if (game.psychic !== game.currentPlayer.id)
     throw new Error('Only psychic can select clue.')
 

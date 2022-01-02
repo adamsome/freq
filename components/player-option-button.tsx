@@ -5,7 +5,7 @@ import { styleColor } from '../lib/util/dom-style'
 import Button from './button'
 
 type Props = typeof defaultProps &
-  ButtonHTMLAttributes<any> & {
+  ButtonHTMLAttributes<unknown> & {
     player?: Player | null
   }
 

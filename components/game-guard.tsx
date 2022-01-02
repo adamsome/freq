@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { isRoomValid } from '../lib/room'
 import { GameType } from '../lib/types/game.types'
+import { isObject } from '../lib/util/object'
 import useGame from '../lib/util/use-game'
 import TitleMessage from './title-message'
 
@@ -16,9 +17,16 @@ export default function GameGuard({ children, type, room }: Props) {
   const { error } = useGame()
 
   if (error) {
-    const msg = error
-      ? error?.data?.message ?? error?.message ?? String(error)
-      : ''
+    let msg = ''
+    if (isObject(error)) {
+      if (isObject(error.data)) {
+        msg = error.data.message as string
+      }
+      if (!msg) {
+        msg = (error.message as string) ?? String(error)
+      }
+    }
+    if (!msg) msg = 'Unknown Error'
 
     return (
       <TitleMessage type={type} error>

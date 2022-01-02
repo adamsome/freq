@@ -10,7 +10,9 @@ type PartialGame = CommonGame & {
   psychic_1?: string
 }
 
-export function getGameTitle(type: GameType | string | undefined) {
+export function getGameTitle(
+  type: GameType | string | undefined
+): 'Cwd' | 'Freq' | undefined {
   switch (type?.toLowerCase()) {
     case 'cwd':
       return 'Cwd'
@@ -19,7 +21,10 @@ export function getGameTitle(type: GameType | string | undefined) {
   }
 }
 
-export function doesGameHaveEnoughPlayers(game: PartialGame, type: GameType) {
+export function doesGameHaveEnoughPlayers(
+  game: PartialGame,
+  type: GameType
+): boolean {
   if (game.settings?.designated_psychic)
     return game.psychic_1 != null || game.psychic != null
 

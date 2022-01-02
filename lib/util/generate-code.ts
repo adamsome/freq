@@ -5,7 +5,7 @@ import wordList from './word-list'
 export default function generateWords(entropy = 4): string[] {
   const bytes = crypto.randomBytes(entropy * 2)
   const words = []
-  for (const [i, byte] of bytes.entries() as any) {
+  for (const [i, byte] of bytes.entries() as unknown as [number, number][]) {
     const nextByte = bytes[i + 1]
     if (i % 2 === 0) {
       // Word list has 2^11 words, so the byte (256 possible values)

@@ -12,7 +12,7 @@ import useLatest from './use-latest'
 const perf = typeof performance !== 'undefined' ? performance : Date
 const now = () => perf.now()
 
-export function useThrottleCallback<CallbackArguments extends any[]>(
+export function useThrottleCallback<CallbackArguments extends unknown[]>(
   callback: (...args: CallbackArguments) => void,
   fps = 30,
   leading = false
@@ -23,7 +23,6 @@ export function useThrottleCallback<CallbackArguments extends any[]>(
   const trailingTimeout = useRef<ReturnType<typeof setTimeout>>()
   const clearTrailing = () =>
     trailingTimeout.current && clearTimeout(trailingTimeout.current)
-  const deps = [fps, leading, storedCallback]
 
   // Reset any time the deps change
   useEffect(
@@ -31,33 +30,36 @@ export function useThrottleCallback<CallbackArguments extends any[]>(
       prev.current = 0
       clearTrailing()
     },
-    deps
+    [fps, leading, storedCallback]
   )
 
-  return useCallback(function () {
-    // eslint-disable-next-line prefer-rest-params
-    const args = arguments
-    const rightNow = now()
-    const call = () => {
-      prev.current = rightNow
+  return useCallback(
+    function () {
+      // eslint-disable-next-line prefer-rest-params
+      const args = arguments
+      const rightNow = now()
+      const call = () => {
+        prev.current = rightNow
+        clearTrailing()
+        storedCallback.current.apply(null, args as unknown)
+      }
+      const current = prev.current
+      // leading
+      if (leading && current === 0) return call()
+      // body
+      if (rightNow - current > ms) {
+        if (current > 0) return call()
+        prev.current = rightNow
+      }
+      // trailing
       clearTrailing()
-      storedCallback.current.apply(null, args as any)
-    }
-    const current = prev.current
-    // leading
-    if (leading && current === 0) return call()
-    // body
-    if (rightNow - current > ms) {
-      if (current > 0) return call()
-      prev.current = rightNow
-    }
-    // trailing
-    clearTrailing()
-    trailingTimeout.current = setTimeout(() => {
-      call()
-      prev.current = 0
-    }, ms)
-  }, deps)
+      trailingTimeout.current = setTimeout(() => {
+        call()
+        prev.current = 0
+      }, ms)
+    },
+    [leading, storedCallback, ms]
+  )
 }
 
 export function useThrottle<State>(

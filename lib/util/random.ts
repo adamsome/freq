@@ -11,7 +11,11 @@ export function randomHourlyItem<T>(
   return items[(index + cycle) % items.length]
 }
 
-export function randomHourlyProp<T>(obj: T, index = 0, changePerHour = 1) {
+export function randomHourlyProp<T>(
+  obj: T,
+  index = 0,
+  changePerHour = 1
+): T[keyof T] {
   const keys = objectKeys(obj)
   const key = randomHourlyItem(keys, index, changePerHour)
   return obj[key]
@@ -33,7 +37,7 @@ export function randomProp<T>(obj: T): T[keyof T] {
  *
  * @see https://stackoverflow.com/questions/49555273/how-to-shuffle-an-array-of-objects-in-javascript/
  */
-export const shuffle = <T>(array: T[]) => {
+export const shuffle = <T>(array: T[]): T[] => {
   let i = array.length
   while (i--) {
     const ri = Math.floor(Math.random() * (i + 1))

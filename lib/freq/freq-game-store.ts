@@ -159,7 +159,7 @@ export async function fetchCurrentFreqGameView(
 export async function updateFreqGamePath(
   room: string,
   path: string,
-  value: any
+  value: unknown
 ) {
   const { db } = await connectToDatabase()
   const games = fromGames(db)

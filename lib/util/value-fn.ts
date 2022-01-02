@@ -29,7 +29,11 @@ export function resolveValueAccessor<T, TDatum>(
   d: TDatum,
   i?: number
 ): T | string | number | undefined {
-  return type(fn) === 'Function' ? (fn as any)(d, i) : fn
+  if (type(fn) === 'Function') {
+    const _fn = fn as (d: TDatum, i?: number) => T | undefined
+    return _fn(d, i)
+  }
+  return fn as T | string | number | undefined
 }
 
 export type ValueFn<T> = T | (() => T)
@@ -39,5 +43,9 @@ export function resolveValueFn(fn: ValueFn<string>): string
 export function resolveValueFn(fn: ValueFn<string | number>): string | number
 export function resolveValueFn<T>(fn: ValueFn<T>): T
 export function resolveValueFn<T>(fn: ValueFn<T>): T | string | number {
-  return type(fn) === 'Function' ? (fn as any)() : fn
+  if (type(fn) === 'Function') {
+    const _fn = fn as () => T
+    return _fn()
+  }
+  return fn as T | string | number
 }

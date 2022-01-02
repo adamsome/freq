@@ -34,7 +34,7 @@ export default function FreqSettings(_: Props) {
   let difficultyIndex = freqClueDifficulties.indexOf(difficulty)
   if (difficultyIndex === -1) difficultyIndex = freqClueDifficulties.length
 
-  const handleCommand = async (cmd: CommandType, value?: unknown) => {
+  const handleCommand = async (cmd: CommandType, value?: boolean | string) => {
     if (!game || fetching || game.fetching) return
 
     setFetching(true)

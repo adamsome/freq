@@ -7,12 +7,14 @@ import CommandButton from './command-button'
 
 const CommandPanel = () => {
   const { game, mutate } = useGame()
-  if (!game) return null
 
   const [error, setError] = useState<string | null>(null)
   const [fetching, setFetching] = useState(false)
 
+  if (!game) return null
+
   const { currentPlayer, commands } = game
+
   if (!currentPlayer) return null
 
   const handleCommandClick = async (

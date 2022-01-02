@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <SWRConfig
       value={{
         fetcher: fetch,
-        onError: (err: any) => {
+        onError: (err: unknown) => {
           console.error(err)
         },
       }}

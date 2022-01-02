@@ -1,10 +1,10 @@
 import { getSession, UserProfile } from '@auth0/nextjs-auth0'
 import { WithId } from 'mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { User } from './types/user.types'
-import { head } from './util/array'
 import { isRoomValid } from './room'
+import { User } from './types/user.types'
 import { fetchUser } from './user-store'
+import { head } from './util/array'
 
 interface RoomUserSuccess {
   status: 'ok'
@@ -19,9 +19,9 @@ interface RoomUserError {
 
 type RoomUser = RoomUserSuccess | RoomUserError
 
-export default async function (
+export default async function getRoomUser(
   req: NextApiRequest,
-  res: NextApiResponse<any>
+  res: NextApiResponse<unknown>
 ): Promise<RoomUser> {
   const session = getSession(req, res)
   const userProfile: UserProfile | undefined = session?.user

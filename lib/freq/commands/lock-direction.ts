@@ -4,7 +4,7 @@ import { fetchCurrentFreqGameView, fromGames } from '../freq-game-store'
 import { areAllDirectionGuessesLocked } from '../guess-direction'
 import revealRoundResults from './reveal-round-results'
 
-export default async function (game: CurrentFreqGameView) {
+export default async function lockDirection(game: CurrentFreqGameView) {
   const player = game.currentPlayer
 
   if (player.team === game.team_turn)

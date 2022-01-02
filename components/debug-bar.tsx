@@ -1,6 +1,7 @@
 import type { MouseEvent } from 'react'
 import { API_GAME_PHASE } from '../lib/consts'
 import { nextCwdPhase, nextFreqPhase } from '../lib/phase'
+import { CwdPhase } from '../lib/types/cwd.types'
 import { postCommand, postJson } from '../lib/util/fetch-json'
 import useGame from '../lib/util/use-game'
 import Button from './button'
@@ -18,7 +19,7 @@ const DebugBar = () => {
     const phase =
       game.type === 'freq'
         ? nextFreqPhase(game?.phase ?? 'prep', offset)
-        : nextCwdPhase((game?.phase ?? 'prep') as any, offset)
+        : nextCwdPhase((game?.phase ?? 'prep') as CwdPhase, offset)
 
     try {
       await postJson(

@@ -38,37 +38,37 @@ export default function ScoreboardGrid({
     ? getPlayersPerTeam(players.filter((p) => !p.designatedPsychic))
     : skeletonTeams
 
-  const Player = (right = false) => (
-    player: PlayerView | undefined,
-    i: number
-  ) => {
-    if (!player)
-      return <SkeletonBox key={i} className="w-full h-8 mb-2" rounded={false} />
+  const createPlayer = (right = false) =>
+    function Player(player: PlayerView | undefined, i: number) {
+      if (!player)
+        return (
+          <SkeletonBox key={i} className="w-full h-8 mb-2" rounded={false} />
+        )
 
-    const score = (scoreType === 'points' ? player.points : player.wins) ?? 0
-    return (
-      <ScoreboardPlayerRow
-        key={player.id}
-        player={player}
-        right={right}
-        active={player.active}
-        current={player.current}
-        leader={currentPlayer?.leader}
-        readonly={readonly}
-        onClick={() => currentPlayer?.leader && onPlayerClick(player)}
-      >
-        <ScoreboardIcon right={right}>{player.icon}</ScoreboardIcon>
-        <ScoreboardPlayerName
-          type={type}
+      const score = (scoreType === 'points' ? player.points : player.wins) ?? 0
+      return (
+        <ScoreboardPlayerRow
+          key={player.id}
           player={player}
           right={right}
-          psychic={player.showPsychic}
-          nextPsychic={player.showNextPsychic}
-        />
-        <ScoreboardPlayerScore score={score} />
-      </ScoreboardPlayerRow>
-    )
-  }
+          active={player.active}
+          current={player.current}
+          leader={currentPlayer?.leader}
+          readonly={readonly}
+          onClick={() => currentPlayer?.leader && onPlayerClick(player)}
+        >
+          <ScoreboardIcon right={right}>{player.icon}</ScoreboardIcon>
+          <ScoreboardPlayerName
+            type={type}
+            player={player}
+            right={right}
+            psychic={player.showPsychic}
+            nextPsychic={player.showNextPsychic}
+          />
+          <ScoreboardPlayerScore score={score} />
+        </ScoreboardPlayerRow>
+      )
+    }
 
   const Team = (team: (PlayerView | undefined)[], i: number) => (
     <div
@@ -77,7 +77,7 @@ export default function ScoreboardGrid({
         'border-r border-black dark:border-white last:border-r-0': !readonly,
       })}
     >
-      {team.map(Player(i === 1))}
+      {team.map(createPlayer(i === 1))}
     </div>
   )
 

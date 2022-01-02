@@ -19,8 +19,7 @@ const defaultProps = {}
 
 const PlayerEdit = ({ onClose }: Props) => {
   const { game, mutate } = useGame()
-  if (!game || !game.currentPlayer) return null
-  const player = game.currentPlayer
+  const player = game?.currentPlayer
 
   const inputRef = useRef<HTMLInputElement>(null)
   useLayoutEffect(() => {
@@ -28,12 +27,12 @@ const PlayerEdit = ({ onClose }: Props) => {
   }, [])
 
   const [fetching, setFetching] = useState(false)
-  const [icon, setIcon] = useState(player.icon ?? '')
-  const [name, setName] = useState(player.name ?? '')
+  const [icon, setIcon] = useState(player?.icon ?? '')
+  const [name, setName] = useState(player?.name ?? '')
 
   const handleSave = async (e: MouseEvent) => {
     e.preventDefault()
-    if (name.length < 2 || fetching || player?.fetching) return
+    if (name.length < 2 || fetching || player?.fetching || !game) return
 
     setFetching(true)
     const cmd: CommandType = 'edit_player'
@@ -52,6 +51,8 @@ const PlayerEdit = ({ onClose }: Props) => {
     setFetching(false)
     onClose?.()
   }
+
+  if (!game || !player) return null
 
   return (
     <>

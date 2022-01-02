@@ -3,6 +3,8 @@ import type { RefObject } from 'react'
 import { useRef } from 'react'
 import useLayoutEffect from './use-passive-layout-effect'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 function useEvent<
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   T extends Window = Window,
@@ -11,7 +13,7 @@ function useEvent<
   target: Window | null,
   type: K,
   listener: WindowEventListener<K>,
-  cleanup?: (...args: any[]) => void
+  cleanup?: (...args: unknown[]) => void
 ): void
 function useEvent<
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -21,7 +23,7 @@ function useEvent<
   target: Document | null,
   type: K,
   listener: DocumentEventListener<K>,
-  cleanup?: (...args: any[]) => void
+  cleanup?: (...args: unknown[]) => void
 ): void
 function useEvent<
   T extends HTMLElement = HTMLElement,
@@ -30,8 +32,9 @@ function useEvent<
   target: RefObject<T> | T | null,
   type: K,
   listener: ElementEventListener<K>,
-  cleanup?: (...args: any[]) => void
+  cleanup?: (...args: unknown[]) => void
 ): void
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function useEvent(target: any, type: any, listener: any, cleanup: any): void {
   const storedListener = useRef(listener)
   const storedCleanup = useRef(cleanup)
@@ -64,14 +67,14 @@ function useEvent(target: any, type: any, listener: any, cleanup: any): void {
 
 export type ElementEventListener<
   K extends keyof HTMLElementEventMap = keyof HTMLElementEventMap
-> = (this: HTMLElement, ev: HTMLElementEventMap[K]) => any
+> = (this: HTMLElement, ev: HTMLElementEventMap[K]) => unknown
 
 export type DocumentEventListener<
   K extends keyof DocumentEventMap = keyof DocumentEventMap
-> = (this: Document, ev: DocumentEventMap[K]) => any
+> = (this: Document, ev: DocumentEventMap[K]) => unknown
 
 export type WindowEventListener<
   K extends keyof WindowEventMap = keyof WindowEventMap
-> = (this: Document, ev: WindowEventMap[K]) => any
+> = (this: Document, ev: WindowEventMap[K]) => unknown
 
 export default useEvent

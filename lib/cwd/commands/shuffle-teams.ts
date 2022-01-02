@@ -15,8 +15,8 @@ export default async function shuffleTeams(game: FullCwdGameView) {
 
   const { db } = await connectToDatabase()
   const filter = { room: game.room.toLowerCase() }
-  const changes: Record<string, string | number | number[]> &
-    Partial<CwdGame> = {}
+  const changes: Record<string, string | number | number[]> & Partial<CwdGame> =
+    {}
 
   const indexByPlayerID = game.players.reduce((acc, p, i) => {
     acc[p.id] = i

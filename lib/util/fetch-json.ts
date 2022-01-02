@@ -1,7 +1,15 @@
 import { API_GAME_COMMAND } from '../consts'
 import { CommandType, GameType } from '../types/game.types'
 
-export default async function fetcher(input: RequestInfo, init?: RequestInit) {
+type FetchError<T> = Error & {
+  response: Response
+  data: T
+}
+
+export default async function fetcher<T>(
+  input: RequestInfo,
+  init?: RequestInit
+): Promise<T> {
   try {
     const response = await fetch(input, init)
 
@@ -13,7 +21,7 @@ export default async function fetcher(input: RequestInfo, init?: RequestInit) {
       return data
     }
 
-    const error = new Error(response.statusText) as any
+    const error = new Error(response.statusText) as FetchError<T>
     error.response = response
     error.data = data
     throw error
@@ -25,22 +33,30 @@ export default async function fetcher(input: RequestInfo, init?: RequestInit) {
   }
 }
 
-export async function postJson<T>(input: RequestInfo, body?: any): Promise<T> {
+export async function postJson<T>(
+  input: RequestInfo,
+  body?: unknown
+): Promise<T> {
   const headers = { 'Content-Type': 'application/json' }
   const init: RequestInit = { method: 'POST', headers }
   if (body) {
     init.body = JSON.stringify(body)
   }
-  return await fetcher(input, init)
+  return await fetcher<T>(input, init)
+}
+
+interface CommandValue {
+  type: CommandType
+  value?: unknown
 }
 
 export async function postCommand<T>(
   game: GameType,
   room: string,
   command: CommandType,
-  value?: any
+  value?: unknown
 ): Promise<T> {
-  const body: any = { type: command }
+  const body: CommandValue = { type: command }
   if (value != null) {
     body.value = value
   }

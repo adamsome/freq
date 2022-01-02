@@ -5,9 +5,11 @@ import { partition } from './util/array'
 import { assignColor } from './color-dict'
 import { randomIcon } from './icon'
 import { randomName } from './name'
+import { isObject } from './util/object'
+import { isNotEmpty } from './util/string'
 
-export function isPlayer(player: any): player is Player {
-  return player.id && player.name
+export function isPlayer(player: unknown): player is Player {
+  return isObject(player) && isNotEmpty(player.id, player.name)
 }
 
 export function createPlayer(

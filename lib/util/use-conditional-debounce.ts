@@ -35,7 +35,7 @@ const defaultEqualsFn = <T>(prev?: T, next?: T) => prev === next
 export default function useConditionalDebounce<T>(
   value: T,
   options: UseConditionalDebounceOptions<T> = {}
-) {
+): T | undefined {
   const {
     conditionFn = defaultConditionFn,
     equalsFn = defaultEqualsFn,
@@ -67,7 +67,7 @@ export default function useConditionalDebounce<T>(
     } else {
       rawSetDebouncedValue(nextValue)
     }
-  }, [prevValue, nextValue])
+  }, [prevValue, nextValue, conditionFn, equalsFn, setDebouncedValue])
 
   return debouncedValue
 }

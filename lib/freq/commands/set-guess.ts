@@ -2,7 +2,10 @@ import { CurrentFreqGameView } from '../../types/freq.types'
 import { connectToDatabase } from '../../util/mongodb'
 import { fromGames } from '../freq-game-store'
 
-export default async function (game: CurrentFreqGameView, guess: unknown) {
+export default async function setGuess(
+  game: CurrentFreqGameView,
+  guess: unknown
+) {
   const player = game.currentPlayer
   const isPlayerTurn = player?.team === game.team_turn
   if (game.psychic === player.id || !isPlayerTurn)

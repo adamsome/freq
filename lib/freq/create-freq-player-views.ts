@@ -16,38 +16,36 @@ export default function createFreqPlayerViews(
   const isPrep = game.phase === 'prep'
   const showNextPsychic = isFreePhase(game.phase) || game.next_psychic != null
 
-  return game.players.map(
-    (p): PlayerView => {
-      const isPsychic = game.psychic === p.id
-      const isNextPsychic = psychic?.id === p.id
-      const isPrepAndDesignated = game.settings?.designated_psychic && isPrep
-      const canSetPsychic =
-        isPrepAndDesignated ||
-        (!isPsychic &&
-          !isNextPsychic &&
-          game.phase === 'choose' &&
-          p.team === game.team_turn)
-      const canSetNextPsychic =
-        !isPrepAndDesignated && canChangeNextPsychic(game, p, psychic)
+  return game.players.map((p): PlayerView => {
+    const isPsychic = game.psychic === p.id
+    const isNextPsychic = psychic?.id === p.id
+    const isPrepAndDesignated = game.settings?.designated_psychic && isPrep
+    const canSetPsychic =
+      isPrepAndDesignated ||
+      (!isPsychic &&
+        !isNextPsychic &&
+        game.phase === 'choose' &&
+        p.team === game.team_turn)
+    const canSetNextPsychic =
+      !isPrepAndDesignated && canChangeNextPsychic(game, p, psychic)
 
-      return {
-        ...p,
-        active: activeByPlayerID[p.id],
-        current: p.id === playerID,
-        psychic: isPsychic,
-        designatedPsychic:
-          game.settings?.designated_psychic === true && isPsychic,
-        nextPsychic: isNextPsychic,
-        showPsychic: isPrep && !isNextPsychic && isPsychic,
-        showNextPsychic: showNextPsychic && isNextPsychic,
-        canSetPsychic,
-        canSetNextPsychic,
-        canChangeTeam: !isInvalidPlayerTeamChange(game, p),
-        points: calculateFreqPlayerPoints(game.stats?.[p.id]),
-        wins: game.stats?.[p.id]?.w ?? 0,
-      }
+    return {
+      ...p,
+      active: activeByPlayerID[p.id],
+      current: p.id === playerID,
+      psychic: isPsychic,
+      designatedPsychic:
+        game.settings?.designated_psychic === true && isPsychic,
+      nextPsychic: isNextPsychic,
+      showPsychic: isPrep && !isNextPsychic && isPsychic,
+      showNextPsychic: showNextPsychic && isNextPsychic,
+      canSetPsychic,
+      canSetNextPsychic,
+      canChangeTeam: !isInvalidPlayerTeamChange(game, p),
+      points: calculateFreqPlayerPoints(game.stats?.[p.id]),
+      wins: game.stats?.[p.id]?.w ?? 0,
     }
-  )
+  })
 }
 
 function getActivePlayers(game: FreqGame): string[] {

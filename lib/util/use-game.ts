@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
+import type { mutateCallback } from 'swr/dist/types'
 import { API_GAME } from '../consts'
 import { CwdGameView } from '../types/cwd.types'
 import { FreqGameView } from '../types/freq.types'
@@ -10,7 +11,18 @@ export interface UseGameOptions<T> {
   refreshInterval: number
   initialData?: T
   useRequired?: boolean
-  required?: any
+  required?: unknown
+}
+
+interface UseGameResult<T> {
+  game: T | undefined
+  loading: boolean
+  error: unknown
+  mutate: (
+    data?: T | Promise<T> | mutateCallback<T>,
+    shouldRevalidate?: boolean
+  ) => Promise<T | undefined>
+  revalidate: () => Promise<boolean>
 }
 
 const withDefaults = <T>(
@@ -22,7 +34,7 @@ const withDefaults = <T>(
 
 export default function useGame<T extends CommonGameView = CommonGameView>(
   options: Partial<UseGameOptions<T>> = {}
-) {
+): UseGameResult<T> {
   const router = useRouter()
   const game = head(router.query?.game as string | undefined)?.toLowerCase()
   const room = head(router.query?.room as string | undefined)?.toLowerCase()
@@ -40,12 +52,14 @@ export default function useGame<T extends CommonGameView = CommonGameView>(
   return { game: data, loading, error, mutate, revalidate }
 }
 
-export function useCwdGame(options: Partial<UseGameOptions<CwdGameView>> = {}) {
+export function useCwdGame(
+  options: Partial<UseGameOptions<CwdGameView>> = {}
+): UseGameResult<CwdGameView> {
   return useGame(options)
 }
 
 export function useFreqGame(
   options: Partial<UseGameOptions<FreqGameView>> = {}
-) {
+): UseGameResult<FreqGameView> {
   return useGame(options)
 }

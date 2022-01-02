@@ -1,6 +1,7 @@
 import { OptionalId, WithId } from 'mongodb'
 import { canChangePsychicTo } from '../phase'
 import { CwdGame, CwdGameView, FullCwdGameView } from '../types/cwd.types'
+import { isObject } from '../util/object'
 import buildCwdCodeViews from './build-cwd-code-views'
 import createCwdCommandView from './create-cwd-command-view'
 import createCwdPlayerViews from './create-cwd-player-views'
@@ -48,8 +49,9 @@ export function toFullCwdGameView(
   return fullGameView
 }
 
-export function isCwdGameView(game: any): game is CwdGameView {
+export function isCwdGameView(game: unknown): game is CwdGameView {
   return (
+    isObject(game) &&
     game.codes != null &&
     game.code_reveals != null &&
     game.phase != null &&
@@ -60,8 +62,9 @@ export function isCwdGameView(game: any): game is CwdGameView {
   )
 }
 
-function isFullCwdGameView(game: any): game is FullCwdGameView {
+function isFullCwdGameView(game: unknown): game is FullCwdGameView {
   return (
+    isObject(game) &&
     game.currentPlayer != null &&
     game.code_words != null &&
     game.code_states != null &&

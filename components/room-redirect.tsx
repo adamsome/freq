@@ -33,7 +33,7 @@ export default function RoomRedirect({ children }: Props) {
         }
       }
     }
-  }, [isBrowser])
+  }, [router])
 
   return <>{children}</>
 }

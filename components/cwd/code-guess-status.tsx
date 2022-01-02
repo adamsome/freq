@@ -112,7 +112,7 @@ export default function CodeGuessStatus({ guess, turn }: Props) {
 
     const lines = createLines(guess)
     setLines(lines)
-  }, [prevGuess, guess])
+  }, [prevGuess, guess, setLines])
 
   const toWord = (key: Key, word: Word) => (
     <span

@@ -20,7 +20,7 @@ export default async function setDesignatedPsychicMode(
   const { db } = await connectToDatabase()
   const filter = { room: game.room.toLowerCase() }
 
-  let changes: Partial<CwdGame> & Dict<any> = {
+  let changes: Partial<CwdGame> & Dict<unknown> = {
     ['settings.designated_psychic']: value,
   }
 

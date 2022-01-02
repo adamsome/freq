@@ -56,9 +56,12 @@ const useResizeObserver = <T extends HTMLElement>(
 const createResizeObserver = () => {
   const callbacks: Set<ResizeObserverCallback> = new Set()
   return {
-    observer: new ResizeObserver((entries: any, observer: any) => {
-      for (const callback of callbacks as any) callback(entries, observer)
-    }),
+    observer: new ResizeObserver(
+      (entries: ResizeObserverEntry[], observer: ResizeObserver) => {
+        for (const callback of callbacks as unknown as ResizeObserverCallback[])
+          callback(entries, observer)
+      }
+    ),
     subscribe: (callback: ResizeObserverCallback) => callbacks.add(callback),
     unsubscribe: (callback: ResizeObserverCallback) =>
       callbacks.delete(callback),
@@ -75,6 +78,6 @@ const getResizeObserver = () =>
 export type UseResizeObserverCallback = (
   entry: ResizeObserverEntry,
   observer: ResizeObserver
-) => any
+) => void
 
 export default useResizeObserver

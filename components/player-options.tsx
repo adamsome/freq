@@ -41,7 +41,8 @@ const PlayerOptions = ({
   const { game, mutate } = useGame()
   const player = game?.currentPlayer
 
-  const debugModeVal: any = isBrowser && localStorage[KEY_DEBUG_MODE]
+  const debugModeVal: string | boolean =
+    isBrowser && localStorage[KEY_DEBUG_MODE]
   const allowDebugMode = debugModeVal === true || debugModeVal === 'true'
 
   const colorMode = `${theme === 'dark' ? 'Light' : 'Dark'} Mode`

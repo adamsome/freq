@@ -1,12 +1,13 @@
 /*! chakra-ui v1.2.3 | MIT License | https://github.com/chakra-ui/chakra-ui/blob/4478509039b4ed9df8a7710f49b12588e1202de2/packages/utils/src/dom.ts */
 import { isStringOrNumber } from './assertion'
+import { isObject } from './object'
 
 type CxParam =
   | string
   | number
   | boolean
   | undefined
-  | (Record<string | number, any> & { toString?: () => string })
+  | (Record<string | number, unknown> & { toString?: () => string })
 
 export const cx = (...classNames: (CxParam | CxParam[])[]): string => {
   const classStrings = classNames.reduce((acc: (string | number)[], c) => {
@@ -38,7 +39,7 @@ export const cx = (...classNames: (CxParam | CxParam[])[]): string => {
   return classStrings.join(' ')
 }
 
-export function canUseDom() {
+export function canUseDom(): boolean {
   return !!(
     typeof window !== 'undefined' &&
     window.document &&
@@ -48,5 +49,5 @@ export function canUseDom() {
 
 export const isBrowser = canUseDom()
 
-export const isLeftClick = (e: any) =>
-  typeof e.button !== 'number' || e.button === 0
+export const isLeftClick = (e: unknown): boolean =>
+  isObject(e) && (typeof e.button !== 'number' || e.button === 0)

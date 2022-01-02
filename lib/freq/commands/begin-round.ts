@@ -7,7 +7,7 @@ import { fromGames } from '../freq-game-store'
 import { getNextPsychic } from '../freq-psychic'
 import randomFreqCluePair from '../random-freq-clue-pair'
 
-export default async function (game: CurrentFreqGameView) {
+export default async function beginRound(game: CurrentFreqGameView) {
   if (!isFreePhase(game.phase))
     throw new Error('Can only begin a round from the free phases.')
 

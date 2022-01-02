@@ -4,7 +4,10 @@ import { fromUsers } from '../../user-store'
 import { connectToDatabase } from '../../util/mongodb'
 import { fromGames } from '../freq-game-store'
 
-export default async function (game: CurrentFreqGameView, player: unknown) {
+export default async function editPlayer(
+  game: CurrentFreqGameView,
+  player: unknown
+) {
   if (!isPlayer(player))
     throw new TypeError("Command 'edit_player' requires valid 'player'.")
 

@@ -1,16 +1,21 @@
 /*! chakra-ui v1.2.3 | MIT License | https://github.com/chakra-ui/chakra-ui/blob/4478509039b4ed9df8a7710f49b12588e1202de2/packages/utils/src/assertion.ts */
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function isFunction(value: any): value is Function {
+export function isFunction(value: unknown): value is Function {
   return typeof value === 'function'
 }
 
-export const isNil = (value: any): value is null | undefined => value == null
+export const isNil = <T = unknown>(
+  value: T | null | undefined
+): value is null | undefined => value == null
 
-export function isNumeric(value: any) {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function isNumeric(value: any): boolean {
   return value != null && value - parseFloat(value) + 1 >= 0
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
-export function isStringOrNumber(value: any): value is string | number {
+export function isStringOrNumber(value: unknown): value is string | number {
   const type = typeof value
   return type === 'string' || type === 'number'
 }
@@ -38,7 +43,18 @@ export function isStringOrNumber(value: any): value is string | number {
  *      R.type(() => {}); //=> "Function"
  *      R.type(undefined); //=> "Undefined"
  */
-export const type = (val: any) =>
+export const type = (
+  val: unknown
+):
+  | 'Object'
+  | 'Number'
+  | 'Boolean'
+  | 'String'
+  | 'Null'
+  | 'Array'
+  | 'RegExp'
+  | 'Function'
+  | 'Undefined' =>
   val === null
     ? 'Null'
     : val === undefined

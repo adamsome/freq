@@ -144,7 +144,7 @@ export async function fetchFullCwdGameView(
 export async function updateCwdGamePath(
   room: string,
   path: string,
-  value: any
+  value: unknown
 ) {
   const { db } = await connectToDatabase()
   const store = fromCwdGames(db)

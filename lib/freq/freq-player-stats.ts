@@ -56,35 +56,34 @@ export function calculateFreqPlayerPoints(stats?: FreqPlayerStats): number {
   )
 }
 
-const makeGetGuessScore = (target: number, target_width: number) => (
-  guess: number
-): 0 | 2 | 3 | 4 => {
-  // Target width is as a percent vs guess & target, which are decimals
-  // Target is broken up into 5 bands
-  const bandWidth = target_width / 100 / 5
-  const guessDiff = target - guess
+const makeGetGuessScore =
+  (target: number, target_width: number) =>
+  (guess: number): 0 | 2 | 3 | 4 => {
+    // Target width is as a percent vs guess & target, which are decimals
+    // Target is broken up into 5 bands
+    const bandWidth = target_width / 100 / 5
+    const guessDiff = target - guess
 
-  if (Math.abs(guessDiff) <= 0.5 * bandWidth) {
-    return 4 // Center band gets top score
-  } else if (Math.abs(guessDiff) <= 1.5 * bandWidth) {
-    return 3 // 2nd middle bands get middle score
-  } else if (Math.abs(guessDiff) <= 2.5 * bandWidth) {
-    return 2 // Outer bands get low score
+    if (Math.abs(guessDiff) <= 0.5 * bandWidth) {
+      return 4 // Center band gets top score
+    } else if (Math.abs(guessDiff) <= 1.5 * bandWidth) {
+      return 3 // 2nd middle bands get middle score
+    } else if (Math.abs(guessDiff) <= 2.5 * bandWidth) {
+      return 2 // Outer bands get low score
+    }
+    return 0
   }
-  return 0
-}
 
-const makeGetDirectionScore = (
-  guessScore: 0 | 2 | 3 | 4,
-  directionActual: -1 | 1
-) => (directionGuess: -1 | 0 | 1): 0 | 1 => {
-  // Opposing team gets 0 if guessing team hits the center band
-  return guessScore !== 4 &&
-    directionGuess !== 0 &&
-    directionGuess === directionActual
-    ? 1
-    : 0
-}
+const makeGetDirectionScore =
+  (guessScore: 0 | 2 | 3 | 4, directionActual: -1 | 1) =>
+  (directionGuess: -1 | 0 | 1): 0 | 1 => {
+    // Opposing team gets 0 if guessing team hits the center band
+    return guessScore !== 4 &&
+      directionGuess !== 0 &&
+      directionGuess === directionActual
+      ? 1
+      : 0
+  }
 
 export interface FreqRoundStats {
   roundStats: Dict<FreqPlayerStats>

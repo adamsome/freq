@@ -14,7 +14,7 @@ import {
 } from '../freq-player-stats-store'
 import revealMatchResults from './reveal-match-results'
 
-export default async function (game: CurrentFreqGameView) {
+export default async function revealRoundResults(game: CurrentFreqGameView) {
   if (!isGuessingPhase(game.phase))
     throw new Error('Can only reveal from a guessing phase.')
 

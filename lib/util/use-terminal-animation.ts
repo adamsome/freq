@@ -30,13 +30,19 @@ export interface UseTerminalAnimationOptions<T> {
   cursorBlinkDelay?: ValueFn<number>
 }
 
+type UseTerminalAnimationResult<T> = readonly [
+  TypedTerminalLine<T>[],
+  boolean,
+  (newLines: TerminalLine<T>[]) => void
+]
+
 const defaultAccessor = <T>(t: T) =>
-  typeof t === 'string' ? t : ((t as any).text as string)
+  typeof t === 'string' ? t : ((t as Record<string, unknown>).text as string)
 
 export default function useTerminalAnimation<T>(
   initialState: TerminalLine<T>[] | (() => TerminalLine<T>[]),
   options: UseTerminalAnimationOptions<T> = {}
-) {
+): UseTerminalAnimationResult<T> {
   const {
     wordAccessor = defaultAccessor,
     lineDelay = 1200,
@@ -70,7 +76,7 @@ export default function useTerminalAnimation<T>(
     }, resolveValueFn(cursorBlinkDelay))
 
     return () => clearTimeout(timeout)
-  }, [cursorBlink])
+  }, [cursorBlink, cursorBlinkDelay])
 
   // Performs the typing animation by iterating through the line and
   // character indices, each iteration w/ a small delay.
@@ -107,7 +113,15 @@ export default function useTerminalAnimation<T>(
     }, delay)
 
     return () => clearTimeout(timeout)
-  }, [lineIndex, lines, lineIndices])
+  }, [
+    lineIndex,
+    lines,
+    lineIndices,
+    charDelay,
+    charRandomDelay,
+    lineDelay,
+    txt,
+  ])
 
   // Return only the list of words (and their characters) that have been typed.
   const buildWords = (

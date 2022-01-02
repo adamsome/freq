@@ -3,7 +3,7 @@ import { connectToDatabase } from '../../util/mongodb'
 import { fromGames } from '../freq-game-store'
 import { areAllNeedleGuessesLocked } from '../guess-needle'
 
-export default async function (game: CurrentFreqGameView) {
+export default async function lockGuess(game: CurrentFreqGameView) {
   const player = game.currentPlayer
   const isPlayerTurn = player.team === game.team_turn
   if (game.psychic === player.id || !isPlayerTurn)

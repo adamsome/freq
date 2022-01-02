@@ -17,6 +17,7 @@ export default withApiAuthRequired(async (req, res) => {
         return res.status(500).end('Phase required.')
       }
 
+      // TODO: Validate phase value
       await updateCwdGamePath(roomUser.room, 'phase', phase)
       return res.json(true)
     } catch (error) {

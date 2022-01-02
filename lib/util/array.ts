@@ -92,6 +92,8 @@ export const reject = <T>(arr: T[], fn: (value: T) => boolean): T[] => {
 }
 
 export const rejectNil = <T>(list: Array<T | undefined | null>): T[] =>
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   reject(list, isNil)
 
 export function reverse(arrayOrElement: null | undefined): undefined

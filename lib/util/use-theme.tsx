@@ -25,7 +25,7 @@ const ThemeContext = createContext<UseThemeProps>({
   setTheme: (_) => {},
   themes: [],
 })
-export const useTheme = () => useContext(ThemeContext)
+export const useTheme = (): UseThemeProps => useContext(ThemeContext)
 
 interface ValueObject {
   [themeName: string]: string
@@ -165,7 +165,7 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({
 }
 
 const ThemeScript = memo(
-  ({
+  function ThemeSciptMemo({
     forcedTheme,
     storageKey,
     attribute,
@@ -180,8 +180,8 @@ const ThemeScript = memo(
     enableSystem?: boolean
     defaultTheme: string
     value?: ValueObject
-    attrs: any
-  }) => {
+    attrs: string[]
+  }) {
     // Code-golfing the amount of characters in the script
     const optimization = (() => {
       if (attribute === 'class') {

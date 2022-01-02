@@ -45,7 +45,7 @@ type Props = {
   htmlType?: InputHTMLType
   onChange?: ChangeEventHandler<HTMLInputElement>
 } & BaseProps &
-  Omit<InputHTMLAttributes<any>, 'type' | 'onChange'>
+  Omit<InputHTMLAttributes<unknown>, 'type' | 'onChange'>
 
 export default function Input({
   className,

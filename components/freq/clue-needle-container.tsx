@@ -20,7 +20,6 @@ const CHANGE_FPS = 2
 
 const ClueNeedleContainer = ({ children, onGuessChange }: Props) => {
   const { game } = useFreqGame()
-  if (!game) return null
 
   const meterWrapperRef = useRef<HTMLDivElement>(null)
   const needleRef = useRef<HTMLDivElement>(null)
@@ -31,16 +30,16 @@ const ClueNeedleContainer = ({ children, onGuessChange }: Props) => {
   // Update guess when set and guesses exist (otherwise disallowed)
   useEffect(() => {
     if (guess != null) onGuessChange(guess)
-  }, [guess])
+  }, [guess, onGuessChange])
 
-  const guesses = game.playerGuesses
+  const guesses = game?.playerGuesses ?? []
   const player = game?.currentPlayer
   const partitionedPlayers = partition((p) => p.id === player?.id, guesses)
   const [currentPlayerGuesses, otherPlayerGueses] = partitionedPlayers
 
   const initialGuess = currentPlayerGuesses[0]?.value ?? 0.5
-  const hasGuesses = guesses.length > 0
-  const isGuessing = game.phase === 'guess'
+  const hasGuesses = (guesses?.length ?? 0) > 0
+  const isGuessing = game?.phase === 'guess'
   const disable =
     !hasGuesses || currentPlayerGuesses[0]?.locked === true || !isGuessing
 
@@ -59,6 +58,8 @@ const ClueNeedleContainer = ({ children, onGuessChange }: Props) => {
     if (needleRef.current)
       needleRef.current.style.transform = `translateX(${position}px)`
   }, [position])
+
+  if (!game) return null
 
   const buildGuessTranslate = (
     guess: number,

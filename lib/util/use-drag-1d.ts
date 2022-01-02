@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { isLeftClick } from './dom'
 import useEvent from './use-event'
 import useLayoutEffect from './use-passive-layout-effect'
@@ -14,6 +14,12 @@ interface UseDrag1DOptions {
   onEnd?: (width: number, position: number) => void
 }
 
+interface UseDrag1DResult {
+  position: number
+  length: number
+  dragging: boolean
+}
+
 const defaultOptions: UseDrag1DOptions = {
   initialPosition: 0,
   lengthOffset: 0,
@@ -26,7 +32,7 @@ export const useDrag1D = <T extends HTMLElement>(
   /** 'x' is an alias of 'horizontal'; same for 'y' & 'vertical' */
   orientation: 'horizontal' | 'x' | 'vertical' | 'y',
   options?: Partial<UseDrag1DOptions>
-) => {
+): UseDrag1DResult => {
   const opts = { ...defaultOptions, ...options }
 
   const [rawLength] = useSize(target)
@@ -47,13 +53,15 @@ export const useDrag1D = <T extends HTMLElement>(
   const [position, setPosition] = useState(() => initPosition)
 
   /** Clamp position to the bounds of the target */
-  const clamp = (p: number) => Math.max(0, Math.min(p, length))
-
+  const clamp = useCallback(
+    (p: number) => Math.max(0, Math.min(p, length)),
+    [length]
+  )
   // When initial position changes, reset the offset so the the position
   // is set exactly to that set, not with the added offset
   useLayoutEffect(() => {
     setPosition(clamp(initPosition))
-  }, [initPosition])
+  }, [initPosition, clamp])
 
   const currentPosition = dragStartAt == null ? position : clamp(dragPosition)
 

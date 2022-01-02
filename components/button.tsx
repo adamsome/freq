@@ -1,5 +1,11 @@
 /*! ant-design v4.12.3 | MIT License | https://github.com/ant-design/ant-design/blob/master/components/button/button.tsx */
-import type { ReactNode } from 'react'
+import type {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  MouseEvent as ReactMouseEvent,
+  MouseEventHandler,
+  ReactNode,
+} from 'react'
 import { cx } from '../lib/util/dom'
 import { omit } from '../lib/util/object'
 
@@ -24,15 +30,15 @@ const defaultProps = {
 type AnchorProps = {
   href: string
   target?: string
-  onClick?: React.MouseEventHandler<HTMLElement>
+  onClick?: MouseEventHandler<HTMLElement>
 } & BaseProps &
-  Omit<React.AnchorHTMLAttributes<any>, 'type' | 'onClick'>
+  Omit<AnchorHTMLAttributes<unknown>, 'type' | 'onClick'>
 
 type ButtonProps = {
   htmlType?: ButtonHTMLType
-  onClick?: React.MouseEventHandler<HTMLElement>
+  onClick?: MouseEventHandler<HTMLElement>
 } & BaseProps &
-  Omit<React.ButtonHTMLAttributes<any>, 'type' | 'onClick'>
+  Omit<ButtonHTMLAttributes<unknown>, 'type' | 'onClick'>
 
 type Props = Partial<AnchorProps & ButtonProps>
 
@@ -52,10 +58,10 @@ export default function Button({
   const blue = !gray && !red && _blue
 
   const handleClick = (
-    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>
+    e: ReactMouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>
   ) => {
     const { onClick } = props
-    const _onClick = onClick as React.MouseEventHandler<
+    const _onClick = onClick as MouseEventHandler<
       HTMLButtonElement | HTMLAnchorElement
     >
     _onClick?.(e)
@@ -94,7 +100,10 @@ export default function Button({
     className
   )
 
-  const anchorProps = omit(props as AnchorProps & { navigate: any }, 'navigate')
+  const anchorProps = omit(
+    props as AnchorProps & { navigate: unknown },
+    'navigate'
+  )
   if (anchorProps.href !== undefined) {
     return (
       <a {...anchorProps} className={classes} onClick={handleClick}>

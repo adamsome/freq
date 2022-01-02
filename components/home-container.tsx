@@ -30,18 +30,24 @@ export default function HomeContainer(_: Props) {
   const { user, isLoading } = useUser()
 
   const { data: generatedRoom } = useSWR<{ roomCode: string }>(API_ROOM_CODE)
-  const { data: rooms, error, isValidating, mutate } = useSWR(() =>
-    user ? API_USER_ROOMS : null
-  )
+  const {
+    data: rooms,
+    error,
+    isValidating,
+    mutate,
+  } = useSWR(() => (user ? API_USER_ROOMS : null))
+
+  const gameType = router.query?.game
 
   useEffect(() => {
     if (isBrowser) {
-      const _type = (head(router.query?.game) ??
-        localStorage[KEY_ROOM_TYPE]) as GameType | undefined
+      const _type = (head(gameType) ?? localStorage[KEY_ROOM_TYPE]) as
+        | GameType
+        | undefined
       if (_type) setType(_type)
       setLoading(false)
     }
-  }, [isBrowser])
+  }, [gameType])
 
   const handleGameClick = (changedType?: GameType) => {
     if (changedType) {

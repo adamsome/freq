@@ -4,7 +4,10 @@ import { connectToDatabase } from '../../util/mongodb'
 import { fromGames } from '../freq-game-store'
 import { getPsychic } from '../freq-psychic'
 
-export default async function (game: CurrentFreqGameView, player: unknown) {
+export default async function setCurrentPsychic(
+  game: CurrentFreqGameView,
+  player: unknown
+) {
   if (!isPlayer(player)) {
     const msg = "Command 'set-current-psychic' requires valid 'player'."
     throw new TypeError(msg)

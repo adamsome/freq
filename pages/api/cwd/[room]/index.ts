@@ -4,11 +4,14 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { fetchCwdGame, joinCwdGame } from '../../../../lib/cwd/cwd-game-store'
 import { toCwdGameView } from '../../../../lib/cwd/cwd-game-view'
 import { isRoomValid } from '../../../../lib/room'
-import { fetchUser } from '../../../../lib/user-store'
 import { User } from '../../../../lib/types/user.types'
+import { fetchUser } from '../../../../lib/user-store'
 import { head } from '../../../../lib/util/array'
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function getCwdRoom(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> {
   if (req.method === 'GET') {
     try {
       const room = head(req.query?.room)?.toLowerCase()
