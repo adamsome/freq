@@ -80,7 +80,7 @@ export default function RoomList({
       {rooms &&
         rooms.map((game) => (
           <RoomCard
-            key={game.room}
+            key={`${game.type}_${game.room}`}
             game={game}
             className="mb-6 md:mb-8"
             onClick={onRoomClick}
