@@ -51,7 +51,7 @@ const Needle = ({ player, size }: Props) => {
         <span>{icon}</span>
       </div>
       <div
-        className={cx('absolute bottom-7.5 bg-transparent', {
+        className={cx('absolute bottom-[1.875rem] bg-transparent', {
           'h-0.5 w-0.5': size !== 'lg',
           'h-1 w-1': size === 'lg',
         })}

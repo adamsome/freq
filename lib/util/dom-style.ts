@@ -2,10 +2,15 @@ import { CSSProperties } from 'react'
 import colorDict from '../color-dict'
 import gradientDict from '../gradient-dict'
 
+interface StyleColor {
+  color: string
+  backgroundColor: string | undefined
+}
+
 export const styleColor = (
   colorOrHasColor?: string | { color?: string } | false | null,
   lit = 0
-) => {
+): StyleColor | undefined => {
   if (!colorOrHasColor) return undefined
   const colorName =
     typeof colorOrHasColor === 'string'
@@ -21,10 +26,14 @@ export const styleColor = (
   }
 }
 
+interface StyleBorder {
+  borderColor: string
+}
+
 export const styleBorder = (
   colorOrHasColor?: string | { color?: string } | false | null,
   lit = 1
-) => {
+): StyleBorder | undefined => {
   if (!colorOrHasColor) return undefined
   const colorName =
     typeof colorOrHasColor === 'string'

@@ -90,7 +90,7 @@ export default function HeaderTitle({
 
           <div
             className={cx(
-              'flex-1 overflow-hidden overflow-ellipsis whitespace-nowrap',
+              'flex-1 overflow-hidden text-ellipsis whitespace-nowrap',
               'text-gray-500 font-light animate-fade-in'
             )}
           >

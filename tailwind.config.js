@@ -3,7 +3,10 @@ const colors = require('tailwindcss/colors')
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
-  purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+  ],
   darkMode: 'class',
   theme: {
     colors: {
@@ -11,7 +14,7 @@ module.exports = {
       current: 'currentColor',
       black: colors.black,
       white: colors.white,
-      gray: { 50: '#f3f4f5', ...colors.gray, 950: '#0e0e10' },
+      gray: { 50: '#f3f4f5', ...colors.zinc, 950: '#0e0e10' },
       blue: { ...colors.blue, 950: '#101831' },
       red: { ...colors.red, 950: '#330b0b' },
       yellow: { DEFAULT: '#ca8200', dark: '#ffd401' },
@@ -33,15 +36,7 @@ module.exports = {
         shine: 'shine 1.4s ease-in-out infinite ',
       },
       backgroundSize: {
-        '125%': '125%',
         skeleton: '200px 100%',
-      },
-      fontSize: {
-        proportional: 'min(4vw, 1em)',
-      },
-      inset: {
-        7.5: '1.875rem',
-        '1/2-1px': 'calc(50% - 1px)',
       },
       keyframes: {
         bounce: {
@@ -106,48 +101,6 @@ module.exports = {
           '40%, 100%': { backgroundPosition: 'calc(200px + 100%) 0' },
         },
       },
-      lineHeight: {
-        2: '0.5rem',
-      },
-      maxWidth: {
-        '19/40': '47.5%',
-      },
-      spacing: {
-        18: '4.5rem',
-        30: '7.5rem',
-        38: '9.5rem',
-        112: '28rem',
-      },
-    },
-  },
-  variants: {
-    extend: {
-      animation: ['responsive', 'hover'],
-      backgroundColor: [
-        'responsive',
-        'dark',
-        'group-hover',
-        'focus-within',
-        'hover',
-        'focus',
-        'disabled',
-      ],
-      borderRadius: ['responsive', 'first', 'last'],
-      borderWidth: ['responsive', 'first', 'last'],
-      cursor: ['disabled'],
-      justifyContent: ['responsive', 'first', 'last'],
-      margin: ['first', 'last'],
-      opacity: ['disabled'],
-      ringOpacity: ['responsive', 'dark', 'focus-within', 'focus'],
-      textColor: [
-        'responsive',
-        'dark',
-        'group-hover',
-        'focus-within',
-        'hover',
-        'focus',
-        'disabled',
-      ],
     },
   },
   plugins: [],

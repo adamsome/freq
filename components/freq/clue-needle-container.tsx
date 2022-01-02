@@ -69,12 +69,14 @@ const ClueNeedleContainer = ({ children, onGuessChange }: Props) => {
     return `translateX(${x}px)`
   }
 
+  const positionClass = 'absolute top-1 h-[7.5rem] sm:h-[9.5rem]'
+
   const teammateGuesses = otherPlayerGueses.map((player, i) => {
     const transform = buildGuessTranslate(player.value)
     return (
       <div
         key={i}
-        className="absolute top-1 h-30 sm:h-38 transition-transform"
+        className={positionClass + ' transition-transform'}
         style={{ transform }}
       >
         <Needle player={player} />
@@ -97,7 +99,7 @@ const ClueNeedleContainer = ({ children, onGuessChange }: Props) => {
 
         {/* Player Needle */}
         {hasGuesses && currentPlayerGuesses.length > 0 && (
-          <div ref={needleRef} className="absolute top-1 h-30 sm:h-38">
+          <div ref={needleRef} className={positionClass}>
             <Needle player={currentPlayerGuesses[0]} size="lg" />
           </div>
         )}

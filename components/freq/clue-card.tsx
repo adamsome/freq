@@ -16,12 +16,14 @@ const defaultProps = {}
 const ClueCard = ({ children, clue, label, hasSlider }: Props) => {
   const [lightLeft, lightRight] = gradientLightTextDict[clue.gradient] ?? []
 
+  const maxWidthClass = 'max-w-[47.5%]'
+
   return (
     <div
       className={cx(
         'absolute top-0 bottom-0 left-4 right-4 overflow-hidden',
         'flex justify-between items-start px-2 py-1',
-        'bg-gray-100 dark:bg-gray-900 bg-125% bg-center',
+        'bg-gray-100 dark:bg-gray-900 bg-[length:125%] bg-center',
         'text-black font-bold border border-transparent rounded-md',
         {
           'bottom-0': !hasSlider,
@@ -32,12 +34,14 @@ const ClueCard = ({ children, clue, label, hasSlider }: Props) => {
     >
       {children}
 
-      <div className={cx('max-w-19/40', { 'text-white': lightLeft })}>
+      <div className={cx(maxWidthClass, { 'text-white': lightLeft })}>
         <span>{clue.left}</span>
       </div>
 
       <div
-        className={cx('max-w-19/40 text-right', { 'text-white': lightRight })}
+        className={cx(maxWidthClass, 'text-right', {
+          'text-white': lightRight,
+        })}
       >
         <span>{clue.right}</span>
       </div>

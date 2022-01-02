@@ -6,7 +6,11 @@ const defaultProps = {
   center: true,
 }
 
-export default function ActionModal({ children, classNames, ...props }: Props) {
+export default function ActionModal({
+  children,
+  classNames,
+  ...props
+}: Props): JSX.Element {
   return (
     <Modal classNames={{ modal: 'modal', ...(classNames ?? {}) }} {...props}>
       {children}

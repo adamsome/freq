@@ -25,13 +25,13 @@ export default function ScoreboardPlayerName({
       <div
         className={cx(
           'flex-1 flex items-center overflow-hidden',
-          'overflow-ellipsis whitespace-nowrap text-center',
+          'text-ellipsis whitespace-nowrap text-center',
           { 'flex-row-reverse': right }
         )}
       >
         <div
           className={cx(
-            'flex-initial overflow-hidden overflow-ellipsis whitespace-nowrap',
+            'flex-initial overflow-hidden text-ellipsis whitespace-nowrap',
             right
               ? 'text-right mr-0 ml-1 sm:ml-2'
               : 'text-left mr-1 sm:mr-2 ml-0',

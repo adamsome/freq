@@ -59,7 +59,7 @@ export default function RoomCard({ game, className, onClick }: Props) {
             'flex flex-1 items-center',
             'text-2xl md:text-3xl font-light whitespace-nowrap',
             'transition-colors group-hover:text-blue-600',
-            'whitespace-nowrap overflow-hidden overflow-ellipsis'
+            'whitespace-nowrap overflow-hidden text-ellipsis'
           )}
         >
           <div
@@ -82,7 +82,7 @@ export default function RoomCard({ game, className, onClick }: Props) {
             className={cx(
               'hidden sm:block font-light',
               'flex-1 ml-4 text-gray-500 text-sm md:text-base text-left',
-              'whitespace-nowrap overflow-hidden overflow-ellipsis'
+              'whitespace-nowrap overflow-hidden text-ellipsis'
             )}
           >
             {lastUpdated}
@@ -104,7 +104,7 @@ export default function RoomCard({ game, className, onClick }: Props) {
         className={cx(
           'block sm:hidden font-light self-start',
           'flex-1 ml-4 text-gray-500 text-sm md:text-base text-left',
-          'whitespace-nowrap overflow-hidden overflow-ellipsis'
+          'whitespace-nowrap overflow-hidden text-ellipsis'
         )}
       >
         {lastUpdated}

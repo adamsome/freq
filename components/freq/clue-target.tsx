@@ -42,7 +42,7 @@ const ClueTarget = ({ position, width }: Props) => {
               'flex-1 flex flex-col content-center text-center',
               'text-white text-opacity-50',
               'dark:text-black dark:text-opacity-50',
-              'text-proportional last:justify-end'
+              'text-[length:min(4vw, 1em)] last:justify-end'
             )}
           >
             {n}

@@ -15,10 +15,11 @@ export default function NeedleAverage({ transform }: Props) {
     >
       <div
         className={cx(
-          'absolute top-0 left-1/2-1px w-0.5 h-20 sm:h-28',
+          'absolute top-0 left-[calc(50%-1px)] w-0.5 h-20 sm:h-28',
           'bg-white dark:bg-black',
           'text-white text-opacity-60 dark:text-black dark:text-opacity-60',
-          'text-xs vertical-rl text-right leading-2'
+          'text-xs vertical-rl text-right leading-[0.5rem]',
+          'vert'
         )}
       >
         <span className="relative left-2.5 cursor-default">AVERAGE</span>
