@@ -1,6 +1,6 @@
-import { FreqGame } from '../../types/freq.types'
-import { Player } from '../../types/game.types'
 import getNextPsychicsInfo, { NextPsychicInfo } from '../get-next-psychics-info'
+import { FreqGame } from '../types/freq.types'
+import { Player } from '../types/game.types'
 
 export function getPsychic(game: FreqGame): Player | undefined {
   return game.players.find((p) => p.id === game.psychic)

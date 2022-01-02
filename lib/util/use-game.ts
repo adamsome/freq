@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
-import { API_GAME } from '../lib/consts'
+import { API_GAME } from '../consts'
 import { CwdGameView } from '../types/cwd.types'
 import { FreqGameView } from '../types/freq.types'
 import { CommonGameView } from '../types/game.types'
-import { head } from '../util/array'
+import { head } from './array'
 
 export interface UseGameOptions<T> {
   refreshInterval: number

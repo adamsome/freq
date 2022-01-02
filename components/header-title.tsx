@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router'
-import useGame from '../hooks/use-game'
 import { ROUTE_GAME_HOME, ROUTE_HOME } from '../lib/consts'
 import { getGameTitle } from '../lib/game'
-import { GameType } from '../types/game.types'
-import { cx } from '../util/dom'
-import { styleLinearGradientText } from '../util/dom-style'
+import { GameType } from '../lib/types/game.types'
+import { cx } from '../lib/util/dom'
+import { styleLinearGradientText } from '../lib/util/dom-style'
+import useGame from '../lib/util/use-game'
 import Logo from './logo'
 
 type Props = typeof defaultProps & {

@@ -1,5 +1,5 @@
-import { FreqGame, FreqPlayerStats } from '../../types/freq.types'
-import { Dict } from '../../types/object.types'
+import { FreqGame, FreqPlayerStats } from '../types/freq.types'
+import { Dict } from '../types/object.types'
 import { calculateAverageDirectionGuess } from './guess-direction'
 import { calculateAverageNeedleGuess } from './guess-needle'
 

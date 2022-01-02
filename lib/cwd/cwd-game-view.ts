@@ -1,6 +1,6 @@
 import { OptionalId, WithId } from 'mongodb'
-import { CwdGame, CwdGameView, FullCwdGameView } from '../../types/cwd.types'
 import { canChangePsychicTo } from '../phase'
+import { CwdGame, CwdGameView, FullCwdGameView } from '../types/cwd.types'
 import buildCwdCodeViews from './build-cwd-code-views'
 import createCwdCommandView from './create-cwd-command-view'
 import createCwdPlayerViews from './create-cwd-player-views'

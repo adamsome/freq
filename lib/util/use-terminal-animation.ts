@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { resolveValueFn, ValueFn } from '../util/value-fn'
+import { resolveValueFn, ValueFn } from './value-fn'
 
 export interface TerminalLine<T> {
   /** Prefix words will always be displayed on the line (no typing effect). */

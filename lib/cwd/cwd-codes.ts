@@ -1,4 +1,4 @@
-import { LanguageCode } from '../../types/game.types'
+import { LanguageCode } from '../types/game.types'
 
 const CWD_CODES: Record<LanguageCode, string[]> = {
   en: [

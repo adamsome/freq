@@ -1,14 +1,14 @@
 import produce from 'immer'
 import { useState } from 'react'
-import { useFreqGame } from '../../hooks/use-game'
 import {
   freqClueDifficulties,
   FreqClueDifficultyOrAll,
   FreqGameView,
-} from '../../types/freq.types'
-import { CommandType } from '../../types/game.types'
-import { cx } from '../../util/dom'
-import { postCommand } from '../../util/fetch-json'
+} from '../../lib/types/freq.types'
+import { CommandType } from '../../lib/types/game.types'
+import { cx } from '../../lib/util/dom'
+import { postCommand } from '../../lib/util/fetch-json'
+import { useFreqGame } from '../../lib/util/use-game'
 import ActionModal from '../action-modal'
 import ActionModalOptions from '../action-modal-options'
 import Button from '../button'

@@ -1,5 +1,6 @@
 /*! @react-hook/event v1.2.3 | MIT License | https://github.com/jaredLunde/react-hook/tree/master/packages/event#readme */
-import * as React from 'react'
+import type { RefObject } from 'react'
+import { useRef } from 'react'
 import useLayoutEffect from './use-passive-layout-effect'
 
 function useEvent<
@@ -26,14 +27,14 @@ function useEvent<
   T extends HTMLElement = HTMLElement,
   K extends keyof HTMLElementEventMap = keyof HTMLElementEventMap
 >(
-  target: React.RefObject<T> | T | null,
+  target: RefObject<T> | T | null,
   type: K,
   listener: ElementEventListener<K>,
   cleanup?: (...args: any[]) => void
 ): void
 function useEvent(target: any, type: any, listener: any, cleanup: any): void {
-  const storedListener = React.useRef(listener)
-  const storedCleanup = React.useRef(cleanup)
+  const storedListener = useRef(listener)
+  const storedCleanup = useRef(cleanup)
 
   useLayoutEffect(() => {
     storedListener.current = listener

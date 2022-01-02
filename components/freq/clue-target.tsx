@@ -1,5 +1,5 @@
-import { reverse, tail } from '../../util/array'
-import { cx } from '../../util/dom'
+import { reverse, tail } from '../../lib/util/array'
+import { cx } from '../../lib/util/dom'
 
 const TARGET_BANDS: Array<[number, number]> = [
   [2, 0.3],

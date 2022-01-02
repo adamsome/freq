@@ -1,6 +1,6 @@
-import { CwdPlayerStats, FullCwdGameView } from '../../../types/cwd.types'
-import { Dict } from '../../../types/object.types'
-import { connectToDatabase } from '../../../util/mongodb'
+import { CwdPlayerStats, FullCwdGameView } from '../../types/cwd.types'
+import { Dict } from '../../types/object.types'
+import { connectToDatabase } from '../../util/mongodb'
 import { fetchFullCwdGameView, fromCwdGames } from '../cwd-game-store'
 import {
   findManyCwdPlayerStatsByID,

@@ -1,5 +1,5 @@
 /*! @react-hook/resize-observer v1.2.0 | MIT License | https://github.com/jaredLunde/react-hook/blob/master/packages/resize-observer/src/index.tsx */
-import * as React from 'react'
+import type { RefObject } from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import useLatest from './use-latest'
 import useLayoutEffect from './use-passive-layout-effect'
@@ -12,7 +12,7 @@ import useLayoutEffect from './use-passive-layout-effect'
  *   the `target` resizes
  */
 const useResizeObserver = <T extends HTMLElement>(
-  target: React.RefObject<T> | T | null,
+  target: RefObject<T> | T | null,
   callback: UseResizeObserverCallback
 ): ResizeObserver => {
   const resizeObserver = getResizeObserver()

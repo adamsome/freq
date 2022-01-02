@@ -1,4 +1,4 @@
-import { cx } from '../../util/dom'
+import { cx } from '../../lib/util/dom'
 import IconSvg from '../icon-svg'
 
 type Props = typeof defaultProps & {

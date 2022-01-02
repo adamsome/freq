@@ -1,8 +1,8 @@
-import { FreqGame } from '../../types/freq.types'
-import { Guess } from '../../types/game.types'
-import { Dict } from '../../types/object.types'
 import { getGuessesLocked, getGuessesSet } from '../guess'
 import { getTeamPlayers } from '../player'
+import { FreqGame } from '../types/freq.types'
+import { Guess } from '../types/game.types'
+import { Dict } from '../types/object.types'
 
 export function getNeedleGuessesNeeded(
   game: FreqGame,

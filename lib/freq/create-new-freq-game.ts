@@ -1,6 +1,6 @@
-import { FreqGame } from '../../types/freq.types'
-import { User } from '../../types/user.types'
 import { createPlayer } from '../player'
+import { FreqGame } from '../types/freq.types'
+import { User } from '../types/user.types'
 
 const DEFAULT_TARGET_WIDTH = 22.5
 

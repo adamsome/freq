@@ -1,6 +1,6 @@
 import { getTeamName } from '../lib/game'
 import { getTeamIcon } from '../lib/icon'
-import { cx } from '../util/dom'
+import { cx } from '../lib/util/dom'
 import ScoreboardIcon from './scoreboard-icon'
 
 type Props = typeof defaultProps & {

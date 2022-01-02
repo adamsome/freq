@@ -1,16 +1,16 @@
-import { CwdGame } from '../../types/cwd.types'
+import { getTeamColor } from '../color-dict'
+import { doesGameHaveEnoughPlayers, getTeamName } from '../game'
+import { getTeamIcon } from '../icon'
+import { CwdGame } from '../types/cwd.types'
 import {
   Command,
   CommandsView,
   Guess,
   Header,
   PlayerView,
-} from '../../types/game.types'
-import { partition, range } from '../../util/array'
-import { randomHourlyItem } from '../../util/random'
-import { getTeamColor } from '../color-dict'
-import { doesGameHaveEnoughPlayers, getTeamName } from '../game'
-import { getTeamIcon } from '../icon'
+} from '../types/game.types'
+import { partition, range } from '../util/array'
+import { randomHourlyItem } from '../util/random'
 import getCwdWinner from './get-cwd-winner'
 
 export default function createCwdCommandView(

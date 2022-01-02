@@ -1,5 +1,5 @@
-import { CurrentFreqGameView } from '../../../types/freq.types'
-import { connectToDatabase } from '../../../util/mongodb'
+import { CurrentFreqGameView } from '../../types/freq.types'
+import { connectToDatabase } from '../../util/mongodb'
 import { fetchCurrentFreqGameView, fromGames } from '../freq-game-store'
 import { areAllDirectionGuessesLocked } from '../guess-direction'
 import revealRoundResults from './reveal-round-results'

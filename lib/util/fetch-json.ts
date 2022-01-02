@@ -1,4 +1,4 @@
-import { API_GAME_COMMAND } from '../lib/consts'
+import { API_GAME_COMMAND } from '../consts'
 import { CommandType, GameType } from '../types/game.types'
 
 export default async function fetcher(input: RequestInfo, init?: RequestInit) {

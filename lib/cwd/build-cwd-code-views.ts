@@ -1,9 +1,9 @@
-import { CwdCodeView, CwdGame } from '../../types/cwd.types'
-import { PlayerView } from '../../types/game.types'
-import { arrayEquals, rejectNil } from '../../util/array'
-import { toIDMap, toTruthMap } from '../../util/object'
-import { toTitleCase } from '../../util/string'
 import { getTeamPlayers } from '../player'
+import { CwdCodeView, CwdGame } from '../types/cwd.types'
+import { PlayerView } from '../types/game.types'
+import { arrayEquals, rejectNil } from '../util/array'
+import { toIDMap, toTruthMap } from '../util/object'
+import { toTitleCase } from '../util/string'
 import CWD_CODE_WORD_BREAKS from './cwd-code-word-breaks'
 
 export function cwdCodeEquals(a?: CwdCodeView, b?: CwdCodeView): boolean {

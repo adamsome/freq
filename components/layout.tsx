@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import type { ReactNode } from 'react'
-import { GameType } from '../types/game.types'
-import { __DEV__ } from '../util/assertion'
-import { cx } from '../util/dom'
+import { GameType } from '../lib/types/game.types'
+import { __DEV__ } from '../lib/util/assertion'
+import { cx } from '../lib/util/dom'
 import Header from './header'
 
 type Props = typeof defaultProps & {

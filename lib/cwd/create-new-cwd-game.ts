@@ -1,6 +1,6 @@
-import { CwdGame } from '../../types/cwd.types'
-import { User } from '../../types/user.types'
 import { createPlayer } from '../player'
+import { CwdGame } from '../types/cwd.types'
+import { User } from '../types/user.types'
 import prepCwdMatch from './prep-cwd-match'
 
 export default function createNewCwdGame(

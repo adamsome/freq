@@ -1,5 +1,5 @@
-import { CwdCodeView, CwdGameView } from '../../types/cwd.types'
-import { range } from '../../util/array'
+import { CwdCodeView, CwdGameView } from '../../lib/types/cwd.types'
+import { range } from '../../lib/util/array'
 import CodeButton from './code-button'
 import CodeGridStatus from './code-grid-status'
 import CodeGuessStatus from './code-guess-status'

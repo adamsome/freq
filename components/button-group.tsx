@@ -1,4 +1,4 @@
-import { cx } from '../util/dom'
+import { cx } from '../lib/util/dom'
 import Button from './button'
 
 type Props = typeof defaultProps & {

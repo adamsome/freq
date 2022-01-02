@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react'
-import colorDict from '../lib/color-dict'
-import gradientDict from '../lib/gradient-dict'
+import colorDict from '../color-dict'
+import gradientDict from '../gradient-dict'
 
 export const styleColor = (
   colorOrHasColor?: string | { color?: string } | false | null,

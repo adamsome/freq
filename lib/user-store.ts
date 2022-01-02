@@ -1,7 +1,7 @@
 import { AfterCallback, UserProfile } from '@auth0/nextjs-auth0'
 import { Db, MatchKeysAndValues, WithId } from 'mongodb'
-import { User } from '../types/user.types'
-import { connectToDatabase } from '../util/mongodb'
+import { User } from './types/user.types'
+import { connectToDatabase } from './util/mongodb'
 import { randomIcon } from './icon'
 import { randomName } from './name'
 

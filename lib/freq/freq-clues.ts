@@ -1,5 +1,5 @@
-import { FreqClueDifficulty } from '../../types/freq.types'
-import { LanguageCode } from '../../types/game.types'
+import { FreqClueDifficulty } from '../types/freq.types'
+import { LanguageCode } from '../types/game.types'
 
 type FreqCluePair = string[]
 

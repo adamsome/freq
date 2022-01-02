@@ -1,6 +1,6 @@
-import { FreqGame } from '../../types/freq.types'
-import { PlayerView } from '../../types/game.types'
 import { isFreePhase, isGuessingPhase } from '../phase'
+import { FreqGame } from '../types/freq.types'
+import { PlayerView } from '../types/game.types'
 import { getNextPsychic } from './freq-psychic'
 
 export default function isInvalidPlayerTeamChange(

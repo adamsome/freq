@@ -1,5 +1,5 @@
 /*! @react-hook/debounce v3.0.0 | MIT License | https://github.com/jaredLunde/react-hook/blob/master/packages/debounce/src/index.tsx */
-import * as React from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import useLatest from './use-latest'
 
 export const useDebounceCallback = <CallbackArgs extends any[]>(
@@ -8,10 +8,10 @@ export const useDebounceCallback = <CallbackArgs extends any[]>(
   leading = false
 ): ((...args: CallbackArgs) => void) => {
   const storedCallback = useLatest(callback)
-  const timeout = React.useRef<ReturnType<typeof setTimeout>>()
+  const timeout = useRef<ReturnType<typeof setTimeout>>()
   const deps = [wait, leading, storedCallback]
   // Cleans up pending timeouts when the deps change
-  React.useEffect(
+  useEffect(
     () => () => {
       timeout.current && clearTimeout(timeout.current)
       timeout.current = void 0
@@ -19,7 +19,7 @@ export const useDebounceCallback = <CallbackArgs extends any[]>(
     deps
   )
 
-  return React.useCallback(function () {
+  return useCallback(function () {
     // eslint-disable-next-line prefer-rest-params
     const args = arguments
     const { current } = timeout
@@ -46,6 +46,6 @@ export const useDebounce = <State extends any>(
   wait?: number,
   leading?: boolean
 ): [State, React.Dispatch<React.SetStateAction<State>>] => {
-  const state = React.useState(initialState)
+  const state = useState(initialState)
   return [state[0], useDebounceCallback(state[1], wait, leading)]
 }

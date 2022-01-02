@@ -1,9 +1,9 @@
-import { CwdGame, FullCwdGameView } from '../../../types/cwd.types'
-import { Dict } from '../../../types/object.types'
-import { connectToDatabase } from '../../../util/mongodb'
-import { getPlayersPerTeam } from '../../player'
-import { fromCwdGames } from '../cwd-game-store'
 import getNextPsychicsInfo from '../../get-next-psychics-info'
+import { getPlayersPerTeam } from '../../player'
+import { CwdGame, FullCwdGameView } from '../../types/cwd.types'
+import { Dict } from '../../types/object.types'
+import { connectToDatabase } from '../../util/mongodb'
+import { fromCwdGames } from '../cwd-game-store'
 
 export default async function setDesignatedPsychicMode(
   game: FullCwdGameView,

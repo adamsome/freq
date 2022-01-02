@@ -1,6 +1,6 @@
-import { CwdCodesInfo, CwdCodeState } from '../../types/cwd.types'
-import { LanguageCode } from '../../types/game.types'
-import { shuffle } from '../../util/random'
+import { CwdCodesInfo, CwdCodeState } from '../types/cwd.types'
+import { LanguageCode } from '../types/game.types'
+import { shuffle } from '../util/random'
 import CWD_CODES from './cwd-codes'
 
 export default function generateCwdCodesInfo(

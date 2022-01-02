@@ -1,7 +1,7 @@
-import { FullCwdGameView } from '../../../types/cwd.types'
-import { insertLimited } from '../../../util/array'
-import { connectToDatabase } from '../../../util/mongodb'
 import { doesGameHaveEnoughPlayers } from '../../game'
+import { FullCwdGameView } from '../../types/cwd.types'
+import { insertLimited } from '../../util/array'
+import { connectToDatabase } from '../../util/mongodb'
 import { fromCwdGames } from '../cwd-game-store'
 
 export default async function beginRound(game: FullCwdGameView, auto = false) {

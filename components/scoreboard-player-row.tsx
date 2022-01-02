@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
-import { Player } from '../types/game.types'
-import { cx } from '../util/dom'
-import { styleColor } from '../util/dom-style'
+import { Player } from '../lib/types/game.types'
+import { cx } from '../lib/util/dom'
+import { styleColor } from '../lib/util/dom-style'
 
 type Props = typeof defaultProps & {
   children: ReactNode

@@ -1,4 +1,4 @@
-import { CwdGame } from '../../types/cwd.types'
+import { CwdGame } from '../types/cwd.types'
 
 export default function getCwdWinner(game: CwdGame): 1 | 2 | undefined {
   if (game.score_team_1 === 0) return 1

@@ -1,10 +1,10 @@
+import { randomGradient } from '../gradient-dict'
 import {
   FreqClue,
   FreqClueDifficulty,
   FreqClueDifficultyOrAll,
-} from '../../types/freq.types'
-import { LanguageCode } from '../../types/game.types'
-import { randomGradient } from '../gradient-dict'
+} from '../types/freq.types'
+import { LanguageCode } from '../types/game.types'
 import FREQ_CLUES from './freq-clues'
 
 function createClue(clues: string[]): FreqClue {

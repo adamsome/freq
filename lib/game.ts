@@ -1,6 +1,6 @@
-import { CwdSettings } from '../types/cwd.types'
-import { FreqSettings } from '../types/freq.types'
-import { CommonGame, GameType, Player } from '../types/game.types'
+import { CwdSettings } from './types/cwd.types'
+import { FreqSettings } from './types/freq.types'
+import { CommonGame, GameType, Player } from './types/game.types'
 import { getPlayersPerTeam } from './player'
 
 type PartialGame = CommonGame & {

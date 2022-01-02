@@ -1,8 +1,8 @@
 import produce from 'immer'
-import { useDebounceCallback } from '../../hooks/use-debounce'
-import { useCwdGame } from '../../hooks/use-game'
-import { CwdGameView } from '../../types/cwd.types'
-import { postCommand } from '../../util/fetch-json'
+import { CwdGameView } from '../../lib/types/cwd.types'
+import { postCommand } from '../../lib/util/fetch-json'
+import { useDebounceCallback } from '../../lib/util/use-debounce'
+import { useCwdGame } from '../../lib/util/use-game'
 import CodeGrid from './code-grid'
 
 type Props = typeof defaultProps

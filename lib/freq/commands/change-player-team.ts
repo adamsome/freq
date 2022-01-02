@@ -1,7 +1,7 @@
-import { CurrentFreqGameView } from '../../../types/freq.types'
-import { connectToDatabase } from '../../../util/mongodb'
 import { assignColor } from '../../color-dict'
 import { isPlayer } from '../../player'
+import { CurrentFreqGameView } from '../../types/freq.types'
+import { connectToDatabase } from '../../util/mongodb'
 import { fromGames } from '../freq-game-store'
 import isInvalidPlayerTeamChange from '../is-freq-team-change-invalid'
 

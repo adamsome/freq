@@ -1,8 +1,8 @@
 import { getSession, UserProfile } from '@auth0/nextjs-auth0'
 import { WithId } from 'mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { User } from '../types/user.types'
-import { head } from '../util/array'
+import { User } from './types/user.types'
+import { head } from './util/array'
 import { isRoomValid } from './room'
 import { fetchUser } from './user-store'
 

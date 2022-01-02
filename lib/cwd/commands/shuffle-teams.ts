@@ -1,14 +1,14 @@
-import { CwdGame, FullCwdGameView } from '../../../types/cwd.types'
-import { connectToDatabase } from '../../../util/mongodb'
-import { fromCwdGames } from '../cwd-game-store'
 import * as crypto from 'crypto'
-import { partition, range } from '../../../util/array'
 import { assignColor } from '../../color-dict'
-import { Dict } from '../../../types/object.types'
-import { PlayerView } from '../../../types/game.types'
 import getNextPsychicsInfo from '../../get-next-psychics-info'
-import { countBinaryOnes } from '../../../util/number'
-import { shuffle } from '../../../util/random'
+import { CwdGame, FullCwdGameView } from '../../types/cwd.types'
+import { PlayerView } from '../../types/game.types'
+import { Dict } from '../../types/object.types'
+import { partition, range } from '../../util/array'
+import { connectToDatabase } from '../../util/mongodb'
+import { countBinaryOnes } from '../../util/number'
+import { shuffle } from '../../util/random'
+import { fromCwdGames } from '../cwd-game-store'
 
 export default async function shuffleTeams(game: FullCwdGameView) {
   if (game.phase !== 'prep') throw new Error('Can only shuffle teams in prep.')

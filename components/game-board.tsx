@@ -1,6 +1,6 @@
-import useGame from '../hooks/use-game'
 import { getGameTitle } from '../lib/game'
-import { GameType } from '../types/game.types'
+import { GameType } from '../lib/types/game.types'
+import useGame from '../lib/util/use-game'
 import CommandPanel from './command-panel'
 import CodesContainer from './cwd/codes-container'
 import CwdSettings from './cwd/cwd-settings'

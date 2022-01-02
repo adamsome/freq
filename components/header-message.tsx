@@ -1,8 +1,8 @@
-import { useFetchUser } from '../hooks/use-fetch-user'
-import useGame from '../hooks/use-game'
-import { Header } from '../types/game.types'
-import { cx } from '../util/dom'
-import { styleColor } from '../util/dom-style'
+import { Header } from '../lib/types/game.types'
+import { cx } from '../lib/util/dom'
+import { styleColor } from '../lib/util/dom-style'
+import { useFetchUser } from '../lib/util/use-fetch-user'
+import useGame from '../lib/util/use-game'
 
 const HeaderMessage = () => {
   const { game, loading: gameLoading } = useGame()

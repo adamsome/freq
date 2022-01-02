@@ -1,5 +1,12 @@
 /*! @react-hook/throttle v2.2.0 | MIT License | https://github.com/jaredLunde/react-hook/tree/master/packages/throttle#readme */
-import * as React from 'react'
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import useLatest from './use-latest'
 
 const perf = typeof performance !== 'undefined' ? performance : Date
@@ -12,14 +19,14 @@ export function useThrottleCallback<CallbackArguments extends any[]>(
 ): (...args: CallbackArguments) => void {
   const storedCallback = useLatest(callback)
   const ms = 1000 / fps
-  const prev = React.useRef(0)
-  const trailingTimeout = React.useRef<ReturnType<typeof setTimeout>>()
+  const prev = useRef(0)
+  const trailingTimeout = useRef<ReturnType<typeof setTimeout>>()
   const clearTrailing = () =>
     trailingTimeout.current && clearTimeout(trailingTimeout.current)
   const deps = [fps, leading, storedCallback]
 
   // Reset any time the deps change
-  React.useEffect(
+  useEffect(
     () => () => {
       prev.current = 0
       clearTrailing()
@@ -27,7 +34,7 @@ export function useThrottleCallback<CallbackArguments extends any[]>(
     deps
   )
 
-  return React.useCallback(function () {
+  return useCallback(function () {
     // eslint-disable-next-line prefer-rest-params
     const args = arguments
     const rightNow = now()
@@ -57,7 +64,7 @@ export function useThrottle<State>(
   initialState: State | (() => State),
   fps?: number,
   leading?: boolean
-): [State, React.Dispatch<React.SetStateAction<State>>] {
-  const state = React.useState<State>(initialState)
+): [State, Dispatch<SetStateAction<State>>] {
+  const state = useState<State>(initialState)
   return [state[0], useThrottleCallback(state[1], fps, leading)]
 }

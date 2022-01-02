@@ -1,7 +1,7 @@
-import { CwdGame } from '../../types/cwd.types'
-import { PlayerView } from '../../types/game.types'
-import { toTruthMap } from '../../util/object'
 import { getTeamPlayers } from '../player'
+import { CwdGame } from '../types/cwd.types'
+import { PlayerView } from '../types/game.types'
+import { toTruthMap } from '../util/object'
 import { calculateCwdPlayerPoints } from './cwd-stats'
 
 export default function createCwdPlayerViews(

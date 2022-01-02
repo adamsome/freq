@@ -1,15 +1,15 @@
 import type { Key } from 'react'
 import { useEffect } from 'react'
-import usePrevious from '../../hooks/use-previous'
+import { getTeamColor } from '../../lib/color-dict'
+import { getTeamName } from '../../lib/game'
+import { CwdLastAct } from '../../lib/types/cwd.types'
+import { styleColor } from '../../lib/util/dom-style'
+import { toTitleCase } from '../../lib/util/string'
+import usePrevious from '../../lib/util/use-previous'
 import useTerminalAnimation, {
   TerminalLine,
   TypedTerminalLine,
-} from '../../hooks/use-terminal-animation'
-import { getTeamColor } from '../../lib/color-dict'
-import { getTeamName } from '../../lib/game'
-import { CwdLastAct } from '../../types/cwd.types'
-import { styleColor } from '../../util/dom-style'
-import { toTitleCase } from '../../util/string'
+} from '../../lib/util/use-terminal-animation'
 
 type Props = typeof defaultProps & {
   guess?: CwdLastAct

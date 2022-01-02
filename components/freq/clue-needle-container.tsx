@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { useEffect, useRef } from 'react'
-import { useDrag1D } from '../../hooks/use-drag-1d'
-import { useFreqGame } from '../../hooks/use-game'
-import { useThrottle } from '../../hooks/use-throttle'
-import { partition } from '../../util/array'
+import { partition } from '../../lib/util/array'
+import { useDrag1D } from '../../lib/util/use-drag-1d'
+import { useFreqGame } from '../../lib/util/use-game'
+import { useThrottle } from '../../lib/util/use-throttle'
 import Needle from './needle'
 import NeedleAverage from './needle-average'
 

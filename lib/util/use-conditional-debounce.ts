@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { resolveValueFn, ValueFn } from '../util/value-fn'
 import { useDebounceCallback } from './use-debounce'
 import usePrevious from './use-previous'
+import { resolveValueFn, ValueFn } from './value-fn'
 
 export interface UseConditionalDebounceOptions<T> {
   /**

@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useFetchUser } from '../hooks/use-fetch-user'
-import { useTheme } from '../hooks/use-theme'
 import { API_LOGIN } from '../lib/consts'
+import { useFetchUser } from '../lib/util/use-fetch-user'
+import { useTheme } from '../lib/util/use-theme'
 import Button from './button'
 import PlayerButtonContainer from './player-button-container'
 

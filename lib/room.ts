@@ -1,4 +1,4 @@
-import generateWords from '../util/generate-code'
+import generateWords from './util/generate-code'
 
 function isTwoWordRoom(room: string) {
   return (

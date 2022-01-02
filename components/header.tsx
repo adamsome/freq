@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { GameType } from '../types/game.types'
-import { cx } from '../util/dom'
+import { GameType } from '../lib/types/game.types'
+import { cx } from '../lib/util/dom'
 import DebugBar from './debug-bar'
 import HeaderActions from './header-actions'
 import HeaderTitle from './header-title'

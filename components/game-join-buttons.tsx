@@ -2,7 +2,6 @@ import { useUser } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { mutate } from 'swr'
-import useGame from '../hooks/use-game'
 import { getTeamColor } from '../lib/color-dict'
 import {
   API_GAME,
@@ -15,8 +14,9 @@ import {
   KEY_ROOM_TYPE,
 } from '../lib/consts'
 import { getPreferredTeam } from '../lib/player'
-import { Command, CommonGameView } from '../types/game.types'
-import { postJson } from '../util/fetch-json'
+import { Command, CommonGameView } from '../lib/types/game.types'
+import { postJson } from '../lib/util/fetch-json'
+import useGame from '../lib/util/use-game'
 import CommandButton from './command-button'
 
 type Props = typeof defaultProps & {

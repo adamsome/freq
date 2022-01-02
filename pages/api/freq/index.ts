@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { FreqGame } from '../../../types/freq.types'
-import { connectToDatabase } from '../../../util/mongodb'
+import { FreqGame } from '../../../lib/types/freq.types'
+import { connectToDatabase } from '../../../lib/util/mongodb'
 
 export default async (_req: NextApiRequest, res: NextApiResponse) => {
   const { db } = await connectToDatabase()

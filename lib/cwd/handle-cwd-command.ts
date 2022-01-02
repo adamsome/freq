@@ -1,5 +1,5 @@
-import { FullCwdGameView } from '../../types/cwd.types'
-import { CommandType } from '../../types/game.types'
+import { FullCwdGameView } from '../types/cwd.types'
+import { CommandType } from '../types/game.types'
 import beginRound from './commands/begin-round'
 import changePlayerTeam from './commands/change-player-team'
 import editPlayer from './commands/edit-player'

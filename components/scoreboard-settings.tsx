@@ -1,4 +1,4 @@
-import { ScoreType } from '../types/game.types'
+import { ScoreType } from '../lib/types/game.types'
 import Button from './button'
 
 type Props = typeof defaultProps & {

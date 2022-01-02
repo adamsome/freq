@@ -1,7 +1,7 @@
 import { getGameTitle } from '../lib/game'
-import { GameType } from '../types/game.types'
-import { cx } from '../util/dom'
-import { styleLinearGradientText } from '../util/dom-style'
+import { GameType } from '../lib/types/game.types'
+import { cx } from '../lib/util/dom'
+import { styleLinearGradientText } from '../lib/util/dom-style'
 
 type Props = typeof defaultProps & {
   type?: string | GameType | null

@@ -1,5 +1,5 @@
-import { GameType, Player } from '../types/game.types'
-import { cx } from '../util/dom'
+import { GameType, Player } from '../lib/types/game.types'
+import { cx } from '../lib/util/dom'
 
 type Props = typeof defaultProps & {
   type?: GameType

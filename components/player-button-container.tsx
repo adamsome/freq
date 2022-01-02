@@ -8,10 +8,10 @@ import {
   KEY_ROOM,
   ROUTE_HOME,
 } from '../lib/consts'
-import { GameType } from '../types/game.types'
-import { User } from '../types/user.types'
-import { head } from '../util/array'
-import { postJson } from '../util/fetch-json'
+import { GameType } from '../lib/types/game.types'
+import { User } from '../lib/types/user.types'
+import { head } from '../lib/util/array'
+import { postJson } from '../lib/util/fetch-json'
 import ActionModal from './action-modal'
 import PlayerButton from './player-button'
 import PlayerEdit from './player-edit'

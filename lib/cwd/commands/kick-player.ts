@@ -1,6 +1,6 @@
-import { FullCwdGameView } from '../../../types/cwd.types'
-import { connectToDatabase } from '../../../util/mongodb'
 import { isPlayer } from '../../player'
+import { FullCwdGameView } from '../../types/cwd.types'
+import { connectToDatabase } from '../../util/mongodb'
 import { fromCwdGames, leaveCwdGame } from '../cwd-game-store'
 
 export default async function kickPlayer(

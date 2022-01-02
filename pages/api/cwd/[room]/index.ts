@@ -5,8 +5,8 @@ import { fetchCwdGame, joinCwdGame } from '../../../../lib/cwd/cwd-game-store'
 import { toCwdGameView } from '../../../../lib/cwd/cwd-game-view'
 import { isRoomValid } from '../../../../lib/room'
 import { fetchUser } from '../../../../lib/user-store'
-import { User } from '../../../../types/user.types'
-import { head } from '../../../../util/array'
+import { User } from '../../../../lib/types/user.types'
+import { head } from '../../../../lib/util/array'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {

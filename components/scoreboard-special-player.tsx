@@ -1,5 +1,5 @@
-import { PlayerView } from '../types/game.types'
-import { cx } from '../util/dom'
+import { PlayerView } from '../lib/types/game.types'
+import { cx } from '../lib/util/dom'
 import ScoreboardIcon from './scoreboard-icon'
 import ScoreboardPlayerName from './scoreboard-player-name'
 

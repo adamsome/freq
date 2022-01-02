@@ -1,17 +1,17 @@
-import { FreqGame } from '../../types/freq.types'
+import { getTeamColor } from '../color-dict'
+import { doesGameHaveEnoughPlayers, getTeamName } from '../game'
+import { getGuessesLocked } from '../guess'
+import { getTeamIcon } from '../icon'
+import { FreqGame } from '../types/freq.types'
 import {
   Command,
   CommandsView,
   Guess,
   Header,
   PlayerView,
-} from '../../types/game.types'
-import { partition, range } from '../../util/array'
-import { randomHourlyItem } from '../../util/random'
-import { getTeamColor } from '../color-dict'
-import { doesGameHaveEnoughPlayers, getTeamName } from '../game'
-import { getGuessesLocked } from '../guess'
-import { getTeamIcon } from '../icon'
+} from '../types/game.types'
+import { partition, range } from '../util/array'
+import { randomHourlyItem } from '../util/random'
 import { generateFreqRoundStats } from './freq-player-stats'
 import { getNextPsychic, getPsychic } from './freq-psychic'
 import {

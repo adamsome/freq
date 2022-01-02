@@ -1,6 +1,6 @@
 import colorDict from '../../lib/color-dict'
-import { PlayerWithGuess } from '../../types/game.types'
-import { cx } from '../../util/dom'
+import { PlayerWithGuess } from '../../lib/types/game.types'
+import { cx } from '../../lib/util/dom'
 
 type Props = typeof defaultProps & {
   player: PlayerWithGuess

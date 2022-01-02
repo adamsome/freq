@@ -8,7 +8,7 @@ import {
   ROUTE_GAME_ROOM,
 } from '../lib/consts'
 import { isRoomValid } from '../lib/room'
-import { isBrowser } from '../util/dom'
+import { isBrowser } from '../lib/util/dom'
 
 type Props = typeof defaultProps & {
   children: ReactNode

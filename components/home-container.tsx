@@ -11,9 +11,9 @@ import {
   ROUTE_HOME,
 } from '../lib/consts'
 import { isCwdGameView } from '../lib/cwd/cwd-game-view'
-import { CommonGameView, GameType } from '../types/game.types'
-import { head } from '../util/array'
-import { isBrowser } from '../util/dom'
+import { CommonGameView, GameType } from '../lib/types/game.types'
+import { head } from '../lib/util/array'
+import { isBrowser } from '../lib/util/dom'
 import Home from './home'
 import RoomRedirect from './room-redirect'
 

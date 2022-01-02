@@ -1,4 +1,4 @@
-import { Dict } from '../../types/object.types'
+import { Dict } from '../types/object.types'
 
 const CWD_CODE_WORD_BREAKS: Dict<number> = {
   ambulance: 4,

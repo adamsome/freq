@@ -2,10 +2,11 @@ import { UserProvider } from '@auth0/nextjs-auth0'
 import { AppProps } from 'next/app'
 import 'react-responsive-modal/styles.css'
 import { SWRConfig } from 'swr'
-import { ThemeProvider } from '../hooks/use-theme'
+import { ThemeProvider } from '../lib/util/use-theme'
 import { KEY_THEME } from '../lib/consts'
+import fetch from '../lib/util/fetch-json'
+
 import '../styles/globals.css'
-import fetch from '../util/fetch-json'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

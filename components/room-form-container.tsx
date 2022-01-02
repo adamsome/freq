@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
 import type { FormEvent } from 'react'
 import { useEffect, useState } from 'react'
-import { useDebounce } from '../hooks/use-debounce'
 import { ROUTE_GAME_ROOM } from '../lib/consts'
 import { isRoomValid } from '../lib/room'
-import { GameType } from '../types/game.types'
-import { head } from '../util/array'
+import { GameType } from '../lib/types/game.types'
+import { head } from '../lib/util/array'
+import { useDebounce } from '../lib/util/use-debounce'
 import RoomForm from './room-form'
 
 type Props = typeof defaultProps & {

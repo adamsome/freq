@@ -1,9 +1,9 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
-import { API_USER } from '../lib/consts'
+import { API_USER } from '../consts'
 import { User } from '../types/user.types'
-import { isBrowser } from '../util/dom'
+import { isBrowser } from './dom'
 
 export function useFetchUser() {
   const { user: authUser, error: authError, isLoading: authLoading } = useUser()

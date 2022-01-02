@@ -1,11 +1,11 @@
-import useConditionalDebounce from '../../hooks/use-conditional-debounce'
 import { getTeamColor } from '../../lib/color-dict'
 import { getTeamName } from '../../lib/game'
 import { getTeamIcon } from '../../lib/icon'
-import { CwdLastAct } from '../../types/cwd.types'
-import { range } from '../../util/array'
-import { cx } from '../../util/dom'
-import { styleColor } from '../../util/dom-style'
+import { CwdLastAct } from '../../lib/types/cwd.types'
+import { range } from '../../lib/util/array'
+import { cx } from '../../lib/util/dom'
+import { styleColor } from '../../lib/util/dom-style'
+import useConditionalDebounce from '../../lib/util/use-conditional-debounce'
 import SkeletonBox from '../skeleton-box'
 
 type Props = typeof defaultProps & {

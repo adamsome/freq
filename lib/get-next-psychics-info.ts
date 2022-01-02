@@ -1,7 +1,7 @@
-import { Player } from '../types/game.types'
-import { partition } from '../util/array'
-import { toTruthMap } from '../util/object'
-import { randomHourlyItem } from '../util/random'
+import { Player } from './types/game.types'
+import { partition } from './util/array'
+import { toTruthMap } from './util/object'
+import { randomHourlyItem } from './util/random'
 import { getPlayersPerTeam } from './player'
 
 export interface NextPsychicInfo {

@@ -1,5 +1,5 @@
-import { CurrentFreqGameView } from '../../../types/freq.types'
-import { connectToDatabase } from '../../../util/mongodb'
+import { CurrentFreqGameView } from '../../types/freq.types'
+import { connectToDatabase } from '../../util/mongodb'
 import { fromGames } from '../freq-game-store'
 import { areAllNeedleGuessesLocked } from '../guess-needle'
 

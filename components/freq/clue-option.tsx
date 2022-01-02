@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
-import useGame from '../../hooks/use-game'
-import { cx } from '../../util/dom'
+import { cx } from '../../lib/util/dom'
+import useGame from '../../lib/util/use-game'
 
 type Props = typeof defaultProps & {
   children: ReactNode

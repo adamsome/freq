@@ -1,5 +1,5 @@
-import { CurrentFreqGameView } from '../../types/freq.types'
-import { CommandType } from '../../types/game.types'
+import { CurrentFreqGameView } from '../types/freq.types'
+import { CommandType } from '../types/game.types'
 import beginRound from './commands/begin-round'
 import changePlayerTeam from './commands/change-player-team'
 import confirmClue from './commands/confirm-clue'

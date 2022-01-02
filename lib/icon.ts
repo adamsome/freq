@@ -1,4 +1,4 @@
-import { randomItem } from '../util/random'
+import { randomItem } from './util/random'
 
 export function randomIcon() {
   return randomItem(iconSet)

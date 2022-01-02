@@ -1,9 +1,9 @@
-import { CwdGame, FullCwdGameView } from '../../../types/cwd.types'
-import { connectToDatabase } from '../../../util/mongodb'
 import { assignColor } from '../../color-dict'
-import { isPlayer } from '../../player'
-import { fromCwdGames } from '../cwd-game-store'
 import getNextPsychicsInfo from '../../get-next-psychics-info'
+import { isPlayer } from '../../player'
+import { CwdGame, FullCwdGameView } from '../../types/cwd.types'
+import { connectToDatabase } from '../../util/mongodb'
+import { fromCwdGames } from '../cwd-game-store'
 
 export default async function changePlayerTeam(
   game: FullCwdGameView,

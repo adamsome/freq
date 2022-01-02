@@ -1,14 +1,14 @@
 import { OptionalId, WithId } from 'mongodb'
+import { canChangePsychicTo, isFreePhase } from '../phase'
+import { getPlayerDict } from '../player'
 import {
   CurrentFreqGameView,
   FreqClue,
   FreqGame,
   FreqGameView,
   FreqPhase,
-} from '../../types/freq.types'
-import { Player, PlayerWithGuess } from '../../types/game.types'
-import { canChangePsychicTo, isFreePhase } from '../phase'
-import { getPlayerDict } from '../player'
+} from '../types/freq.types'
+import { Player, PlayerWithGuess } from '../types/game.types'
 import createFreqCommandsView from './create-freq-commands-view'
 import createFreqPlayerViews from './create-freq-player-views'
 import { calculateAverageNeedleGuess } from './guess-needle'

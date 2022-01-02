@@ -1,4 +1,4 @@
-import { GameType } from '../types/game.types'
+import { GameType } from '../lib/types/game.types'
 import GamePicker from './game-picker'
 import RoomFormContainer from './room-form-container'
 import Title from './title'

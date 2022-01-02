@@ -1,5 +1,5 @@
-import { FullCwdGameView } from '../../../types/cwd.types'
-import { connectToDatabase } from '../../../util/mongodb'
+import { FullCwdGameView } from '../../types/cwd.types'
+import { connectToDatabase } from '../../util/mongodb'
 import { fromCwdGames } from '../cwd-game-store'
 
 export default async function setGuess(game: FullCwdGameView, guess: unknown) {

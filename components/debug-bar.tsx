@@ -1,8 +1,8 @@
 import type { MouseEvent } from 'react'
-import useGame from '../hooks/use-game'
 import { API_GAME_PHASE } from '../lib/consts'
 import { nextCwdPhase, nextFreqPhase } from '../lib/phase'
-import { postCommand, postJson } from '../util/fetch-json'
+import { postCommand, postJson } from '../lib/util/fetch-json'
+import useGame from '../lib/util/use-game'
 import Button from './button'
 
 const defaultProps = {}

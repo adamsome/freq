@@ -1,4 +1,4 @@
-import { CwdPlayerStats } from '../../types/cwd.types'
+import { CwdPlayerStats } from '../types/cwd.types'
 
 export function createCwdPlayerStats(id: string): CwdPlayerStats {
   return {

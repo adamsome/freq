@@ -1,5 +1,5 @@
-import { Guess } from '../types/game.types'
-import { Dict } from '../types/object.types'
+import { Guess } from './types/game.types'
+import { Dict } from './types/object.types'
 
 export function getGuessesLocked(dict: Dict<Guess> = {}): Guess[] {
   return Object.values(dict).filter((g) => g.locked === true)

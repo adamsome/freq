@@ -8,8 +8,8 @@ import { toCwdGameView } from '../../../lib/cwd/cwd-game-view'
 import { findManyFreqGames } from '../../../lib/freq/freq-game-store'
 import { toFreqGameView } from '../../../lib/freq/freq-game-view'
 import { fetchUser } from '../../../lib/user-store'
-import { CwdGameView } from '../../../types/cwd.types'
-import { FreqGameView } from '../../../types/freq.types'
+import { CwdGameView } from '../../../lib/types/cwd.types'
+import { FreqGameView } from '../../../lib/types/freq.types'
 
 export default withApiAuthRequired(async function getUser(req, res) {
   try {

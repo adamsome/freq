@@ -1,9 +1,9 @@
 import { formatDistanceWithOptions, formatISO9075, parseISO } from 'date-fns/fp'
 import type { MouseEvent as ReactMouseEvent } from 'react'
 import { getGameTitle } from '../lib/game'
-import { CommonGameView } from '../types/game.types'
-import { cx } from '../util/dom'
-import { styleLinearGradientText } from '../util/dom-style'
+import { CommonGameView } from '../lib/types/game.types'
+import { cx } from '../lib/util/dom'
+import { styleLinearGradientText } from '../lib/util/dom-style'
 import Scoreboard from './scoreboard'
 
 type Props = typeof defaultProps & {

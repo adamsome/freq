@@ -1,8 +1,8 @@
 import produce from 'immer'
 import { useState } from 'react'
-import useGame from '../hooks/use-game'
-import { Command, CommonGameView } from '../types/game.types'
-import { postCommand } from '../util/fetch-json'
+import { Command, CommonGameView } from '../lib/types/game.types'
+import { postCommand } from '../lib/util/fetch-json'
+import useGame from '../lib/util/use-game'
 import CommandButton from './command-button'
 
 const CommandPanel = () => {

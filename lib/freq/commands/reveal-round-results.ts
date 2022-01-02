@@ -1,12 +1,12 @@
-import { CurrentFreqGameView, FreqPlayerStats } from '../../../types/freq.types'
-import { Dict } from '../../../types/object.types'
-import { connectToDatabase } from '../../../util/mongodb'
-import { fromGames } from '../freq-game-store'
 import { isGuessingPhase } from '../../phase'
+import { CurrentFreqGameView, FreqPlayerStats } from '../../types/freq.types'
+import { Dict } from '../../types/object.types'
+import { connectToDatabase } from '../../util/mongodb'
+import { fromGames } from '../freq-game-store'
 import {
-  sumFreqPlayerStats,
   createFreqPlayerStats,
   generateFreqRoundStats,
+  sumFreqPlayerStats,
 } from '../freq-player-stats'
 import {
   findManyFreqPlayerStatsByID,

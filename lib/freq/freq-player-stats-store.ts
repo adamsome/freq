@@ -1,7 +1,7 @@
 import { Db, OptionalId, WithId } from 'mongodb'
-import { FreqPlayerStats } from '../../types/freq.types'
-import { Dict } from '../../types/object.types'
-import { connectToDatabase } from '../../util/mongodb'
+import { FreqPlayerStats } from '../types/freq.types'
+import { Dict } from '../types/object.types'
+import { connectToDatabase } from '../util/mongodb'
 
 export const fromFreqPlayerStats = (db: Db) =>
   db.collection<WithId<FreqPlayerStats>>('player_stats')

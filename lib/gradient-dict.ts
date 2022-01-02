@@ -1,7 +1,7 @@
 /*! From ghosh/uiGradients | MIT License | https://github.com/ghosh/uiGradients/blob/master/gradients.json */
-import { Dict } from '../types/object.types'
-import { objectKeys } from '../util/object'
-import { randomItem } from '../util/random'
+import { Dict } from './types/object.types'
+import { objectKeys } from './util/object'
+import { randomItem } from './util/random'
 
 export function randomGradient() {
   return randomItem(objectKeys(gradientDict))

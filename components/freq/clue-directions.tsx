@@ -1,6 +1,6 @@
-import { PlayerWithGuess } from '../../types/game.types'
-import { partition } from '../../util/array'
-import { cx } from '../../util/dom'
+import { PlayerWithGuess } from '../../lib/types/game.types'
+import { partition } from '../../lib/util/array'
+import { cx } from '../../lib/util/dom'
 
 type Props = typeof defaultProps & {
   directions: PlayerWithGuess[]

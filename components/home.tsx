@@ -1,5 +1,5 @@
 import { getGameTitle } from '../lib/game'
-import { CommonGameView, GameType } from '../types/game.types'
+import { CommonGameView, GameType } from '../lib/types/game.types'
 import HomeGames from './home-games'
 import Layout from './layout'
 import LayoutMain from './layout-main'

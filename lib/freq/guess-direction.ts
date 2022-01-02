@@ -1,9 +1,9 @@
-import { FreqGame } from '../../types/freq.types'
-import { Guess } from '../../types/game.types'
-import { Dict } from '../../types/object.types'
-import { partition } from '../../util/array'
 import { getGuessesLocked, getGuessesSet } from '../guess'
 import { getTeamPlayers } from '../player'
+import { FreqGame } from '../types/freq.types'
+import { Guess } from '../types/game.types'
+import { Dict } from '../types/object.types'
+import { partition } from '../util/array'
 
 export function getDirectionGuessesNeeded(
   game: FreqGame,

@@ -1,14 +1,14 @@
 import { Db, WithId } from 'mongodb'
+import { addPlayer, getTeamPlayers, hasPlayer } from '../player'
 import {
   CurrentFreqGameView,
   FreqGame,
   FreqGameView,
-} from '../../types/freq.types'
-import { User } from '../../types/user.types'
-import { head } from '../../util/array'
-import { connectToDatabase } from '../../util/mongodb'
-import { addPlayer, getTeamPlayers, hasPlayer } from '../player'
+} from '../types/freq.types'
+import { User } from '../types/user.types'
 import { fromUsers } from '../user-store'
+import { head } from '../util/array'
+import { connectToDatabase } from '../util/mongodb'
 import createNewFreqGame from './create-new-freq-game'
 import { isCurrentFreqGameView, toFreqGameView } from './freq-game-view'
 import { getNextPsychic } from './freq-psychic'

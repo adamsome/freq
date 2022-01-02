@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router'
 import GameBoard from '../../components/game-board'
 import GameGuard from '../../components/game-guard'
-import { GameType } from '../../types/game.types'
-import { head } from '../../util/array'
+import { GameType } from '../../lib/types/game.types'
+import { head } from '../../lib/util/array'
 
 export default function FreqRoomPage() {
   const router = useRouter()

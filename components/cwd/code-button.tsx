@@ -1,11 +1,15 @@
-import useConditionalDebounce from '../../hooks/use-conditional-debounce'
-import { useTheme } from '../../hooks/use-theme'
 import { getTeamColor } from '../../lib/color-dict'
 import { cwdCodeEquals } from '../../lib/cwd/build-cwd-code-views'
-import { CwdCodeState, CwdCodeView, CwdLastAct } from '../../types/cwd.types'
-import { PlayerView } from '../../types/game.types'
-import { cx } from '../../util/dom'
-import { styleBorder, styleColor } from '../../util/dom-style'
+import {
+  CwdCodeState,
+  CwdCodeView,
+  CwdLastAct,
+} from '../../lib/types/cwd.types'
+import { PlayerView } from '../../lib/types/game.types'
+import { cx } from '../../lib/util/dom'
+import { styleBorder, styleColor } from '../../lib/util/dom-style'
+import useConditionalDebounce from '../../lib/util/use-conditional-debounce'
+import { useTheme } from '../../lib/util/use-theme'
 import SkeletonBox from '../skeleton-box'
 
 type Props = typeof defaultProps & {

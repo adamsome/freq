@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { isLeftClick } from '../util/dom'
+import { isLeftClick } from './dom'
 import useEvent from './use-event'
 import useLayoutEffect from './use-passive-layout-effect'
 import useSize from './use-size'
