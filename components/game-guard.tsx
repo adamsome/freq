@@ -3,7 +3,7 @@ import { isRoomValid } from '../lib/room'
 import { GameType } from '../lib/types/game.types'
 import { isObject } from '../lib/util/object'
 import useGame from '../lib/util/use-game'
-import TitleMessage from './title-message'
+import TitleMessage from './control/title-message'
 
 type Props = typeof defaultProps & {
   children: ReactNode

@@ -1,5 +1,5 @@
-import Button from './button'
-import SkeletonBox from './skeleton-box'
+import Button from './control/button'
+import SkeletonBox from './layout/skeleton-box'
 
 type Props = typeof defaultProps & {
   url?: string

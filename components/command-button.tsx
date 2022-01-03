@@ -2,8 +2,8 @@ import type { MouseEvent } from 'react'
 import { Command, Player } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
 import { styleColor } from '../lib/util/dom-style'
-import Button from './button'
-import IconSvg from './icon-svg'
+import Button from './control/button'
+import IconSvg from './control/icon-svg'
 
 type Props = typeof defaultProps & {
   command: Command

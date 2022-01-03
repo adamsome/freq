@@ -8,7 +8,7 @@ import { styleColor } from '../lib/util/dom-style'
 import { postCommand } from '../lib/util/fetch-json'
 import useGame from '../lib/util/use-game'
 import useLayoutEffect from '../lib/util/use-passive-layout-effect'
-import IconSvg from './icon-svg'
+import IconSvg from './control/icon-svg'
 import PlayerOptionButton from './player-option-button'
 
 type Props = typeof defaultProps & {

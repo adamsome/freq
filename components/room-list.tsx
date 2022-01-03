@@ -1,9 +1,9 @@
 import { BaseGameView } from '../lib/types/game.types'
 import { range } from '../lib/util/array'
 import { cx } from '../lib/util/dom'
-import Button from './button'
-import Heading from './heading'
-import IconSvg from './icon-svg'
+import Button from './control/button'
+import Heading from './control/heading'
+import IconSvg from './control/icon-svg'
 import RoomCard, { RoomCardSkeleton } from './room-card'
 
 type Props = typeof defaultProps & {

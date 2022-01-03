@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import ActionModal from './action-modal'
+import ActionModal from './control/action-modal'
 import PlayerButton from './player-button'
 import PlayerEdit from './player-edit'
 

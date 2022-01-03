@@ -1,5 +1,5 @@
 import { cx } from '../../lib/util/dom'
-import IconSvg from '../icon-svg'
+import IconSvg from '../control/icon-svg'
 
 type Props = typeof defaultProps & {
   transform: string

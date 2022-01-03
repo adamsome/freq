@@ -1,8 +1,8 @@
 import { GameType } from '../lib/types/game.types'
+import Heading from './control/heading'
+import Title from './control/title'
 import GamePicker from './game-picker'
-import Heading from './heading'
 import RoomFormContainer from './room-form-container'
-import Title from './title'
 
 type Props = typeof defaultProps & {
   gameType?: GameType

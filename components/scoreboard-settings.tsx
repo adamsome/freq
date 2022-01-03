@@ -1,5 +1,5 @@
 import { ScoreType } from '../lib/types/game.types'
-import Button from './button'
+import Button from './control/button'
 
 type Props = typeof defaultProps & {
   onTypeToggle: (scoreType: ScoreType) => void

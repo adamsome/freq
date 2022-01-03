@@ -4,7 +4,7 @@ import { isTeamGuessGame } from '../lib/game'
 import { BaseGameView } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
 import Scoreboard from './scoreboard'
-import Title from './title'
+import Title from './control/title'
 
 type Props = typeof defaultProps & {
   game: BaseGameView

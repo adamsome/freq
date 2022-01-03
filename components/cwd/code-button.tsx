@@ -10,7 +10,7 @@ import { cx } from '../../lib/util/dom'
 import { styleBorder, styleColor } from '../../lib/util/dom-style'
 import useConditionalDebounce from '../../lib/util/use-conditional-debounce'
 import { useTheme } from '../../lib/util/use-theme'
-import SkeletonBox from '../skeleton-box'
+import SkeletonBox from '../layout/skeleton-box'
 
 type Props = typeof defaultProps & {
   code?: CwdCodeView

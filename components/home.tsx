@@ -1,9 +1,9 @@
 import { getGameTitle } from '../lib/game'
 import { BaseGameView, GameType } from '../lib/types/game.types'
+import RepoLink from './control/repo-link'
 import HomeGames from './home-games'
-import Layout from './layout'
-import LayoutMain from './layout-main'
-import RepoLink from './repo-link'
+import Layout from './layout/layout'
+import LayoutMain from './layout/layout-main'
 import RoomList from './room-list'
 
 type Props = typeof defaultProps & {

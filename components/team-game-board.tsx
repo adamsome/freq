@@ -9,11 +9,11 @@ import FreqSettings from './freq/freq-settings'
 import GameJoinButtons from './game-join-buttons'
 import GameLink from './game-link'
 import HeaderMessage from './header-message'
-import Layout from './layout'
-import LayoutMain from './layout-main'
+import Layout from './layout/layout'
+import LayoutMain from './layout/layout-main'
+import SkeletonBox from './layout/skeleton-box'
 import PlayerHero from './player-hero'
 import Scoreboard from './scoreboard'
-import SkeletonBox from './skeleton-box'
 
 type Props = typeof defaultProps & {
   type?: GameType
@@ -21,7 +21,7 @@ type Props = typeof defaultProps & {
 
 const defaultProps = {}
 
-export default function GameBoard({ type }: Props) {
+export default function TeamGameBoard({ type }: Props) {
   const { game } = useGame()
 
   const title = getGameTitle(type)
@@ -75,4 +75,4 @@ export default function GameBoard({ type }: Props) {
   )
 }
 
-GameBoard.defaultProps = defaultProps
+TeamGameBoard.defaultProps = defaultProps

@@ -1,6 +1,6 @@
 import { GameType, GAME_TYPES } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
-import GameButton from './game-button'
+import GameButton from './control/game-button'
 
 type Props = typeof defaultProps & {
   horizontal?: boolean

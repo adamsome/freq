@@ -3,8 +3,8 @@ import { User } from '../lib/types/user.types'
 import { cx } from '../lib/util/dom'
 import { styleColor } from '../lib/util/dom-style'
 import useGame from '../lib/util/use-game'
-import Button from './button'
-import IconSvg from './icon-svg'
+import Button from './control/button'
+import IconSvg from './control/icon-svg'
 
 type Props = typeof defaultProps & {
   user?: User

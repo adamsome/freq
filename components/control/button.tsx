@@ -6,8 +6,8 @@ import type {
   MouseEventHandler,
   ReactNode,
 } from 'react'
-import { cx } from '../lib/util/dom'
-import { omit } from '../lib/util/object'
+import { cx } from '../../lib/util/dom'
+import { omit } from '../../lib/util/object'
 
 const ButtonHTMLTypes = ['submit', 'button', 'reset'] as const
 export type ButtonHTMLType = typeof ButtonHTMLTypes[number]

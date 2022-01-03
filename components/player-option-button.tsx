@@ -2,7 +2,7 @@ import type { ButtonHTMLAttributes } from 'react'
 import { Player } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
 import { styleColor } from '../lib/util/dom-style'
-import Button from './button'
+import Button from './control/button'
 
 type Props = typeof defaultProps &
   ButtonHTMLAttributes<unknown> & {

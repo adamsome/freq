@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { API_LOGIN } from '../lib/consts'
-import { useFetchUser } from '../lib/util/use-fetch-user'
-import { useTheme } from '../lib/util/use-theme'
-import Button from './button'
-import PlayerButtonContainer from './player-button-container'
+import { API_LOGIN } from '../../lib/consts'
+import { useFetchUser } from '../../lib/util/use-fetch-user'
+import { useTheme } from '../../lib/util/use-theme'
+import Button from '../control/button'
+import PlayerButtonContainer from '../player-button-container'
 
 type Props = typeof defaultProps & {
   onDebugToggle: () => void

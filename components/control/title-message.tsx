@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
-import { GameType } from '../lib/types/game.types'
-import { cx } from '../lib/util/dom'
-import Layout from './layout'
+import { GameType } from '../../lib/types/game.types'
+import { cx } from '../../lib/util/dom'
+import Layout from '../layout/layout'
 import RepoLink from './repo-link'
 import Title from './title'
 

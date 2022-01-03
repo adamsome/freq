@@ -6,7 +6,7 @@ import { range } from '../../lib/util/array'
 import { cx } from '../../lib/util/dom'
 import { styleColor } from '../../lib/util/dom-style'
 import useConditionalDebounce from '../../lib/util/use-conditional-debounce'
-import SkeletonBox from '../skeleton-box'
+import SkeletonBox from '../layout/skeleton-box'
 
 type Props = typeof defaultProps & {
   winner?: 1 | 2

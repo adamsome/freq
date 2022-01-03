@@ -3,7 +3,7 @@ import type {
   FocusEventHandler,
   InputHTMLAttributes,
 } from 'react'
-import { cx } from '../lib/util/dom'
+import { cx } from '../../lib/util/dom'
 
 const InputHTMLType = [
   'button',

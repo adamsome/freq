@@ -1,5 +1,5 @@
-import { GameType } from '../lib/types/game.types'
-import { cx } from '../lib/util/dom'
+import { GameType } from '../../lib/types/game.types'
+import { cx } from '../../lib/util/dom'
 import Title from './title'
 
 type Props = typeof defaultProps & {

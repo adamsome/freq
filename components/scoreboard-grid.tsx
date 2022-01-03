@@ -6,7 +6,7 @@ import ScoreboardIcon from './scoreboard-icon'
 import ScoreboardPlayerName from './scoreboard-player-name'
 import ScoreboardPlayerRow from './scoreboard-player-row'
 import ScoreboardPlayerScore from './scoreboard-player-score'
-import SkeletonBox from './skeleton-box'
+import SkeletonBox from './layout/skeleton-box'
 
 type Props = typeof defaultProps & {
   type?: GameType

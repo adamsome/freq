@@ -1,7 +1,7 @@
 import { FreqClue } from '../../lib/types/freq.types'
 import { postCommand } from '../../lib/util/fetch-json'
 import { useFreqGame } from '../../lib/util/use-game'
-import SkeletonBox from '../skeleton-box'
+import SkeletonBox from '../layout/skeleton-box'
 import ClueCard from './clue-card'
 import ClueDirections from './clue-directions'
 import ClueNeedleContainer from './clue-needle-container'

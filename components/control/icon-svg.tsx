@@ -1,4 +1,4 @@
-import { cx } from '../lib/util/dom'
+import { cx } from '../../lib/util/dom'
 
 export type IconSvgName = 'dropdown' | 'caret-down' | 'spinner'
 

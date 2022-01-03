@@ -8,8 +8,8 @@ import { cx, isBrowser } from '../lib/util/dom'
 import { styleColor } from '../lib/util/dom-style'
 import { postCommand } from '../lib/util/fetch-json'
 import useGame from '../lib/util/use-game'
-import ActionModalOptions from './action-modal-options'
-import IconSvg from './icon-svg'
+import ActionModalOptions from './control/action-modal-options'
+import IconSvg from './control/icon-svg'
 import PlayerOptionButton from './player-option-button'
 
 type Props = typeof defaultProps & {

@@ -3,9 +3,9 @@ import { useState } from 'react'
 import { GameType } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
 import { styleLinearGradient } from '../lib/util/dom-style'
-import Button from './button'
-import Input from './input'
-import SkeletonBox from './skeleton-box'
+import Button from './control/button'
+import Input from './control/input'
+import SkeletonBox from './layout/skeleton-box'
 
 type Props = typeof defaultProps & {
   type?: GameType
