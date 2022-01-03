@@ -14,6 +14,7 @@ type Props = typeof defaultProps & {
   fetching?: boolean
   animate?: boolean
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
+  onChangeGameClick: () => void
 }
 
 const defaultProps = {
@@ -24,6 +25,7 @@ export default function RoomForm({
   type,
   error,
   onSubmit,
+  onChangeGameClick,
   generatedRoom,
   fetching,
   animate,
@@ -45,12 +47,12 @@ export default function RoomForm({
         className={cx('flex-center flex-col', classNames)}
         onSubmit={onSubmit}
       >
-        <div className="w-72 max-w-full">
+        <div className="w-72 max-w-full space-y-3">
           {generatedRoom == null ? (
-            <SkeletonBox className="w-full h-12 mb-4" />
+            <SkeletonBox className="w-full h-12" />
           ) : (
             <Input
-              className="w-full h-12 mb-4 px-3 py-1 text-3xl font-medium"
+              className="w-full h-12 px-3 py-1 text-3xl font-medium"
               htmlType="text"
               name="room"
               placeholder="Room Code"
@@ -77,6 +79,18 @@ export default function RoomForm({
             disabled={fetching || !type}
           >
             Start
+          </Button>
+
+          <Button
+            className={cx('w-full font-bold text-xl text-center', {
+              'opacity-20': fetching,
+            })}
+            // solid
+            blue
+            disabled={fetching || !type}
+            onClick={onChangeGameClick}
+          >
+            Change Game
           </Button>
         </div>
 

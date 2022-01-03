@@ -12,7 +12,7 @@ export default function createNewFreqGame(
   // Assign player to random team
   const team_turn = team ?? Math.random() < 0.5 ? 1 : 2
   // Since new game, player gets made leader
-  const player = createPlayer(user, team_turn, true)
+  const player = createPlayer(user, { team: team_turn })
   const game: FreqGame = {
     room: room.toLowerCase(),
     target_width: DEFAULT_TARGET_WIDTH,

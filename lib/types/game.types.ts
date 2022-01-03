@@ -43,25 +43,41 @@ export const COMMON_PHASES = [
 
 export type CommonPhase = typeof COMMON_PHASES[number]
 
-const GameType = ['freq', 'cwd'] as const
-export type GameType = typeof GameType[number]
-export interface CommonGame {
+export const GAME_TYPES = ['freq', 'cwd', 'blow'] as const
+export type GameType = typeof GAME_TYPES[number]
+
+export interface BaseGame {
   /** Room code. */
   room: string
   /** List of players in the game. */
   players: Player[]
+  match_number: number
+  round_number: number
+  /** Phase of the currently played match. */
+  phase: CommonPhase
+  /** Truth map of player IDs who have been kicked from the game. */
+  kicked?: Dict<boolean>
+  /** ISO Timestamp of when the room was initially created */
+  room_started_at: string
+  match_started_at?: string
+  match_finished_at?: string
+  round_started_at?: string
+  round_finished_at?: string
+  /**
+   * UI helper -- never actually set on the server or DB, but the
+   * client can set it in the frontend to indicate button loading states.
+   **/
+  fetching?: boolean
+}
+export interface TeamGuessGame extends BaseGame {
   /** Map of guess value & whether its locked, by player ID. */
   guesses?: Dict<Guess>
   /** Map of direcion guess value & whether its locked, by player ID. */
   directions?: Dict<Guess>
-  match_number: number
-  round_number: number
   /** Current team whose turn it is. */
   team_turn: 1 | 2
-  /** Whether the tea whose turn it is goes again after this round. */
+  /** Whether the team whose turn it is goes again after this round. */
   repeat_turn?: boolean
-  /** Phase of the currently played match. */
-  phase: CommonPhase
   score_team_1: number
   score_team_2: number
   /**
@@ -78,19 +94,6 @@ export interface CommonGame {
    * used team combination from `team_combos`.
    */
   team_combos_index?: Dict<number>
-  /** Truth map of player IDs who have been kicked from the game. */
-  kicked?: Dict<boolean>
-  /** ISO Timestamp of when the room was initially created */
-  room_started_at: string
-  match_started_at?: string
-  match_finished_at?: string
-  round_started_at?: string
-  round_finished_at?: string
-  /**
-   * UI helper -- never actually set on the server or DB, but the
-   * client can set it in the frontend to indicate button loading states.
-   **/
-  fetching?: boolean
 }
 
 export type CommandType =
@@ -146,10 +149,16 @@ export interface CommandsView {
   commands: Command[]
 }
 
-export interface CommonGameView extends CommonGame, CommandsView {
+export interface BaseGameView extends Omit<BaseGame, 'players'> {
   type: GameType
-  currentPlayer?: PlayerView
   players: PlayerView[]
+  currentPlayer?: PlayerView
+}
+
+export interface TeamGuessGameView
+  extends Omit<TeamGuessGame, 'players'>,
+    BaseGameView,
+    CommandsView {
   canChangePsychicTo: CanChangePsychicTo
 }
 

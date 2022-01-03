@@ -23,6 +23,7 @@ module.exports = {
     fontFamily: {
       sans: ['Rubik', ...defaultTheme.fontFamily.sans],
       mono: ["'Space Mono'", ...defaultTheme.fontFamily.mono],
+      narrow: ["'Noto Sans Display'", ...defaultTheme.fontFamily.sans],
     },
     extend: {
       animation: {

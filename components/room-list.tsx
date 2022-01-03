@@ -1,13 +1,14 @@
-import { CommonGameView } from '../lib/types/game.types'
+import { BaseGameView } from '../lib/types/game.types'
 import { range } from '../lib/util/array'
 import { cx } from '../lib/util/dom'
 import Button from './button'
+import Heading from './heading'
 import IconSvg from './icon-svg'
 import RoomCard, { RoomCardSkeleton } from './room-card'
 
 type Props = typeof defaultProps & {
-  rooms?: CommonGameView[]
-  onRoomClick: (game: CommonGameView) => void
+  rooms?: BaseGameView[]
+  onRoomClick: (game: BaseGameView) => void
   onRefresh?: () => void
 }
 
@@ -27,13 +28,7 @@ export default function RoomList({
 }: Props) {
   return (
     <>
-      <h1
-        className={cx(
-          'flex items-center',
-          'w-full text-3xl font-semibold mb-6 md:mb-8 pl-4 md:pl-0',
-          classNames
-        )}
-      >
+      <Heading classNames={classNames}>
         <span>Recent Games</span>
         <span className="flex-1"></span>
         <Button
@@ -52,7 +47,7 @@ export default function RoomList({
             'Refresh'
           )}
         </Button>
-      </h1>
+      </Heading>
 
       {error != null && (
         <p className="mb-8 self-start text-left text-xl text-red-700">

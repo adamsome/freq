@@ -61,7 +61,7 @@ export async function joinFreqGame(
   } else {
     // Add player to game if not already
     if (!hasPlayer(game.players, user.id)) {
-      game.players = addPlayer(game.players, user, team)
+      game.players = addPlayer(game.players, user, { team, assignTeam: true })
 
       const gameFilter = { room: game.room.toLowerCase() }
       const kicked = { ...game.kicked }

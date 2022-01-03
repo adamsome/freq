@@ -7,23 +7,40 @@ type Props = typeof defaultProps & {
   type?: string | GameType | null
   title?: string
   animate?: boolean
+  small?: boolean
 }
 
 const defaultProps = {
   classNames: '',
 }
 
-export default function Title({ classNames, type, title, animate }: Props) {
+export default function Title({
+  classNames,
+  type,
+  title,
+  animate,
+  small,
+}: Props) {
+  const label = title || (type ? getGameTitle(type) : <span>&nbsp;</span>)
+  const styles = styleLinearGradientText(type ?? undefined)
+  const classes = cx('font-extrabold', classNames, {
+    'animate-shift': animate,
+    'hover:animate-shake': animate,
+    'font-mono': type === 'cwd',
+    'font-narrow tracking-[0.2em] pl-3': type === 'blow',
+  })
+
+  if (small) {
+    return (
+      <div className={classes} style={styles}>
+        {label}
+      </div>
+    )
+  }
+
   return (
-    <h1
-      style={styleLinearGradientText(type ?? undefined)}
-      className={cx('m-0 text-7xl font-extrabold text-center', classNames, {
-        'animate-shift': animate,
-        'hover:animate-shake': animate,
-        'font-mono': type === 'cwd',
-      })}
-    >
-      {title || (type ? getGameTitle(type) : <span>&nbsp;</span>)}
+    <h1 style={styles} className={cx('m-0 text-7xl text-center', classes)}>
+      {label}
     </h1>
   )
 }

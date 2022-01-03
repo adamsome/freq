@@ -12,11 +12,15 @@ export function isPlayer(player: unknown): player is Player {
   return isObject(player) && isNotEmpty(player.id, player.name)
 }
 
+interface CreatePlayerOptions {
+  team?: 1 | 2
+  leader?: boolean
+  existingPlayers?: Player[]
+}
+
 export function createPlayer(
   user: User,
-  team?: 1 | 2,
-  leader = false,
-  existingPlayers?: Player[]
+  { team, leader = true, existingPlayers }: CreatePlayerOptions = {}
 ): Player {
   const id = user.id
   const existingNames = existingPlayers?.map((p) => p.name ?? '')
@@ -68,19 +72,30 @@ export function getPreferredTeam(players: Player[]): 1 | 2 {
   return (countByTeam[1] ?? 0) > (countByTeam[2] ?? 0) ? 2 : 1
 }
 
+interface AddPlayerOptions {
+  team?: 1 | 2
+  forceLeader?: boolean
+  assignTeam?: boolean
+}
+
 export function addPlayer(
-  players: Player[],
+  existingPlayers: Player[],
   user: User,
-  team: 1 | 2 = getPreferredTeam(players),
-  forceLeader = false
+  { team, forceLeader = false, assignTeam }: AddPlayerOptions = {}
+  // team: 1 | 2 = getPreferredTeam(players),
+  // forceLeader = false
 ): Player[] {
   // Make leader if team has none
   const leader =
-    forceLeader || !players.some((p) => p.team === team && p.leader)
+    forceLeader || !existingPlayers.some((p) => p.team === team && p.leader)
+
+  if (team == null && assignTeam) {
+    team = getPreferredTeam(existingPlayers)
+  }
 
   // Return game w/ new player added
-  const player = createPlayer(user, team, leader, players)
-  return [...players, player]
+  const player = createPlayer(user, { team, leader, existingPlayers })
+  return [...existingPlayers, player]
 }
 
 export function getPlayerDict<T extends Player>(players: T[]): Dict<T> {

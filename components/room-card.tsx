@@ -1,14 +1,14 @@
 import { formatDistanceWithOptions, formatISO9075, parseISO } from 'date-fns/fp'
 import type { MouseEvent as ReactMouseEvent } from 'react'
-import { getGameTitle } from '../lib/game'
-import { CommonGameView } from '../lib/types/game.types'
+import { isTeamGuessGame } from '../lib/game'
+import { BaseGameView } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
-import { styleLinearGradientText } from '../lib/util/dom-style'
 import Scoreboard from './scoreboard'
+import Title from './title'
 
 type Props = typeof defaultProps & {
-  game: CommonGameView
-  onClick: (game: CommonGameView) => void
+  game: BaseGameView
+  onClick: (game: BaseGameView) => void
 }
 
 const defaultProps = {
@@ -62,14 +62,7 @@ export default function RoomCard({ game, className, onClick }: Props) {
             'whitespace-nowrap overflow-hidden text-ellipsis'
           )}
         >
-          <div
-            className={cx('font-extrabold', {
-              'font-mono': game.type === 'cwd',
-            })}
-            style={styleLinearGradientText(game.type)}
-          >
-            {getGameTitle(game.type)}
-          </div>
+          <Title type={game.type} small />
 
           <div className="text-gray-300 dark:text-gray-700 font-light ml-2 mr-1.5">
             /
@@ -118,7 +111,11 @@ export default function RoomCard({ game, className, onClick }: Props) {
           'group-hover:border-gray-300 dark:group-hover:border-gray-700'
         )}
       >
-        <Scoreboard game={game} readonly></Scoreboard>
+        {isTeamGuessGame(game.type) ? (
+          <Scoreboard game={game} readonly></Scoreboard>
+        ) : (
+          <div>Scores not yet implemented.</div>
+        )}
       </div>
     </button>
   )

@@ -1,4 +1,4 @@
-import { CommonGame, CommonGameView, PlayerView } from './game.types'
+import { TeamGuessGame, TeamGuessGameView, PlayerView } from './game.types'
 import { Dict } from './object.types'
 
 export interface CwdPlayerStats {
@@ -65,7 +65,7 @@ export interface CwdLastAct {
   pass?: boolean
 }
 
-export interface CwdGame extends CommonGame, CwdCodesInfo {
+export interface CwdGame extends TeamGuessGame, CwdCodesInfo {
   settings?: CwdSettings
   /* Team 1's current psychic */
   psychic_1?: string
@@ -88,7 +88,7 @@ export interface CwdGame extends CommonGame, CwdCodesInfo {
 }
 
 export interface CwdGameView
-  extends Omit<CommonGameView, 'phase'>,
+  extends Omit<TeamGuessGameView, 'phase'>,
     Omit<CwdGame, keyof CwdCodesInfo | 'players'> {
   codes: CwdCodeView[]
   winner?: 1 | 2

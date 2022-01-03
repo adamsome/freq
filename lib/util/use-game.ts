@@ -4,7 +4,7 @@ import type { mutateCallback } from 'swr/dist/types'
 import { API_GAME } from '../consts'
 import { CwdGameView } from '../types/cwd.types'
 import { FreqGameView } from '../types/freq.types'
-import { CommonGameView } from '../types/game.types'
+import { TeamGuessGameView } from '../types/game.types'
 import { head } from './array'
 
 export interface UseGameOptions<T> {
@@ -32,9 +32,9 @@ const withDefaults = <T>(
   refreshInterval: options.refreshInterval ?? 750,
 })
 
-export default function useGame<T extends CommonGameView = CommonGameView>(
-  options: Partial<UseGameOptions<T>> = {}
-): UseGameResult<T> {
+export default function useGame<
+  T extends TeamGuessGameView = TeamGuessGameView
+>(options: Partial<UseGameOptions<T>> = {}): UseGameResult<T> {
   const router = useRouter()
   const game = head(router.query?.game as string | undefined)?.toLowerCase()
   const room = head(router.query?.room as string | undefined)?.toLowerCase()

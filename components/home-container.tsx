@@ -10,8 +10,7 @@ import {
   ROUTE_GAME_ROOM,
   ROUTE_HOME,
 } from '../lib/consts'
-import { isCwdGameView } from '../lib/cwd/cwd-game-view'
-import { CommonGameView, GameType } from '../lib/types/game.types'
+import { BaseGameView, GameType } from '../lib/types/game.types'
 import { head } from '../lib/util/array'
 import { isBrowser } from '../lib/util/dom'
 import Home from './home'
@@ -68,9 +67,9 @@ export default function HomeContainer(_: Props) {
     mutate()
   }
 
-  const handleRoomClick = (game: CommonGameView) => {
+  const handleRoomClick = (game: BaseGameView) => {
     const room = game.room
-    const gameType = isCwdGameView(game) ? 'cwd' : 'freq'
+    const gameType = game.type
     router.push(ROUTE_GAME_ROOM.replace('%0', gameType).replace('%1', room))
   }
 
@@ -84,7 +83,7 @@ export default function HomeContainer(_: Props) {
         rooms={rooms}
         roomsLoading={isValidating}
         roomsError={error}
-        onGameClick={handleGameClick}
+        onGameChange={handleGameClick}
         onRoomClick={handleRoomClick}
         onRoomsRefresh={handleRefreshRooms}
       ></Home>

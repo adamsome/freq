@@ -11,6 +11,7 @@ import RoomForm from './room-form'
 type Props = typeof defaultProps & {
   type?: GameType
   generatedRoom?: string
+  onChangeGameClick: () => void
 }
 
 const defaultProps = {
@@ -21,6 +22,7 @@ export default function RoomFormContainer({
   generatedRoom,
   type,
   classNames,
+  onChangeGameClick,
 }: Props) {
   const router = useRouter()
 
@@ -64,6 +66,7 @@ export default function RoomFormContainer({
       animate={true}
       classNames={classNames}
       onSubmit={handleStart}
+      onChangeGameClick={onChangeGameClick}
     ></RoomForm>
   )
 }

@@ -1,6 +1,6 @@
 import produce from 'immer'
 import { useState } from 'react'
-import { Command, CommonGameView } from '../lib/types/game.types'
+import { Command, TeamGuessGameView } from '../lib/types/game.types'
 import { postCommand } from '../lib/util/fetch-json'
 import useGame from '../lib/util/use-game'
 import CommandButton from './command-button'
@@ -49,7 +49,7 @@ const CommandPanel = () => {
     try {
       await postCommand(game.type, game.room, cmdType, value)
       mutate(
-        produce((game: CommonGameView | undefined) => {
+        produce((game: TeamGuessGameView | undefined) => {
           if (game) game.commands[i].fetching = true
         })
       )

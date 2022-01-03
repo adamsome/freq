@@ -14,7 +14,7 @@ import {
   KEY_ROOM_TYPE,
 } from '../lib/consts'
 import { getPreferredTeam } from '../lib/player'
-import { Command, CommonGameView } from '../lib/types/game.types'
+import { Command, TeamGuessGameView } from '../lib/types/game.types'
 import { postJson } from '../lib/util/fetch-json'
 import useGame from '../lib/util/use-game'
 import CommandButton from './command-button'
@@ -62,7 +62,9 @@ export default function GameJoinButtons({ room }: Props) {
 
     try {
       const path = API_GAME_JOIN.replace('%0', game.type).replace('%1', room)
-      const newGame: CommonGameView = await postJson(path, { team: team + 1 })
+      const newGame: TeamGuessGameView = await postJson(path, {
+        team: team + 1,
+      })
       mutate(API_USER)
       mutate(API_GAME.replace('%0', game.type).replace('%1', room), newGame)
       mutate(API_USER_ROOMS)

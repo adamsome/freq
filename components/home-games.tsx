@@ -1,5 +1,6 @@
 import { GameType } from '../lib/types/game.types'
 import GamePicker from './game-picker'
+import Heading from './heading'
 import RoomFormContainer from './room-form-container'
 import Title from './title'
 
@@ -7,7 +8,7 @@ type Props = typeof defaultProps & {
   gameType?: GameType
   loading?: boolean
   generatedRoom?: string
-  onGameClick: (gameType?: GameType) => void
+  onGameChange: (gameType?: GameType) => void
 }
 
 const defaultProps = {}
@@ -16,16 +17,14 @@ export default function HomeGames({
   gameType,
   loading,
   generatedRoom,
-  onGameClick,
+  onGameChange,
 }: Props) {
   return (
     <div className="h-80 flex flex-col justify-center">
       {!loading && !gameType && (
-        <div className="flex flex-col justify-center items-center mb-3.5">
-          <GamePicker onClick={onGameClick} />
-          <p className="mx-4 mt-4 sm:mt-8 text-xl text-center">
-            Choose a game.
-          </p>
+        <div className="flex flex-col justify-center items-center mb-3.5 pt-12">
+          <Heading>Choose Game</Heading>
+          <GamePicker horizontal onClick={onGameChange} />
         </div>
       )}
 
@@ -37,7 +36,7 @@ export default function HomeGames({
             animate={true}
           />
 
-          <div className="flex flex-col justify-center h-24 px-6 sm:px-24">
+          <div className="flex flex-col justify-center h-24 px-6 sm:px-24 md:my-4">
             <p className="text-xl text-center">
               Type an existing game&apos;s name to join or just click Start to
               create a new game.
@@ -48,6 +47,7 @@ export default function HomeGames({
             classNames="mt-3"
             generatedRoom={generatedRoom}
             type={gameType}
+            onChangeGameClick={() => onGameChange()}
           />
         </>
       )}

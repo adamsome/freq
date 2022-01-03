@@ -1,6 +1,6 @@
 import {
-  CommonGame,
-  CommonGameView,
+  TeamGuessGame,
+  TeamGuessGameView,
   CommonPhase,
   PlayerView,
   PlayerWithGuess,
@@ -71,7 +71,7 @@ export interface FreqSettings {
   difficulty?: FreqClueDifficulty
 }
 
-export interface FreqGame extends CommonGame {
+export interface FreqGame extends TeamGuessGame {
   settings?: FreqSettings
   /* Current turn team's psychic */
   psychic: string
@@ -89,7 +89,7 @@ export interface FreqGame extends CommonGame {
 }
 
 export interface FreqGameView
-  extends CommonGameView,
+  extends TeamGuessGameView,
     Omit<FreqGame, 'players'> {
   cluesToShow: FreqClue[]
   playerGuesses: PlayerWithGuess[]

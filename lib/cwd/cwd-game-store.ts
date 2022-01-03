@@ -60,7 +60,11 @@ export async function joinCwdGame(
   } else {
     // Add player to game if not already
     if (!hasPlayer(game.players, user.id)) {
-      game.players = addPlayer(game.players, user, team, true)
+      game.players = addPlayer(game.players, user, {
+        team,
+        assignTeam: true,
+        forceLeader: true,
+      })
 
       const gameFilter = { room: game.room.toLowerCase() }
       const changes: Partial<CwdGame> = {}

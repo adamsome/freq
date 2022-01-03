@@ -1,4 +1,4 @@
-import { getGameTitle } from '../lib/game'
+import { getGameTitle, isTeamGuessGame } from '../lib/game'
 import { GameType } from '../lib/types/game.types'
 import useGame from '../lib/util/use-game'
 import CommandPanel from './command-panel'
@@ -31,7 +31,7 @@ export default function GameBoard({ type }: Props) {
   return (
     <Layout type={type} title={title} room={game?.room}>
       <LayoutMain>
-        {type !== 'cwd' && <HeaderMessage />}
+        {type === 'freq' && <HeaderMessage />}
 
         {game?.phase === 'prep' && (
           <>
@@ -51,19 +51,25 @@ export default function GameBoard({ type }: Props) {
           <SkeletonBox className="w-full h-32 sm:h-40 md:px-4 mb-4 sm:mb-5" />
         ) : type === 'freq' ? (
           <CluesContainer />
-        ) : (
+        ) : type === 'cwd' ? (
           <CodesContainer />
-        )}
-
-        {!game ? (
-          <SkeletonBox className="w-full h-14 mb-6 md:px-4" />
-        ) : game.currentPlayer ? (
-          <CommandPanel />
         ) : (
-          <GameJoinButtons room={game.room} />
+          <div>Not Yet Implemented.</div>
         )}
 
-        <Scoreboard game={game} />
+        {isTeamGuessGame(type) && (
+          <>
+            {!game ? (
+              <SkeletonBox className="w-full h-14 mb-6 md:px-4" />
+            ) : game.currentPlayer ? (
+              <CommandPanel />
+            ) : (
+              <GameJoinButtons room={game.room} />
+            )}
+
+            <Scoreboard game={game} />
+          </>
+        )}
       </LayoutMain>
     </Layout>
   )

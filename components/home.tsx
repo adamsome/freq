@@ -1,5 +1,5 @@
 import { getGameTitle } from '../lib/game'
-import { CommonGameView, GameType } from '../lib/types/game.types'
+import { BaseGameView, GameType } from '../lib/types/game.types'
 import HomeGames from './home-games'
 import Layout from './layout'
 import LayoutMain from './layout-main'
@@ -11,9 +11,9 @@ type Props = typeof defaultProps & {
   gameTypeLoading?: boolean
   userLoading?: boolean
   generatedRoom?: string
-  rooms?: CommonGameView[]
-  onGameClick: (gameType?: GameType) => void
-  onRoomClick: (game: CommonGameView) => void
+  rooms?: BaseGameView[]
+  onGameChange: (gameType?: GameType) => void
+  onRoomClick: (game: BaseGameView) => void
   onRoomsRefresh?: () => void
 }
 
@@ -30,29 +30,24 @@ export default function Home({
   rooms,
   roomsLoading,
   roomsError,
-  onGameClick,
+  onGameChange,
   onRoomClick,
   onRoomsRefresh,
 }: Props) {
   const title = getGameTitle(gameType)
-  const otherType = gameType
-    ? ((gameType === 'freq' ? 'cwd' : 'freq') as GameType)
-    : undefined
 
   return (
     <Layout
       big
-      type={otherType}
       title={title ?? 'Games'}
-      onLogoClick={() => onGameClick(undefined)}
-      onTitleClick={() => onGameClick(otherType)}
+      onLogoClick={() => onGameChange(undefined)}
     >
       <LayoutMain>
         <HomeGames
           gameType={gameType}
           loading={gameTypeLoading}
           generatedRoom={generatedRoom}
-          onGameClick={onGameClick}
+          onGameChange={onGameChange}
         />
 
         {!userLoading && (roomsLoading || roomsError || rooms != null) && (

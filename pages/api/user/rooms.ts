@@ -3,13 +3,15 @@ import {
   UserProfile,
   withApiAuthRequired,
 } from '@auth0/nextjs-auth0'
+import { findManyBlowGames } from '../../../lib/blow/blow-game-store'
+import { toBlowGameView } from '../../../lib/blow/blow-game-view'
 import { findManyCwdGames } from '../../../lib/cwd/cwd-game-store'
 import { toCwdGameView } from '../../../lib/cwd/cwd-game-view'
 import { findManyFreqGames } from '../../../lib/freq/freq-game-store'
 import { toFreqGameView } from '../../../lib/freq/freq-game-view'
+import { mostRecentGamesComparer } from '../../../lib/game'
+import { BaseGame } from '../../../lib/types/game.types'
 import { fetchUser } from '../../../lib/user-store'
-import { CwdGameView } from '../../../lib/types/cwd.types'
-import { FreqGameView } from '../../../lib/types/freq.types'
 
 export default withApiAuthRequired(async function getUser(req, res) {
   try {
@@ -28,17 +30,15 @@ export default withApiAuthRequired(async function getUser(req, res) {
 
     const freqGames = await findManyFreqGames(Object.keys(user.rooms))
     const cwdGames = await findManyCwdGames(Object.keys(user.rooms))
+    const blowGames = await findManyBlowGames(Object.keys(user.rooms))
 
     const freqViews = freqGames.map((g) => toFreqGameView(user.id, g))
     const cwdViews = cwdGames.map((g) => toCwdGameView(user.id, g))
+    const blowViews = blowGames.map((g) => toBlowGameView(user.id, g))
 
-    const views: (FreqGameView | CwdGameView)[] = [...freqViews, ...cwdViews]
-    const mruViews = views.sort((a, b) => {
-      const aa = a.round_started_at ?? a?.match_started_at ?? a?.room_started_at
-      const bb = b.round_started_at ?? b?.match_started_at ?? b?.room_started_at
+    const views: BaseGame[] = [...freqViews, ...cwdViews, ...blowViews]
 
-      return aa < bb ? 1 : aa > bb ? -1 : 0
-    })
+    const mruViews = views.sort(mostRecentGamesComparer)
 
     res.json(mruViews)
   } catch (error) {
