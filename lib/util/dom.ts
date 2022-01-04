@@ -16,7 +16,7 @@ export const cx = (...classNames: (CxParam | CxParam[])[]): string => {
         acc.push(c)
       } else if (Array.isArray(c)) {
         if (c.length) {
-          const cs = cx(c)
+          const cs = cx(...c)
           if (cs) {
             acc.push(cs)
           }

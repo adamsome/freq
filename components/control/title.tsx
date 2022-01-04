@@ -8,6 +8,7 @@ type Props = typeof defaultProps & {
   title?: string
   animate?: boolean
   small?: boolean
+  onClick?: () => void
 }
 
 const defaultProps = {
@@ -20,6 +21,7 @@ export default function Title({
   title,
   animate,
   small,
+  onClick,
 }: Props) {
   const label = title || (type ? getGameTitle(type) : <span>&nbsp;</span>)
   const styles = styleLinearGradientText(type ?? undefined)
@@ -28,11 +30,13 @@ export default function Title({
     'hover:animate-shake': animate,
     'font-mono': type === 'cwd',
     'font-narrow tracking-[0.2em] pl-3': type === 'blow',
+    'cursor-pointer opacity-80 hover:opacity-100 transition-opacity':
+      onClick != null,
   })
 
   if (small) {
     return (
-      <div className={classes} style={styles}>
+      <div className={classes} style={styles} onClick={onClick}>
         {label}
       </div>
     )

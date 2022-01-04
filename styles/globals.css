@@ -119,6 +119,10 @@ html.dark {
     @apply flex justify-center items-center;
   }
 
+  .text-overflow {
+    @apply w-full overflow-hidden whitespace-nowrap text-ellipsis;
+  }
+
   .modal {
     @apply max-w-md m-4 p-0 overflow-hidden;
   }
@@ -127,15 +131,4 @@ html.dark {
     writing-mode: vertical-rl;
     text-orientation: mixed;
   }
-}
-
-/** Vendors */
-
-.react-responsive-modal-modal {
-  @apply bg-white dark:bg-gray-950 rounded-lg shadow-2xl;
-}
-
-/* stylelint-disable-next-line selector-class-pattern */
-.react-responsive-modal-modal .react-responsive-modal-closeButton svg {
-  @apply text-white fill-current;
 }

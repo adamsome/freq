@@ -71,7 +71,7 @@ export default function Button({
     'relative inline-block align-baseline',
     'm-0 py-0 px-3',
     'no-underline whitespace-nowrap cursor-pointer select-none',
-    'bg-transparent transition',
+    ' transition',
     {
       'text-white': solid,
       'bg-blue-700 hover:bg-blue-900 dark:hover:bg-blue-600':

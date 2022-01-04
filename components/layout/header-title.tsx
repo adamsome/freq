@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router'
 import { ROUTE_GAME_HOME, ROUTE_HOME } from '../../lib/consts'
-import { getGameTitle } from '../../lib/game'
 import { GameType } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'
-import { styleLinearGradientText } from '../../lib/util/dom-style'
 import useGame from '../../lib/util/use-game'
 import Logo from '../control/logo'
+import Title from '../control/title'
 
 type Props = typeof defaultProps & {
   type?: GameType
@@ -65,16 +64,12 @@ export default function HeaderTitle({
       </div>
 
       {type && (
-        <div
-          className={cx(
-            'cursor-pointer animate-fade-in opacity-80 hover:opacity-100 transition-opacity',
-            { 'sm:text-3xl': big, 'font-mono': type === 'cwd' }
-          )}
-          style={styleLinearGradientText(type)}
+        <Title
+          small
+          type={type}
+          classNames={cx('animate-fade-in', { 'sm:text-3xl': big })}
           onClick={handleTitleClick}
-        >
-          {getGameTitle(type)}
-        </div>
+        />
       )}
 
       {game?.room && (
