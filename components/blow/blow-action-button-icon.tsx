@@ -21,7 +21,11 @@ export default function BlowActionButtonIcon({
     color === 'white'
       ? 'text-opacity-70 dark:text-opacity-70'
       : color === 'cyan'
-      ? 'text-opacity-50 dark:text-opacity-50'
+      ? [
+          'text-opacity-50 dark:text-opacity-50',
+          'group-hover:text-opacity-70 dark:group-hover:text-opacity-70',
+          'transition-opacity',
+        ]
       : 'text-opacity-30 dark:text-opacity-30'
 
   if (action.payment) {

@@ -52,7 +52,8 @@ export default function BlowActionButton({
       className={cx(
         'relative inline-block align-baseline flex-center transition',
         'w-full m-0 pl-0.5 py-0.5',
-        'text-sm ',
+        'text-sm',
+        'group',
         'rounded-sm',
         'min-h-[var(--blow-action-button-min-height)]',
         state === 'clickable' ? 'cursor-pointer' : 'cursor-auto',
@@ -60,8 +61,10 @@ export default function BlowActionButton({
         state === 'counter' && 'bg-red-400 dark:bg-red-500',
         state === 'clickable' && [
           'text-cyan-600 dark:text-cyan-400',
+          'hover:text-cyan-700 dark:hover:text-cyan-300',
           'bg-slate-600 dark:bg-gray-500 bg-opacity-10 dark:bg-opacity-30',
           'border-gray-500 dark:border-gray-500 border-opacity-10 dark:border-opacity-10',
+          'hover:bg-opacity-30 dark:hover:bg-opacity-40',
           'shadow',
         ],
         state !== 'clickable' && 'text-black dark:text-white',
@@ -90,7 +93,8 @@ export default function BlowActionButton({
         <BlowLabel
           className={cx(
             state === 'clickable'
-              ? 'text-cyan-600 dark:text-cyan-400'
+              ? 'text-cyan-600 dark:text-cyan-400 transition-colors ' +
+                  'group-hover:text-cyan-700 dark:group-hover:text-cyan-300'
               : 'text-black dark:text-white',
             counter
               ? invert || state === 'clickable'
