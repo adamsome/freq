@@ -27,8 +27,7 @@ export default function BlowCardBoard(_: Props) {
       <div
         className={cx(
           'grid gap-4 grid-cols-2 grid-rows-3',
-          '[--blow-card-unit:1.4375rem]',
-          'text-opacity-75'
+          '[--blow-card-unit:1.4375rem]'
         )}
       >
         {range(0, 6).map((i) => (

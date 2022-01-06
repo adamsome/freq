@@ -50,7 +50,7 @@ const ClueCard = ({ children, clue, label, hasSlider }: Props) => {
         <div
           className={cx(
             'absolute top-0 bottom-0 left-0 right-0 flex-center text-8xl',
-            'text-black text-opacity-20 dark:text-white dark:text-opacity-20'
+            'text-black/20 dark:text-white/20'
           )}
         >
           <div>{label}</div>
