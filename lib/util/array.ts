@@ -113,3 +113,7 @@ export function tail<T>(
   const array = asArray(arrayOrElement)
   return array != null && array.length ? array.slice(1) : undefined
 }
+
+export function shiftOrder<T>(arr: T[], newStartIndex: number): T[] {
+  return arr.slice(newStartIndex).concat(arr.slice(0, newStartIndex))
+}
