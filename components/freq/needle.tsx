@@ -11,7 +11,7 @@ const defaultProps = {
 }
 
 const Needle = ({ player, size }: Props) => {
-  const { color = 'yellow', icon = '😃', locked } = player
+  const { color = 'amber', icon = '😃', locked } = player
   const hex = colorDict[color]?.hex
 
   return (

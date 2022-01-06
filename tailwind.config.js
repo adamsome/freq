@@ -19,7 +19,8 @@ module.exports = {
       cyan: { ...colors.cyan, 925: '#133b4b', 950: '#0d2832', 975: '#061419' },
       slate: colors.slate,
       red: { ...colors.red, 950: '#330b0b' },
-      yellow: { DEFAULT: '#ca8200', dark: '#ffd401' },
+      yellow: { 400: '#fbf202' },
+      amber: { DEFAULT: '#ca8200', dark: '#ffd401' },
       taupe: { DEFAULT: '#655d63', dark: '#AEA4B9' },
     },
     fontFamily: {
