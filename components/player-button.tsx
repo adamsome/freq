@@ -1,20 +1,25 @@
 import type { MouseEvent } from 'react'
+import { shouldUsePlayerIcon } from '../lib/game'
 import { User } from '../lib/types/user.types'
 import { cx } from '../lib/util/dom'
 import { styleColor } from '../lib/util/dom-style'
 import useGame from '../lib/util/use-game'
-import Button from './control/button'
+import Button, { ButtonProps } from './control/button'
 import IconSvg from './control/icon-svg'
 
-type Props = typeof defaultProps & {
+type Props = {
   user?: User
   hero?: boolean
+  button?: Partial<ButtonProps>
   onClick: (e: MouseEvent) => void
 }
 
-const defaultProps = {}
-
-const PlayerButton = ({ user, hero, onClick }: Props) => {
+export default function PlayerButton({
+  user,
+  hero,
+  button = {},
+  onClick,
+}: Props) {
   const { game } = useGame()
   const player = game?.currentPlayer
 
@@ -27,11 +32,15 @@ const PlayerButton = ({ user, hero, onClick }: Props) => {
         'focus:border-blue-700 dark:focus:border-blue-700': hero,
         'pt-1.5 pr-0.5 pb-1 pl-3.5': hero,
       })}
-      gray={player?.team != null}
+      color={player?.team != null ? 'none' : 'blue'}
       style={styleColor(player)}
       onClick={onClick}
+      {...button}
     >
-      {player?.icon ?? user?.icon ?? '🤠'}&nbsp;&nbsp;
+      {shouldUsePlayerIcon(game?.type) && (
+        <>{player?.icon ?? user?.icon ?? '🤠'}&nbsp;&nbsp;</>
+      )}
+
       {player?.name ?? user?.name ?? 'Noname'}
       <div>
         <IconSvg
@@ -46,7 +55,3 @@ const PlayerButton = ({ user, hero, onClick }: Props) => {
     </Button>
   )
 }
-
-PlayerButton.defaultProps = defaultProps
-
-export default PlayerButton

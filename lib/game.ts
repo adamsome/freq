@@ -34,6 +34,19 @@ export function isTeamGuessGame(type: GameType | string | undefined): boolean {
   }
 }
 
+export function shouldUsePlayerIcon(
+  type: GameType | string | undefined
+): boolean {
+  switch (type?.toLowerCase()) {
+    case 'blow':
+      return false
+    case 'cwd':
+    case 'freq':
+    default:
+      return true
+  }
+}
+
 export function doesGameHaveEnoughPlayers(
   game: PartialGame,
   type: GameType

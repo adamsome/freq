@@ -1,19 +1,45 @@
 import { cx } from '../../lib/util/dom'
 
-type Props = typeof defaultProps
+type SkeletonBoxColor = 'gray' | 'cyan'
 
-const defaultProps = {
-  className: '',
-  innerClassName: '',
-  invert: false,
-  rounded: true,
+type Props = {
+  className?: string
+  innerClassName?: string
+  color?: SkeletonBoxColor
+  rounded?: boolean
+}
+
+const GRAY_COLORS = [
+  'bg-gray-50',
+  'from-gray-50 via-white to-gray-50',
+  'dark:bg-gray-950',
+  'dark:from-gray-950 dark:via-gray-900 dark:to-gray-950',
+]
+
+const CYAN_COLORS = [
+  'bg-cyan-50',
+  'from-cyan-50 via-white to-cyan-50',
+  'dark:bg-cyan-975',
+  'dark:from-cyan-975 dark:via-cyan-950 dark:to-cyan-975',
+]
+
+function getColorClasses(color: SkeletonBoxColor) {
+  switch (color) {
+    case 'cyan': {
+      return CYAN_COLORS
+    }
+    default:
+    case 'gray': {
+      return GRAY_COLORS
+    }
+  }
 }
 
 export default function SkeletonBox({
-  className,
-  innerClassName,
-  invert,
-  rounded,
+  className = '',
+  innerClassName = '',
+  color = 'gray',
+  rounded = true,
 }: Props) {
   return (
     <div className={className}>
@@ -24,20 +50,11 @@ export default function SkeletonBox({
           'border-t border-b border-transparent',
           'md:border-l md:border-r',
           'focus:outline-none cursor-default',
-          {
-            'bg-gray-50 dark:bg-gray-950': !invert,
-            'from-gray-50 via-white to-gray-50': !invert,
-            'dark:from-gray-950 dark:via-gray-900 dark:to-gray-950': !invert,
-            'bg-white dark:bg-gray-900': invert,
-            'from-white via-gray-50 to-white': invert,
-            'dark:from-gray-900 dark:via-gray-950 dark:to-gray-900': invert,
-            'md:rounded-lg': rounded,
-          },
+          getColorClasses(color),
+          rounded && 'md:rounded-lg',
           innerClassName
         )}
       ></div>
     </div>
   )
 }
-
-SkeletonBox.defaultProps = defaultProps

@@ -1,13 +1,12 @@
-import Button from './control/button'
+import Button, { ButtonProps } from './control/button'
 import SkeletonBox from './layout/skeleton-box'
 
-type Props = typeof defaultProps & {
+type Props = {
   url?: string
+  button?: Partial<ButtonProps>
 }
 
-const defaultProps = {}
-
-export default function GameLink({ url }: Props) {
+export default function GameLink({ url, button = {} }: Props) {
   if (!url) {
     return <SkeletonBox className="w-full h-8" />
   }
@@ -19,14 +18,15 @@ export default function GameLink({ url }: Props) {
       </div>
       <Button
         className="text-center text-sm"
+        spacing="m-0 p-0"
+        selectable
         href={url}
         target="_blank"
         rel="noreferrer"
+        {...button}
       >
         {url}
       </Button>
     </div>
   )
 }
-
-GameLink.defaultProps = defaultProps

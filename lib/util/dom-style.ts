@@ -2,15 +2,11 @@ import { CSSProperties } from 'react'
 import colorDict from '../color-dict'
 import gradientDict from '../gradient-dict'
 
-interface StyleColor {
-  color: string
-  backgroundColor: string | undefined
-}
-
 export const styleColor = (
   colorOrHasColor?: string | { color?: string } | false | null,
-  lit = 0
-): StyleColor | undefined => {
+  bgOpacity = 0,
+  borderOpacity?: number
+): CSSProperties | undefined => {
   if (!colorOrHasColor) return undefined
   const colorName =
     typeof colorOrHasColor === 'string'
@@ -18,22 +14,23 @@ export const styleColor = (
       : colorOrHasColor.color
 
   const hex = colorDict[colorName ?? 0]?.hex
-  const alpha = lit * 255
-  return {
-    color: lit > 0.5 ? '#fff' : hex,
-    backgroundColor:
-      lit > 0 ? `${hex}${Math.round(alpha).toString(16)}` : undefined,
-  }
-}
+  const style: CSSProperties = { color: bgOpacity > 0.5 ? '#fff' : hex }
 
-interface StyleBorder {
-  borderColor: string
+  if (hex && bgOpacity > 0) {
+    style.backgroundColor = `${hex}${Math.round(bgOpacity * 255).toString(16)}`
+  }
+
+  if (hex && borderOpacity != null && borderOpacity > 0) {
+    style.borderColor = `${hex}${Math.round(borderOpacity * 255).toString(16)}`
+  }
+
+  return style
 }
 
 export const styleBorder = (
   colorOrHasColor?: string | { color?: string } | false | null,
-  lit = 1
-): StyleBorder | undefined => {
+  borderOpacity = 1
+): CSSProperties | undefined => {
   if (!colorOrHasColor) return undefined
   const colorName =
     typeof colorOrHasColor === 'string'
@@ -41,9 +38,9 @@ export const styleBorder = (
       : colorOrHasColor.color
 
   const hex = colorDict[colorName ?? 0]?.hex
-  const alpha = lit * 255
+  const alpha = borderOpacity * 255
   return {
-    borderColor: `${hex}${Math.round(alpha).toString(16)}`,
+    borderColor: hex ? `${hex}${Math.round(alpha).toString(16)}` : undefined,
   }
 }
 

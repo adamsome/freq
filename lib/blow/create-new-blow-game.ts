@@ -21,11 +21,14 @@ export default function createNewBlowGame(room: string, user: User): BlowGame {
 const BLANK_GAME: BlowGame = {
   room: '',
   players: [],
-  player_order: [],
-  player_active: 0,
   match_number: 0,
   round_number: 0,
+  settings: {
+    variant: 'basic',
+  },
   phase: 'prep',
+  player_order: [],
+  actions: [],
   stats: {},
   room_started_at: '',
 }

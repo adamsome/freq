@@ -1,22 +1,23 @@
 import { useState } from 'react'
 import { GameType } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'
+import { ButtonProps } from '../control/button'
 import DebugBar from './debug-bar'
 import HeaderActions from './header-actions'
 import HeaderTitle from './header-title'
 
-type Props = typeof defaultProps & {
+type Props = {
   type?: GameType
   big?: boolean
+  button?: Partial<ButtonProps>
   onLogoClick?: () => void
   onTitleClick?: () => void
 }
 
-const defaultProps = {}
-
 export default function Header({
   type,
   big,
+  button = {},
   onLogoClick,
   onTitleClick,
 }: Props) {
@@ -50,10 +51,11 @@ export default function Header({
           onTitleClick={onTitleClick}
         />
 
-        <HeaderActions onDebugToggle={() => setShowDebug(!showDebug)} />
+        <HeaderActions
+          button={button}
+          onDebugToggle={() => setShowDebug(!showDebug)}
+        />
       </div>
     </header>
   )
 }
-
-Header.defaultProps = defaultProps

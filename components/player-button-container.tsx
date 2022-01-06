@@ -13,22 +13,23 @@ import { User } from '../lib/types/user.types'
 import { head } from '../lib/util/array'
 import { postJson } from '../lib/util/fetch-json'
 import ActionModal from './control/action-modal'
+import { ButtonProps } from './control/button'
 import PlayerButton from './player-button'
 import PlayerEdit from './player-edit'
 import PlayerOptions from './player-options'
 
-type Props = typeof defaultProps & {
+type Props = {
   user: User
   theme?: string
+  button?: Partial<ButtonProps>
   onThemeToggle: () => void
   onDebugToggle: () => void
 }
 
-const defaultProps = {}
-
 export default function PlayerButtonContainer({
   user,
   theme,
+  button,
   onThemeToggle,
   onDebugToggle,
 }: Props) {
@@ -54,7 +55,11 @@ export default function PlayerButtonContainer({
 
   return (
     <>
-      <PlayerButton user={user} onClick={() => setModelOptionsOpen(true)} />
+      <PlayerButton
+        user={user}
+        button={button}
+        onClick={() => setModelOptionsOpen(true)}
+      />
 
       <ActionModal
         open={modelOptionsOpen}
@@ -81,5 +86,3 @@ export default function PlayerButtonContainer({
     </>
   )
 }
-
-PlayerButtonContainer.defaultProps = defaultProps

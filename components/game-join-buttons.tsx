@@ -13,19 +13,26 @@ import {
   KEY_ROOM_REDIRECT,
   KEY_ROOM_TYPE,
 } from '../lib/consts'
+import { isTeamGuessGame } from '../lib/game'
 import { getPreferredTeam } from '../lib/player'
 import { Command, TeamGuessGameView } from '../lib/types/game.types'
 import { postJson } from '../lib/util/fetch-json'
 import useGame from '../lib/util/use-game'
 import CommandButton from './command-button'
+import { ButtonProps } from './control/button'
 
-type Props = typeof defaultProps & {
+type Props = {
   room: string
+  commandDefaults?: Partial<Command>
+  button?: ButtonProps
+  rightButton?: ButtonProps
 }
 
-const defaultProps = {}
-
-export default function GameJoinButtons({ room }: Props) {
+export default function GameJoinButtons({
+  room,
+  commandDefaults = {},
+  ...props
+}: Props) {
   const router = useRouter()
   const { user } = useUser()
   const { game } = useGame()
@@ -76,21 +83,34 @@ export default function GameJoinButtons({ room }: Props) {
     }
   }
 
-  const preferredTeam = getPreferredTeam(game.players)
-  const command: Command = user
-    ? {
-        text: `Join Red`,
+  let command: Command
+  if (user) {
+    if (isTeamGuessGame(game.type)) {
+      const preferredTeam = getPreferredTeam(game.players)
+      command = {
         color: getTeamColor(1),
-        rightText: `Join Blue`,
         rightWidth: preferredTeam === 1 ? 1 / 8 : 7 / 8,
         rightColor: getTeamColor(2),
+        ...commandDefaults,
+        text: `Join Red`,
+        rightText: `Join Blue`,
         fetching,
       }
-    : {
-        text: 'Log In to Join',
-        color: 'International Klein Blue',
+    } else {
+      command = {
+        ...commandDefaults,
+        text: 'Join Game',
         fetching,
       }
+    }
+  } else {
+    command = {
+      color: 'International Klein Blue',
+      ...commandDefaults,
+      text: 'Log In to Join',
+      fetching,
+    }
+  }
 
   return (
     <div className="w-full px-4 mb-6">
@@ -100,6 +120,7 @@ export default function GameJoinButtons({ room }: Props) {
           currentPlayer={game.currentPlayer}
           fetching={fetching}
           onClick={handleJoinClick}
+          {...props}
         />
       </div>
 
@@ -107,5 +128,3 @@ export default function GameJoinButtons({ room }: Props) {
     </div>
   )
 }
-
-GameJoinButtons.defaultProps = defaultProps

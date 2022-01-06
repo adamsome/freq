@@ -117,7 +117,7 @@ export default function SeatGrid({ children, classNames }: Props) {
         const arrow = arrowsPerItem[i % arrowsPerItem.length]
         return (
           <>
-            <div key={i} className={cx(classes, 'bg-blue-900')}>
+            <div key={i} className={classes}>
               {child}
             </div>
             {arrow && (

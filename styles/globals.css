@@ -1,6 +1,7 @@
 :root {
-  /* Colors */
   --text: #000;
+  --freq-button-weight: 600;
+  --blow-action-button-min-height: 1.5rem;
 }
 
 html.dark {
@@ -121,6 +122,10 @@ html.dark {
 
   .text-overflow {
     @apply w-full overflow-hidden whitespace-nowrap text-ellipsis;
+  }
+
+  .font-spaced-narrow {
+    @apply font-narrow tracking-[0.2em];
   }
 
   .modal {

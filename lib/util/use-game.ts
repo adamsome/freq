@@ -2,9 +2,10 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import type { mutateCallback } from 'swr/dist/types'
 import { API_GAME } from '../consts'
+import { BlowGameView } from '../types/blow.types'
 import { CwdGameView } from '../types/cwd.types'
 import { FreqGameView } from '../types/freq.types'
-import { TeamGuessGameView } from '../types/game.types'
+import { BaseGameView, TeamGuessGameView } from '../types/game.types'
 import { head } from './array'
 
 export interface UseGameOptions<T> {
@@ -32,9 +33,9 @@ const withDefaults = <T>(
   refreshInterval: options.refreshInterval ?? 750,
 })
 
-export default function useGame<
-  T extends TeamGuessGameView = TeamGuessGameView
->(options: Partial<UseGameOptions<T>> = {}): UseGameResult<T> {
+export default function useGame<T extends BaseGameView = TeamGuessGameView>(
+  options: Partial<UseGameOptions<T>> = {}
+): UseGameResult<T> {
   const router = useRouter()
   const game = head(router.query?.game as string | undefined)?.toLowerCase()
   const room = head(router.query?.room as string | undefined)?.toLowerCase()
@@ -62,4 +63,10 @@ export function useFreqGame(
   options: Partial<UseGameOptions<FreqGameView>> = {}
 ): UseGameResult<FreqGameView> {
   return useGame(options)
+}
+
+export function useBlowGame(
+  options: Partial<UseGameOptions<BlowGameView>> = {}
+): UseGameResult<BlowGameView> {
+  return useGame<BlowGameView>(options)
 }

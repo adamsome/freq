@@ -16,16 +16,16 @@ export default function ScoreboardSettings({ scoreType, onTypeToggle }: Props) {
       <div className="flex-center p-1 bg-gray-100 dark:bg-gray-900 rounded-lg">
         <Button
           className="w-20 mr-0.5 text-sm sm:text-base"
-          gray
-          solid={isWins}
+          color="gray"
+          variant={isWins && 'solid'}
           onClick={() => onTypeToggle('wins')}
         >
           Wins
         </Button>
         <Button
           className="w-20 ml-0.5 text-sm sm:text-base"
-          gray
-          solid={!isWins}
+          color="gray"
+          variant={!isWins && 'solid'}
           onClick={() => onTypeToggle('points')}
         >
           Points

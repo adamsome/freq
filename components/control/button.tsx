@@ -9,54 +9,60 @@ import type {
 import { cx } from '../../lib/util/dom'
 import { omit } from '../../lib/util/object'
 
+export type ButtonColor = 'blue' | 'cyan' | 'red' | 'gray' | 'none'
+export type ButtonVariant = 'link' | 'dim' | 'solid'
+
+interface ButtonColorOptions {
+  color?: ButtonColor
+  variant?: ButtonVariant | false
+  border?: boolean
+  bgHover?: boolean
+}
+
 const ButtonHTMLTypes = ['submit', 'button', 'reset'] as const
 export type ButtonHTMLType = typeof ButtonHTMLTypes[number]
 
-type BaseProps = typeof defaultProps & {
+type BaseProps = ButtonColorOptions & {
   children: ReactNode
-  gray?: boolean
-  red?: boolean
+  className?: string
+  spacing?: string
+  round?: boolean
+  ring?: boolean
+  selectable?: boolean
 }
 
-const defaultProps = {
-  className: '',
-  blue: true,
-  solid: false,
-  round: true,
-  ring: true,
-  bg: true,
-}
-
-type AnchorProps = {
+type AnchorHtmlProps = {
   href: string
   target?: string
   onClick?: MouseEventHandler<HTMLElement>
 } & BaseProps &
-  Omit<AnchorHTMLAttributes<unknown>, 'type' | 'onClick'>
+  Omit<AnchorHTMLAttributes<unknown>, 'color' | 'type' | 'onClick'>
 
-type ButtonProps = {
+type ButtonHtmlProps = {
   htmlType?: ButtonHTMLType
   onClick?: MouseEventHandler<HTMLElement>
 } & BaseProps &
-  Omit<ButtonHTMLAttributes<unknown>, 'type' | 'onClick'>
+  Omit<ButtonHTMLAttributes<unknown>, 'color' | 'type' | 'onClick'>
 
-type Props = Partial<AnchorProps & ButtonProps>
+export type ButtonProps = Partial<AnchorHtmlProps & ButtonHtmlProps>
+
+const DEFAULT_RING =
+  'focus:ring-4 focus:ring-opacity-25 dark:focus:ring-opacity-25'
 
 export default function Button({
-  className,
+  className = '',
+  spacing = 'm-0 px-3 py-0',
   children,
-  blue: _blue,
-  gray,
-  red,
-  solid,
-  round,
-  ring,
-  bg,
-  htmlType = 'button' as Props['htmlType'],
+  color = 'blue',
+  variant: _variant,
+  border,
+  bgHover = true,
+  round = true,
+  ring = true,
+  selectable,
+  htmlType = 'button' as ButtonProps['htmlType'],
   ...props
-}: Props) {
-  const blue = !gray && !red && _blue
-
+}: ButtonProps) {
   const handleClick = (
     e: ReactMouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>
   ) => {
@@ -67,41 +73,254 @@ export default function Button({
     _onClick?.(e)
   }
 
+  const variant = typeof _variant === 'string' ? _variant : 'link'
+
+  const getColorClasses = (): string[] | undefined => {
+    const classes: string[] = []
+
+    switch (color) {
+      case 'blue': {
+        switch (variant) {
+          case 'solid': {
+            classes.push('text-white')
+            classes.push('bg-blue-700')
+
+            if (bgHover) {
+              classes.push('hover:bg-blue-900 dark:hover:bg-blue-600')
+            }
+            if (border) {
+              classes.push('border-blue-900 dark:border-blue-500')
+            }
+
+            return classes
+          }
+          case 'dim': {
+            classes.push('text-blue-600')
+            classes.push('disabled:text-blue-600 disabled:dark:text-blue-600')
+            classes.push('hover:text-blue-800 dark:hover:text-blue-400')
+            classes.push('bg-blue-100 dark:bg-blue-950')
+
+            if (bgHover) {
+              classes.push('hover:bg-blue-200 dark:hover:bg-blue-900')
+            }
+            if (border) {
+              classes.push('border-blue-200 dark:border-blue-900')
+            }
+
+            return classes
+          }
+          default:
+          case 'link': {
+            classes.push('text-blue-600 dark:text-blue-700')
+            classes.push('disabled:text-blue-600 disabled:dark:text-blue-700')
+            classes.push('hover:text-blue-800 dark:hover:text-blue-600')
+
+            if (bgHover) {
+              classes.push('hover:bg-blue-100 dark:hover:bg-blue-950')
+            }
+            if (border) {
+              classes.push('border-blue-400 dark:border-blue-500')
+            }
+
+            return classes
+          }
+        }
+      }
+      case 'cyan': {
+        switch (variant) {
+          case 'solid': {
+            classes.push('text-white')
+            classes.push('bg-cyan-700')
+
+            if (bgHover) {
+              classes.push('hover:bg-cyan-900 dark:hover:bg-cyan-600')
+            }
+            if (border) {
+              classes.push('border-cyan-900 dark:border-cyan-500')
+            }
+
+            return classes
+          }
+          case 'dim': {
+            classes.push('text-cyan-600 dark:text-cyan-400')
+            classes.push('disabled:text-cyan-600 disabled:dark:text-cyan-400')
+            classes.push('hover:text-cyan-800 dark:hover:text-cyan-300')
+            classes.push('bg-cyan-100 dark:bg-cyan-975')
+
+            if (bgHover) {
+              classes.push('hover:bg-cyan-200 dark:hover:bg-cyan-900')
+            }
+            if (border) {
+              classes.push('border-cyan-200 dark:border-cyan-900')
+            }
+
+            return classes
+          }
+          default:
+          case 'link': {
+            classes.push('text-cyan-600 dark:text-cyan-600')
+            classes.push('disabled:text-cyan-600 disabled:dark:text-cyan-600')
+            classes.push('hover:text-cyan-800 dark:hover:text-cyan-500')
+
+            if (bgHover) {
+              classes.push('hover:bg-cyan-100 dark:hover:bg-cyan-950')
+            }
+            if (border) {
+              classes.push('border-cyan-400 dark:border-cyan-500')
+            }
+
+            return classes
+          }
+        }
+      }
+      case 'red': {
+        if (border) {
+          classes.push('focus:border-red-700 dark:focus:border-red-700')
+        }
+
+        switch (variant) {
+          case 'solid': {
+            classes.push('text-white')
+            classes.push('bg-red-700')
+
+            if (bgHover) {
+              classes.push('hover:bg-red-900 dark:hover:bg-red-600')
+            }
+            if (border) {
+              classes.push('border-red-900 dark:border-red-500')
+            }
+
+            return classes
+          }
+          case 'dim': {
+            classes.push('text-red-700 dark:text-red-800')
+            classes.push('disabled:text-red-700 disabled:dark:text-red-800')
+            classes.push('hover:text-red-900 dark:hover:text-red-500')
+            classes.push('bg-red-100 dark:bg-red-950')
+
+            if (bgHover) {
+              classes.push('hover:bg-red-200 dark:hover:bg-red-900')
+            }
+            if (border) {
+              classes.push('border-red-200 dark:border-red-900')
+            }
+
+            return classes
+          }
+          default:
+          case 'link': {
+            classes.push('text-red-700 dark:text-red-800')
+            classes.push('disabled:text-red-700 disabled:dark:text-red-800')
+            classes.push('hover:text-red-900 dark:hover:text-red-700')
+
+            if (bgHover) {
+              classes.push('hover:bg-red-100 dark:hover:bg-red-950')
+            }
+            if (border) {
+              classes.push('border-red-400 dark:border-red-500')
+            }
+
+            return classes
+          }
+        }
+      }
+      case 'gray': {
+        if (border) {
+          classes.push('focus:border-gray-600 dark:focus:border-gray-600')
+        }
+
+        switch (variant) {
+          case 'solid': {
+            classes.push('text-white')
+            classes.push('bg-gray-500 dark:bg-gray-700')
+
+            if (bgHover) {
+              classes.push('hover:bg-gray-600 dark:hover:bg-gray-600')
+            }
+            if (border) {
+              classes.push('border-gray-700 dark:border-gray-600')
+            }
+
+            return classes
+          }
+          case 'dim': {
+            classes.push('text-gray-500 dark:text-gray-500')
+            classes.push('disabled:text-gray-500 disabled:dark:text-gray-500')
+            classes.push('hover:text-gray-700 dark:hover:text-gray-400')
+            classes.push('bg-gray-100 dark:bg-gray-900')
+
+            if (bgHover) {
+              classes.push('hover:bg-gray-200 dark:hover:bg-gray-800')
+              classes.push('disabled:hover:bg-gray-100 dark:hover:bg-gray-900')
+            }
+            if (border) {
+              classes.push('border-gray-200 dark:border-gray-700')
+            }
+
+            return classes
+          }
+          default:
+          case 'link': {
+            classes.push('text-gray-500 dark:text-gray-500')
+            classes.push('disabled:text-gray-500 disabled:dark:text-gray-500')
+            classes.push('hover:text-gray-700 dark:hover:text-gray-400')
+
+            if (bgHover) {
+              classes.push('hover:bg-gray-100 dark:hover:bg-gray-900')
+            }
+            if (border) {
+              classes.push('border-gray-400 dark:border-gray-500')
+            }
+
+            return classes
+          }
+        }
+      }
+    }
+  }
+
+  const getRingClasses = () => {
+    if (!ring) return
+
+    switch (color) {
+      case 'cyan': {
+        return [
+          DEFAULT_RING,
+          'focus:ring-cyan-400 dark:focus:ring-cyan-500 focus:border-cyan-700',
+          border ? 'dark:focus:border-cyan-500' : 'dark:focus:border-cyan-700',
+        ]
+      }
+      default:
+      case 'blue': {
+        return [
+          DEFAULT_RING,
+          'focus:ring-blue-400 dark:focus:ring-blue-500 focus:border-blue-700',
+          border ? 'dark:focus:border-blue-500' : 'dark:focus:border-blue-700',
+        ]
+      }
+    }
+  }
+
   const classes = cx(
-    'relative inline-block align-baseline',
-    'm-0 py-0 px-3',
-    'no-underline whitespace-nowrap cursor-pointer select-none',
-    ' transition',
-    {
-      'text-white': solid,
-      'bg-blue-700 hover:bg-blue-900 dark:hover:bg-blue-600':
-        blue && solid && bg,
-      'bg-gray-500 dark:bg-gray-700 hover:bg-gray-600 dark:hover:bg-gray-600':
-        gray && solid && bg,
-      'bg-red-700 hover:bg-red-900 dark:hover:bg-red-600': red && solid && bg,
-      'text-blue-600 hover:text-blue-800': blue && !solid,
-      'dark:text-blue-700 dark:hover:text-blue-600': blue && !solid,
-      'text-gray-500 hover:text-gray-700': gray && !solid,
-      'dark:text-gray-500 dark:hover:text-gray-400': gray && !solid,
-      'text-red-700 hover:text-red-900': red && !solid,
-      'dark:text-red-800 dark:hover:text-red-700': red && !solid,
-      'hover:bg-blue-100 dark:hover:bg-blue-950': blue && !solid && bg,
-      'hover:bg-gray-100 dark:hover:bg-gray-900': gray && !solid && bg,
-      'hover:bg-red-100 dark:hover:bg-red-950': red && !solid && bg,
-      'rounded-md': round,
-      'focus:ring-4 focus:ring-blue-400 focus:ring-opacity-25': ring,
-      'dark:focus:ring-blue-500 dark:focus:ring-opacity-25': ring,
-      'focus:border-blue-700': ring,
-    },
-    'border border-transparent',
-    'font-semibold focus:outline-none',
+    'relative inline-block align-baseline transition',
+    'no-underline whitespace-nowrap cursor-pointer',
+    selectable ? 'select-text' : 'select-none',
+    spacing,
+    getColorClasses(),
+    getRingClasses(),
+    round && 'rounded-md',
+    !border && 'border-transparent dark:border-transparent',
+    'border border-opacity-50 dark:border-opacity-25',
+    'focus:outline-none',
+    'font-[number:var(--freq-button-weight)]',
     'disabled:cursor-not-allowed disabled:opacity-40',
-    'disabled:hover:bg-transparent disabled:hover:dark:bg-transparent',
+    (color === 'none' || variant === 'link') &&
+      'disabled:hover:bg-transparent disabled:hover:dark:bg-transparent',
     className
   )
 
   const anchorProps = omit(
-    props as AnchorProps & { navigate: unknown },
+    props as AnchorHtmlProps & { navigate: unknown },
     'navigate'
   )
   if (anchorProps.href !== undefined) {
@@ -123,5 +342,3 @@ export default function Button({
     </button>
   )
 }
-
-Button.defaultProps = defaultProps

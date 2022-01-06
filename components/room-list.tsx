@@ -33,9 +33,9 @@ export default function RoomList({
         <span className="flex-1"></span>
         <Button
           className={cx('text-base ml-4', { 'text-right': loading })}
-          gray
+          color="gray"
+          bgHover={false}
           disabled={loading}
-          bg={false}
           onClick={onRefresh}
         >
           {loading ? (

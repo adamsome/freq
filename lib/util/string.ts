@@ -6,3 +6,6 @@ export const toTitleCase = (word: string): string =>
 
 export const isNotEmpty = (...strings: unknown[]): boolean =>
   strings.every((str) => typeof str === 'string' && str.length > 0)
+
+export const isNotNil = (...strings: unknown[]): boolean =>
+  strings.every((str) => str != null)

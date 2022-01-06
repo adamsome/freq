@@ -29,8 +29,8 @@ export default function ButtonGroup({
             'mr-0.5': i !== buttons.length - 1,
             'ml-0.5': i !== 0,
           })}
-          gray
-          solid={i === selected}
+          color="gray"
+          variant={i === selected ? 'solid' : 'link'}
           disabled={disabled}
           onClick={() => !disabled && selected !== i && onClick(text, i)}
         >

@@ -131,6 +131,8 @@ export interface Command {
   type?: CommandType
   disabled?: boolean
   color?: string
+  colorLit?: number
+  colorBorder?: number
   rightText?: string
   value?: string | number | boolean
   rightType?: CommandType
@@ -138,6 +140,8 @@ export interface Command {
   /** Percent width the right-side command should have */
   rightWidth?: number
   rightColor?: string
+  rightColorLit?: number
+  rightColorBorder?: number
   rightDisabled?: boolean
   info?: string
   infoColor?: string

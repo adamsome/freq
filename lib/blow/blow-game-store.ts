@@ -4,7 +4,7 @@ import { BlowGame, BlowGameView } from '../types/blow.types'
 import { User } from '../types/user.types'
 import { fromUsers } from '../user-store'
 import { connectToDatabase } from '../util/mongodb'
-import { toBlowGameView } from './blow-game-view'
+import { buildBlowGameView } from './blow-game-view'
 import createNewBlowGame from './create-new-blow-game'
 
 export const fromBlowGames = (db: Db) =>
@@ -74,7 +74,7 @@ export async function joinBlowGame(
       await updateUserRoom()
     }
   }
-  return toBlowGameView(user.id, game)
+  return buildBlowGameView(user.id, game)
 }
 
 export async function leaveBlowGame(
@@ -100,15 +100,6 @@ export async function leaveBlowGame(
     const order = game.player_order.filter((_, i) => i !== orderIndex)
 
     const update: Partial<BlowGame> = { players, player_order: order }
-
-    // Update the active player to the next player
-    if (game.player_active > orderIndex) {
-      update.player_active = game.player_active - 1
-    }
-    if (game.player_active >= order.length) {
-      update.player_active = 0
-    }
-
     await store.updateOne(filter, { $set: update })
 
     if (opts.deleteEmpty && players.length === 0) {

@@ -86,7 +86,7 @@ const gradientDict: Dict<string[]> = {
   games: ['#feac5e', '#c779d0', '#4bc0c8'],
   freq: ['#c02425', '#f0cb35', '#38ef7d'],
   cwd: ['#eb0000', '#95008a', '#3300fc'],
-  blow: ['#3282f9', '#2fc4fd', '#46ffcc'],
+  blow: ['#3282f9', '#00BFFF', '#46ffcc'],
   Omolon: ['#091e3a', '#2f80ed', '#2d9ee0'],
   Farhan: ['#9400d3', '#4b0082'],
   Purple: ['#c84e89', '#f15f79'],

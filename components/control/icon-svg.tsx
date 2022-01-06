@@ -1,17 +1,14 @@
 import { cx } from '../../lib/util/dom'
 
-export type IconSvgName = 'dropdown' | 'caret-down' | 'spinner'
+export type IconSvgName = 'dropdown' | 'caret-down' | 'spinner' | 'shield'
 
-type Props = typeof defaultProps & {
+type Props = {
+  className?: string
   name: IconSvgName
+  top?: string
 }
 
-const defaultProps = {
-  top: '0' as string,
-  className: '',
-}
-
-const IconSvg = ({ className, name, top }: Props) => {
+export default function IconSvg({ className = '', name, top = '0' }: Props) {
   switch (name) {
     case 'dropdown':
       return (
@@ -66,11 +63,20 @@ const IconSvg = ({ className, name, top }: Props) => {
         </svg>
       )
 
+    case 'shield':
+      return (
+        <svg
+          className={cx('relative fill-current', className)}
+          aria-hidden="true"
+          focusable="false"
+          style={{ top }}
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 0c-2.995 2.995-7.486 4-11 4 0 8.582 5.068 16.097 11 20 5.932-3.903 11-11.418 11-20-3.514 0-8.005-1.005-11-4zm-8.912 5.894c2.455-.246 5.912-1.012 8.912-3.25v18.906c-4-3.063-8.254-8.604-8.912-15.656z" />
+        </svg>
+      )
+
     default:
       return null
   }
 }
-
-IconSvg.defaultProps = defaultProps
-
-export default IconSvg

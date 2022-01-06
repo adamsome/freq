@@ -3,26 +3,29 @@ import type { ReactNode } from 'react'
 import { GameType } from '../../lib/types/game.types'
 import { __DEV__ } from '../../lib/util/assertion'
 import { cx } from '../../lib/util/dom'
+import { ButtonProps } from '../control/button'
 import Header from './header'
 
-type Props = typeof defaultProps & {
+type Props = {
   children: ReactNode
+  className?: string
   type?: GameType
   title?: string
   room?: string
   big?: boolean
+  button?: Partial<ButtonProps>
   onLogoClick?: () => void
   onTitleClick?: () => void
 }
 
-const defaultProps = {}
-
 export default function Layout({
   children,
+  className = '',
   type,
   title,
   room,
   big,
+  button = {},
   onLogoClick,
   onTitleClick,
 }: Props) {
@@ -34,7 +37,8 @@ export default function Layout({
       className={cx(
         'flex-center flex-col min-h-screen min-w-min overflow-hidden',
         'bg-white dark:bg-black text-black dark:text-white',
-        'transition'
+        'transition',
+        className
       )}
     >
       <Head>
@@ -62,6 +66,7 @@ export default function Layout({
       <Header
         type={type}
         big={big}
+        button={button}
         onLogoClick={onLogoClick}
         onTitleClick={onTitleClick}
       />
@@ -78,5 +83,3 @@ export default function Layout({
     </div>
   )
 }
-
-Layout.defaultProps = defaultProps

@@ -5,7 +5,7 @@ import {
   fetchBlowGame,
   joinBlowGame,
 } from '../../../../lib/blow/blow-game-store'
-import { toBlowGameView } from '../../../../lib/blow/blow-game-view'
+import { buildBlowGameView } from '../../../../lib/blow/blow-game-view'
 import { isRoomValid } from '../../../../lib/room'
 import { User } from '../../../../lib/types/user.types'
 import { fetchUser } from '../../../../lib/user-store'
@@ -34,7 +34,7 @@ export default async function getBlowRoom(
 
       const game = await fetchBlowGame(room)
       if (game) {
-        const view = toBlowGameView(user?.id, game)
+        const view = buildBlowGameView(user?.id, game)
         return res.json(view)
       }
 

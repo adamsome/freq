@@ -3,16 +3,15 @@ import { useEffect, useState } from 'react'
 import { API_LOGIN } from '../../lib/consts'
 import { useFetchUser } from '../../lib/util/use-fetch-user'
 import { useTheme } from '../../lib/util/use-theme'
-import Button from '../control/button'
+import Button, { ButtonProps } from '../control/button'
 import PlayerButtonContainer from '../player-button-container'
 
-type Props = typeof defaultProps & {
+type Props = {
+  button?: Partial<ButtonProps>
   onDebugToggle: () => void
 }
 
-const defaultProps = {}
-
-export default function HeaderActions({ onDebugToggle }: Props) {
+export default function HeaderActions({ button, onDebugToggle }: Props) {
   const router = useRouter()
   const { user, isLoading, error } = useFetchUser()
   const [mounted, setMounted] = useState(false)
@@ -31,14 +30,14 @@ export default function HeaderActions({ onDebugToggle }: Props) {
 
   if (error) {
     return (
-      <Button red title={error.message}>
+      <Button color="red" title={error.message}>
         Error
       </Button>
     )
   }
 
   if (isLoading || !mounted) {
-    return <Button gray>Loading...</Button>
+    return <Button color="gray">Loading...</Button>
   }
 
   if (user) {
@@ -46,6 +45,7 @@ export default function HeaderActions({ onDebugToggle }: Props) {
       <PlayerButtonContainer
         user={user}
         theme={theme}
+        button={button}
         onThemeToggle={handleThemeToggle}
         onDebugToggle={onDebugToggle}
       ></PlayerButtonContainer>
@@ -54,15 +54,17 @@ export default function HeaderActions({ onDebugToggle }: Props) {
 
   return (
     <>
-      <Button className="mr-1.5 text-xl" onClick={handleThemeToggle}>
+      <Button
+        className="mr-1.5 text-xl"
+        onClick={handleThemeToggle}
+        {...button}
+      >
         {theme === 'dark' ? 'Light' : 'Dark'} Mode
       </Button>
 
-      <Button className="text-xl" onClick={handleLogin}>
+      <Button className="text-xl" onClick={handleLogin} {...button}>
         Log In
       </Button>
     </>
   )
 }
-
-HeaderActions.defaultProps = defaultProps

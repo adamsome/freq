@@ -1,15 +1,37 @@
 import { PlayerView } from '../../lib/types/game.types'
+import { cx } from '../../lib/util/dom'
+import SkeletonBox from '../layout/skeleton-box'
 
 type Props = typeof defaultProps & {
-  player: PlayerView
+  player?: PlayerView | null
 }
 
 const defaultProps = {}
 
 export default function PlayerSeat({ player }: Props) {
   return (
-    <div className="w-24 h-16 bg-gray-700 text-gray-300">
-      <div className="text-overflow">{player.name}</div>
+    <div
+      className={cx(
+        'w-24 h-16 rounded',
+        'font-narrow text-sm tracking-widest',
+        'text-gray-700 dark:text-gray-300',
+        {
+          'px-1.5 py-0.5': player,
+          border: player != null,
+          'bg-gray-200 dark:bg-gray-800 flex-center': player === null,
+        },
+        player
+          ? 'border-gray-300 dark:border-gray-700'
+          : 'border-gray-200 dark:border-gray-800'
+      )}
+    >
+      {player === null ? (
+        <div className="text-overflow text-center text-gray-500">Empty</div>
+      ) : player === undefined ? (
+        <SkeletonBox className="w-full h-full" />
+      ) : (
+        <div className="text-overflow">{player.name}</div>
+      )}
     </div>
   )
 }

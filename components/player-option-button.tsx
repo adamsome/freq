@@ -5,7 +5,7 @@ import { styleColor } from '../lib/util/dom-style'
 import Button from './control/button'
 
 type Props = typeof defaultProps &
-  ButtonHTMLAttributes<unknown> & {
+  Omit<ButtonHTMLAttributes<unknown>, 'color'> & {
     player?: Player | null
   }
 
@@ -41,8 +41,7 @@ export default function PlayerOptionButton({
         },
         className ?? ''
       )}
-      blue={false}
-      red={leave}
+      color={leave ? 'red' : 'none'}
       round={false}
       ring={false}
       disabled={disabled}

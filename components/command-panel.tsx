@@ -4,8 +4,13 @@ import { Command, TeamGuessGameView } from '../lib/types/game.types'
 import { postCommand } from '../lib/util/fetch-json'
 import useGame from '../lib/util/use-game'
 import CommandButton from './command-button'
+import { ButtonProps } from './control/button'
 
-const CommandPanel = () => {
+type Props = {
+  button?: Partial<ButtonProps>
+}
+
+const CommandPanel = ({ button = {} }: Props) => {
   const { game, mutate } = useGame()
 
   const [error, setError] = useState<string | null>(null)
@@ -18,16 +23,16 @@ const CommandPanel = () => {
   if (!currentPlayer) return null
 
   const handleCommandClick = async (
-    i: number,
-    e: React.MouseEvent,
+    event: React.MouseEvent,
     cmd: Command,
-    j = 0
+    rowIndex: number,
+    colIndex = 0
   ) => {
-    e.preventDefault()
+    event.preventDefault()
 
     if (fetching) return
 
-    const isRight = j > 0
+    const isRight = colIndex > 0
     if (isRight) {
       if (cmd.rightDisabled == null) {
         if (cmd.disabled) return
@@ -50,7 +55,7 @@ const CommandPanel = () => {
       await postCommand(game.type, game.room, cmdType, value)
       mutate(
         produce((game: TeamGuessGameView | undefined) => {
-          if (game) game.commands[i].fetching = true
+          if (game) game.commands[rowIndex].fetching = true
         })
       )
     } catch (err) {
@@ -62,7 +67,7 @@ const CommandPanel = () => {
 
   return (
     <div className="w-full px-4 mb-6">
-      {commands.map((cmd, i) => (
+      {commands.map((cmd, rowIndex) => (
         <div
           className="mb-2 last:mb-0"
           key={cmd.type + cmd.text + cmd.info + cmd.rightText}
@@ -71,7 +76,11 @@ const CommandPanel = () => {
             command={cmd}
             currentPlayer={currentPlayer}
             fetching={fetching}
-            onClick={(e, cmd, j) => handleCommandClick(i, e, cmd, j)}
+            button={button}
+            rightButton={button}
+            onClick={(event, cmd, colIndex) =>
+              handleCommandClick(event, cmd, rowIndex, colIndex)
+            }
           />
         </div>
       ))}

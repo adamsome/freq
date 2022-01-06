@@ -74,7 +74,7 @@ export default function RoomForm({
                 ? styleLinearGradient(type ?? 'freq', '-60deg', '300%')
                 : {}
             }
-            blue={!animate}
+            color={animate ? 'none' : 'blue'}
             htmlType="submit"
             disabled={fetching || !type}
           >
@@ -85,8 +85,7 @@ export default function RoomForm({
             className={cx('w-full font-bold text-xl text-center', {
               'opacity-20': fetching,
             })}
-            // solid
-            blue
+            color="blue"
             disabled={fetching || !type}
             onClick={onChangeGameClick}
           >

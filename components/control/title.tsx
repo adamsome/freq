@@ -25,11 +25,12 @@ export default function Title({
 }: Props) {
   const label = title || (type ? getGameTitle(type) : <span>&nbsp;</span>)
   const styles = styleLinearGradientText(type ?? undefined)
-  const classes = cx('font-extrabold', classNames, {
+  const classes = cx(classNames, {
     'animate-shift': animate,
     'hover:animate-shake': animate,
+    'font-extrabold': type !== 'blow',
     'font-mono': type === 'cwd',
-    'font-narrow tracking-[0.2em] pl-3': type === 'blow',
+    'font-narrow font-light tracking-[0.2em] pl-3': type === 'blow',
     'cursor-pointer opacity-80 hover:opacity-100 transition-opacity':
       onClick != null,
   })

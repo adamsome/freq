@@ -23,7 +23,7 @@ export default function HomeGames({
     <div className="h-80 flex flex-col justify-center">
       {!loading && !gameType && (
         <div className="flex flex-col justify-center items-center mb-3.5 pt-12">
-          <Heading>Choose Game</Heading>
+          <Heading classNames="hidden md:block">Choose Game</Heading>
           <GamePicker horizontal onClick={onGameChange} />
         </div>
       )}

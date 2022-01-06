@@ -1,24 +1,25 @@
-import type { MouseEvent } from 'react'
+import type { CSSProperties, MouseEvent } from 'react'
 import { Command, Player } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
 import { styleColor } from '../lib/util/dom-style'
-import Button from './control/button'
+import Button, { ButtonProps } from './control/button'
 import IconSvg from './control/icon-svg'
 
-type Props = typeof defaultProps & {
+type Props = {
   command: Command
   currentPlayer?: Player
-  onClick: (e: MouseEvent, cmd: Command, i?: number) => Promise<void>
-}
-
-const defaultProps = {
-  fetching: false,
+  button?: ButtonProps
+  rightButton?: ButtonProps
+  fetching?: boolean
+  onClick: (e: MouseEvent, cmd: Command, colIndex?: number) => Promise<void>
 }
 
 const CommandButton = ({
   command,
   currentPlayer,
-  fetching,
+  button = {},
+  rightButton = {},
+  fetching = false,
   onClick,
 }: Props) => {
   const cmd = command
@@ -30,16 +31,25 @@ const CommandButton = ({
     return `max(${min}, min(${rawWidth}, calc(100% - ${min})))`
   }
 
-  const button = ({ right }: { right?: boolean } = {}) => {
+  const createButton = ({ right }: { right?: boolean } = {}) => {
     const flex = `0 0 ${getCmdRightWidth(cmd)}`
-    const player = !cmd.disabled ? currentPlayer : undefined
-    const color = (right ? cmd.rightColor : cmd.color) ?? player
+
+    const { className, ...props } = right ? rightButton : button
+
+    let style: CSSProperties | undefined
+    if (!props.color) {
+      const player = !cmd.disabled ? currentPlayer : undefined
+      const color = (right ? cmd.rightColor : cmd.color) ?? player
+      const bg = (right ? cmd.rightColorLit : cmd.colorLit) ?? 1
+      const border = (right ? cmd.rightColorBorder : cmd.colorBorder) ?? 0
+      style = styleColor(color, bg, border)
+    }
+
     const disabled =
       fetching ||
       cmd.fetching ||
       (right ? cmd.rightDisabled ?? cmd.disabled ?? false : cmd.disabled)
 
-    const style: React.CSSProperties | undefined = styleColor(color, 1)
     if (style && right) {
       style.flex = flex
     }
@@ -47,15 +57,19 @@ const CommandButton = ({
     return (
       <Button
         className={cx(
-          'flex-1 bg-gray-500 w-full text-xl py-2 px-2',
+          'flex-1 w-full text-xl',
           'opacity-80 hover:opacity-100 transition-opacity',
           'inline-flex justify-center items-center',
-          { 'ml-2': right }
+          { 'ml-2': right },
+          className
         )}
-        blue={false}
+        color="none"
+        bgHover={false}
         style={style}
+        spacing="m-0 px-2 py-2"
         disabled={disabled}
         onClick={(e) => onClick(e, cmd, right ? 1 : 0)}
+        {...props}
       >
         {fetching || cmd.fetching ? (
           <IconSvg name="spinner" className="w-7 h-7 text-white" />
@@ -77,9 +91,9 @@ const CommandButton = ({
           'text-lg': cmd.rightText,
         })}
       >
-        {button()}
+        {createButton()}
 
-        {cmd.rightText != null && button({ right: true })}
+        {cmd.rightText != null && createButton({ right: true })}
       </div>
 
       {cmd.info && (
@@ -93,7 +107,5 @@ const CommandButton = ({
     </>
   )
 }
-
-CommandButton.defaultProps = defaultProps
 
 export default CommandButton

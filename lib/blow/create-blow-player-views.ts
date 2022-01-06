@@ -1,27 +1,27 @@
-import { BlowGame } from '../types/blow.types'
+import { BlowGameView } from '../types/blow.types'
 import { PlayerView } from '../types/game.types'
 
 export default function createBlowPlayerViews(
-  game: BlowGame,
+  view: BlowGameView,
   currentID?: string
 ): PlayerView[] {
-  const activePlayerID = getActivePlayer(game)
+  // const activePlayerID = getActivePlayer(view)
 
-  return game.players.map(
+  return view.players.map(
     (p): PlayerView => ({
       ...p,
-      active: p.id === activePlayerID,
+      // active: p.id === activePlayerID,
       current: p.id === currentID,
-      wins: game.stats?.[p.id]?.w,
+      wins: view.stats?.[p.id]?.w,
     })
   )
 }
 
-function getActivePlayer(game: BlowGame): string | undefined {
-  switch (game.phase) {
-    case 'guess': {
-      const { player_order, player_active } = game
-      return player_order[player_active]
-    }
-  }
-}
+// function getActivePlayer(view: BlowGameView): string | undefined {
+//   switch (view.phase) {
+//     case 'guess': {
+//       const { player_order, player_active } = view
+//       return player_order[player_active]
+//     }
+//   }
+// }

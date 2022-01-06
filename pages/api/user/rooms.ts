@@ -4,7 +4,7 @@ import {
   withApiAuthRequired,
 } from '@auth0/nextjs-auth0'
 import { findManyBlowGames } from '../../../lib/blow/blow-game-store'
-import { toBlowGameView } from '../../../lib/blow/blow-game-view'
+import { buildBlowGameView } from '../../../lib/blow/blow-game-view'
 import { findManyCwdGames } from '../../../lib/cwd/cwd-game-store'
 import { toCwdGameView } from '../../../lib/cwd/cwd-game-view'
 import { findManyFreqGames } from '../../../lib/freq/freq-game-store'
@@ -34,7 +34,7 @@ export default withApiAuthRequired(async function getUser(req, res) {
 
     const freqViews = freqGames.map((g) => toFreqGameView(user.id, g))
     const cwdViews = cwdGames.map((g) => toCwdGameView(user.id, g))
-    const blowViews = blowGames.map((g) => toBlowGameView(user.id, g))
+    const blowViews = blowGames.map((g) => buildBlowGameView(user.id, g))
 
     const views: BaseGame[] = [...freqViews, ...cwdViews, ...blowViews]
 
