@@ -24,7 +24,7 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.0.0",
     "date-fns": "^2.19.0",
-    "immer": "^8.0.1",
+    "immer": "^9.0.7",
     "mongodb": "^3.5.9",
     "next": "^12.0.7",
     "react": "^17.0.2",
@@ -32,7 +32,7 @@
     "react-responsive-modal": "^6.0.1",
     "react-spring-bottom-sheet": "^3.4.0",
     "resize-observer-polyfill": "^1.5.1",
-    "swr": "^0.4.0",
+    "swr": "^1.1.2",
     "tiny-invariant": "^1.2.0"
   },
   "devDependencies": {

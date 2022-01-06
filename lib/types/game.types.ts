@@ -149,11 +149,11 @@ export interface Command {
 }
 
 export interface CommandsView {
-  headers: Header[]
+  headers?: Header[]
   commands: Command[]
 }
 
-export interface BaseGameView extends Omit<BaseGame, 'players'> {
+export interface BaseGameView extends Omit<BaseGame, 'players'>, CommandsView {
   type: GameType
   players: PlayerView[]
   currentPlayer?: PlayerView

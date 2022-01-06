@@ -2,7 +2,7 @@ import produce from 'immer'
 import type { MouseEvent } from 'react'
 import { useState } from 'react'
 import { KEY_DEBUG_MODE } from '../lib/consts'
-import { CommandType, TeamGuessGameView } from '../lib/types/game.types'
+import { CommandType } from '../lib/types/game.types'
 import { User } from '../lib/types/user.types'
 import { cx, isBrowser } from '../lib/util/dom'
 import { styleColor } from '../lib/util/dom-style'
@@ -59,11 +59,11 @@ const PlayerOptions = ({
     try {
       await postCommand(game.type, game.room, cmd, player)
       mutate(
-        produce((game: TeamGuessGameView | undefined) => {
+        produce((game) => {
           if (game && game.currentPlayer) {
             game.currentPlayer.fetching = true
           }
-        })
+        }, game)
       )
     } catch (err) {
       console.error(`Error posting command '${cmd}'.`, err.data ?? err)

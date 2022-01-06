@@ -1,5 +1,4 @@
 import produce from 'immer'
-import { CwdGameView } from '../../lib/types/cwd.types'
 import { postCommand } from '../../lib/util/fetch-json'
 import { useDebounceCallback } from '../../lib/util/use-debounce'
 import { useCwdGame } from '../../lib/util/use-game'
@@ -18,7 +17,7 @@ export default function CodesContainer(_: Props) {
     try {
       await postCommand('cwd', game.room, 'set_guess', index)
       mutate(
-        produce((game: CwdGameView | undefined) => {
+        produce((game) => {
           if (!game || !game.currentPlayer?.icon) return
 
           game.codes[index].selected = true
@@ -26,7 +25,7 @@ export default function CodesContainer(_: Props) {
           if (game.codes[index].icons?.find((it) => it === icon)) return
           if (!game.codes[index].icons) game.codes[index].icons = []
           game.codes[index].icons.push(game.currentPlayer.icon)
-        })
+        }, game)
       )
     } catch (err) {
       console.error(`Error setting guess.`, err.data ?? err)

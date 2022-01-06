@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { mutate } from 'swr'
+import { useSWRConfig } from 'swr'
 import {
   API_GAME_LEAVE,
   API_LOGOUT,
@@ -35,6 +35,8 @@ export default function PlayerButtonContainer({
 }: Props) {
   const router = useRouter()
   const type = head(router.query?.game) as GameType | undefined
+
+  const { mutate } = useSWRConfig()
 
   // Player Options modal state
   const [modelOptionsOpen, setModelOptionsOpen] = useState(false)

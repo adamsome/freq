@@ -1,7 +1,7 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { mutate } from 'swr'
+import { useSWRConfig } from 'swr'
 import { getTeamColor } from '../lib/color-dict'
 import {
   API_GAME,
@@ -36,6 +36,7 @@ export default function GameJoinButtons({
   const router = useRouter()
   const { user } = useUser()
   const { game } = useGame()
+  const { mutate } = useSWRConfig()
 
   const [error, setError] = useState<string | null>(null)
   const [fetching, setFetching] = useState(false)

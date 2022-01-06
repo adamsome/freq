@@ -3,7 +3,6 @@ import { useState } from 'react'
 import {
   freqClueDifficulties,
   FreqClueDifficultyOrAll,
-  FreqGameView,
 } from '../../lib/types/freq.types'
 import { CommandType } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'
@@ -41,9 +40,9 @@ export default function FreqSettings(_: Props) {
     try {
       await postCommand(game.type, game.room, cmd, value)
       mutate(
-        produce((game?: FreqGameView) => {
+        produce((game) => {
           if (game) game.fetching = true
-        })
+        }, game)
       )
     } catch (err) {
       console.error('Error setting designated psychic.', err.data ?? err)

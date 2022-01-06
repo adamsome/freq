@@ -1,6 +1,5 @@
 import produce from 'immer'
 import { useState } from 'react'
-import { CwdGameView } from '../../lib/types/cwd.types'
 import { CommandType } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'
 import { postCommand } from '../../lib/util/fetch-json'
@@ -34,9 +33,9 @@ export default function CwdSettings(_: Props) {
     try {
       await postCommand(game.type, game.room, cmd, value)
       mutate(
-        produce((game?: CwdGameView) => {
+        produce((game) => {
           if (game) game.fetching = true
-        })
+        }, game)
       )
     } catch (err) {
       console.error('Error setting designated psychic.', err.data ?? err)

@@ -20,7 +20,7 @@ const HeaderMessage = () => {
   } else if (gameLoading || !game) {
     headers = [{ text: 'Loading room...', color: 'Gray' }]
   } else {
-    headers = game?.headers
+    headers = game?.headers ?? []
   }
 
   const textSize =

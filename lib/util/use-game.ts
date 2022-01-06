@@ -1,16 +1,15 @@
 import { useRouter } from 'next/router'
-import useSWR from 'swr'
-import type { mutateCallback } from 'swr/dist/types'
+import useSWR, { KeyedMutator } from 'swr'
 import { API_GAME } from '../consts'
 import { BlowGameView } from '../types/blow.types'
 import { CwdGameView } from '../types/cwd.types'
 import { FreqGameView } from '../types/freq.types'
-import { BaseGameView, TeamGuessGameView } from '../types/game.types'
+import { BaseGameView } from '../types/game.types'
 import { head } from './array'
 
 export interface UseGameOptions<T> {
   refreshInterval: number
-  initialData?: T
+  fallbackData?: T
   useRequired?: boolean
   required?: unknown
 }
@@ -19,11 +18,7 @@ interface UseGameResult<T> {
   game: T | undefined
   loading: boolean
   error: unknown
-  mutate: (
-    data?: T | Promise<T> | mutateCallback<T>,
-    shouldRevalidate?: boolean
-  ) => Promise<T | undefined>
-  revalidate: () => Promise<boolean>
+  mutate: KeyedMutator<T>
 }
 
 const withDefaults = <T>(
@@ -33,7 +28,7 @@ const withDefaults = <T>(
   refreshInterval: options.refreshInterval ?? 750,
 })
 
-export default function useGame<T extends BaseGameView = TeamGuessGameView>(
+export default function useGame<T extends BaseGameView = BaseGameView>(
   options: Partial<UseGameOptions<T>> = {}
 ): UseGameResult<T> {
   const router = useRouter()
@@ -47,10 +42,10 @@ export default function useGame<T extends BaseGameView = TeamGuessGameView>(
       ? API_GAME.replace('%0', game).replace('%1', room)
       : null
 
-  const { data, error, mutate, revalidate } = useSWR<T>(path, opts)
+  const { data, error, mutate } = useSWR<T>(path, opts)
 
   const loading = !error && !data
-  return { game: data, loading, error, mutate, revalidate }
+  return { game: data, loading, error, mutate }
 }
 
 export function useCwdGame(
