@@ -39,7 +39,7 @@ export default function BlowActionButton({
   }
 
   const invert = state === 'active' || state === 'counter'
-  const color = invert ? 'white' : state === 'clickable' ? 'cyan' : 'gray'
+  const color = invert ? 'black' : state === 'clickable' ? 'cyan' : 'gray'
 
   const handleClick = (e: MouseEvent) => {
     e.preventDefault()
@@ -67,7 +67,7 @@ export default function BlowActionButton({
           'hover:bg-opacity-30 dark:hover:bg-opacity-40',
           'shadow',
         ],
-        state !== 'clickable' && 'text-black dark:text-white',
+        invert ? 'text-black dark:text-black' : 'text-black dark:text-white',
         invert || state === 'clickable'
           ? 'text-opacity-100 dark:text-opacity-100'
           : 'text-opacity-80 dark:text-opacity-80',
@@ -95,6 +95,8 @@ export default function BlowActionButton({
             state === 'clickable'
               ? 'text-cyan-600 dark:text-cyan-400 transition-colors ' +
                   'group-hover:text-cyan-700 dark:group-hover:text-cyan-300'
+              : invert
+              ? 'text-black dark:text-black'
               : 'text-black dark:text-white',
             counter
               ? invert || state === 'clickable'

@@ -12,22 +12,35 @@ type Props = {
   color?: BlowActionButtonColor
 }
 
+function getOpacityClass(color?: BlowActionButtonColor) {
+  return color === 'black'
+    ? 'text-opacity-70 dark:text-opacity-70'
+    : color === 'cyan'
+    ? [
+        'text-opacity-50 dark:text-opacity-50',
+        'group-hover:text-opacity-70 dark:group-hover:text-opacity-70',
+        'transition-opacity',
+      ]
+    : 'text-opacity-30 dark:text-opacity-30'
+}
+
+function getColorClass(color?: BlowActionButtonColor) {
+  switch (color) {
+    case 'black': {
+      return 'text-black dark:text-black'
+    }
+    case 'cyan':
+      return 'text-cyan-800 dark:text-cyan-400'
+    case 'gray':
+      return 'text-black dark:text-white'
+  }
+}
+
 export default function BlowActionButtonIcon({
   action,
   counter,
   color = 'gray',
 }: Props) {
-  const opacity =
-    color === 'white'
-      ? 'text-opacity-70 dark:text-opacity-70'
-      : color === 'cyan'
-      ? [
-          'text-opacity-50 dark:text-opacity-50',
-          'group-hover:text-opacity-70 dark:group-hover:text-opacity-70',
-          'transition-opacity',
-        ]
-      : 'text-opacity-30 dark:text-opacity-30'
-
   if (action.payment) {
     return (
       <BlowCoin
@@ -46,10 +59,8 @@ export default function BlowActionButtonIcon({
       <IconSvg
         className={cx(
           'relative w-3 h-5 ml-0.5',
-          color === 'cyan'
-            ? 'text-cyan-800 dark:text-cyan-400'
-            : 'text-black dark:text-white',
-          opacity
+          getColorClass(color),
+          getOpacityClass(color)
         )}
         name="shield"
       />
@@ -57,15 +68,7 @@ export default function BlowActionButtonIcon({
   }
 
   return (
-    <div
-      className={cx(
-        'ml-0.5',
-        color === 'cyan'
-          ? 'text-cyan-800 dark:text-cyan-400'
-          : 'text-black dark:text-white',
-        opacity
-      )}
-    >
+    <div className={cx('ml-0.5', getColorClass(color), getOpacityClass(color))}>
       →
     </div>
   )

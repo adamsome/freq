@@ -14,18 +14,16 @@ export default function PlayerSeat({ player }: Props) {
       className={cx(
         'w-24 h-16 rounded',
         'font-narrow text-sm tracking-widest',
-        'text-gray-700 dark:text-yellow-400',
+        'text-black/90 dark:text-white/90',
         {
           'px-1.5 py-0.5': player,
           border: player != null,
           'bg-gray-200 dark:bg-gray-800 flex-center': player === null,
         },
         player
-          ? [
-              'border-gray-300 dark:border-white',
-              'border-opacity-20 dark:border-opacity-20',
-            ]
+          ? ['border-black dark:border-white']
           : 'border-gray-200 dark:border-gray-800',
+        'border-opacity-20 dark:border-opacity-20',
         player?.current &&
           'border-2 border-opacity-30 dark:border-opacity-30 font-semibold'
       )}

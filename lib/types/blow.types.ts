@@ -94,7 +94,7 @@ export interface BlowAction {
 
 export type BlowActionState = 'normal' | 'active' | 'counter' | 'clickable'
 
-export type BlowActionButtonColor = 'gray' | 'white' | 'cyan'
+export type BlowActionButtonColor = 'gray' | 'black' | 'cyan'
 
 export interface BlowGame extends BaseGame {
   settings: BlowSettings

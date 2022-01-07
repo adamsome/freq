@@ -18,15 +18,15 @@ const getCoinColor = (color: BlowActionButtonColor, lit = false) => {
         ? 'from-slate-500 dark:from-slate-400'
         : 'from-slate-400 dark:from-slate-500'
     }
-    case 'white': {
+    case 'black': {
       return lit
-        ? 'from-cyan-400 dark:from-cyan-800'
-        : 'from-cyan-500 dark:from-cyan-700'
+        ? 'from-cyan-900 dark:from-cyan-900'
+        : 'from-cyan-700 dark:from-cyan-800'
     }
     case 'cyan': {
       return lit
-        ? 'from-cyan-400 dark:from-cyan-400'
-        : 'from-cyan-500 dark:from-cyan-500'
+        ? 'from-cyan-700 dark:from-cyan-400'
+        : 'from-cyan-600 dark:from-cyan-500'
     }
   }
 }
@@ -36,11 +36,11 @@ const getTextColor = (color: BlowActionButtonColor) => {
     case 'gray': {
       return 'text-white dark:text-black'
     }
-    case 'white': {
-      return 'text-black dark:text-white'
+    case 'black': {
+      return 'text-cyan-300 dark:text-cyan-400'
     }
     case 'cyan': {
-      return 'text-white dark:text-black'
+      return 'text-cyan-100 dark:text-black'
     }
   }
 }
@@ -75,7 +75,7 @@ export default function BlowCoin({
         className={cx(
           'absolute -left-0.5 w-5 h-5',
           'flex-center',
-          '[background-image:radial-gradient(ellipse_at_center,var(--tw-gradient-from)_0%,var(--tw-gradient-from)_25%,rgb(0_0_0_/_0%)_70%,rgb(0_0_0_/_0%)_100%)]',
+          '[background-image:radial-gradient(ellipse_at_center,var(--tw-gradient-from)_0%,var(--tw-gradient-from)_35%,rgb(0_0_0_/_0%)_65%,rgb(0_0_0_/_0%)_100%)]',
           getCoinColor(color, lit),
           className
         )}
@@ -88,7 +88,7 @@ export default function BlowCoin({
             'text-center',
             getTextColor(color),
             dimLabelWhenOne && children === 1
-              ? 'text-[0.7rem] text-opacity-30 dark:text-opacity-30'
+              ? 'text-[0.7rem] text-opacity-20 dark:text-opacity-30'
               : 'text-[0.875rem] text-opacity-95 dark:text-opacity-95'
           )}
         >
