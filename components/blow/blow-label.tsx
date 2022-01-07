@@ -1,23 +1,23 @@
 /* eslint-disable react/display-name */
 import type { HTMLAttributes } from 'react'
-import { BlowActionButtonColor, BlowToken } from '../../lib/types/blow.types'
-import BlowCoin from './blow-coin'
+import { BlowToken } from '../../lib/types/blow.types'
+import BlowCoin, { BlowCoinProps } from './blow-coin'
 
 type Props = HTMLAttributes<HTMLSpanElement> & {
   label?: string | (string | BlowToken)[]
-  color?: BlowActionButtonColor
+  coinProps?: Partial<BlowCoinProps>
 }
 
 const isString = (p: unknown): p is string => typeof p === 'string'
 
 const createPartRenderer =
-  (color?: BlowActionButtonColor) =>
+  (coinProps: Partial<BlowCoinProps> = {}) =>
   (p: string | BlowToken, i: number, arr: (string | BlowToken)[]) => {
     if (!isString(p)) {
       switch (p.type) {
         case 'coin': {
           return (
-            <BlowCoin key={i} color={color}>
+            <BlowCoin key={i} className="mt-0.5" {...coinProps}>
               {p.value}
             </BlowCoin>
           )
@@ -39,8 +39,8 @@ const createPartRenderer =
     return <span key={i}>{label}</span>
   }
 
-export default function BlowLabel({ label = '', color, ...props }: Props) {
+export default function BlowLabel({ label = '', coinProps, ...props }: Props) {
   const parts = Array.isArray(label) ? label : [label]
-  const renderPart = createPartRenderer(color)
+  const renderPart = createPartRenderer(coinProps)
   return <span {...props}>{parts.map(renderPart)}</span>
 }

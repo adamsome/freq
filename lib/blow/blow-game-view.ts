@@ -9,12 +9,9 @@ export function buildBlowGameView(
   userID: string | undefined,
   game: OptionalId<WithId<BlowGame>>
 ): BlowGameView {
-  const currentPlayer = game.players.find((p) => p.id === userID)
-
   const view: OptionalId<WithId<BlowGameView>> = {
     ...game,
     type: 'blow',
-    currentPlayer,
     players: game.players,
     roles: getBlowRoles(game.settings.variant),
     commands: [
@@ -39,6 +36,11 @@ export function buildBlowGameView(
   }
 
   view.players = createBlowPlayerViews(view, userID)
+
+  const currentPlayerIndex = game.players.findIndex((p) => p.id === userID)
+  if (currentPlayerIndex >= 0) {
+    view.currentPlayer = view.players[currentPlayerIndex]
+  }
 
   delete view._id
   return view

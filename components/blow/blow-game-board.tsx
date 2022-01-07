@@ -3,7 +3,7 @@ import useGame from '../../lib/util/use-game'
 import GameLink from '../game-link'
 import Layout from '../layout/layout'
 import LayoutMain from '../layout/layout-main'
-import BlowCardBoard from './blow-card-board'
+import BlowRoleCardBoard from './blow-role-card-board'
 import BlowPlayersSheet from './blow-players-sheet'
 
 type Props = typeof defaultProps
@@ -34,7 +34,7 @@ export default function BlowGameBoard(_: Props) {
           <GameLink url={roomUrl} button={{ color: 'cyan', bgHover: false }} />
         )}
 
-        <BlowCardBoard />
+        <BlowRoleCardBoard />
         <BlowPlayersSheet />
       </LayoutMain>
     </Layout>

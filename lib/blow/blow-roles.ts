@@ -1,4 +1,10 @@
-import { BlowCardRole, BlowCardRoleID } from '../types/blow.types'
+import {
+  BlowCardRole,
+  BlowCardRoleID,
+  BLOW_CARD_ROLE_IDS,
+} from '../types/blow.types'
+import { isObject } from '../util/object'
+import { isNotEmpty, isNotNil } from '../util/string'
 
 export const BLOW_CARD_ROLE_DEFS: Record<BlowCardRoleID, BlowCardRole> = {
   common: {
@@ -33,6 +39,15 @@ export const BLOW_CARD_ROLE_DEFS: Record<BlowCardRoleID, BlowCardRole> = {
     name: 'Explorer',
     actions: ['activate_explore', 'counter_raid'],
   },
+}
+
+export function isBlowCardRole(role: unknown): role is BlowCardRole {
+  return (
+    isObject(role) &&
+    isNotEmpty(role.id, role.name) &&
+    isNotNil(role.actions) &&
+    BLOW_CARD_ROLE_IDS.includes(role.id as BlowCardRoleID)
+  )
 }
 
 // const GENERIC_MAP: Record<BlowCardRoleID, Partial<BlowCardRole>> = {

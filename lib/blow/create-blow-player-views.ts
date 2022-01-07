@@ -1,18 +1,19 @@
-import { BlowGameView } from '../types/blow.types'
-import { PlayerView } from '../types/game.types'
+import { BlowGameView, BlowPlayerView } from '../types/blow.types'
 
 export default function createBlowPlayerViews(
   view: BlowGameView,
   currentID?: string
-): PlayerView[] {
+): BlowPlayerView[] {
   // const activePlayerID = getActivePlayer(view)
 
   return view.players.map(
-    (p): PlayerView => ({
+    (p): BlowPlayerView => ({
       ...p,
       // active: p.id === activePlayerID,
       current: p.id === currentID,
       wins: view.stats?.[p.id]?.w,
+      cards: p.name?.startsWith('B') ? ['merchant', 'killer'] : [null],
+      coins: p.name?.startsWith('B') ? 12 : 7,
     })
   )
 }

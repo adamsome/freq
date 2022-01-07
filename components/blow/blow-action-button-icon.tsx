@@ -1,6 +1,7 @@
 import {
   BlowActionButtonColor,
   BlowActionDef,
+  BlowCardSize,
 } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import IconSvg from '../control/icon-svg'
@@ -10,6 +11,7 @@ type Props = {
   action: BlowActionDef
   counter?: BlowActionDef
   color?: BlowActionButtonColor
+  size?: BlowCardSize
 }
 
 function getOpacityClass(color?: BlowActionButtonColor) {
@@ -40,13 +42,17 @@ export default function BlowActionButtonIcon({
   action,
   counter,
   color = 'gray',
+  size = 'sm',
 }: Props) {
+  const sm = size === 'xs' || size === 'sm'
+
   if (action.payment) {
     return (
       <BlowCoin
-        className="-top-px"
+        className="mt-0.5"
         lit
         color={color}
+        size={sm ? 'xs' : 'sm'}
         showIndividualCoins={false}
       >
         {action.payment}
@@ -58,17 +64,26 @@ export default function BlowActionButtonIcon({
     return (
       <IconSvg
         className={cx(
-          'relative w-3 h-5 ml-0.5',
+          'relative transition-all',
+          sm ? 'w-0.5 h-0.5 ml-0' : 'w-3 h-5 ml-0.5',
           getColorClass(color),
           getOpacityClass(color)
         )}
+        top={sm ? '-0.5px' : undefined}
         name="shield"
       />
     )
   }
 
   return (
-    <div className={cx('ml-0.5', getColorClass(color), getOpacityClass(color))}>
+    <div
+      className={cx(
+        'transition-all',
+        sm ? 'ml-0 leading-tight' : 'ml-0.5',
+        getColorClass(color),
+        getOpacityClass(color)
+      )}
+    >
       →
     </div>
   )

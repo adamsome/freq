@@ -51,7 +51,7 @@ export interface BlowActionDef {
   counter?: BlowActionID
 }
 
-const BLOW_CARD_ROLE_IDS = [
+export const BLOW_CARD_ROLE_IDS = [
   'merchant',
   'thief',
   'killer',
@@ -96,6 +96,12 @@ export type BlowActionState = 'normal' | 'active' | 'counter' | 'clickable'
 
 export type BlowActionButtonColor = 'gray' | 'black' | 'cyan'
 
+export type BlowCardVariant = 'empty' | 'facedown' | 'faceup'
+export type BlowCardSize = 'xs' | 'sm' | 'md'
+export type BlowCardColor = 'gray' | 'cyan'
+
+export type BlowCoinSize = 'xs' | 'sm' | 'md'
+
 export interface BlowGame extends BaseGame {
   settings: BlowSettings
   phase: BlowPhase
@@ -104,13 +110,17 @@ export interface BlowGame extends BaseGame {
   stats?: Dict<BlowPlayerStats>
 }
 
-export type BlowPlayerView = PlayerView
+export type BlowPlayerView = PlayerView & {
+  /** References a card role or null to indicate an unknown facedown card */
+  cards?: (BlowCardRoleID | null)[]
+  coins?: number
+}
 
 export type BlowGameView = Omit<BlowGame, 'players'> & {
   type: GameType
   players: BlowPlayerView[]
   currentPlayer?: BlowPlayerView
-  roles: BlowCardRole[]
+  roles: readonly BlowCardRoleID[]
   commands: Command[]
   activePlayer?: string
   counterPlayer?: string

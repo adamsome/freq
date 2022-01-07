@@ -112,6 +112,10 @@ html.dark {
 }
 
 @layer utilities {
+  .full {
+    @apply w-full h-full;
+  }
+
   .flex-start {
     @apply flex justify-start items-start;
   }
