@@ -2,23 +2,24 @@ import { createPlayer } from '../player'
 import { BlowGame } from '../types/blow.types'
 import { User } from '../types/user.types'
 import prepBlowMatch from './prep-blow-match'
+// import { prep } from './store/blow-reducer'
 
 export default function createNewBlowGame(room: string, user: User): BlowGame {
   // Since new game, player gets made leader
   const player = createPlayer(user)
 
   const game: BlowGame = {
-    ...BLANK_GAME,
+    ...initBlowGame(),
     room: room.toLowerCase(),
     players: [player],
-    player_order: [player.id],
+    player_order: [0],
     room_started_at: new Date().toISOString(),
   }
 
   return prepBlowMatch(game)
 }
 
-const BLANK_GAME: BlowGame = {
+export const initBlowGame = (): BlowGame => ({
   room: '',
   players: [],
   match_number: 0,
@@ -31,4 +32,4 @@ const BLANK_GAME: BlowGame = {
   actions: [],
   stats: {},
   room_started_at: '',
-}
+})

@@ -2,6 +2,7 @@ import { doesGameHaveEnoughPlayers } from '../../game'
 import { BlowGame } from '../../types/blow.types'
 import { connectToDatabase } from '../../util/mongodb'
 import { fromBlowGames } from '../blow-game-store'
+import { deal, shuffle } from '../store/blow-reducer'
 
 export default async function beginRound(game: BlowGame) {
   if (!doesGameHaveEnoughPlayers(game, 'blow'))
@@ -26,6 +27,8 @@ export default async function beginRound(game: BlowGame) {
   }
   changes.round_started_at = now
   changes.phase = 'guess'
+
+  changes.actions = [...game.actions, shuffle(), deal()]
 
   await fromBlowGames(db).updateOne(filter, { $set: changes })
 }

@@ -1,50 +1,60 @@
+import { configureStore } from '@reduxjs/toolkit'
 import { OptionalId, WithId } from 'mongodb'
 import { findCurrentPlayer } from '../player'
 import { BlowGame, BlowGameView } from '../types/blow.types'
 import { isObject } from '../util/object'
 import { isNotEmpty } from '../util/string'
-import { getBlowRoles } from './blow-variant-defs'
-import createBlowPlayerViews from './create-blow-player-views'
+import { seedBlowRandomNumberGenerator } from './blow-random'
+import blowReducer, { initialState, prep } from './store/blow-reducer'
 
 export function buildBlowGameView(
   userID: string | undefined,
-  game: OptionalId<WithId<BlowGame>>
+  rawGame: OptionalId<WithId<BlowGame>>
 ): BlowGameView {
-  const view: OptionalId<WithId<BlowGameView>> = {
-    ...game,
-    type: 'blow',
-    players: game.players,
-    roles: getBlowRoles(game.settings.variant),
-    commands: [
-      {
-        type: 'begin_round',
-        text: 'Deal Cards',
-        disabled: game.players.length < 3,
-      },
-    ],
-    actionState: {
-      activate_explore: 'clickable',
-      activate_kill: 'active',
-      activate_raid: 'active',
-      activate_trade: 'clickable',
-      counter_raid: 'counter',
-      counter_kill: 'clickable',
-      // counter_extort: 'normal',
-      income: 'normal',
-      extort: 'normal',
-      blow: 'clickable',
-    },
+  try {
+    const game = { ...rawGame } as BlowGame
+    delete (game as OptionalId<WithId<BlowGame>>)._id
+
+    seedBlowRandomNumberGenerator(game)
+
+    const store = configureStore({
+      reducer: { blow: blowReducer },
+      preloadedState: { blow: { ...initialState, game, userID } },
+    })
+
+    store.dispatch(prep())
+    game.actions.forEach((a) => store.dispatch(a))
+
+    const { blow: state } = store.getState()
+
+    const view: OptionalId<WithId<BlowGameView>> = {
+      ...game,
+      type: 'blow',
+      roles: state.roles,
+      commands: state.commands,
+      actionState: state.actionState,
+      players: state.players,
+      currentPlayer: findCurrentPlayer(state.players, userID),
+      // actionState: {
+      //   activate_explore: 'clickable',
+      //   activate_kill: 'active',
+      //   activate_raid: 'active',
+      //   activate_trade: 'clickable',
+      //   counter_raid: 'counter',
+      //   counter_kill: 'clickable',
+      //   // counter_extort: 'normal',
+      //   income: 'normal',
+      //   extort: 'normal',
+      //   blow: 'clickable',
+      // },
+    }
+
+    delete view._id
+    return view
+  } catch (e) {
+    console.error('error', e)
+    throw new Error(e)
   }
-
-  view.players = createBlowPlayerViews(view, userID)
-
-  const currentPlayer = findCurrentPlayer(view.players, userID)
-  if (currentPlayer) {
-    view.currentPlayer = currentPlayer
-  }
-
-  delete view._id
-  return view
 }
 
 export function isBlowGameView(game: unknown): game is BlowGameView {

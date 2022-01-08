@@ -27,6 +27,8 @@ export default function BlowRoleCardBoard(_: Props) {
       <div className="grid gap-4 grid-cols-2 grid-rows-3">
         {range(0, 6).map((i) => {
           const role = roles?.[i]
+          const cards = currentPlayer?.cards ?? []
+          const currentCards = role ? cards.filter((r) => r === role).length : 0
           return (
             <BlowCard
               key={i}
@@ -35,7 +37,7 @@ export default function BlowRoleCardBoard(_: Props) {
               orientation="horizontal"
               variant="faceup"
               actions={actionState}
-              currentCard={role && currentPlayer?.cards?.includes(role)}
+              currentCards={currentCards}
             />
           )
         })}

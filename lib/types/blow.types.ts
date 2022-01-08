@@ -1,3 +1,4 @@
+import { PayloadAction } from '@reduxjs/toolkit'
 import { BaseGame, Command, GameType, PlayerView } from './game.types'
 import { Dict } from './object.types'
 
@@ -104,8 +105,8 @@ export type BlowCoinSize = 'xs' | 'sm' | 'md'
 export interface BlowGame extends BaseGame {
   settings: BlowSettings
   phase: BlowPhase
-  player_order: string[]
-  actions: string[]
+  player_order: number[]
+  actions: PayloadAction<unknown>[]
   stats?: Dict<BlowPlayerStats>
 }
 

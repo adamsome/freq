@@ -59,7 +59,7 @@ export async function joinBlowGame(
     // Add player to game if not already
     if (!hasPlayer(game.players, user.id)) {
       game.players = addPlayer(game.players, user, { forceLeader: true })
-      game.player_order = [...game.player_order, user.id]
+      game.player_order = [...game.player_order, game.players.length]
 
       const gameFilter = { room: game.room.toLowerCase() }
       const changes: Partial<BlowGame> = {}
@@ -95,11 +95,13 @@ export async function leaveBlowGame(
   if (playerIndex >= 0) {
     const players = game.players.filter((p) => p.id !== userID)
 
-    // Remove from the player order
-    const orderIndex = game.player_order.findIndex((id) => id === userID)
-    const order = game.player_order.filter((_, i) => i !== orderIndex)
+    // Remove from the player order and decrement any player index above the
+    // index of the player being removed from the player list
+    const player_order = game.player_order
+      .filter((i) => i !== playerIndex)
+      .map((i) => (i > playerIndex ? i - 1 : i))
 
-    const update: Partial<BlowGame> = { players, player_order: order }
+    const update: Partial<BlowGame> = { players, player_order }
     await store.updateOne(filter, { $set: update })
 
     if (opts.deleteEmpty && players.length === 0) {

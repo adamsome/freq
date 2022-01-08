@@ -23,7 +23,7 @@ type Props = {
   variant?: BlowCardVariant
   color?: BlowCardColor
   actions?: Partial<Record<BlowRoleActionID, BlowActionState>>
-  currentCard?: boolean
+  currentCards?: number
 }
 
 export default function BlowCard({ ...props }: Props) {
@@ -40,7 +40,7 @@ function BlowCardContent({
   size = 'sm',
   variant = 'facedown',
   color = 'gray',
-  currentCard,
+  currentCards = 0,
 }: Props) {
   if (variant === 'empty') return null
 
@@ -56,7 +56,7 @@ function BlowCardContent({
   return (
     <BlowCardContentWrapper size={size}>
       {!role.common && (
-        <BlowCardTitle size={size} showCard={!sm && currentCard}>
+        <BlowCardTitle size={size} cards={!sm ? currentCards : 0}>
           {role.name}
         </BlowCardTitle>
       )}
