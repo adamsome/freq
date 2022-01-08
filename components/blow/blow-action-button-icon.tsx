@@ -1,6 +1,6 @@
 import {
   BlowActionButtonColor,
-  BlowActionDef,
+  BlowRoleActionDef,
   BlowCardSize,
 } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
@@ -8,8 +8,8 @@ import IconSvg from '../control/icon-svg'
 import BlowCoin from './blow-coin'
 
 type Props = {
-  action: BlowActionDef
-  counter?: BlowActionDef
+  action: BlowRoleActionDef
+  counter?: BlowRoleActionDef
   color?: BlowActionButtonColor
   size?: BlowCardSize
 }

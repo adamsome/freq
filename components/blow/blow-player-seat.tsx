@@ -1,5 +1,5 @@
 import {
-  BlowActionID,
+  BlowRoleActionID,
   BlowActionState,
   BlowCardVariant,
   BlowPlayerView,
@@ -11,7 +11,7 @@ import BlowPlayerSeatOutline from './blow-player-seat-outline'
 
 type Props = {
   player?: BlowPlayerView | null
-  actions?: Partial<Record<BlowActionID, BlowActionState>>
+  actions?: Partial<Record<BlowRoleActionID, BlowActionState>>
 }
 
 export default function BlowPlayerSeat(props: Props) {

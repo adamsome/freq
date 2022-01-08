@@ -27,7 +27,7 @@ export interface BlowTokenCard {
 
 export type BlowToken = BlowTokenCoin | BlowTokenCard
 
-const BLOW_ACTION_IDS = [
+const BLOW_ROLE_ACTION_IDS = [
   'income',
   'extort',
   'blow',
@@ -40,18 +40,18 @@ const BLOW_ACTION_IDS = [
   'activate_explore',
 ] as const
 
-export type BlowActionID = typeof BLOW_ACTION_IDS[number]
+export type BlowRoleActionID = typeof BLOW_ROLE_ACTION_IDS[number]
 
-export interface BlowActionDef {
-  id: BlowActionID
+export interface BlowRoleActionDef {
+  id: BlowRoleActionID
   name?: string
   label?: string | (string | BlowToken)[]
   description?: string | (string | BlowToken)[]
   payment?: number
-  counter?: BlowActionID
+  counter?: BlowRoleActionID
 }
 
-export const BLOW_CARD_ROLE_IDS = [
+export const BLOW_ROLE_IDS = [
   'merchant',
   'thief',
   'killer',
@@ -60,14 +60,14 @@ export const BLOW_CARD_ROLE_IDS = [
   'common',
 ] as const
 
-export type BlowCardRoleID = typeof BLOW_CARD_ROLE_IDS[number]
+export type BlowRoleID = typeof BLOW_ROLE_IDS[number]
 
-export interface BlowCardRole {
-  id: BlowCardRoleID
+export interface BlowRoleDef {
+  id: BlowRoleID
   common?: boolean
   hasNoCounters?: boolean
   name: string
-  actions: BlowActionID[]
+  actions: BlowRoleActionID[]
   color?: string
 }
 
@@ -85,15 +85,14 @@ export interface BlowSettings {
 }
 
 export interface BlowAction {
-  id: BlowActionID
-  role?: BlowCardRoleID
+  id: BlowRoleActionID
+  role?: BlowRoleID
   subject?: string
   target?: string
   token?: BlowToken[]
 }
 
 export type BlowActionState = 'normal' | 'active' | 'counter' | 'clickable'
-
 export type BlowActionButtonColor = 'gray' | 'black' | 'cyan'
 
 export type BlowCardVariant = 'empty' | 'facedown' | 'faceup'
@@ -112,7 +111,7 @@ export interface BlowGame extends BaseGame {
 
 export type BlowPlayerView = PlayerView & {
   /** References a card role or null to indicate an unknown facedown card */
-  cards?: (BlowCardRoleID | null)[]
+  cards?: (BlowRoleID | null)[]
   coins?: number
 }
 
@@ -120,11 +119,11 @@ export type BlowGameView = Omit<BlowGame, 'players'> & {
   type: GameType
   players: BlowPlayerView[]
   currentPlayer?: BlowPlayerView
-  roles: readonly BlowCardRoleID[]
+  roles: readonly BlowRoleID[]
   commands: Command[]
   activePlayer?: string
   counterPlayer?: string
-  actionState: Partial<Record<BlowActionID, BlowActionState>>
+  actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
 }
 
 // TODO: RoleSet's: Determine which roles included in game

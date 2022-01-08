@@ -1,19 +1,17 @@
 import {
-  BlowCardRoleID,
+  BlowRoleID,
   BlowVariantDef,
   BlowVariantID,
-  BLOW_CARD_ROLE_IDS,
+  BLOW_ROLE_IDS,
 } from '../types/blow.types'
 
 export const BLOW_VARIANTS_DEFS: Record<BlowVariantID, BlowVariantDef> = {
   basic: { id: 'basic', name: 'Basic' },
 }
 
-const BASIC_ROLES: readonly BlowCardRoleID[] = BLOW_CARD_ROLE_IDS
+const BASIC_ROLES: readonly BlowRoleID[] = BLOW_ROLE_IDS
 
-export function getBlowRoles(
-  variantID: BlowVariantID
-): readonly BlowCardRoleID[] {
+export function getBlowRoles(variantID: BlowVariantID): readonly BlowRoleID[] {
   switch (variantID) {
     default:
     case 'basic': {

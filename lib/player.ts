@@ -104,3 +104,15 @@ export function getPlayerDict<T extends Player>(players: T[]): Dict<T> {
     return acc
   }, {} as Dict<T>)
 }
+
+export function findCurrentPlayer<T extends Player>(
+  players: T[],
+  userID?: string
+): T | undefined {
+  if (!userID) return
+
+  const currentPlayerIndex = players.findIndex((p) => p.id === userID)
+  if (currentPlayerIndex >= 0) {
+    return players[currentPlayerIndex]
+  }
+}

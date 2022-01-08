@@ -1,9 +1,9 @@
+import { getPlayersPerTeam } from './player'
 import { CwdSettings } from './types/cwd.types'
 import { FreqSettings } from './types/freq.types'
-import { TeamGuessGame, GameType, Player, BaseGame } from './types/game.types'
-import { getPlayersPerTeam } from './player'
+import { BaseGame, GameType, Player, TeamGuessGame } from './types/game.types'
 
-type PartialGame = TeamGuessGame & {
+type PartialGame = Partial<TeamGuessGame> & {
   players: Player[]
   settings?: CwdSettings | FreqSettings
   psychic?: string
@@ -48,15 +48,27 @@ export function shouldUsePlayerIcon(
 }
 
 export function doesGameHaveEnoughPlayers(
-  game: PartialGame,
+  game: BaseGame,
   type: GameType
 ): boolean {
-  if (game.settings?.designated_psychic)
-    return game.psychic_1 != null || game.psychic != null
+  switch (type?.toLowerCase()) {
+    case 'blow': {
+      return (game.players ?? []).length >= 3
+    }
+    default:
+    case 'cwd':
+    case 'freq': {
+      const teamGame = game as PartialGame
+      if (teamGame.settings?.designated_psychic)
+        return teamGame.psychic_1 != null || teamGame.psychic != null
 
-  const requiredCount = type === 'cwd' ? 1 : 2
-  const teams = getPlayersPerTeam(game.players)
-  return teams[0].length >= requiredCount && teams[1].length >= requiredCount
+      const requiredCount = type === 'cwd' ? 1 : 2
+      const teams = getPlayersPerTeam(teamGame.players ?? [])
+      return (
+        teams[0].length >= requiredCount && teams[1].length >= requiredCount
+      )
+    }
+  }
 }
 
 export function getTeamName(team?: 1 | 2): string {

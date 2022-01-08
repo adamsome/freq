@@ -1,12 +1,8 @@
-import {
-  BlowCardRole,
-  BlowCardRoleID,
-  BLOW_CARD_ROLE_IDS,
-} from '../types/blow.types'
+import { BlowRoleDef, BlowRoleID, BLOW_ROLE_IDS } from '../types/blow.types'
 import { isObject } from '../util/object'
 import { isNotEmpty, isNotNil } from '../util/string'
 
-export const BLOW_CARD_ROLE_DEFS: Record<BlowCardRoleID, BlowCardRole> = {
+export const BLOW_ROLE_DEFS: Record<BlowRoleID, BlowRoleDef> = {
   common: {
     id: 'common',
     common: true,
@@ -41,12 +37,12 @@ export const BLOW_CARD_ROLE_DEFS: Record<BlowCardRoleID, BlowCardRole> = {
   },
 }
 
-export function isBlowCardRole(role: unknown): role is BlowCardRole {
+export function isBlowRoleDef(role: unknown): role is BlowRoleDef {
   return (
     isObject(role) &&
     isNotEmpty(role.id, role.name) &&
     isNotNil(role.actions) &&
-    BLOW_CARD_ROLE_IDS.includes(role.id as BlowCardRoleID)
+    BLOW_ROLE_IDS.includes(role.id as BlowRoleID)
   )
 }
 

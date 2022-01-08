@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react'
 import invariant from 'tiny-invariant'
-import { BLOW_CARD_ROLE_DEFS, isBlowCardRole } from '../../lib/blow/blow-roles'
+import { BLOW_ROLE_DEFS, isBlowRoleDef } from '../../lib/blow/blow-role-defs'
 import {
-  BlowActionID,
+  BlowRoleActionID,
   BlowActionState,
   BlowCardColor,
-  BlowCardRoleID,
+  BlowRoleID,
   BlowCardSize,
   BlowCardVariant,
 } from '../../lib/types/blow.types'
@@ -17,12 +17,12 @@ import BlowCardFacedownPattern from './blow-card-facedown-pattern'
 import BlowCardTitle from './blow-card-title'
 
 type Props = {
-  id?: BlowCardRoleID | null
+  id?: BlowRoleID | null
   size?: BlowCardSize
   orientation?: 'horizontal' | 'vertical'
   variant?: BlowCardVariant
   color?: BlowCardColor
-  actions?: Partial<Record<BlowActionID, BlowActionState>>
+  actions?: Partial<Record<BlowRoleActionID, BlowActionState>>
   currentCard?: boolean
 }
 
@@ -48,8 +48,8 @@ function BlowCardContent({
 
   if (!id) return <SkeletonBox color="cyan" className="full" />
 
-  const role = BLOW_CARD_ROLE_DEFS[id]
-  invariant(isBlowCardRole(role), `BlowCard: BlowCardRole for '${id}' invalid`)
+  const role = BLOW_ROLE_DEFS[id]
+  invariant(isBlowRoleDef(role), `BlowCard: BlowCardRole for '${id}' invalid`)
 
   const sm = size === 'xs' || size === 'sm'
 

@@ -1,8 +1,9 @@
 import { OptionalId, WithId } from 'mongodb'
+import { findCurrentPlayer } from '../player'
 import { BlowGame, BlowGameView } from '../types/blow.types'
 import { isObject } from '../util/object'
 import { isNotEmpty } from '../util/string'
-import { getBlowRoles } from './blow-variants'
+import { getBlowRoles } from './blow-variant-defs'
 import createBlowPlayerViews from './create-blow-player-views'
 
 export function buildBlowGameView(
@@ -37,9 +38,9 @@ export function buildBlowGameView(
 
   view.players = createBlowPlayerViews(view, userID)
 
-  const currentPlayerIndex = game.players.findIndex((p) => p.id === userID)
-  if (currentPlayerIndex >= 0) {
-    view.currentPlayer = view.players[currentPlayerIndex]
+  const currentPlayer = findCurrentPlayer(view.players, userID)
+  if (currentPlayer) {
+    view.currentPlayer = currentPlayer
   }
 
   delete view._id

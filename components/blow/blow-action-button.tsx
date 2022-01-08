@@ -1,9 +1,12 @@
 import type { MouseEvent } from 'react'
 import invariant from 'tiny-invariant'
-import { BLOW_ACTIONS_DEFS, isBlowActionDef } from '../../lib/blow/blow-actions'
 import {
-  BlowActionDef,
-  BlowActionID,
+  BLOW_ROLE_ACTIONS_DEFS,
+  isBlowRoleActionDef,
+} from '../../lib/blow/blow-role-action-defs'
+import {
+  BlowRoleActionDef,
+  BlowRoleActionID,
   BlowActionState,
   BlowCardSize,
 } from '../../lib/types/blow.types'
@@ -13,10 +16,10 @@ import BlowLabel from './blow-label'
 
 type Props = {
   className?: string
-  id?: BlowActionID
+  id?: BlowRoleActionID
   size?: BlowCardSize
   state?: BlowActionState
-  onClick?: (id: BlowActionID) => void
+  onClick?: (id: BlowRoleActionID) => void
 }
 
 const BG = {
@@ -53,17 +56,17 @@ export default function BlowActionButton({
     return <div className={heightCx}></div>
   }
 
-  const action = BLOW_ACTIONS_DEFS[id]
+  const action = BLOW_ROLE_ACTIONS_DEFS[id]
   invariant(
-    isBlowActionDef(action),
+    isBlowRoleActionDef(action),
     `BlowActionButton: BlowActionDef for '${id}' invalid`
   )
 
-  let counter: BlowActionDef | undefined
+  let counter: BlowRoleActionDef | undefined
   if (action.counter) {
-    counter = BLOW_ACTIONS_DEFS[action.counter as BlowActionID]
+    counter = BLOW_ROLE_ACTIONS_DEFS[action.counter as BlowRoleActionID]
     invariant(
-      isBlowActionDef(counter),
+      isBlowRoleActionDef(counter),
       `BlowActionButton: BlowActionDef counter for '${action.counter}' invalid`
     )
   }

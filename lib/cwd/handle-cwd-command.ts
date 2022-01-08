@@ -11,7 +11,7 @@ import setDesignatedPsychicMode from './commands/set-designated-psychic-mode'
 import setGuess from './commands/set-guess'
 import shuffleTeams from './commands/shuffle-teams'
 
-export default async function handleFreqCommand(
+export default async function handleCwdCommand(
   game: FullCwdGameView,
   type: CommandType,
   value?: unknown

@@ -1,8 +1,11 @@
-import { BlowActionDef, BlowActionID } from '../types/blow.types'
+import { BlowRoleActionDef, BlowRoleActionID } from '../types/blow.types'
 import { isObject } from '../util/object'
 import { isNotEmpty, isNotNil } from '../util/string'
 
-export const BLOW_ACTIONS_DEFS: Record<BlowActionID, BlowActionDef> = {
+export const BLOW_ROLE_ACTIONS_DEFS: Record<
+  BlowRoleActionID,
+  BlowRoleActionDef
+> = {
   income: {
     id: 'income',
     name: 'Income',
@@ -57,7 +60,9 @@ export const BLOW_ACTIONS_DEFS: Record<BlowActionID, BlowActionDef> = {
   },
 }
 
-export function isBlowActionDef(action: unknown): action is BlowActionDef {
+export function isBlowRoleActionDef(
+  action: unknown
+): action is BlowRoleActionDef {
   return (
     isObject(action) &&
     isNotEmpty(action.id, action.name) &&
