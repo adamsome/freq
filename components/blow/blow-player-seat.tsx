@@ -1,11 +1,11 @@
 import {
-  BlowRoleActionID,
   BlowActionState,
   BlowCardVariant,
   BlowPlayerView,
+  BlowRoleActionID,
 } from '../../lib/types/blow.types'
 import SkeletonBox from '../layout/skeleton-box'
-import BlowCard from './blow-card'
+import BlowCardContainer from './blow-card-container'
 import BlowCoin from './blow-coin'
 import BlowPlayerSeatOutline from './blow-player-seat-outline'
 
@@ -52,7 +52,7 @@ function BlowPlayerSeatContent({ player, actions }: Props) {
 
         <div className="flex space-x-[3px] ml-1">
           {[0, 1].map((i) => (
-            <BlowCard
+            <BlowCardContainer
               key={i}
               id={cards?.[i]}
               size="sm"

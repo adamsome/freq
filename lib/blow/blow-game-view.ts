@@ -3,9 +3,13 @@ import { OptionalId, WithId } from 'mongodb'
 import { findCurrentPlayer } from '../player'
 import { BlowGame, BlowGameView } from '../types/blow.types'
 import { isObject } from '../util/object'
-import { isNotEmpty } from '../util/string'
 import { setRandomNumberGeneratorSeed } from '../util/prng'
-import blowReducer, { initialState, prep } from './blow-action-reducer'
+import { isNotEmpty } from '../util/string'
+import blowReducer, {
+  finalize,
+  initialState,
+  prep,
+} from './blow-action-reducer'
 
 export function buildBlowGameView(
   userID: string | undefined,
@@ -34,6 +38,8 @@ export function buildBlowGameView(
     store.dispatch(prep())
     // Iterate through each action that has taken place during the match...
     game.actions.forEach((a) => store.dispatch(a))
+    // ...and remove any secret information for the player
+    store.dispatch(finalize())
     // ...to get the up-to-date game state
     const { blow: state } = store.getState()
 
@@ -46,8 +52,6 @@ export function buildBlowGameView(
       messages: state.messages,
       actionState: state.actionState,
       players: state.players,
-      active: state.active,
-      counter: state.counter,
       currentPlayer: findCurrentPlayer(state.players, userID),
     }
   } catch (e) {

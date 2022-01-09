@@ -6,18 +6,18 @@ export const BLOW_ROLE_ACTIONS_DEFS: Record<
   BlowRoleActionID,
   BlowRoleActionDef
 > = {
-  income: {
-    id: 'income',
+  activate_income: {
+    id: 'activate_income',
     name: 'Income',
     label: ['Earn', { type: 'coin', value: 1 }],
   },
-  extort: {
-    id: 'extort',
+  activate_extort: {
+    id: 'activate_extort',
     name: 'Extort',
     label: ['Earn', { type: 'coin', value: 2 }],
   },
-  blow: {
-    id: 'blow',
+  activate_blow: {
+    id: 'activate_blow',
     name: 'Blow',
     label: 'Kill target',
     coins: 7,
@@ -46,7 +46,7 @@ export const BLOW_ROLE_ACTIONS_DEFS: Record<
   counter_extort: {
     id: 'counter_extort',
     name: 'Counter',
-    counter: 'extort',
+    counter: 'activate_extort',
   },
   counter_kill: {
     id: 'counter_kill',

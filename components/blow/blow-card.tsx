@@ -24,7 +24,11 @@ type Props = {
   color?: BlowCardColor
   actions?: Partial<Record<BlowRoleActionID, BlowActionState>>
   currentCards?: number
+  fetching?: BlowRoleActionID | null
+  onActionClick?: (id: BlowRoleActionID) => void
 }
+
+export type BlowCardProps = Props
 
 export default function BlowCard({ ...props }: Props) {
   return (
@@ -41,6 +45,8 @@ function BlowCardContent({
   variant = 'facedown',
   color = 'gray',
   currentCards = 0,
+  fetching,
+  onActionClick,
 }: Props) {
   if (variant === 'empty') return null
 
@@ -69,7 +75,19 @@ function BlowCardContent({
 
       <div className={sm ? 'space-y-0.5' : 'space-y-0.5 xs:space-y-1.5'}>
         {role.actions.map((a) => (
-          <BlowActionButton key={a} id={a} size={size} state={actions[a]} />
+          <BlowActionButton
+            key={a}
+            id={a}
+            size={size}
+            state={
+              // If we're fetching, set clickable actions to normal
+              fetching && fetching !== a && actions[a] === 'clickable'
+                ? 'normal'
+                : actions[a]
+            }
+            fetching={fetching === a}
+            onClick={onActionClick}
+          />
         ))}
 
         {!role.common && role.actions.length < 2 && role.hasNoCounters && (
@@ -81,10 +99,14 @@ function BlowCardContent({
   )
 }
 
+type ContentWrapperProps = Omit<Props, 'onActionClick'> & {
+  children: ReactNode
+}
+
 function BlowCardContentWrapper({
   children,
   size = 'sm',
-}: Props & { children: ReactNode }) {
+}: ContentWrapperProps) {
   const sm = size === 'xs' || size === 'sm'
 
   return (

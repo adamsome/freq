@@ -67,7 +67,7 @@ export interface BaseGame {
    * UI helper -- never actually set on the server or DB, but the
    * client can set it in the frontend to indicate button loading states.
    **/
-  fetching?: boolean
+  fetching?: unknown
 }
 export interface TeamGuessGame extends BaseGame {
   /** Map of guess value & whether its locked, by player ID. */
@@ -136,9 +136,9 @@ export interface Command {
   colorLit?: number
   colorBorder?: number
   rightText?: string
-  value?: string | number | boolean
+  value?: unknown
   rightType?: CommandType
-  rightValue?: string | number | boolean
+  rightValue?: unknown
   /** Percent width the right-side command should have */
   rightWidth?: number
   rightColor?: string

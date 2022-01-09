@@ -6,7 +6,7 @@ import CommandPanel from '../command-panel'
 import { ButtonProps } from '../control/button'
 import GameJoinButtons from '../game-join-buttons'
 import SkeletonBox from '../layout/skeleton-box'
-import BlowCard from './blow-card'
+import BlowCardContainer from './blow-card-container'
 
 type Props = {
   className?: string
@@ -49,7 +49,7 @@ export default function BlowRoleCardBoard({
           const cards = currentPlayer?.cards ?? []
           const currentCards = role ? cards.filter((r) => r === role).length : 0
           return (
-            <BlowCard
+            <BlowCardContainer
               key={i}
               id={role}
               size="md"

@@ -8,6 +8,7 @@ export default function initBlowGame(): BlowGame {
     round_number: 0,
     settings: {
       variant: 'basic',
+      timer: { challenge: 5, 'next-turn': 5 },
     },
     phase: 'prep',
     player_order: [],

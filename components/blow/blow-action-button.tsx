@@ -19,6 +19,7 @@ type Props = {
   id?: BlowRoleActionID
   size?: BlowCardSize
   state?: BlowActionState
+  fetching?: boolean
   onClick?: (id: BlowRoleActionID) => void
 }
 
@@ -47,10 +48,13 @@ export default function BlowActionButton({
   id,
   size = 'sm',
   state = 'normal',
+  fetching,
   onClick,
 }: Props) {
   const sm = size === 'xs' || size === 'sm'
-  const heightCx = sm ? 'h-1' : 'min-h-[var(--blow-action-button-min-height)]'
+  const heightCx = sm
+    ? 'h-1'
+    : 'h-[var(--blow-action-button-min-height)] min-h-[var(--blow-action-button-min-height)]'
 
   if (!id) {
     return <div className={cx(heightCx, className)}></div>
@@ -101,15 +105,16 @@ export default function BlowActionButton({
           'border-gray-500 dark:border-gray-500',
           'border-opacity-10 dark:border-opacity-10',
           !sm && 'shadow',
+          !sm &&
+            'focus:ring-4 focus:ring-opacity-25 dark:focus:ring-opacity-25',
+          'focus:ring-blue-400 focus:border-blue-700',
+          'dark:focus:ring-blue-500 dark:focus:border-blue-700',
         ],
         invert ? TEXT.black : TEXT.body,
         invert || state === 'clickable' ? TEXT_OPACITY[100] : TEXT_OPACITY[80],
         sm ? 'border-0' : 'border',
         state !== 'clickable' && 'border-transparent dark:border-transparent',
         'focus:outline-none',
-        !sm && 'focus:ring-4 focus:ring-opacity-25 dark:focus:ring-opacity-25',
-        'focus:ring-blue-400 focus:border-blue-700',
-        'dark:focus:ring-blue-500 dark:focus:border-blue-700',
         className
       )}
       onClick={handleClick}
@@ -118,6 +123,7 @@ export default function BlowActionButton({
         <BlowActionButtonIcon
           action={action}
           counter={counter}
+          fetching={fetching}
           color={color}
           size={size}
         />

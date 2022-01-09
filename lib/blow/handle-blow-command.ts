@@ -1,5 +1,6 @@
 import { BlowGame } from '../types/blow.types'
 import { CommandType } from '../types/game.types'
+import action from './commands/action'
 import beginRound from './commands/begin-round'
 import editPlayer from './commands/edit-player'
 import kickPlayer from './commands/kick-player'
@@ -12,6 +13,8 @@ export default async function handleBlowCommand(
   value?: unknown
 ) {
   switch (type) {
+    case 'action':
+      return await action(game, userID, value)
     // Player Commands
     case 'edit_player':
       return await editPlayer(game, userID, value)

@@ -7,7 +7,7 @@ export const BLOW_ROLE_DEFS: Record<BlowRoleID, BlowRoleDef> = {
     id: 'common',
     common: true,
     name: 'Common',
-    actions: ['income', 'extort', 'blow'],
+    actions: ['activate_income', 'activate_extort', 'activate_blow'],
   },
   killer: {
     id: 'killer',

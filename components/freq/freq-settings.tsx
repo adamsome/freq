@@ -27,7 +27,7 @@ export default function FreqSettings(_: Props) {
 
   if (!game) return null
 
-  const disabled = fetching || game?.fetching
+  const disabled = fetching || game?.fetching != null
   const designatedPsychic = game.settings?.designated_psychic === true
   const difficulty: FreqClueDifficultyOrAll = game.settings?.difficulty ?? 'all'
   let difficultyIndex = freqClueDifficulties.indexOf(difficulty)

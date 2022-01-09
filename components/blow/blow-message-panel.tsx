@@ -27,7 +27,6 @@ export default function BlowMessagePanel({
 
   useEffect(() => {
     if (ref) {
-      console.log('msgs-scroll')
       ref.current?.scroll({ top: ref.current.scrollHeight, behavior: 'smooth' })
     }
     return

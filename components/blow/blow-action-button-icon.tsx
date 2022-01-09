@@ -12,6 +12,7 @@ type Props = {
   counter?: BlowRoleActionDef
   color?: BlowActionButtonColor
   size?: BlowCardSize
+  fetching?: boolean
 }
 
 function getOpacityClass(color?: BlowActionButtonColor) {
@@ -43,8 +44,16 @@ export default function BlowActionButtonIcon({
   counter,
   color = 'gray',
   size = 'sm',
+  fetching,
 }: Props) {
   const sm = size === 'xs' || size === 'sm'
+
+  if (fetching) {
+    if (sm) return null
+    return (
+      <IconSvg name="spinner" className="w-3 h-3 ml-0.5 text-white" top="3px" />
+    )
+  }
 
   if (action.coins) {
     return (
@@ -69,7 +78,7 @@ export default function BlowActionButtonIcon({
           getColorClass(color),
           getOpacityClass(color)
         )}
-        top={sm ? '-0.5px' : undefined}
+        top={sm ? '-0.5px' : '-1.5px'}
         name="shield"
       />
     )
@@ -78,8 +87,8 @@ export default function BlowActionButtonIcon({
   return (
     <div
       className={cx(
-        'transition-all',
-        sm ? 'ml-0 leading-tight' : 'ml-0.5',
+        'transition-all leading-tight',
+        sm ? 'ml-0' : 'ml-0.5',
         getColorClass(color),
         getOpacityClass(color)
       )}

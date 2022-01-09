@@ -23,7 +23,7 @@ export default function CwdSettings(_: Props) {
 
   if (!game) return null
 
-  const disabled = fetching || game?.fetching
+  const disabled = fetching || game?.fetching != null
   const designatedPsychic = game.settings?.designated_psychic === true
 
   const handleCommand = async (cmd: CommandType, value?: boolean) => {
