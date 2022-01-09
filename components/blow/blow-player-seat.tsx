@@ -38,7 +38,7 @@ function BlowPlayerSeatContent({ player, actions }: Props) {
       : 'faceup'
 
   return (
-    <div className="flex flex-col space-y-0.5">
+    <div className="flex flex-col space-y-0.5 select-none">
       <div className="text-overflow">{player.name}</div>
 
       <div className="flex-1 flex">

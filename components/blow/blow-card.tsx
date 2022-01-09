@@ -56,21 +56,25 @@ function BlowCardContent({
   return (
     <BlowCardContentWrapper size={size}>
       {!role.common && (
-        <BlowCardTitle size={size} cards={!sm ? currentCards : 0}>
+        <BlowCardTitle
+          className="mb-1"
+          size={size}
+          cards={!sm ? currentCards : 0}
+        >
           {role.name}
         </BlowCardTitle>
       )}
 
-      <div className="flex-1"></div>
+      <div className={cx(!sm && 'hidden xs:block', 'flex-1')}></div>
 
-      <div className={sm ? 'space-y-0.5' : 'space-y-1.5'}>
+      <div className={sm ? 'space-y-0.5' : 'space-y-0.5 xs:space-y-1.5'}>
         {role.actions.map((a) => (
           <BlowActionButton key={a} id={a} size={size} state={actions[a]} />
         ))}
 
         {!role.common && role.actions.length < 2 && role.hasNoCounters && (
           // Blank space where counter actions usually appear
-          <BlowActionButton size={size} />
+          <BlowActionButton className="hidden xs:flex" size={size} />
         )}
       </div>
     </BlowCardContentWrapper>

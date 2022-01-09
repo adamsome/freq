@@ -31,7 +31,7 @@ export default function BlowCardShape({
             ]
           : [
               'w-[calc(var(--blow-card-unit)*7)]',
-              'h-[calc(var(--blow-card-unit)*5)]',
+              'xs:h-[calc(var(--blow-card-unit)*5)]',
             ],
         className
       )}

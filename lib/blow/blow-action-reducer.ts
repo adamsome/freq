@@ -2,15 +2,16 @@ import { createSlice } from '@reduxjs/toolkit'
 import {
   BlowActionState,
   BlowGame,
+  BlowMessage,
   BlowPlayerView,
   BlowRoleActionID,
   BlowRoleID,
-} from '../../types/blow.types'
-import { Command } from '../../types/game.types'
-import { blowShuffle } from '../blow-random'
-import { getBlowRoles } from '../blow-role'
-import { BLOW_ROLE_DEFS } from '../blow-role-defs'
-import { initBlowGame } from '../create-new-blow-game'
+} from '../types/blow.types'
+import { Command } from '../types/game.types'
+import { blowShuffle } from './blow-random'
+import { getBlowRoles } from './blow-role'
+import { BLOW_ROLE_DEFS } from './blow-role-defs'
+import { initBlowGame } from './create-new-blow-game'
 
 export interface BlowState {
   game: BlowGame
@@ -18,6 +19,7 @@ export interface BlowState {
   deck: BlowRoleID[]
   roles: BlowRoleID[]
   commands: Command[]
+  messages: BlowMessage[]
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
   players: BlowPlayerView[]
   turnIndex: number
@@ -28,6 +30,7 @@ export const initialState: BlowState = {
   deck: [],
   roles: [],
   commands: [],
+  messages: [],
   actionState: {},
   players: [],
   turnIndex: 0,
@@ -59,10 +62,15 @@ const blowSlice = createSlice({
     },
     shuffle(state) {
       state.deck = blowShuffle(state.deck)
+
+      const date = new Date().toISOString()
+      const text = `Shuffling cards`
+      state.messages.push({ date, text, subject: '__dealer' })
     },
     deal(state) {
+      const players = state.game.players
       for (let handIndex = 0; handIndex < 2; handIndex++) {
-        state.game.players.forEach((_, playerIndex) => {
+        players.forEach((_, playerIndex) => {
           const card = state.deck.pop()
           if (!card) throw new Error('Unexected Error: Deck ran out of cards')
 
@@ -73,6 +81,10 @@ const blowSlice = createSlice({
           player.cards[handIndex] = card
         })
       }
+
+      const date = new Date().toISOString()
+      const text = `Dealing cards to ${players.length} players`
+      state.messages.push({ date, text, subject: '__dealer' })
     },
   },
 })

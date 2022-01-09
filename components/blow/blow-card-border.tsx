@@ -33,7 +33,7 @@ export default function BlowCardBorder({
       orientation={orientation}
       className={cx(
         sm && variant === 'facedown' && 'p-px',
-        !sm && 'p-1.5',
+        !sm && 'p-0.5 xs:p-1.5',
         !sm && 'bg-white dark:bg-black',
         {
           'border-gray-300 dark:border-gray-700': sm && color === 'gray',

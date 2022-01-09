@@ -6,12 +6,14 @@ import BlowCard from './blow-card'
 
 type Props = {
   children: ReactNode
+  className?: string
   size: BlowCardSize
   cards?: number
 }
 
 export default function BlowCardTitle({
   children,
+  className,
   size = 'sm',
   cards = 0,
 }: Props) {
@@ -22,7 +24,8 @@ export default function BlowCardTitle({
       className={cx(
         'flex-center space-x-1',
         'font-semibold w-full overflow-hidden whitespace-nowrap',
-        sm && 'text-[3.5px] leading-normal tracking-widest'
+        sm && 'text-[3.5px] leading-normal tracking-widest',
+        className
       )}
     >
       <span className="flex-1 text-left">{children}</span>

@@ -2,7 +2,7 @@ import { doesGameHaveEnoughPlayers } from '../../game'
 import { BlowGame } from '../../types/blow.types'
 import { connectToDatabase } from '../../util/mongodb'
 import { fromBlowGames } from '../blow-game-store'
-import { deal, shuffle } from '../store/blow-reducer'
+import { deal, shuffle } from '../blow-action-reducer'
 
 export default async function beginRound(game: BlowGame) {
   if (!doesGameHaveEnoughPlayers(game, 'blow'))

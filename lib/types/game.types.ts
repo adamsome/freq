@@ -153,6 +153,13 @@ export interface CommandsView {
   commands: Command[]
 }
 
+export interface CommandError {
+  command: Command
+  data: unknown
+  message: string
+  date: Date
+}
+
 export interface BaseGameView extends Omit<BaseGame, 'players'>, CommandsView {
   type: GameType
   players: PlayerView[]

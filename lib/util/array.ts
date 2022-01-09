@@ -117,3 +117,13 @@ export function tail<T>(
 export function shiftOrder<T>(arr: T[], newStartIndex: number): T[] {
   return arr.slice(newStartIndex).concat(arr.slice(0, newStartIndex))
 }
+
+export const createPropComparer =
+  <T, P>(accessor: (obj: T) => P, order: 'asc' | 'desc' = 'asc') =>
+  (a: T, b: T) => {
+    const pa = accessor(a)
+    const pb = accessor(b)
+
+    if (order === 'desc') return pa < pb ? 1 : pa > pb ? -1 : 0
+    return pa < pb ? -1 : pa > pb ? 1 : 0
+  }

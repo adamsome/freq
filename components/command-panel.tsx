@@ -1,6 +1,6 @@
 import produce from 'immer'
 import { useState } from 'react'
-import { Command } from '../lib/types/game.types'
+import { Command, CommandError } from '../lib/types/game.types'
 import { postCommand } from '../lib/util/fetch-json'
 import useGame from '../lib/util/use-game'
 import CommandButton from './command-button'
@@ -8,9 +8,17 @@ import { ButtonProps } from './control/button'
 
 type Props = {
   button?: Partial<ButtonProps>
+  spacingClassName?: string
+  hideError?: boolean
+  onError?: (error: CommandError) => void
 }
 
-const CommandPanel = ({ button = {} }: Props) => {
+const CommandPanel = ({
+  button = {},
+  spacingClassName,
+  hideError,
+  onError,
+}: Props) => {
   const { game, mutate } = useGame()
 
   const [error, setError] = useState<string | null>(null)
@@ -59,8 +67,11 @@ const CommandPanel = ({ button = {} }: Props) => {
         }, game)
       )
     } catch (err) {
-      console.error(`Error posting command '${cmd.type}'.`, err.data ?? err)
-      setError(String(err?.data?.message ?? err?.message))
+      const data = err?.data ?? err
+      const message = String(data?.message ?? err?.message ?? '')
+      console.error(`Error posting command '${cmd.type}'.`, data)
+      setError(message)
+      onError?.({ command: cmd, data, message, date: new Date() })
     }
     setFetching(false)
   }
@@ -78,6 +89,7 @@ const CommandPanel = ({ button = {} }: Props) => {
             fetching={fetching}
             button={button}
             rightButton={button}
+            spacingClassName={spacingClassName}
             onClick={(event, cmd, colIndex) =>
               handleCommandClick(event, cmd, rowIndex, colIndex)
             }
@@ -85,7 +97,9 @@ const CommandPanel = ({ button = {} }: Props) => {
         </div>
       ))}
 
-      {error && <div className="text-red-700 text-center mt-2">{error}</div>}
+      {error && !hideError && (
+        <div className="text-red-700 text-center mt-2">{error}</div>
+      )}
     </div>
   )
 }

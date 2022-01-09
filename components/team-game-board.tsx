@@ -35,7 +35,7 @@ export default function TeamGameBoard({ type }: Props) {
 
         {game?.phase === 'prep' && (
           <>
-            <GameLink url={roomUrl} />
+            <GameLink className="mt-6 mb-6" url={roomUrl} />
 
             {game.currentPlayer && (
               <>

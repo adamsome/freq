@@ -1,26 +1,27 @@
 import type { ReactNode } from 'react'
 import { cx } from '../../lib/util/dom'
 
-type Props = typeof defaultProps & {
+type Props = {
   children: ReactNode
+  className?: string
+  paddingClass?: string
 }
 
-const defaultProps = {
-  classNames: '',
-}
-
-export default function LayoutMain({ children, classNames }: Props) {
+export default function LayoutMain({
+  children,
+  className = '',
+  paddingClass = 'pb-4 md:px-2 md:py-5',
+}: Props) {
   return (
     <main
       className={cx(
         'flex-1 flex flex-col items-center',
-        'w-full max-w-screen-md pb-4 md:px-2 md:py-5',
-        classNames
+        'w-full max-w-screen-md',
+        paddingClass,
+        className
       )}
     >
       {children}
     </main>
   )
 }
-
-LayoutMain.defaultProps = defaultProps

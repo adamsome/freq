@@ -28,6 +28,10 @@ module.exports = {
       mono: ["'Space Mono'", ...defaultTheme.fontFamily.mono],
       narrow: ["'Noto Sans Display'", ...defaultTheme.fontFamily.sans],
     },
+    screens: {
+      xs: '370px',
+      ...defaultTheme.screens,
+    },
     extend: {
       animation: {
         bounce: 'bounce 1s ease-in-out 1',

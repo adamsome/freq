@@ -5,7 +5,7 @@ import { BlowGame, BlowGameView } from '../types/blow.types'
 import { isObject } from '../util/object'
 import { isNotEmpty } from '../util/string'
 import { seedBlowRandomNumberGenerator } from './blow-random'
-import blowReducer, { initialState, prep } from './store/blow-reducer'
+import blowReducer, { initialState, prep } from './blow-action-reducer'
 
 export function buildBlowGameView(
   userID: string | undefined,
@@ -32,6 +32,7 @@ export function buildBlowGameView(
       type: 'blow',
       roles: state.roles,
       commands: state.commands,
+      messages: state.messages,
       actionState: state.actionState,
       players: state.players,
       currentPlayer: findCurrentPlayer(state.players, userID),

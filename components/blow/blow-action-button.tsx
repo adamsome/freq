@@ -53,7 +53,7 @@ export default function BlowActionButton({
   const heightCx = sm ? 'h-1' : 'min-h-[var(--blow-action-button-min-height)]'
 
   if (!id) {
-    return <div className={heightCx}></div>
+    return <div className={cx(heightCx, className)}></div>
   }
 
   const action = BLOW_ROLE_ACTIONS_DEFS[id]

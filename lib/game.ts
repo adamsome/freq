@@ -2,6 +2,7 @@ import { getPlayersPerTeam } from './player'
 import { CwdSettings } from './types/cwd.types'
 import { FreqSettings } from './types/freq.types'
 import { BaseGame, GameType, Player, TeamGuessGame } from './types/game.types'
+import { createPropComparer } from './util/array'
 
 type PartialGame = Partial<TeamGuessGame> & {
   players: Player[]
@@ -82,9 +83,8 @@ export function getTeamName(team?: 1 | 2): string {
   }
 }
 
-export function mostRecentGamesComparer(a: BaseGame, b: BaseGame): -1 | 0 | 1 {
-  const aa = a.round_started_at ?? a?.match_started_at ?? a?.room_started_at
-  const bb = b.round_started_at ?? b?.match_started_at ?? b?.room_started_at
-
-  return aa < bb ? 1 : aa > bb ? -1 : 0
-}
+export const mostRecentGamesComparer = createPropComparer(
+  (a: BaseGame) =>
+    a.round_started_at ?? a?.match_started_at ?? a?.room_started_at,
+  'desc'
+)

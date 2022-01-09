@@ -93,6 +93,14 @@ export interface BlowAction {
   token?: BlowToken[]
 }
 
+export interface BlowMessage {
+  date: string
+  text: string
+  /** Number is player index; String is player ID or '__dealer' for dealer */
+  subject?: string | number
+  error?: true
+}
+
 export type BlowActionState = 'normal' | 'active' | 'counter' | 'clickable'
 export type BlowActionButtonColor = 'gray' | 'black' | 'cyan'
 
@@ -122,6 +130,7 @@ export type BlowGameView = Omit<BlowGame, 'players'> & {
   currentPlayer?: BlowPlayerView
   roles: readonly BlowRoleID[]
   commands: Command[]
+  messages: BlowMessage[]
   activePlayer?: string
   counterPlayer?: string
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>

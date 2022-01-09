@@ -10,6 +10,7 @@ type Props = {
   currentPlayer?: Player
   button?: ButtonProps
   rightButton?: ButtonProps
+  spacingClassName?: string
   fetching?: boolean
   onClick: (e: MouseEvent, cmd: Command, colIndex?: number) => Promise<void>
 }
@@ -19,6 +20,7 @@ const CommandButton = ({
   currentPlayer,
   button = {},
   rightButton = {},
+  spacingClassName = 'm-0 px-2 py-2',
   fetching = false,
   onClick,
 }: Props) => {
@@ -66,7 +68,7 @@ const CommandButton = ({
         color="none"
         bgHover={false}
         style={style}
-        spacing="m-0 px-2 py-2"
+        spacing={spacingClassName}
         disabled={disabled}
         onClick={(e) => onClick(e, cmd, right ? 1 : 0)}
         {...props}
