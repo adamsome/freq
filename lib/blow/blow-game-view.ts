@@ -5,11 +5,8 @@ import { BlowGame, BlowGameView } from '../types/blow.types'
 import { isObject } from '../util/object'
 import { setRandomNumberGeneratorSeed } from '../util/prng'
 import { isNotEmpty } from '../util/string'
-import blowReducer, {
-  finalize,
-  initialState,
-  prep,
-} from './blow-action-reducer'
+import blowReducer, { finalize, prep } from './blow-action-reducer'
+import { initialBlowState } from './blow-state'
 
 export function buildBlowGameView(
   userID: string | undefined,
@@ -31,7 +28,7 @@ export function buildBlowGameView(
     // Initialize the temporary Redux store using the DB game object & user ID
     const store = configureStore({
       reducer: { blow: blowReducer },
-      preloadedState: { blow: { ...initialState, game, userID } },
+      preloadedState: { blow: { ...initialBlowState, game, userID } },
     })
 
     // Always run the `prep` action first to setup the state

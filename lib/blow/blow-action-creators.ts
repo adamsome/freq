@@ -8,6 +8,7 @@ import {
   BLOW_CORE_ACTION_IDS,
   BLOW_ROLE_ACTION_IDS,
 } from '../types/blow.types'
+import { Command } from '../types/game.types'
 import { isObject } from '../util/object'
 import { isNotEmpty } from '../util/string'
 
@@ -30,4 +31,25 @@ export function isBlowAction(action: unknown): action is BlowAction {
     (BLOW_ROLE_ACTION_IDS.includes(action.type as BlowRoleActionID) ||
       BLOW_CORE_ACTION_IDS.includes(action.type as BlowCoreActionID))
   )
+}
+
+// Action Command helpers
+
+const createCommand = (
+  command: Partial<Command>,
+  // action: BlowAction,
+  // text: string,
+  status?: 'enabled' | 'disabled'
+) => {
+  const cmd: Command = { type: 'action', text: '', ...command }
+  if (status) cmd.disabled = status === 'enabled' ? false : true
+  return [cmd]
+}
+
+export const createChallengeCommand = (status?: 'enabled' | 'disabled') => {
+  return createCommand({ value: challenge({}), text: 'Challenge' }, status)
+}
+
+export const createNextTurnCommand = (status?: 'enabled' | 'disabled') => {
+  return createCommand({ value: nextTurn({}), text: 'Continue' }, status)
 }

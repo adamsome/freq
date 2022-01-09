@@ -1,4 +1,9 @@
-import { BlowRoleActionDef, BlowRoleActionID } from '../types/blow.types'
+import {
+  BlowAction,
+  BlowRoleActionDef,
+  BlowRoleActionID,
+  isBlowRoleActionID,
+} from '../types/blow.types'
 import { isObject } from '../util/object'
 import { isNotEmpty, isNotNil } from '../util/string'
 
@@ -58,6 +63,24 @@ export const BLOW_ROLE_ACTIONS_DEFS: Record<
     name: 'Explore',
     label: ['Draw', { type: 'card', value: 2 }],
   },
+}
+
+export function getBlowRoleActionDef(id: BlowRoleActionID): BlowRoleActionDef
+export function getBlowRoleActionDef(
+  x: BlowAction
+): BlowRoleActionDef | undefined
+export function getBlowRoleActionDef(
+  idOrAction: BlowAction | BlowRoleActionID
+): BlowRoleActionDef | undefined {
+  let id: BlowRoleActionID
+  if (typeof idOrAction === 'string') {
+    id = idOrAction
+  } else if (isBlowRoleActionID(idOrAction.type)) {
+    id = idOrAction.type
+  } else {
+    return
+  }
+  return BLOW_ROLE_ACTIONS_DEFS[id]
 }
 
 export function isBlowRoleActionDef(

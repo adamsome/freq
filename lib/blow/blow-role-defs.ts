@@ -37,6 +37,10 @@ export const BLOW_ROLE_DEFS: Record<BlowRoleID, BlowRoleDef> = {
   },
 }
 
+export function getBlowRoleDef(rid: BlowRoleID): BlowRoleDef {
+  return BLOW_ROLE_DEFS[rid]
+}
+
 export function isBlowRoleDef(role: unknown): role is BlowRoleDef {
   return (
     isObject(role) &&
