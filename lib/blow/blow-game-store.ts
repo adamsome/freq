@@ -1,11 +1,11 @@
 import { Db, WithId } from 'mongodb'
-import { addPlayer, hasPlayer } from '../player'
+import { addPlayer, createPlayer, hasPlayer } from '../player'
 import { BlowGame, BlowGameView } from '../types/blow.types'
 import { User } from '../types/user.types'
 import { fromUsers } from '../user-store'
 import { connectToDatabase } from '../util/mongodb'
 import { buildBlowGameView } from './blow-game-view'
-import createNewBlowGame from './create-new-blow-game'
+import initBlowGame from './init-blow-game'
 
 export const fromBlowGames = (db: Db) =>
   db.collection<WithId<BlowGame>>('blow_games')
@@ -51,7 +51,14 @@ export async function joinBlowGame(
   let game = await fetchBlowGame(room)
   if (!game) {
     // Create new game
-    game = createNewBlowGame(room, user)
+    const player = createPlayer(user)
+    game = {
+      ...initBlowGame(),
+      room: room.toLowerCase(),
+      players: [player],
+      player_order: [0],
+      room_started_at: new Date().toISOString(),
+    }
 
     await store.insertOne(game)
     await updateUserRoom()

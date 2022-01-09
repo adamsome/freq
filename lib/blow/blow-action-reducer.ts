@@ -1,17 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { doesGameHaveEnoughPlayers } from '../game'
 import {
   BlowActionState,
   BlowGame,
   BlowMessage,
   BlowPlayerView,
+  BlowRoleActionDef,
   BlowRoleActionID,
   BlowRoleID,
 } from '../types/blow.types'
 import { Command } from '../types/game.types'
-import { blowShuffle } from './blow-random'
+import { prngShuffle } from '../util/prng'
 import { getBlowRoles } from './blow-role'
+import { BLOW_ROLE_ACTIONS_DEFS } from './blow-role-action-defs'
 import { BLOW_ROLE_DEFS } from './blow-role-defs'
-import { initBlowGame } from './create-new-blow-game'
+import initBlowGame from './init-blow-game'
 
 export interface BlowState {
   game: BlowGame
@@ -22,7 +25,10 @@ export interface BlowState {
   messages: BlowMessage[]
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
   players: BlowPlayerView[]
-  turnIndex: number
+  order: number[]
+  turn: number
+  active?: number
+  counter?: number
 }
 
 export const initialState: BlowState = {
@@ -31,9 +37,10 @@ export const initialState: BlowState = {
   roles: [],
   commands: [],
   messages: [],
-  actionState: {},
   players: [],
-  turnIndex: 0,
+  order: [],
+  turn: 0,
+  actionState: {},
 }
 
 const blowSlice = createSlice({
@@ -42,18 +49,21 @@ const blowSlice = createSlice({
   reducers: {
     prep(state) {
       state.roles = getBlowRoles(state.game.settings.variant) as BlowRoleID[]
+      state.order = state.game.player_order
 
+      // Establish deck of cards, three of each role
       state.deck = state.roles
-        .map((id) => BLOW_ROLE_DEFS[id])
-        .filter((r) => !r.common)
-        .flatMap((r) => [r.id, r.id, r.id])
+        .map((rid) => BLOW_ROLE_DEFS[rid])
+        .filter((role) => !role.common)
+        .flatMap((role) => [role.id, role.id, role.id])
 
-      const disabled = state.game.players.length < 3
+      // Set command to Deal Cards & enable if enough players
+      const disabled = !doesGameHaveEnoughPlayers(state.game, 'blow')
       state.commands = [{ type: 'begin_round', text: 'Deal Cards', disabled }]
 
-      state.players = state.game.players.map((p, i) => ({
+      // Init player view w/ an empty hand, 2 coins, & metadata
+      state.players = state.game.players.map((p) => ({
         ...p,
-        active: state.game.player_order[0] === i,
         current: p.id === state.userID,
         wins: state.game.stats?.[p.id]?.w,
         cards: [],
@@ -61,33 +71,69 @@ const blowSlice = createSlice({
       }))
     },
     shuffle(state) {
-      state.deck = blowShuffle(state.deck)
+      addMessage(state, 'Shuffling cards', { as: '__dealer' })
 
-      const date = new Date().toISOString()
-      const text = `Shuffling cards`
-      state.messages.push({ date, text, subject: '__dealer' })
+      state.deck = prngShuffle(state.deck)
     },
     deal(state) {
-      const players = state.game.players
-      for (let handIndex = 0; handIndex < 2; handIndex++) {
-        players.forEach((_, playerIndex) => {
-          const card = state.deck.pop()
-          if (!card) throw new Error('Unexected Error: Deck ran out of cards')
+      const text = `Dealing cards to ${state.game.players.length} players`
+      addMessage(state, text, { as: '__dealer' })
 
-          const player = state.players[playerIndex]
-          if (!player) throw new Error('Unexected Error: Player at index empty')
+      // Deal two cards from the deck to each player
+      for (let idx = 0; idx < 2; idx++) {
+        state.game.players.forEach((_, pidx) => {
+          const role = state.deck.pop()
+          if (!role) throw new Error('Unexected Error: Deck ran out of cards')
 
-          if (!player.cards) player.cards = []
-          player.cards[handIndex] = card
+          const p = state.players[pidx]
+          if (!p) throw new Error('Unexected Error: Player at index empty')
+
+          if (!p.cards) p.cards = []
+          p.cards[idx] = role
         })
       }
 
-      const date = new Date().toISOString()
-      const text = `Dealing cards to ${players.length} players`
-      state.messages.push({ date, text, subject: '__dealer' })
+      state.commands = createChallengeCommand('disabled')
+      state.turn = 0
+      state.active = state.order[state.turn]
+
+      const activePlayer = state.players[state.active]
+      const isCurrentPlayerActive = activePlayer?.id === state.userID
+      if (isCurrentPlayerActive) {
+        // Mark active actions that the player can afford clickable
+        state.roles.forEach((rid) => {
+          const role = BLOW_ROLE_DEFS[rid]
+          role.actions.forEach((xid) => {
+            const x = BLOW_ROLE_ACTIONS_DEFS[xid]
+            if (!x.counter && canAffordAction(activePlayer, x)) {
+              state.actionState[xid] = 'clickable'
+            }
+          })
+        })
+      }
     },
   },
 })
+
+const createChallengeCommand = (status?: 'enabled' | 'disabled') => {
+  const cmd: Command = { type: 'action', text: 'Challenge' }
+  if (status) cmd.disabled = status === 'enabled' ? false : true
+  return [cmd]
+}
+
+const addMessage = (
+  state: BlowState,
+  text: string,
+  { as }: { as?: string | number } = {}
+): void => {
+  const date = new Date().toISOString()
+  const msg: BlowMessage = { date, text }
+  if (as) msg.subject = as
+  state.messages.push(msg)
+}
+
+const canAffordAction = (p: BlowPlayerView, x: BlowRoleActionDef): boolean =>
+  (p.coins ?? 0) >= (x.coins ?? 0)
 
 const { actions, reducer } = blowSlice
 export const { prep, shuffle, deal } = actions

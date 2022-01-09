@@ -20,13 +20,13 @@ export const BLOW_ROLE_ACTIONS_DEFS: Record<
     id: 'blow',
     name: 'Blow',
     label: 'Kill target',
-    payment: 7,
+    coins: 7,
   },
   activate_kill: {
     id: 'activate_kill',
     name: 'Kill',
     label: 'Kill target',
-    payment: 3,
+    coins: 3,
   },
   activate_raid: {
     id: 'activate_raid',

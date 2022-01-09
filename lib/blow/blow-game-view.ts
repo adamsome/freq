@@ -4,7 +4,7 @@ import { findCurrentPlayer } from '../player'
 import { BlowGame, BlowGameView } from '../types/blow.types'
 import { isObject } from '../util/object'
 import { isNotEmpty } from '../util/string'
-import { seedBlowRandomNumberGenerator } from './blow-random'
+import { setRandomNumberGeneratorSeed } from '../util/prng'
 import blowReducer, { initialState, prep } from './blow-action-reducer'
 
 export function buildBlowGameView(
@@ -12,22 +12,33 @@ export function buildBlowGameView(
   rawGame: OptionalId<WithId<BlowGame>>
 ): BlowGameView {
   try {
+    // Delete the DB `_id` object since its not serializable
     const game = { ...rawGame } as BlowGame
     delete (game as OptionalId<WithId<BlowGame>>)._id
 
-    seedBlowRandomNumberGenerator(game)
+    // Set up the random number generator (RNG), seeding it from the game object
+    // Throughout a given match, since the seed remains the same,
+    // the RNG will generator the same random numbers in the same order allowing
+    // the game state to be built the same way when iterating the action list
+    const date = game.match_started_at ?? new Date().toISOString()
+    const seed = `${game.match_number}_${date}_${game.room}`
+    setRandomNumberGeneratorSeed(seed)
 
+    // Initialize the temporary Redux store using the DB game object & user ID
     const store = configureStore({
       reducer: { blow: blowReducer },
       preloadedState: { blow: { ...initialState, game, userID } },
     })
 
+    // Always run the `prep` action first to setup the state
     store.dispatch(prep())
+    // Iterate through each action that has taken place during the match...
     game.actions.forEach((a) => store.dispatch(a))
-
+    // ...to get the up-to-date game state
     const { blow: state } = store.getState()
 
-    const view: OptionalId<WithId<BlowGameView>> = {
+    // Create the frontend's game view from the up-to-date game state
+    return {
       ...game,
       type: 'blow',
       roles: state.roles,
@@ -35,25 +46,12 @@ export function buildBlowGameView(
       messages: state.messages,
       actionState: state.actionState,
       players: state.players,
+      active: state.active,
+      counter: state.counter,
       currentPlayer: findCurrentPlayer(state.players, userID),
-      // actionState: {
-      //   activate_explore: 'clickable',
-      //   activate_kill: 'active',
-      //   activate_raid: 'active',
-      //   activate_trade: 'clickable',
-      //   counter_raid: 'counter',
-      //   counter_kill: 'clickable',
-      //   // counter_extort: 'normal',
-      //   income: 'normal',
-      //   extort: 'normal',
-      //   blow: 'clickable',
-      // },
     }
-
-    delete view._id
-    return view
   } catch (e) {
-    console.error('error', e)
+    console.error('Unexpected Error', e)
     throw new Error(e)
   }
 }

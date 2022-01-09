@@ -117,6 +117,8 @@ export type CommandType =
   | 'lock_direction'
   | 'reveal_round_results'
   | 'reveal_match_results'
+  // Custom per-game
+  | 'action'
 
 export type CanChangePsychicTo = 'any' | 'same_team' | 'none'
 

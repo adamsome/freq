@@ -46,7 +46,7 @@ export default function BlowActionButtonIcon({
 }: Props) {
   const sm = size === 'xs' || size === 'sm'
 
-  if (action.payment) {
+  if (action.coins) {
     return (
       <BlowCoin
         className="mt-0.5"
@@ -55,7 +55,7 @@ export default function BlowActionButtonIcon({
         size={sm ? 'xs' : 'sm'}
         showIndividualCoins={false}
       >
-        {action.payment}
+        {action.coins}
       </BlowCoin>
     )
   }

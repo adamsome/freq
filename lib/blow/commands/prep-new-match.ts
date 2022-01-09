@@ -2,7 +2,6 @@ import { findCurrentPlayer } from '../../player'
 import { BlowGame } from '../../types/blow.types'
 import { connectToDatabase } from '../../util/mongodb'
 import { fromBlowGames } from '../blow-game-store'
-import { createPrepBlowMatchChanges } from '../prep-blow-match'
 
 export default async function prepNewMatch(game: BlowGame, userID: string) {
   const currentPlayer = findCurrentPlayer(game.players, userID)
@@ -13,7 +12,10 @@ export default async function prepNewMatch(game: BlowGame, userID: string) {
   const { db } = await connectToDatabase()
   const filter = { room: game.room.toLowerCase() }
 
-  const changes = createPrepBlowMatchChanges()
+  const changes: Partial<BlowGame> = {
+    phase: 'prep' as const,
+    actions: [],
+  }
 
   await fromBlowGames(db).updateOne(filter, { $set: changes })
 }

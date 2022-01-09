@@ -48,7 +48,7 @@ export interface BlowRoleActionDef {
   name?: string
   label?: string | (string | BlowToken)[]
   description?: string | (string | BlowToken)[]
-  payment?: number
+  coins?: number
   counter?: BlowRoleActionID
 }
 
@@ -128,11 +128,16 @@ export type BlowGameView = Omit<BlowGame, 'players'> & {
   type: GameType
   players: BlowPlayerView[]
   currentPlayer?: BlowPlayerView
+  /** Role IDs being used in this match */
   roles: readonly BlowRoleID[]
+  /** List of command buttons, i.e. Deal Cards or Challenge */
   commands: Command[]
   messages: BlowMessage[]
-  activePlayer?: string
-  counterPlayer?: string
+  /** Player index of player who can play an active action */
+  active?: number
+  /** Player index of player who can play a counter action */
+  counter?: number
+  /** Map of role action to its state (active, clickable, counter, normal) */
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
 }
 
