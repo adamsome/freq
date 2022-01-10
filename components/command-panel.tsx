@@ -2,6 +2,8 @@ import produce from 'immer'
 import { useState } from 'react'
 import { Command, CommandError } from '../lib/types/game.types'
 import { postCommand } from '../lib/util/fetch-json'
+import { isObject } from '../lib/util/object'
+import { isNotNil } from '../lib/util/string'
 import useGame from '../lib/util/use-game'
 import CommandButton from './command-button'
 import { ButtonProps } from './control/button'
@@ -13,12 +15,20 @@ type Props = {
   onError?: (error: CommandError) => void
 }
 
-const CommandPanel = ({
+interface HasPayload {
+  payload: Record<string, unknown>
+}
+
+function hasPayload(value: unknown): value is HasPayload {
+  return isObject(value) && isNotNil(value.payload)
+}
+
+export default function CommandPanel({
   button = {},
   spacingClassName,
   hideError,
   onError,
-}: Props) => {
+}: Props) {
   const { game, mutate } = useGame()
 
   const [error, setError] = useState<string | null>(null)
@@ -31,12 +41,13 @@ const CommandPanel = ({
   if (!currentPlayer) return null
 
   const handleCommandClick = async (
-    event: React.MouseEvent,
+    event: React.MouseEvent | null,
     cmd: Command,
     rowIndex: number,
-    colIndex = 0
+    colIndex = 0,
+    timerExpired?: boolean
   ) => {
-    event.preventDefault()
+    event?.preventDefault()
 
     if (fetching) return
 
@@ -53,12 +64,20 @@ const CommandPanel = ({
       setFetching(false)
       return
     }
+
     if (!cmd.type) {
       setFetching(false)
       return
     }
-    const value = isRight ? cmd.rightValue : cmd.value
+
     const cmdType = isRight ? cmd.rightType ?? cmd.type : cmd.type
+    let value = isRight ? cmd.rightValue : cmd.value
+
+    // If the timer expired, indicated in cmd payload, if it has one
+    if (timerExpired && hasPayload(value)) {
+      value = { ...value, payload: { ...value.payload, expired: true } }
+    }
+
     try {
       await postCommand(game.type, game.room, cmdType, value)
       mutate(
@@ -73,6 +92,7 @@ const CommandPanel = ({
       setError(message)
       onError?.({ command: cmd, data, message, date: new Date() })
     }
+
     setFetching(false)
   }
 
@@ -93,6 +113,9 @@ const CommandPanel = ({
             onClick={(event, cmd, colIndex) =>
               handleCommandClick(event, cmd, rowIndex, colIndex)
             }
+            onTimerFinish={(colIndex) =>
+              handleCommandClick(null, cmd, rowIndex, colIndex, true)
+            }
           />
         </div>
       ))}
@@ -103,5 +126,3 @@ const CommandPanel = ({
     </div>
   )
 }
-
-export default CommandPanel

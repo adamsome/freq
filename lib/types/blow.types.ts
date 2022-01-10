@@ -109,9 +109,10 @@ export interface BlowVariantDef {
 
 export interface BlowActionPayload {
   role?: BlowRoleID
-  subject?: string
+  subject?: string | number
   target?: string
   token?: BlowToken[]
+  expired?: boolean
 }
 
 export interface BlowAction extends PayloadAction<BlowActionPayload> {
@@ -139,7 +140,7 @@ export type BlowCoinSize = 'xs' | 'sm' | 'md'
 export type BlowTimerType = 'challenge' | 'next-turn'
 export interface BlowTimer {
   type: BlowTimerType
-  ends: string
+  expiry: string
 }
 
 export interface BlowSettings {

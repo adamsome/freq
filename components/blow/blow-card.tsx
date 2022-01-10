@@ -60,7 +60,7 @@ function BlowCardContent({
   const sm = size === 'xs' || size === 'sm'
 
   return (
-    <BlowCardContentWrapper size={size}>
+    <BlowCardContentWrapper size={size} center={role.common}>
       {!role.common && (
         <BlowCardTitle
           className="mb-1"
@@ -71,9 +71,16 @@ function BlowCardContent({
         </BlowCardTitle>
       )}
 
-      <div className={cx(!sm && 'hidden xs:block', 'flex-1')}></div>
+      {!role.common && (
+        <div className={cx(!sm && 'hidden xs:block', 'flex-1')}></div>
+      )}
 
-      <div className={sm ? 'space-y-0.5' : 'space-y-0.5 xs:space-y-1.5'}>
+      <div
+        className={cx(
+          sm ? 'space-y-0.5' : 'space-y-0.5 xs:space-y-1.5',
+          role.common && 'flex flex-col justify-between h-full'
+        )}
+      >
         {role.actions.map((a) => (
           <BlowActionButton
             key={a}
@@ -101,11 +108,13 @@ function BlowCardContent({
 
 type ContentWrapperProps = Omit<Props, 'onActionClick'> & {
   children: ReactNode
+  center?: boolean
 }
 
 function BlowCardContentWrapper({
   children,
   size = 'sm',
+  center = false,
 }: ContentWrapperProps) {
   const sm = size === 'xs' || size === 'sm'
 
@@ -113,7 +122,12 @@ function BlowCardContentWrapper({
     <div
       className={cx(
         'flex flex-col full',
-        sm ? 'px-0.5 pt-0.5 pb-[3px]' : 'px-1.5 pt-0.5 pb-1.5',
+        center && 'justify-center',
+        sm
+          ? 'px-0.5 pt-0.5 pb-[3px]'
+          : !center
+          ? 'px-1.5 pt-0.5 pb-1.5'
+          : 'p-1.5',
         sm ? 'bg-cyan-200 dark:bg-cyan-925' : 'bg-cyan-100 dark:bg-cyan-975',
         'font-spaced-narrow text-black dark:text-white',
         'rounded-sm',

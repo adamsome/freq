@@ -4,6 +4,7 @@ import { cx } from '../lib/util/dom'
 import { styleColor } from '../lib/util/dom-style'
 import Button, { ButtonProps } from './control/button'
 import IconSvg from './control/icon-svg'
+import TimerSpinner from './control/timer-spinner'
 
 type Props = {
   command: Command
@@ -12,77 +13,12 @@ type Props = {
   rightButton?: ButtonProps
   spacingClassName?: string
   fetching?: boolean
-  onClick: (e: MouseEvent, cmd: Command, colIndex?: number) => Promise<void>
+  onClick?: (e: MouseEvent, cmd: Command, colIndex?: number) => Promise<void>
+  onTimerFinish?: (colIndex?: number) => void
 }
 
-const CommandButton = ({
-  command,
-  currentPlayer,
-  button = {},
-  rightButton = {},
-  spacingClassName = 'm-0 px-2 py-2',
-  fetching = false,
-  onClick,
-}: Props) => {
-  const cmd = command
-
-  const getCmdRightWidth = (cmd: Command) => {
-    const w = (cmd.rightWidth ?? 0.5) * 100
-    const min = '6.5em'
-    const rawWidth = `calc(${w}% - 0.25rem)`
-    return `max(${min}, min(${rawWidth}, calc(100% - ${min})))`
-  }
-
-  const createButton = ({ right }: { right?: boolean } = {}) => {
-    const flex = `0 0 ${getCmdRightWidth(cmd)}`
-
-    const { className, ...props } = right ? rightButton : button
-
-    let style: CSSProperties | undefined
-    if (!props.color) {
-      const player = !cmd.disabled ? currentPlayer : undefined
-      const color = (right ? cmd.rightColor : cmd.color) ?? player
-      const bg = (right ? cmd.rightColorLit : cmd.colorLit) ?? 1
-      const border = (right ? cmd.rightColorBorder : cmd.colorBorder) ?? 0
-      style = styleColor(color, bg, border)
-    }
-
-    const disabled =
-      fetching ||
-      cmd.fetching ||
-      (right ? cmd.rightDisabled ?? cmd.disabled ?? false : cmd.disabled)
-
-    if (style && right) {
-      style.flex = flex
-    }
-
-    return (
-      <Button
-        className={cx(
-          'flex-1 w-full text-xl',
-          'opacity-80 hover:opacity-100 transition-opacity',
-          'inline-flex justify-center items-center',
-          { 'ml-2': right },
-          className
-        )}
-        color="none"
-        bgHover={false}
-        style={style}
-        spacing={spacingClassName}
-        disabled={disabled}
-        onClick={(e) => onClick(e, cmd, right ? 1 : 0)}
-        {...props}
-      >
-        {fetching || cmd.fetching ? (
-          <IconSvg name="spinner" className="w-7 h-7 text-white" />
-        ) : right ? (
-          cmd.rightText
-        ) : (
-          cmd.text
-        )}
-      </Button>
-    )
-  }
+export default function CommandButton(props: Props) {
+  const cmd = props.command
 
   return (
     <>
@@ -93,9 +29,9 @@ const CommandButton = ({
           'text-lg': cmd.rightText,
         })}
       >
-        {createButton()}
+        <SideButton {...props} />
 
-        {cmd.rightText != null && createButton({ right: true })}
+        {cmd.rightText != null && <SideButton right {...props} />}
       </div>
 
       {cmd.info && (
@@ -110,4 +46,92 @@ const CommandButton = ({
   )
 }
 
-export default CommandButton
+function SideButton(props: Props & { right?: boolean }) {
+  const {
+    right,
+    command: cmd,
+    currentPlayer,
+    button = {},
+    rightButton = {},
+    spacingClassName = 'm-0 px-2 py-2',
+    fetching = false,
+    onClick,
+  } = props
+
+  const getCmdRightWidth = (cmd: Command) => {
+    const w = (cmd.rightWidth ?? 0.5) * 100
+    const min = '6.5em'
+    const rawWidth = `calc(${w}% - 0.25rem)`
+    return `max(${min}, min(${rawWidth}, calc(100% - ${min})))`
+  }
+
+  const flex = `0 0 ${getCmdRightWidth(cmd)}`
+
+  const { className, ...buttonProps } = right ? rightButton : button
+
+  let style: CSSProperties | undefined
+  if (!buttonProps.color) {
+    const player = !cmd.disabled ? currentPlayer : undefined
+    const color = (right ? cmd.rightColor : cmd.color) ?? player
+    const bg = (right ? cmd.rightColorLit : cmd.colorLit) ?? 1
+    const border = (right ? cmd.rightColorBorder : cmd.colorBorder) ?? 0
+    style = styleColor(color, bg, border)
+  }
+
+  const disabled =
+    fetching ||
+    cmd.fetching ||
+    (right ? cmd.rightDisabled ?? cmd.disabled ?? false : cmd.disabled)
+
+  if (style && right) {
+    style.flex = flex
+  }
+
+  return (
+    <Button
+      className={cx(
+        'flex-1 w-full text-xl',
+        'opacity-80 hover:opacity-100 transition-opacity',
+        'inline-flex justify-center items-center',
+        { 'ml-2': right },
+        className
+      )}
+      color="none"
+      bgHover={false}
+      style={style}
+      spacing={spacingClassName}
+      disabled={disabled}
+      onClick={(e) => onClick?.(e, cmd, right ? 1 : 0)}
+      {...buttonProps}
+    >
+      <ButtonContent {...props} />
+    </Button>
+  )
+}
+
+function ButtonContent({
+  right,
+  command,
+  fetching = false,
+  onTimerFinish,
+}: Props & { right?: boolean }) {
+  if (fetching || command.fetching)
+    return <IconSvg name="spinner" className="w-7 h-7 text-white" />
+
+  const text = right ? command.rightText : command.text
+  const timer = right ? command.rightTimer : command.timer
+
+  if (!timer) return <>{text}</>
+
+  return (
+    <>
+      <span>{text}</span>
+      <div className="absolute right-1.5">
+        <TimerSpinner
+          duration={timer}
+          onFinish={() => onTimerFinish?.(right ? 1 : 0)}
+        />
+      </div>
+    </>
+  )
+}

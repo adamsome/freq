@@ -137,8 +137,10 @@ export interface Command {
   colorBorder?: number
   rightText?: string
   value?: unknown
+  timer?: number
   rightType?: CommandType
   rightValue?: unknown
+  rightTimer?: number
   /** Percent width the right-side command should have */
   rightWidth?: number
   rightColor?: string

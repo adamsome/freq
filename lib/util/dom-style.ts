@@ -84,3 +84,26 @@ export const styleLinearGradientText = (
     WebkitTextFillColor: 'transparent',
   }
 }
+
+export interface RGBColor {
+  r: number
+  g: number
+  b: number
+  opacity: 1
+}
+
+export const convertHexToRGB = (hex: string): RGBColor => {
+  const rgb = hex
+    .replace(
+      /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+      (_, r, g, b) => `#${r}${r}${g}${g}${b}${b}`
+    )
+    .substring(1)
+    .match(/.{2}/g)
+    ?.map((x) => parseInt(x, 16))
+  const [r, g, b] = rgb ?? [0, 0, 0]
+  return { r, g, b, opacity: 1 }
+}
+
+export const createRGBStyle = ({ r, g, b, opacity }: RGBColor) =>
+  `rgba(${r}, ${g}, ${b}, ${opacity})`

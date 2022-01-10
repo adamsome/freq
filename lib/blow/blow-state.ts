@@ -88,9 +88,10 @@ export default class BlowState {
     )
   }
 
-  getPlayer(id?: string): BlowPlayerView | undefined {
-    if (!id) return
-    return this.s.players.find((p) => p.id === id)
+  getPlayer(idOrIdx?: string | number | null): BlowPlayerView | undefined {
+    if (idOrIdx == null) return
+    if (typeof idOrIdx === 'number') return this.s.players[idOrIdx]
+    return this.s.players.find((p) => p.id === idOrIdx)
   }
 
   // Fluent methods
@@ -108,8 +109,11 @@ export default class BlowState {
     return this
   }
 
-  addCoins(playerID: string | undefined, coins: number): this {
-    const player = this.getPlayer(playerID)
+  addCoins(
+    playerIDOrIdx: string | number | null | undefined,
+    coins: number
+  ): this {
+    const player = this.getPlayer(playerIDOrIdx)
     if (!isPlayer(player)) throw new Error('No action subject player found')
     player.coins += coins
     return this
@@ -182,16 +186,16 @@ export default class BlowState {
     type: BlowTimerType,
     status?: 'enabled' | 'disabled'
   ): this {
-    const s = this.s.game.settings.timer[type] ?? 5
-    const ends = addSeconds(s, new Date()).toISOString()
-    this.s.timer = { type, ends }
+    const timer = this.s.game.settings.timer[type] ?? 5
+    const expiry = addSeconds(timer, new Date()).toISOString()
+    this.s.timer = { type, expiry }
 
     switch (type) {
       case 'challenge': {
-        this.s.commands = createChallengeCommand(status)
+        this.s.commands = createChallengeCommand(status, timer)
       }
       case 'next-turn': {
-        this.s.commands = createNextTurnCommand(status)
+        this.s.commands = createNextTurnCommand(status, timer)
       }
     }
     return this

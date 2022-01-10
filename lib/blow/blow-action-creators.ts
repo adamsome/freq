@@ -46,10 +46,18 @@ const createCommand = (
   return [cmd]
 }
 
-export const createChallengeCommand = (status?: 'enabled' | 'disabled') => {
-  return createCommand({ value: challenge({}), text: 'Challenge' }, status)
+export const createChallengeCommand = (
+  status?: 'enabled' | 'disabled',
+  timer?: number
+) => {
+  const value = challenge({})
+  return createCommand({ value, text: 'Challenge', timer }, status)
 }
 
-export const createNextTurnCommand = (status?: 'enabled' | 'disabled') => {
-  return createCommand({ value: nextTurn({}), text: 'Continue' }, status)
+export const createNextTurnCommand = (
+  status?: 'enabled' | 'disabled',
+  timer?: number
+) => {
+  const value = nextTurn({})
+  return createCommand({ value, text: 'Continue', timer }, status)
 }
