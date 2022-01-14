@@ -19,6 +19,7 @@ type Props = {
   id?: BlowRoleActionID
   size?: BlowCardSize
   state?: BlowActionState
+  passClicks?: boolean
   fetching?: boolean
   onClick?: (id: BlowRoleActionID) => void
 }
@@ -35,6 +36,9 @@ const TEXT = {
   cyan: 'text-cyan-600 dark:text-cyan-400',
   cyanHover: 'hover:text-cyan-700 dark:hover:text-cyan-300',
   cyanHoverGroup: 'group-hover:text-cyan-700 dark:group-hover:text-cyan-300',
+  red: 'text-red-500 dark:text-red-400',
+  redHover: 'hover:text-red-700 dark:hover:text-red-300',
+  redHoverGroup: 'group-hover:text-red-700 dark:group-hover:text-red-300',
 }
 
 const TEXT_OPACITY = {
@@ -48,6 +52,7 @@ export default function BlowActionButton({
   id,
   size = 'sm',
   state = 'normal',
+  passClicks,
   fetching,
   onClick,
 }: Props) {
@@ -80,12 +85,16 @@ export default function BlowActionButton({
 
   const handleClick = (e: MouseEvent) => {
     e.preventDefault()
-    if (state !== 'clickable') return
+    if (state !== 'clickable' && !passClicks) return
     onClick?.(id)
   }
 
+  const asButton = state === 'clickable'
+  const Component = asButton ? 'button' : 'div'
+
   return (
-    <button
+    <Component
+      type={asButton ? 'button' : undefined}
       className={cx(
         'relative align-baseline flex-center group transition',
         'w-full m-0',
@@ -93,12 +102,13 @@ export default function BlowActionButton({
         sm ? 'text-[2.25px] leading-normal' : 'text-sm',
         !sm && 'rounded-sm',
         heightCx,
-        state === 'clickable' ? 'cursor-pointer' : 'cursor-auto',
+        'tracking-normal',
+        state === 'clickable' || passClicks ? 'cursor-pointer' : 'cursor-auto',
         state === 'active' && BG.cyan,
         state === 'counter' && BG.red,
         state === 'clickable' && [
-          TEXT.cyan,
-          TEXT.cyanHover,
+          !action.counter ? TEXT.cyan : TEXT.red,
+          !action.counter ? TEXT.cyanHover : TEXT.redHover,
           BG.gray,
           'bg-opacity-10 dark:bg-opacity-30',
           'hover:bg-opacity-30 dark:hover:bg-opacity-40',
@@ -115,6 +125,7 @@ export default function BlowActionButton({
         sm ? 'border-0' : 'border',
         state !== 'clickable' && 'border-transparent dark:border-transparent',
         'focus:outline-none',
+        state !== 'normal' && !sm && 'shadow',
         className
       )}
       onClick={handleClick}
@@ -148,7 +159,10 @@ export default function BlowActionButton({
         <BlowLabel
           className={cx(
             state === 'clickable'
-              ? [TEXT, TEXT.cyanHoverGroup, 'transition-all']
+              ? [
+                  !action.counter ? TEXT.cyanHoverGroup : TEXT.redHoverGroup,
+                  'transition-all',
+                ]
               : invert
               ? TEXT.black
               : TEXT.body,
@@ -165,6 +179,6 @@ export default function BlowActionButton({
           coinProps={{ color, size: sm ? 'xs' : 'sm' }}
         />
       </div>
-    </button>
+    </Component>
   )
 }

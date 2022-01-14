@@ -22,7 +22,6 @@ export default function BlowCardContainer({ onError, ...props }: Props) {
     fetching ?? (isBlowRoleActionID(game?.fetching) ? game?.fetching : null)
 
   const handleActionClick = async (id: BlowRoleActionID): Promise<void> => {
-    console.log('action', id)
     if (fetching != null || !game || !role) return
     setFetching(id)
 

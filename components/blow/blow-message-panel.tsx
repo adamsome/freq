@@ -61,8 +61,12 @@ export default function BlowMessagePanel({
           'text-sm text-gray-500'
         )}
       >
-        <GameLink url={roomUrl} button={{ color: 'cyan', bgHover: false }} />
-        {allMessages.length && (
+        <GameLink
+          className="mt-1"
+          url={roomUrl}
+          button={{ color: 'cyan', bgHover: false }}
+        />
+        {allMessages.length > 0 && (
           <div className={cx('w-full', 'my-2 px-4')}>
             <div
               className={cx('w-full h-px', 'bg-gray-100 dark:bg-gray-900')}
@@ -70,7 +74,7 @@ export default function BlowMessagePanel({
           </div>
         )}
 
-        {allMessages.length && (
+        {allMessages.length > 0 && (
           <div className={cx('max-w-sm m-auto px-5 space-y-1.5')}>
             {allMessages.map((msg) => (
               <BlowMessageLine key={msg.index} subject={getSubject(msg)}>
@@ -81,14 +85,16 @@ export default function BlowMessagePanel({
         )}
       </div>
 
-      <div
-        className={cx(
-          'absolute top-0 left-0 right-3.5',
-          'pointer-events-none',
-          'h-6 md:h-8',
-          'from-white dark:from-black bg-gradient-to-b '
-        )}
-      ></div>
+      {allMessages.length > 0 && (
+        <div
+          className={cx(
+            'absolute top-0 left-0 right-3.5',
+            'pointer-events-none',
+            'h-6 md:h-8',
+            'from-white dark:from-black bg-gradient-to-b '
+          )}
+        ></div>
+      )}
     </div>
   )
 }

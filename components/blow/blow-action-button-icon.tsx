@@ -27,13 +27,18 @@ function getOpacityClass(color?: BlowActionButtonColor) {
     : 'text-opacity-30 dark:text-opacity-30'
 }
 
-function getColorClass(color?: BlowActionButtonColor) {
+function getColorClass(
+  action: BlowRoleActionDef,
+  color?: BlowActionButtonColor
+) {
   switch (color) {
     case 'black': {
       return 'text-black dark:text-black'
     }
     case 'cyan':
-      return 'text-cyan-800 dark:text-cyan-400'
+      return !action.counter
+        ? 'text-cyan-800 dark:text-cyan-400'
+        : 'text-red-600 dark:text-red-400'
     case 'gray':
       return 'text-black dark:text-white'
   }
@@ -75,7 +80,7 @@ export default function BlowActionButtonIcon({
         className={cx(
           'relative transition-all',
           sm ? 'w-0.5 h-0.5 ml-0' : 'w-3 h-5 ml-0.5',
-          getColorClass(color),
+          getColorClass(action, color),
           getOpacityClass(color)
         )}
         top={sm ? '-0.5px' : '-1.5px'}
@@ -89,7 +94,7 @@ export default function BlowActionButtonIcon({
       className={cx(
         'transition-all leading-tight',
         sm ? 'ml-0' : 'ml-0.5',
-        getColorClass(color),
+        getColorClass(action, color),
         getOpacityClass(color)
       )}
     >

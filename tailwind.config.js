@@ -29,7 +29,7 @@ module.exports = {
       narrow: ["'Noto Sans Display'", ...defaultTheme.fontFamily.sans],
     },
     screens: {
-      xs: '370px',
+      xs: '384px',
       ...defaultTheme.screens,
     },
     extend: {

@@ -1,13 +1,11 @@
 import type { ReactNode } from 'react'
 import React from 'react'
-import { BlowCardSize } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
+import { BlowCardProps } from './blow-card'
 
-type Props = {
+type Props = BlowCardProps & {
   children?: ReactNode
   className?: string
-  size?: BlowCardSize
-  orientation?: 'horizontal' | 'vertical'
 }
 
 export default function BlowCardShape({
@@ -16,25 +14,22 @@ export default function BlowCardShape({
   size = 'sm',
   orientation = 'vertical',
 }: Props) {
+  const horizontal = orientation === 'horizontal'
   return (
     <div
-      className={cx(
-        size === 'xs'
-          ? '[--blow-card-unit:0.1875rem]'
-          : size === 'sm'
-          ? '[--blow-card-unit:0.28125rem]'
-          : '[--blow-card-unit:1.4375rem]',
-        orientation === 'vertical'
-          ? [
-              'w-[calc(var(--blow-card-unit)*5)]',
-              'h-[calc(var(--blow-card-unit)*7)]',
-            ]
-          : [
-              'w-[calc(var(--blow-card-unit)*7)]',
-              'xs:h-[calc(var(--blow-card-unit)*5)]',
-            ],
-        className
-      )}
+      className={cx(className, {
+        relative: true,
+        'flex-center': true,
+        '[--blow-card-unit:0.1875rem]': size === 'xs',
+        '[--blow-card-unit:0.28125rem]': size === 'sm',
+        // Width of 'md' vertical card same as width of 'md' horizontal card
+        '[--blow-card-unit:1.4375rem]': size === 'md' && horizontal,
+        '[--blow-card-unit:2rem]': size === 'md' && !horizontal,
+        'w-[calc(var(--blow-card-unit)*5)]': !horizontal,
+        'h-[calc(var(--blow-card-unit)*7)]': !horizontal,
+        'w-[calc(var(--blow-card-unit)*7)]': horizontal,
+        'xs:h-[calc(var(--blow-card-unit)*5)]': horizontal,
+      })}
     >
       {children}
     </div>

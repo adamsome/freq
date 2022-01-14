@@ -60,9 +60,17 @@ export interface BlowRoleActionDef {
   counter?: BlowRoleActionID
 }
 
-export const BLOW_CORE_ACTION_IDS = ['challenge', 'next-turn'] as const
+export const BLOW_CORE_ACTION_IDS = [
+  'challenge',
+  'reveal-challenge-card',
+  'decline-counter',
+  'continue-turn',
+  'next-turn',
+] as const
 
 export type BlowCoreActionID = typeof BLOW_CORE_ACTION_IDS[number]
+
+export type BlowTimerType = Exclude<BlowCoreActionID, 'reveal-challenge-card'>
 
 export function isBlowCoreActionID(id: unknown): id is BlowCoreActionID {
   return (
@@ -98,6 +106,8 @@ export interface BlowRoleDef {
   color?: string
 }
 
+export type BlowRoleActionPair = [role: BlowRoleDef, action: BlowRoleActionDef]
+
 const BLOW_VARIANT_IDS = ['basic'] as const
 
 export type BlowVariantID = typeof BLOW_VARIANT_IDS[number]
@@ -109,8 +119,9 @@ export interface BlowVariantDef {
 
 export interface BlowActionPayload {
   role?: BlowRoleID
-  subject?: string | number
-  target?: string
+  cardIndex?: number
+  subject?: number
+  target?: number
   token?: BlowToken[]
   expired?: boolean
 }
@@ -135,18 +146,24 @@ export type BlowCardVariant = 'empty' | 'facedown' | 'faceup'
 export type BlowCardSize = 'xs' | 'sm' | 'md'
 export type BlowCardColor = 'gray' | 'cyan'
 
-export type BlowCoinSize = 'xs' | 'sm' | 'md'
+export type BlowPlayerSeatSize = 'md' | 'lg'
 
-export type BlowTimerType = 'challenge' | 'next-turn'
-export interface BlowTimer {
-  type: BlowTimerType
-  expiry: string
-}
+export type BlowCoinSize = 'xs' | 'sm' | 'md'
 
 export interface BlowSettings {
   variant: BlowVariantID
   /** Map timer type to the number of seconds in the countdown */
   timer: Record<BlowTimerType, number>
+}
+
+export interface BlowChallenge {
+  challenger: number
+  target: number
+  role: BlowRoleID
+  winner?: 'target' | 'challenger'
+  cardIndex?: number
+  challengerLoss?: true
+  challengerCardIndex?: number
 }
 
 export interface BlowGame extends BaseGame {
@@ -158,12 +175,15 @@ export interface BlowGame extends BaseGame {
 }
 
 export type BlowPlayerView = PlayerView & {
+  index: number
   /** References a card role or null to indicate an unknown facedown card */
   cards: (BlowRoleID | null)[]
+  cardsKilled: [boolean, boolean]
   /** Number of coins a player owns */
   coins: number
   /** Player index of player who can play a counter action */
   counter?: boolean
+  eliminated?: boolean
 }
 
 export type BlowGameView = Omit<BlowGame, 'players'> & {
@@ -177,7 +197,7 @@ export type BlowGameView = Omit<BlowGame, 'players'> & {
   messages: BlowMessage[]
   /** Map of role action to its state (active, clickable, counter, normal) */
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
-  timer?: BlowTimer
+  challenge?: BlowChallenge
 }
 
 // TODO: RoleSet's: Determine which roles included in game

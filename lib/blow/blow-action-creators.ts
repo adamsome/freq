@@ -12,17 +12,44 @@ import { Command } from '../types/game.types'
 import { isObject } from '../util/object'
 import { isNotEmpty } from '../util/string'
 
+// Role Actions
+
 export const activateIncome = createAction<BlowActionPayload, BlowActionID>(
   'activate_income'
 )
+
+export const activateExtort = createAction<BlowActionPayload, BlowActionID>(
+  'activate_extort'
+)
+
+export const counterExtort = createAction<BlowActionPayload, BlowActionID>(
+  'counter_extort'
+)
+
+// Core Actions
 
 export const challenge = createAction<BlowActionPayload, BlowActionID>(
   'challenge'
 )
 
+export const revealChallengeCard = createAction<
+  BlowActionPayload,
+  BlowActionID
+>('reveal-challenge-card')
+
 export const nextTurn = createAction<BlowActionPayload, BlowActionID>(
   'next-turn'
 )
+
+export const declineCounter = createAction<BlowActionPayload, BlowActionID>(
+  'decline-counter'
+)
+
+export const continueTurn = createAction<BlowActionPayload, BlowActionID>(
+  'continue-turn'
+)
+
+// Utilities
 
 export function isBlowAction(action: unknown): action is BlowAction {
   return (
@@ -33,31 +60,11 @@ export function isBlowAction(action: unknown): action is BlowAction {
   )
 }
 
-// Action Command helpers
-
-const createCommand = (
+export const createCommand = (
   command: Partial<Command>,
-  // action: BlowAction,
-  // text: string,
-  status?: 'enabled' | 'disabled'
-) => {
+  disabled?: boolean
+): Command[] => {
   const cmd: Command = { type: 'action', text: '', ...command }
-  if (status) cmd.disabled = status === 'enabled' ? false : true
+  if (disabled) cmd.disabled = true
   return [cmd]
-}
-
-export const createChallengeCommand = (
-  status?: 'enabled' | 'disabled',
-  timer?: number
-) => {
-  const value = challenge({})
-  return createCommand({ value, text: 'Challenge', timer }, status)
-}
-
-export const createNextTurnCommand = (
-  status?: 'enabled' | 'disabled',
-  timer?: number
-) => {
-  const value = nextTurn({})
-  return createCommand({ value, text: 'Continue', timer }, status)
 }

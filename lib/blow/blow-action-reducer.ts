@@ -1,37 +1,24 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { doesGameHaveEnoughPlayers } from '../game'
-import { BlowRoleID } from '../types/blow.types'
-import { activateIncome, challenge, nextTurn } from './blow-action-creators'
-import { getBlowRoles } from './blow-role'
-import { getBlowRoleActionDef } from './blow-role-action-defs'
-import { getBlowRoleDef } from './blow-role-defs'
+import invariant from 'tiny-invariant'
+import {
+  activateExtort,
+  activateIncome,
+  challenge,
+  continueTurn,
+  counterExtort,
+  declineCounter,
+  nextTurn,
+  revealChallengeCard,
+} from './blow-action-creators'
+import { getBlowRoleAction } from './blow-role-action-defs'
 import BlowState, { initialBlowState } from './blow-state'
 
 const blowSlice = createSlice({
   name: 'blow',
   initialState: initialBlowState,
   reducers: {
-    prep(state) {
-      state.roles = getBlowRoles(state.game.settings.variant) as BlowRoleID[]
-      state.order = state.game.player_order
-
-      // Establish deck of cards, three of each role
-      state.deck = state.roles
-        .map((rid) => getBlowRoleDef(rid))
-        .filter((role) => !role.common)
-        .flatMap((role) => [role.id, role.id, role.id])
-
-      // Set command to Deal Cards & enable if enough players
-      const disabled = !doesGameHaveEnoughPlayers(state.game, 'blow')
-      state.commands = [{ type: 'begin_round', text: 'Deal Cards', disabled }]
-
-      // Init player view w/ an empty hand, 2 coins, & metadata
-      state.players = state.game.players.map((p) => ({
-        ...p,
-        wins: state.game.stats?.[p.id]?.w,
-        cards: [],
-        coins: 2,
-      }))
+    init(state) {
+      new BlowState(state).init()
     },
     shuffle(state) {
       new BlowState(state)
@@ -43,56 +30,177 @@ const blowSlice = createSlice({
       new BlowState(state)
         .addMessage(text, { as: '__dealer' })
         .deal()
-        .setTurn(0)
-        .setActive()
+        .setActiveMode()
     },
     finalize(state) {
-      state.players.forEach((p, pidx) => {
-        // Set all players hands facedown for non-current players
-        if (state.game.phase !== 'prep' && p.id !== state.userID) {
-          p.cards = [null, null]
-        }
-        // Set player statuses
-        if (p.id === state.userID) p.current = true
-        if (pidx === state.active) p.active = true
-        if (pidx === state.counter) p.counter = true
-      })
+      new BlowState(state).finalize()
     },
   },
   extraReducers: (builder) =>
     builder
       .addCase(challenge, (state, action) => {
-        console.error('challenge', state, action)
-        throw new Error('Challenge not yet implemented')
-      })
-      .addCase(nextTurn, (state) => {
-        new BlowState(state).incrementTurn().setActive()
-      })
-      .addCase(activateIncome, (state, action) => {
         const s = new BlowState(state)
 
-        s.addMessage(`Plays ${getBlowRoleActionDef(action)?.name}`)
+        const latestRoleAction = s.latestTurnRoleAction
+        invariant(latestRoleAction, 'No turn role action')
 
-        if (s.canChallenge(action)) {
-          // TODO: implement challenge sequence
-          console.log('can-challenge', action)
+        latestRoleAction.hadChallengeOpportunity = true
+
+        if (action.payload.expired) {
+          if (latestRoleAction.def.counter) {
+            invariant(state.turnActions.active, 'Counter requires active')
+            state.turnActions.active.countered = true
+          }
+          s.processRoleActions()
           return
         }
-        if (s.canCounter(action)) {
-          // TODO: implement counter sequence
-          console.log('can-counter', action)
-          return
+
+        // Initiate the challenge
+        const challenger = action.payload.subject
+        const target = latestRoleAction?.payload.subject
+        const role = latestRoleAction?.payload.role
+
+        const hasProps = challenger != null && target != null && role
+        invariant(hasProps, `Missing challenge properties`)
+
+        state.challenge = { challenger, target, role }
+        s.setTimerCommand('continue-turn', true)
+      })
+      .addCase(revealChallengeCard, (state, action) => {
+        const s = new BlowState(state)
+
+        const { cardIndex } = action.payload
+        invariant(cardIndex != null, 'Need card index to handle reveal')
+        invariant(state.challenge, 'Need challenge to handle reveal')
+
+        const challenge = state.challenge
+        const target = s.getPlayer(challenge.target)
+        const cardRevealed = target.cards[cardIndex]
+        invariant(cardRevealed, "Need player's revealed card to handle reveal")
+
+        if (!state.challenge.challengerLoss) {
+          // Handle the challenge target revealing card
+          state.challenge.cardIndex = cardIndex
+
+          if (cardRevealed === challenge.role) {
+            // Handle the challenge target winning the challenge
+            challenge.winner = 'target'
+
+            // Give the winning challenge target a new card
+            state.deck.push(cardRevealed)
+            s.shuffle()
+            target.cards[cardIndex] = s.drawCard()
+
+            // If target was the counter action, active action now countered
+            const latestRoleAction = s.latestTurnRoleAction
+            invariant(latestRoleAction, 'No turn role action')
+            if (latestRoleAction.def.counter) {
+              invariant(state.turnActions.active, 'Counter requires active')
+              state.turnActions.active.countered = true
+            }
+          } else {
+            // Handle the challenge target losing the challenge
+            challenge.winner = 'challenger'
+            // Flip over the losing challenge target's chosen card
+            target.cardsKilled[cardIndex] = true
+          }
+        } else {
+          // Handle the challenger who lost revealing their card
+          state.challenge.challengerCardIndex = cardIndex
+          // Flip over the losing challenge challenger's chosen card
+          const challenger = s.getPlayer(challenge.challenger)
+          challenger.cardsKilled[cardIndex] = true
         }
 
-        // Resolve action
+        s.setTimerCommand('continue-turn')
+      })
+      .addCase(continueTurn, (state, _action) => {
+        const s = new BlowState(state)
 
-        s.setActionStates({ active: (xdef) => xdef.id === action.type })
-          .setTimerAndCommand('next-turn')
-          // Action-specific
-          .addCoins(action.payload.subject, 1)
+        if (state.challenge) {
+          if (state.challenge.challengerLoss) {
+            // Done w/ challenge
+            delete state.challenge
+            s.processRoleActions()
+          } else if (state.challenge.winner === 'target') {
+            // Challenge target won challenge, challenger now must lose card
+            state.challenge.challengerLoss = true
+
+            s.setTimerCommand('continue-turn', true)
+
+            const pidx = state.challenge.challenger
+            const lastRemaining = s.getLastRemainingPlayerCardIndex(pidx)
+            if (lastRemaining != null) {
+              // Challenger has only one card left: reveal it automatically
+              state.challenge.challengerCardIndex = lastRemaining
+              s.setTimerCommand('continue-turn')
+            }
+          } else {
+            // Challenge target lost challenge
+            const latestRoleAction = s.latestTurnRoleAction
+            invariant(latestRoleAction, 'No turn role action')
+            if (!latestRoleAction.def.counter) {
+              // Active action challenged successfully, next turn
+              s.incrementTurn().setActiveMode()
+            } else {
+              // Counter action challenged successfully, continue active action
+              delete state.challenge
+              s.processRoleActions()
+            }
+          }
+        }
+      })
+      .addCase(declineCounter, (state, action) => {
+        const s = new BlowState(state)
+
+        const { active } = state.turnActions
+        invariant(active, 'Need action active to counter')
+
+        active.countersDeclined = (active.countersDeclined ?? 0) + 1
+
+        const counterPlayers = state.counter ?? []
+        if (
+          action.payload.expired ||
+          active.countersDeclined === counterPlayers.length
+        ) {
+          s.processRoleActions()
+        } else if (
+          active.countersDeclined <= counterPlayers.length &&
+          s.getPlayer(action.payload.subject).id === state.userID
+        ) {
+          // Player declined, but still waiting on other counter players
+          s.setActionStates()
+          state.commands[0].text = 'Waiting for others...'
+          state.commands[0].disabled = true
+        }
+      })
+      .addCase(nextTurn, (state) => {
+        new BlowState(state).incrementTurn().setActiveMode()
+      })
+      .addCase(activateIncome, (state, action) => {
+        new BlowState(state)
+          .updateTurnActions(action)
+          .addMessage(`plays ${getBlowRoleAction(action)?.name}`)
+          .processRoleActions()
+      })
+      .addCase(activateExtort, (state, action) => {
+        new BlowState(state)
+          .updateTurnActions(action)
+          .addMessage(`plays ${getBlowRoleAction(action)?.name}`)
+          .processRoleActions()
+      })
+      .addCase(counterExtort, (state, action) => {
+        const xdef = getBlowRoleAction(action)
+        invariant(xdef?.counter, 'Counter action must have a counter specified')
+        const counter = getBlowRoleAction(xdef?.counter)
+
+        new BlowState(state)
+          .updateTurnActions(action)
+          .addMessage(`counters ${counter.name}`)
+          .processRoleActions()
       }),
 })
 
 const { actions, reducer } = blowSlice
-export const { prep, shuffle, deal, finalize } = actions
+export const { init, shuffle, deal, finalize } = actions
 export default reducer

@@ -2,16 +2,27 @@ import { configureStore } from '@reduxjs/toolkit'
 import { OptionalId, WithId } from 'mongodb'
 import { findCurrentPlayer } from '../player'
 import { BlowGame, BlowGameView } from '../types/blow.types'
+import { GameType } from '../types/game.types'
 import { isObject } from '../util/object'
 import { setRandomNumberGeneratorSeed } from '../util/prng'
 import { isNotEmpty } from '../util/string'
-import blowReducer, { finalize, prep } from './blow-action-reducer'
-import { initialBlowState } from './blow-state'
+import blowReducer, { finalize, init } from './blow-action-reducer'
+import { IBlowState, initialBlowState } from './blow-state'
 
 export function buildBlowGameView(
   userID: string | undefined,
   rawGame: OptionalId<WithId<BlowGame>>
-): BlowGameView {
+): BlowGameView
+export function buildBlowGameView(
+  userID: string | undefined,
+  rawGame: OptionalId<WithId<BlowGame>>,
+  withState: true
+): BlowGameView & { state: IBlowState }
+export function buildBlowGameView(
+  userID: string | undefined,
+  rawGame: OptionalId<WithId<BlowGame>>,
+  withState?: boolean
+): BlowGameView & { state?: IBlowState } {
   try {
     // Delete the DB `_id` object since its not serializable
     const game = { ...rawGame } as BlowGame
@@ -32,27 +43,40 @@ export function buildBlowGameView(
     })
 
     // Always run the `prep` action first to setup the state
-    store.dispatch(prep())
+    store.dispatch(init())
     // Iterate through each action that has taken place during the match...
-    game.actions.forEach((a) => store.dispatch(a))
+    game.actions.forEach((a) => {
+      try {
+        store.dispatch(a)
+      } catch (e) {
+        const payload = JSON.stringify(a.payload)
+        console.error(`Error running action '${a.type}' (${payload})`)
+        throw e
+      }
+    })
     // ...and remove any secret information for the player
     store.dispatch(finalize())
     // ...to get the up-to-date game state
     const { blow: state } = store.getState()
 
     // Create the frontend's game view from the up-to-date game state
-    return {
+    const view = {
       ...game,
-      type: 'blow',
+      type: 'blow' as GameType,
       roles: state.roles,
       commands: state.commands,
       messages: state.messages,
       actionState: state.actionState,
+      challenge: state.challenge,
       players: state.players,
       currentPlayer: findCurrentPlayer(state.players, userID),
     }
+    if (withState) {
+      return { ...view, state }
+    }
+    return view
   } catch (e) {
-    console.error('Unexpected Error', e)
+    console.error('Unexpected:', e)
     throw new Error(e)
   }
 }

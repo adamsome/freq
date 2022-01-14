@@ -1,5 +1,6 @@
 import { BlowMessage } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
+import BlowPlayerLabel from './blow-player-label'
 
 type Props = {
   children: BlowMessage
@@ -11,7 +12,7 @@ export default function BlowMessageLine({ children: msg, subject }: Props) {
     <div className={cx({ 'text-red-500': msg.error })}>
       {subject && (
         <>
-          <span className="font-spaced-narrow font-semibold">{subject}</span>
+          <BlowPlayerLabel>{subject}</BlowPlayerLabel>
           {': '}
         </>
       )}

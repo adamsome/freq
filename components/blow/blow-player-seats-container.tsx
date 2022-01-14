@@ -16,6 +16,7 @@ export default function BlowPlayerSeatsContainer() {
           key={p?.id ?? i}
           player={p}
           actions={game?.actionState}
+          card={{ color: 'gray' }}
         />
       ))}
     </SeatGrid>

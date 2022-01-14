@@ -1,38 +1,42 @@
 import type { ReactNode } from 'react'
-import { BlowCardSize } from '../../lib/types/blow.types'
 import { range } from '../../lib/util/array'
 import { cx } from '../../lib/util/dom'
-import BlowCard from './blow-card'
+import BlowCard, { BlowCardProps } from './blow-card'
 
-type Props = {
+type Props = BlowCardProps & {
   children: ReactNode
   className?: string
-  size: BlowCardSize
-  cards?: number
 }
 
-export default function BlowCardTitle({
-  children,
-  className,
-  size = 'sm',
-  cards = 0,
-}: Props) {
+export default function BlowCardTitle(props: Props) {
+  const { children, className, size = 'sm', orientation = 'vertical' } = props
   const sm = size === 'xs' || size === 'sm'
 
   return (
     <div
       className={cx(
+        'relative',
         'flex-center space-x-1',
         'font-semibold w-full overflow-hidden whitespace-nowrap',
         sm && 'text-[3.5px] leading-normal tracking-widest',
+        !sm && orientation === 'vertical' && 'text-lg ml-1',
         className
       )}
     >
       <span className="flex-1 text-left">{children}</span>
 
-      {range(0, cards).map((i) => (
+      <Icons {...props} />
+    </div>
+  )
+}
+
+function Icons(props: Props) {
+  const { currentCards = 0 } = props
+  return (
+    <>
+      {range(0, currentCards).map((i) => (
         <BlowCard key={i} size="xs" color="cyan" />
       ))}
-    </div>
+    </>
   )
 }

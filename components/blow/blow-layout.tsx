@@ -9,7 +9,7 @@ import Layout from '../layout/layout'
 import LayoutMain from '../layout/layout-main'
 import BlowMessagePanel from './blow-message-panel'
 import BlowPlayersSheet from './blow-players-sheet'
-import BlowRoleCardBoard from './blow-role-card-board'
+import BlowGameBoard from './blow-game-board'
 
 export default function BlowLayout() {
   const { game } = useBlowGame()
@@ -58,10 +58,10 @@ export default function BlowLayout() {
             'md:max-h-[calc(100vh-theme(spacing.12)-theme(spacing.20))]'
           )}
         >
-          <BlowRoleCardBoard
+          <BlowGameBoard
             className="full pt-2 xs:pt-3 sm:pt-4"
             // Height of the players sheet's seat grid + chrome
-            bottomSpacerClass="min-h-[theme(spacing.56)]"
+            bottomSpacerClass="min-h-[theme(spacing.48)]"
             onError={handleError}
           />
         </div>

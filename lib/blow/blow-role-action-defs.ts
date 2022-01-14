@@ -65,11 +65,9 @@ export const BLOW_ROLE_ACTIONS_DEFS: Record<
   },
 }
 
-export function getBlowRoleActionDef(id: BlowRoleActionID): BlowRoleActionDef
-export function getBlowRoleActionDef(
-  x: BlowAction
-): BlowRoleActionDef | undefined
-export function getBlowRoleActionDef(
+export function getBlowRoleAction(id: BlowRoleActionID): BlowRoleActionDef
+export function getBlowRoleAction(x: BlowAction): BlowRoleActionDef | undefined
+export function getBlowRoleAction(
   idOrAction: BlowAction | BlowRoleActionID
 ): BlowRoleActionDef | undefined {
   let id: BlowRoleActionID

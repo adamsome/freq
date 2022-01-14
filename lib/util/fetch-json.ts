@@ -54,7 +54,9 @@ export async function postCommand<T>(
   game: GameType,
   room: string,
   command: CommandType,
-  value?: unknown
+  value?: unknown,
+  /** Delay the post command in seconds */
+  delaySeconds?: number
 ): Promise<T> {
   const body: CommandValue = { type: command }
   if (value != null) {
@@ -62,5 +64,12 @@ export async function postCommand<T>(
   }
 
   const path = API_GAME_COMMAND.replace('%0', game).replace('%1', room)
+
+  if (delaySeconds) {
+    await delay(delaySeconds * 1000)
+  }
+
   return await postJson<T>(path, body)
 }
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
