@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, Store } from '@reduxjs/toolkit'
 import { OptionalId, WithId } from 'mongodb'
 import { findCurrentPlayer } from '../player'
 import { BlowGame, BlowGameView } from '../types/blow.types'
@@ -9,6 +9,11 @@ import { isNotEmpty } from '../util/string'
 import blowReducer, { finalize, init } from './blow-action-reducer'
 import { IBlowState, initialBlowState } from './blow-state'
 
+interface BlowGameStore {
+  view: BlowGameView
+  store: Store<{ blow: IBlowState }>
+}
+
 export function buildBlowGameView(
   userID: string | undefined,
   rawGame: OptionalId<WithId<BlowGame>>
@@ -17,12 +22,12 @@ export function buildBlowGameView(
   userID: string | undefined,
   rawGame: OptionalId<WithId<BlowGame>>,
   withState: true
-): BlowGameView & { state: IBlowState }
+): BlowGameStore
 export function buildBlowGameView(
   userID: string | undefined,
   rawGame: OptionalId<WithId<BlowGame>>,
   withState?: boolean
-): BlowGameView & { state?: IBlowState } {
+): BlowGameView | BlowGameStore {
   try {
     // Delete the DB `_id` object since its not serializable
     const game = { ...rawGame } as BlowGame
@@ -70,9 +75,10 @@ export function buildBlowGameView(
       challenge: state.challenge,
       players: state.players,
       currentPlayer: findCurrentPlayer(state.players, userID),
+      winner: state.winner,
     }
     if (withState) {
-      return { ...view, state }
+      return { view, store }
     }
     return view
   } catch (e) {

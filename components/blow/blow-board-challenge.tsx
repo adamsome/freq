@@ -5,15 +5,15 @@ import { BlowPlayerView, BlowRoleID } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import { postCommand } from '../../lib/util/fetch-json'
 import { useBlowGame } from '../../lib/util/use-game'
-import BlowPlayerLabel from './blow-player-label'
+import BlowBoardTitle from './blow-board-title'
+import BlowLabel, { BlowLabelItem } from './blow-label'
 import BlowPlayerSeat from './blow-player-seat'
-import BlowRoleLabel from './blow-role-label'
 
 type Props = {
   className?: string
 }
 
-export default function BlowChallengePanel(props: Props) {
+export default function BlowBoardChallenge(props: Props) {
   const { game, mutate } = useBlowGame()
   const [selected, setSelected] = useState<number | undefined>(undefined)
   const [fetching, setFetching] = useState(false)
@@ -39,7 +39,7 @@ export default function BlowChallengePanel(props: Props) {
   }
 
   return (
-    <BlowChallengeContent
+    <BlowBoardChallengeContent
       {...props}
       selected={selected}
       onCardClick={handleCardClick}
@@ -47,12 +47,14 @@ export default function BlowChallengePanel(props: Props) {
   )
 }
 
-interface BlowChallengeContentProps {
+interface BlowBoardChallengeContentProps {
   onCardClick: (rid: BlowRoleID, index: number) => void
   selected?: number
 }
 
-function BlowChallengeContent(props: Props & BlowChallengeContentProps) {
+function BlowBoardChallengeContent(
+  props: Props & BlowBoardChallengeContentProps
+) {
   const { game } = useBlowGame()
   if (!game?.challenge) return null
 
@@ -93,27 +95,21 @@ function BlowChallengeContent(props: Props & BlowChallengeContentProps) {
     ? 'target'
     : undefined
   const targetMsg = getTargetMessage(player, msgResult, challengerLoss)
+  const label: BlowLabelItem[] = [
+    { type: 'player', value: target },
+    'must prove that they actually have',
+    { type: 'role', value: game.challenge.role },
+    'in their hand or they lose a life.',
+  ]
   const handleClick = selectableCards ? onCardClick : undefined
 
   return (
     <div className={cx('flex-center flex-col', className)}>
-      <div className="text-center font-spaced-narrow text-cyan-500 text-xs">
-        CHALLENGE
-      </div>
-
-      <div className="xs:mb-1 text-xl">
-        <LitPlayerLabel
-          className="mr-1"
-          player={challenger}
-          lit={winner === 'challenger'}
-        />
-        <span className="text-gray-400 italic">vs.</span>
-        <LitPlayerLabel
-          className="ml-2"
-          player={target}
-          lit={winner === 'target'}
-        />
-      </div>
+      <BlowBoardTitle
+        title="CHALLENGE"
+        player={[challenger, target]}
+        selected={winner === 'challenger' ? 0 : winner === 'target' ? 1 : null}
+      />
 
       <BlowPlayerSeat
         className="mb-1"
@@ -130,55 +126,18 @@ function BlowChallengeContent(props: Props & BlowChallengeContentProps) {
         cardSelected={cardSelected}
       />
 
-      {!winner && <BlowChallengeDescription />}
-    </div>
-  )
-}
-
-type LitPlayerLabelProps = Props & { player: BlowPlayerView; lit?: boolean }
-
-function LitPlayerLabel({ className, player, lit }: LitPlayerLabelProps) {
-  return (
-    <BlowPlayerLabel
-      className={cx(
-        'mr-1',
-        lit && 'pl-1.5 pr-0.5 py-0 font-light text-black bg-cyan-400 rounded',
-        className
+      {!winner && (
+        <div
+          className={cx(
+            'max-w-xs',
+            'text-center',
+            'font-narrow',
+            'text-gray-400 dark:text-gray-500 text-sm'
+          )}
+        >
+          <BlowLabel label={label} />
+        </div>
       )}
-      value={player}
-    />
-  )
-}
-
-// TODO: Use `BlowLabel` to render
-function BlowChallengeDescription({ className }: Props) {
-  const { game } = useBlowGame()
-  if (!game?.challenge) return null
-
-  const { players, challenge } = game
-
-  const target = players[challenge.target]
-
-  return (
-    <div
-      className={cx(
-        'max-w-xs',
-        'text-center',
-        'font-narrow',
-        'text-gray-400 dark:text-gray-500 text-sm',
-        className
-      )}
-    >
-      <BlowPlayerLabel
-        className="mr-1 text-gray-500 dark:text-gray-400"
-        value={target}
-      />
-      <span className="mr-1">must prove that they actually have </span>
-      <BlowRoleLabel
-        className="mr-0.5 text-gray-500 dark:text-gray-400"
-        value={game.challenge.role}
-      />
-      <span> in their hand or they lose a life.</span>
     </div>
   )
 }

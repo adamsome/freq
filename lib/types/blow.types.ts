@@ -26,7 +26,21 @@ export interface BlowTokenCard {
   value: number
 }
 
-export type BlowToken = BlowTokenCoin | BlowTokenCard
+export interface BlowTokenPlayer {
+  type: 'player'
+  value: BlowPlayerView | string
+}
+
+export interface BlowTokenRole {
+  type: 'role'
+  value: BlowRoleID
+}
+
+export type BlowToken =
+  | BlowTokenCoin
+  | BlowTokenCard
+  | BlowTokenPlayer
+  | BlowTokenRole
 
 export const BLOW_ROLE_ACTION_IDS = [
   'activate_income',
@@ -198,6 +212,7 @@ export type BlowGameView = Omit<BlowGame, 'players'> & {
   /** Map of role action to its state (active, clickable, counter, normal) */
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
   challenge?: BlowChallenge
+  winner?: BlowPlayerView
 }
 
 // TODO: RoleSet's: Determine which roles included in game

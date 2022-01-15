@@ -1,37 +1,37 @@
 import { Db, OptionalId, WithId } from 'mongodb'
-import { CwdPlayerStats } from '../types/cwd.types'
+import { BlowPlayerStats } from '../types/blow.types'
 import { Dict } from '../types/object.types'
 import { connectToDatabase } from '../util/mongodb'
 
-export const fromCwdPlayerStats = (db: Db) =>
-  db.collection<WithId<CwdPlayerStats>>('cwd_player_stats')
+export const fromBlowPlayerStats = (db: Db) =>
+  db.collection<WithId<BlowPlayerStats>>('blow_player_stats')
 
-export async function findManyCwdPlayerStatsByID(
+export async function findManyBlowPlayerStatsByID(
   playerIDs: string[]
-): Promise<Dict<CwdPlayerStats>> {
+): Promise<Dict<BlowPlayerStats>> {
   const { db } = await connectToDatabase()
 
-  const stats = await fromCwdPlayerStats(db)
+  const stats = await fromBlowPlayerStats(db)
     .find({ id: { $in: playerIDs } })
     .toArray()
 
   return stats.reduce((acc, statsRecord) => {
-    const playerStats: OptionalId<WithId<CwdPlayerStats>> = { ...statsRecord }
+    const playerStats: OptionalId<WithId<BlowPlayerStats>> = { ...statsRecord }
     delete playerStats._id
     acc[playerStats.id] = playerStats
     return acc
-  }, {} as Dict<CwdPlayerStats>)
+  }, {} as Dict<BlowPlayerStats>)
 }
 
-export async function upsertManyCwdPlayerStatsByID(
-  playerStats: Dict<CwdPlayerStats>
+export async function upsertManyBlowPlayerStatsByID(
+  playerStats: Dict<BlowPlayerStats>
 ): Promise<void> {
   const { db } = await connectToDatabase()
 
   const playerIDs = Object.keys(playerStats)
   await Promise.all(
     playerIDs.map((id) =>
-      fromCwdPlayerStats(db).updateOne(
+      fromBlowPlayerStats(db).updateOne(
         { id },
         { $set: playerStats[id] },
         { upsert: true }

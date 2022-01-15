@@ -2,17 +2,26 @@
 import type { HTMLAttributes } from 'react'
 import { BlowToken } from '../../lib/types/blow.types'
 import BlowCoin, { BlowCoinProps } from './blow-coin'
+import BlowPlayerLabel from './blow-player-label'
+import BlowRoleLabel from './blow-role-label'
+
+export type BlowLabelItem = string | BlowToken
 
 type Props = HTMLAttributes<HTMLSpanElement> & {
-  label?: string | (string | BlowToken)[]
+  className?: string
+  label?: string | BlowLabelItem[]
   coinProps?: Partial<BlowCoinProps>
 }
 
 const isString = (p: unknown): p is string => typeof p === 'string'
 
 const createPartRenderer =
-  (coinProps: Partial<BlowCoinProps> = {}) =>
-  (p: string | BlowToken, i: number, arr: (string | BlowToken)[]) => {
+  ({ coinProps }: Props) =>
+  (
+    p: string | BlowToken,
+    i: number,
+    arr: (string | BlowToken)[]
+  ): JSX.Element => {
     if (!isString(p)) {
       switch (p.type) {
         case 'coin': {
@@ -22,9 +31,14 @@ const createPartRenderer =
             </BlowCoin>
           )
         }
-        default:
         case 'card': {
           return <span key={i}>{p.value}</span>
+        }
+        case 'player': {
+          return <BlowPlayerLabel key={i} value={p.value} />
+        }
+        case 'role': {
+          return <BlowRoleLabel key={i} value={p.value} />
         }
       }
     }
@@ -39,8 +53,14 @@ const createPartRenderer =
     return <span key={i}>{label}</span>
   }
 
-export default function BlowLabel({ label = '', coinProps, ...props }: Props) {
+export default function BlowLabel(props: Props) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { className, label = '', coinProps, ...spanProps } = props
   const parts = Array.isArray(label) ? label : [label]
-  const renderPart = createPartRenderer(coinProps)
-  return <span {...props}>{parts.map(renderPart)}</span>
+  const renderPart = createPartRenderer(props)
+  return (
+    <span className={className} {...spanProps}>
+      {parts.map(renderPart)}
+    </span>
+  )
 }

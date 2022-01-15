@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getGameTitle } from '../../lib/game'
 import { BlowMessage } from '../../lib/types/blow.types'
 import { CommandError } from '../../lib/types/game.types'
@@ -9,11 +9,16 @@ import Layout from '../layout/layout'
 import LayoutMain from '../layout/layout-main'
 import BlowMessagePanel from './blow-message-panel'
 import BlowPlayersSheet from './blow-players-sheet'
-import BlowGameBoard from './blow-game-board'
+import BlowGameBoard from './blow-board'
 
 export default function BlowLayout() {
   const { game } = useBlowGame()
   const [errors, setErrors] = useState<WithIndex<BlowMessage>[]>([])
+
+  const phase = game?.phase ?? 'prep'
+  useEffect(() => {
+    setErrors([])
+  }, [phase])
 
   const roomUrl =
     game?.type &&

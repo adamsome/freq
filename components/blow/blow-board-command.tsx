@@ -17,7 +17,7 @@ const BUTTON_DEFAULTS: ButtonProps = {
   round: false,
 }
 
-export default function BlowGameCommand({ onError }: Props) {
+export default function BlowBoardCommand({ onError }: Props) {
   const { game } = useBlowGame()
   const { currentPlayer, commands } = game ?? {}
 

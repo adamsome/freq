@@ -7,19 +7,23 @@ import {
 } from '../../types/blow.types'
 import { connectToDatabase } from '../../util/mongodb'
 import { isBlowAction } from '../blow-action-creators'
+import { finalize } from '../blow-action-reducer'
 import { fromBlowGames } from '../blow-game-store'
 import { buildBlowGameView } from '../blow-game-view'
+import { upsertManyBlowPlayerStatsByID } from '../blow-player-stats-store'
+import { updateBlowPlayerStats } from '../blow-stats'
 
 export default async function actionCommand(
   game: BlowGame,
   userID: string,
   action: unknown
 ): Promise<void> {
-  if (game.phase !== 'guess') throw new Error('Can only do action during game.')
-
   if (!isBlowAction(action)) throw new Error('Action is invalid.')
 
-  const view = buildBlowGameView(userID, game)
+  if (game.phase !== 'guess' && action.type !== 'continue-turn')
+    throw new Error('Can only do action during game.')
+
+  const { view, store } = buildBlowGameView(userID, game, true)
   const valid = validateCoreAction(view, action)
 
   if (!valid) return
@@ -31,9 +35,35 @@ export default async function actionCommand(
   if (!action.payload.subject)
     action.payload.subject = findCurrentPlayerIndex(game.players, userID)
 
-  await fromBlowGames(db).updateOne(filter, {
-    $set: { actions: [...game.actions, action] },
-  })
+  const changes: Partial<BlowGame> = {}
+
+  try {
+    store.dispatch(action)
+    store.dispatch(finalize())
+    const { blow: state } = store.getState()
+    view.winner = state.winner
+  } catch (e) {
+    const payload = JSON.stringify(action.payload)
+    console.error(`Error running action '${action.type}' (${payload})`)
+    throw e
+  }
+
+  changes.actions = [...game.actions, action]
+
+  if (view.winner) {
+    changes.phase = 'win'
+    const now = new Date().toISOString()
+    changes.match_finished_at = now
+    changes.round_finished_at = now
+
+    const [roomStats, totalStats] = await updateBlowPlayerStats(view)
+    changes.stats = roomStats
+
+    await fromBlowGames(db).updateOne(filter, { $set: changes })
+    await upsertManyBlowPlayerStatsByID(totalStats)
+  } else {
+    await fromBlowGames(db).updateOne(filter, { $set: changes })
+  }
 }
 
 /**
@@ -80,7 +110,7 @@ function validateCoreAction(view: BlowGameView, action: BlowAction): boolean {
       const msg =
         !value || value.type !== action.type
           ? 'Action no longer available.'
-          : cmd?.disabled
+          : cmd?.disabled && !action.payload.expired
           ? 'Action is disabled.'
           : null
       if (msg) {

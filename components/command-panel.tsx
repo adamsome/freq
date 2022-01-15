@@ -52,11 +52,13 @@ export default function CommandPanel({
     if (fetching) return
 
     const isRight = colIndex > 0
-    if (isRight) {
-      if (cmd.rightDisabled == null) {
-        if (cmd.disabled) return
-      } else if (cmd.rightDisabled === true) return
-    } else if (cmd.disabled) return
+    if (timerExpired == null) {
+      if (isRight) {
+        if (cmd.rightDisabled == null) {
+          if (cmd.disabled) return
+        } else if (cmd.rightDisabled === true) return
+      } else if (cmd.disabled) return
+    }
 
     setFetching(true)
     if (error) {

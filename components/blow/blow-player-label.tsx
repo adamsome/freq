@@ -7,11 +7,17 @@ type Props = {
   className?: string
 }
 
-export default function BlowPlayerLabel({ children, value, className }: Props) {
+export default function BlowPlayerLabel({
+  children,
+  value,
+  className = 'text-gray-500 dark:text-gray-400',
+}: Props) {
   const player = children ?? value
   const label = typeof player === 'string' ? player : player?.name
   return (
-    <span className={cx('font-spaced-narrow font-semibold', className)}>
+    <span
+      className={cx('font-spaced-narrow font-semibold -mr-[0.2em]', className)}
+    >
       {label}
     </span>
   )

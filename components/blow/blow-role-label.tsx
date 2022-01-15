@@ -8,11 +8,17 @@ type Props = {
   className?: string
 }
 
-export default function BlowRoleLabel({ children, value, className }: Props) {
+export default function BlowRoleLabel({
+  children,
+  value,
+  className = 'text-gray-500 dark:text-gray-400',
+}: Props) {
   const role = tryGetBlowRole(children ?? value)
   const label = role ? role.name : children ?? value
   return (
-    <span className={cx('font-spaced-narrow font-semibold', className)}>
+    <span
+      className={cx('font-spaced-narrow font-semibold -mr-[0.2em]', className)}
+    >
       {label}
     </span>
   )

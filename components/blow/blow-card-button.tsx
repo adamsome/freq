@@ -69,7 +69,7 @@ export default function BlowCardButton(props: Props) {
         {children}
       </Component>
 
-      {(selectable || selected != null) && (
+      {(selectable || selected != null) && !killed && (
         <Component
           type={asButton ? 'button' : undefined}
           className={cx(

@@ -2,8 +2,9 @@ import { BlowGameView } from '../../lib/types/blow.types'
 import { CommandError } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'
 import { useBlowGame } from '../../lib/util/use-game'
-import BlowChallengePanel from './blow-challenge-panel'
-import BlowGameCommand from './blow-game-command'
+import BlowBoardChallenge from './blow-board-challenge'
+import BlowBoardCommand from './blow-board-command'
+import BlowBoardWinner from './blow-board-winner'
 import BlowRoleCardGrid from './blow-role-card-grid'
 
 type Props = {
@@ -30,7 +31,7 @@ export default function BlowGameBoard(props: Props) {
 
       {showCommand && (
         <div className="w-full h-12 px-6">
-          <BlowGameCommand onError={props.onError} />
+          <BlowBoardCommand onError={props.onError} />
         </div>
       )}
 
@@ -41,7 +42,10 @@ export default function BlowGameBoard(props: Props) {
 
 function Content({ game }: Props) {
   if (game?.challenge) {
-    return <BlowChallengePanel />
+    return <BlowBoardChallenge />
+  }
+  if (game?.winner) {
+    return <BlowBoardWinner />
   }
   return <BlowRoleCardGrid />
 }

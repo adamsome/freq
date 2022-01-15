@@ -10,7 +10,6 @@ import {
   nextTurn,
   revealChallengeCard,
 } from './blow-action-creators'
-import { getBlowRoleAction } from './blow-role-action-defs'
 import BlowState, { initialBlowState } from './blow-state'
 
 const blowSlice = createSlice({
@@ -71,16 +70,16 @@ const blowSlice = createSlice({
 
         const { cardIndex } = action.payload
         invariant(cardIndex != null, 'Need card index to handle reveal')
-        invariant(state.challenge, 'Need challenge to handle reveal')
-
         const challenge = state.challenge
-        const target = s.getPlayer(challenge.target)
-        const cardRevealed = target.cards[cardIndex]
-        invariant(cardRevealed, "Need player's revealed card to handle reveal")
+        invariant(challenge, 'Need challenge to handle reveal')
 
-        if (!state.challenge.challengerLoss) {
+        if (!challenge.challengerLoss) {
+          const target = s.getPlayer(challenge.target)
+          const cardRevealed = target.cards[cardIndex]
+          invariant(cardRevealed, 'Need revealed card to handle reveal')
+
           // Handle the challenge target revealing card
-          state.challenge.cardIndex = cardIndex
+          challenge.cardIndex = cardIndex
 
           if (cardRevealed === challenge.role) {
             // Handle the challenge target winning the challenge
@@ -106,7 +105,7 @@ const blowSlice = createSlice({
           }
         } else {
           // Handle the challenger who lost revealing their card
-          state.challenge.challengerCardIndex = cardIndex
+          challenge.challengerCardIndex = cardIndex
           // Flip over the losing challenge challenger's chosen card
           const challenger = s.getPlayer(challenge.challenger)
           challenger.cardsKilled[cardIndex] = true
@@ -118,7 +117,7 @@ const blowSlice = createSlice({
         const s = new BlowState(state)
 
         if (state.challenge) {
-          if (state.challenge.challengerLoss) {
+          if (state.challenge.challengerLoss || state.winner) {
             // Done w/ challenge
             delete state.challenge
             s.processRoleActions()
@@ -180,23 +179,19 @@ const blowSlice = createSlice({
       .addCase(activateIncome, (state, action) => {
         new BlowState(state)
           .updateTurnActions(action)
-          .addMessage(`plays ${getBlowRoleAction(action)?.name}`)
+          .addMessage()
           .processRoleActions()
       })
       .addCase(activateExtort, (state, action) => {
         new BlowState(state)
           .updateTurnActions(action)
-          .addMessage(`plays ${getBlowRoleAction(action)?.name}`)
+          .addMessage()
           .processRoleActions()
       })
       .addCase(counterExtort, (state, action) => {
-        const xdef = getBlowRoleAction(action)
-        invariant(xdef?.counter, 'Counter action must have a counter specified')
-        const counter = getBlowRoleAction(xdef?.counter)
-
         new BlowState(state)
           .updateTurnActions(action)
-          .addMessage(`counters ${counter.name}`)
+          .addMessage()
           .processRoleActions()
       }),
 })

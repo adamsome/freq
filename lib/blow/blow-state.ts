@@ -67,6 +67,7 @@ export interface IBlowState {
   counter?: number[]
   turnActions: TurnActions
   challenge?: BlowChallenge
+  winner?: BlowPlayerView
 }
 
 export const initialBlowState: IBlowState = {
@@ -169,7 +170,7 @@ export default class BlowState {
     return pidx
   }
 
-  isPlayerEliminated(idOrIdx: string | number): boolean {
+  isPlayerEliminated(idOrIdx: string | number | BlowPlayerView): boolean {
     return this.getPlayer(idOrIdx).cardsKilled.every(Boolean)
   }
 
@@ -207,6 +208,8 @@ export default class BlowState {
   }
 
   finalize(): this {
+    const alive: BlowPlayerView[] = []
+
     this.s.players.forEach((p, pidx) => {
       const cardsKilled = p.cardsKilled
       const isCurrent = p.id === this.s.userID
@@ -215,25 +218,49 @@ export default class BlowState {
       if (isCurrent) p.current = true
       if (pidx === this.s.active) p.active = true
       if (this.s.counter?.includes(pidx)) p.counter = true
-      if (cardsKilled.every(Boolean)) p.eliminated = true
+      if (this.isPlayerEliminated(p)) {
+        p.eliminated = true
+      } else {
+        alive.push(p)
+      }
 
       // Set all non-current player unkilled cards facedown
-      if (this.s.game.phase !== 'prep' && !isCurrent) {
+      if (this.s.game.phase === 'guess' && !isCurrent) {
         if (!cardsKilled[0]) p.cards[0] = null
         if (!cardsKilled[1]) p.cards[1] = null
       }
     })
+
+    invariant(alive.length !== 0, 'All players cannot be eliminated')
+    if (alive.length === 1) {
+      this.s.winner = alive[0]
+
+      if (!this.s.challenge) {
+        // Set command to Start New Match
+        this.s.commands = [{ type: 'prep_new_match', text: 'New Match' }]
+        this.addMessage('won the match!', { as: this.s.winner.index })
+      }
+    }
+
     return this
   }
 
   // Fluent methods
 
-  addMessage(text: string, { as }: { as?: string | number } = {}): this {
+  addMessage(text?: string, { as }: { as?: string | number } = {}): this {
     const action = this.latestTurnRoleAction
     if (!action) return this
 
+    const counter = action.def.counter
+      ? getBlowRoleAction(action.def.counter)
+      : undefined
+
+    const roleText = counter
+      ? `counters ${counter.name}`
+      : `plays ${action.def.name}`
+
     const date = new Date().toISOString()
-    const msg: BlowMessage = { date, text }
+    const msg: BlowMessage = { date, text: text ?? roleText }
     if (as) {
       msg.subject = as
     } else {
@@ -405,7 +432,7 @@ export default class BlowState {
 
     // Disable Challenge for the player who performed the action
     const pidx = action?.payload?.subject
-    const disable = this.getPlayer(pidx).current
+    const disable = this.getPlayer(pidx).id === this.s.userID
     this.setTimerCommand('challenge', disable)
 
     return this
