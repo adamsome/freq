@@ -140,6 +140,8 @@ export interface BlowActionPayload {
   expired?: boolean
 }
 
+export type BlowRoleAction = PayloadAction<BlowActionPayload, BlowRoleActionID>
+
 export interface BlowAction extends PayloadAction<BlowActionPayload> {
   type: BlowActionID
   payload: BlowActionPayload

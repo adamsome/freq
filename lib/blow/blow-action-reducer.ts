@@ -1,12 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 import invariant from 'tiny-invariant'
 import {
-  activateExtort,
-  activateIncome,
   challenge,
   continueTurn,
-  counterExtort,
   declineCounter,
+  isBlowRoleAction,
   nextTurn,
   revealChallengeCard,
 } from './blow-action-creators'
@@ -176,19 +174,7 @@ const blowSlice = createSlice({
       .addCase(nextTurn, (state) => {
         new BlowState(state).incrementTurn().setActiveMode()
       })
-      .addCase(activateIncome, (state, action) => {
-        new BlowState(state)
-          .updateTurnActions(action)
-          .addMessage()
-          .processRoleActions()
-      })
-      .addCase(activateExtort, (state, action) => {
-        new BlowState(state)
-          .updateTurnActions(action)
-          .addMessage()
-          .processRoleActions()
-      })
-      .addCase(counterExtort, (state, action) => {
+      .addMatcher(isBlowRoleAction, (state, action) => {
         new BlowState(state)
           .updateTurnActions(action)
           .addMessage()

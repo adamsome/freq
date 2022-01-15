@@ -170,7 +170,9 @@ export default class BlowState {
     return pidx
   }
 
-  isPlayerEliminated(idOrIdx: string | number | BlowPlayerView): boolean {
+  isPlayerEliminated(
+    idOrIdx?: string | number | BlowPlayerView | null
+  ): boolean {
     return this.getPlayer(idOrIdx).cardsKilled.every(Boolean)
   }
 
@@ -430,9 +432,11 @@ export default class BlowState {
 
     this.setActionStates()
 
-    // Disable Challenge for the player who performed the action
-    const pidx = action?.payload?.subject
-    const disable = this.getPlayer(pidx).id === this.s.userID
+    const disable =
+      // Disable Challenge for the player who performed the action, and
+      this.getPlayer(action?.payload?.subject).id === this.s.userID ||
+      // For the current player if eliminated
+      this.isPlayerEliminated(this.s.userID)
     this.setTimerCommand('challenge', disable)
 
     return this

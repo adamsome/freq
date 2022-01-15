@@ -4,6 +4,7 @@ import {
   BlowActionID,
   BlowActionPayload,
   BlowCoreActionID,
+  BlowRoleAction,
   BlowRoleActionID,
   BLOW_CORE_ACTION_IDS,
   BLOW_ROLE_ACTION_IDS,
@@ -11,20 +12,6 @@ import {
 import { Command } from '../types/game.types'
 import { isObject } from '../util/object'
 import { isNotEmpty } from '../util/string'
-
-// Role Actions
-
-export const activateIncome = createAction<BlowActionPayload, BlowActionID>(
-  'activate_income'
-)
-
-export const activateExtort = createAction<BlowActionPayload, BlowActionID>(
-  'activate_extort'
-)
-
-export const counterExtort = createAction<BlowActionPayload, BlowActionID>(
-  'counter_extort'
-)
 
 // Core Actions
 
@@ -57,6 +44,14 @@ export function isBlowAction(action: unknown): action is BlowAction {
     isNotEmpty(action.type) &&
     (BLOW_ROLE_ACTION_IDS.includes(action.type as BlowRoleActionID) ||
       BLOW_CORE_ACTION_IDS.includes(action.type as BlowCoreActionID))
+  )
+}
+
+export function isBlowRoleAction(action: unknown): action is BlowRoleAction {
+  return (
+    isObject(action) &&
+    isNotEmpty(action.type) &&
+    BLOW_ROLE_ACTION_IDS.includes(action.type as BlowRoleActionID)
   )
 }
 
