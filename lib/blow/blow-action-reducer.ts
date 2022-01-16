@@ -61,7 +61,7 @@ const blowSlice = createSlice({
         invariant(hasProps, `Missing challenge properties`)
 
         state.challenge = { challenger, target, role }
-        s.setCommand('continue-turn', { disabled: true })
+        s.setCommand('continue_turn', { disabled: true })
       })
       .addCase(revealCard, (state, action) => {
         const s = new BlowState(state)
@@ -115,11 +115,11 @@ const blowSlice = createSlice({
           const target = s.getPlayer(state.pickLossCard.action.payload.target)
           target.cardsKilled[cardIndex] = true
           // This happens at the very end of the turn
-          s.setCommand('next-turn')
+          s.setCommand('next_turn')
           return
         }
 
-        s.setCommand('continue-turn')
+        s.setCommand('continue_turn')
       })
       .addCase(continueTurn, (state, _action) => {
         const s = new BlowState(state)
@@ -139,14 +139,14 @@ const blowSlice = createSlice({
           // Challenge target won challenge, challenger now must lose card
           state.challenge.challengerLoss = true
 
-          s.setCommand('continue-turn', { disabled: true })
+          s.setCommand('continue_turn', { disabled: true })
 
           const pidx = state.challenge.challenger
           const lastRemaining = s.getLastRemainingPlayerCardIndex(pidx)
           if (lastRemaining != null) {
             // Challenger has only one card left: reveal it automatically
             state.challenge.challengerCardIndex = lastRemaining
-            s.setCommand('continue-turn')
+            s.setCommand('continue_turn')
           }
         } else if (state.challenge?.winner === 'challenger') {
           // Challenge target lost challenge

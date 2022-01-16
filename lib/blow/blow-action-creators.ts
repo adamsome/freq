@@ -20,19 +20,19 @@ export const challenge = createAction<BlowActionPayload, BlowActionID>(
 )
 
 export const revealCard = createAction<BlowActionPayload, BlowActionID>(
-  'reveal-card'
+  'reveal_card'
 )
 
 export const nextTurn = createAction<BlowActionPayload, BlowActionID>(
-  'next-turn'
+  'next_turn'
 )
 
 export const declineCounter = createAction<BlowActionPayload, BlowActionID>(
-  'decline-counter'
+  'decline_counter'
 )
 
 export const continueTurn = createAction<BlowActionPayload, BlowActionID>(
-  'continue-turn'
+  'continue_turn'
 )
 
 // Utilities

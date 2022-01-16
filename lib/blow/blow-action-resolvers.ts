@@ -9,12 +9,12 @@ const kill = (s: BlowState, x: BlowActionTurnInfo): BlowState => {
     // Target has only one card left: reveal it automatically
     const target = s.getPlayer(x.payload.target)
     target.cardsKilled[lastRemaining] = true
-    return s.setupPickLossCard(x, lastRemaining).setCommand('next-turn')
+    return s.setupPickLossCard(x, lastRemaining).setCommand('next_turn')
   }
   if (s.isPlayerEliminated(x.payload.target)) {
-    return s.setCommand('next-turn')
+    return s.setCommand('next_turn')
   }
-  return s.setupPickLossCard(x).setCommand('next-turn', { disabled: true })
+  return s.setupPickLossCard(x).setCommand('next_turn', { disabled: true })
 }
 
 const steal =
@@ -22,7 +22,7 @@ const steal =
   (s: BlowState, x: BlowActionTurnInfo): BlowState => {
     invariant(x.payload.target != null, 'Blow action needs a target')
     if (s.isPlayerEliminated(x.payload.target)) {
-      return s.setCommand('next-turn')
+      return s.setCommand('next_turn')
     }
 
     let coins = maxCoins
@@ -33,16 +33,16 @@ const steal =
     return s
       .addCoins(x.payload.target, -coins)
       .addCoins(x.payload.subject, coins)
-      .setCommand('next-turn')
+      .setCommand('next_turn')
   }
 
 const addCoins =
   (coins: number) =>
   (s: BlowState, x: BlowActionTurnInfo): BlowState =>
-    s.addCoins(x.payload.subject, coins).setCommand('next-turn')
+    s.addCoins(x.payload.subject, coins).setCommand('next_turn')
 
 const noop = (s: BlowState, _x: BlowActionTurnInfo): BlowState =>
-  s.setCommand('next-turn')
+  s.setCommand('next_turn')
 
 export const BLOW_ACTION_RESOLVERS: Record<
   BlowRoleActionID,
@@ -51,7 +51,7 @@ export const BLOW_ACTION_RESOLVERS: Record<
   activate_blow: kill,
   activate_explore: (s) => {
     // TODO
-    return s.setCommand('next-turn')
+    return s.setCommand('next_turn')
   },
   activate_extort: addCoins(2),
   activate_income: addCoins(1),

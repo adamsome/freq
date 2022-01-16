@@ -10,9 +10,9 @@ export default function initBlowGame(): BlowGame {
       variant: 'basic',
       timer: {
         challenge: 5,
-        'continue-turn': 5,
-        'next-turn': 5,
-        'decline-counter': 5,
+        continue_turn: 5,
+        next_turn: 5,
+        decline_counter: 5,
       },
     },
     phase: 'prep',

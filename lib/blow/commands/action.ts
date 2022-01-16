@@ -21,7 +21,7 @@ export default async function actionCommand(
 ): Promise<void> {
   if (!isBlowAction(action)) throw new Error('Action is invalid.')
 
-  if (game.phase !== 'guess' && action.type !== 'continue-turn')
+  if (game.phase !== 'guess' && action.type !== 'continue_turn')
     throw new Error('Can only do action during game.')
 
   const { view, store } = buildBlowGameView(userID, game, true)
@@ -99,7 +99,7 @@ function validateCoreAction(view: BlowGameView, action: BlowAction): boolean {
   }
 
   switch (type) {
-    case 'reveal-card': {
+    case 'reveal_card': {
       if (view.challenge) {
         if (view.challenge.challengerLoss) {
           if (view.challenge.challenger !== view.currentPlayer?.index) {
@@ -136,9 +136,9 @@ function validateCoreAction(view: BlowGameView, action: BlowAction): boolean {
     }
     // Regular command panel commands
     case 'challenge':
-    case 'decline-counter':
-    case 'continue-turn':
-    case 'next-turn': {
+    case 'decline_counter':
+    case 'continue_turn':
+    case 'next_turn': {
       const cmd = view.commands[0]
       const value = cmd?.value as BlowAction | undefined
 

@@ -90,15 +90,15 @@ export interface BlowRoleActionDef {
 
 export const BLOW_CORE_ACTION_IDS = [
   'challenge',
-  'reveal-card',
-  'decline-counter',
-  'continue-turn',
-  'next-turn',
+  'reveal_card',
+  'decline_counter',
+  'continue_turn',
+  'next_turn',
 ] as const
 
 export type BlowCoreActionID = typeof BLOW_CORE_ACTION_IDS[number]
 
-export type BlowTimerType = Exclude<BlowCoreActionID, 'reveal-card'>
+export type BlowTimerType = Exclude<BlowCoreActionID, 'reveal_card'>
 
 export function isBlowCoreActionID(id: unknown): id is BlowCoreActionID {
   return (

@@ -325,7 +325,7 @@ export default class BlowState {
         if (this.isPlayerEliminated(x.payload.target)) {
           // If active action target has been eliminated (i.e. through
           // a challenge loss), immediately show next turn timer
-          return this.setActionStates().setCommand('next-turn')
+          return this.setActionStates().setCommand('next_turn')
         }
 
         this.s.counter = [x.payload.target]
@@ -421,19 +421,19 @@ export default class BlowState {
         this.s.commands = createCommand({ value, text, timer }, disabled)
         return this
       }
-      case 'decline-counter': {
+      case 'decline_counter': {
         const value = declineCounter({})
         const text = 'Decline Counter'
         this.s.commands = createCommand({ value, text, timer }, disabled)
         return this
       }
-      case 'continue-turn': {
+      case 'continue_turn': {
         const value = continueTurn({})
         const text = 'Continue'
         this.s.commands = createCommand({ value, text, timer }, disabled)
         return this
       }
-      case 'next-turn': {
+      case 'next_turn': {
         const value = nextTurn({})
         const text = 'Next Turn'
         this.s.commands = createCommand({ value, text, timer }, disabled)
@@ -501,7 +501,7 @@ export default class BlowState {
 
     // Disable decline counter command for non-counterable players
     const disabled = !this.isCounterPlayer
-    this.setCommand('decline-counter', { disabled })
+    this.setCommand('decline_counter', { disabled })
 
     this.setActionStates()
 
