@@ -24,6 +24,8 @@ type Props = {
   card?: BlowCardProps
   cardSelected?: number
   description?: ReactNode
+  targetable?: boolean
+  onClick?: (player: BlowPlayerView) => void
 }
 
 export type BlowPlayerSeatProps = Props

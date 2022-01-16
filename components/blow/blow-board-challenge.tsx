@@ -1,12 +1,16 @@
 import produce from 'immer'
 import React, { useState } from 'react'
-import { revealChallengeCard } from '../../lib/blow/blow-action-creators'
-import { BlowPlayerView, BlowRoleID } from '../../lib/types/blow.types'
+import { revealCard } from '../../lib/blow/blow-action-creators'
+import {
+  BlowLabelItem,
+  BlowPlayerView,
+  BlowRoleID,
+} from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import { postCommand } from '../../lib/util/fetch-json'
 import { useBlowGame } from '../../lib/util/use-game'
 import BlowBoardTitle from './blow-board-title'
-import BlowLabel, { BlowLabelItem } from './blow-label'
+import BlowLabel from './blow-label'
 import BlowPlayerSeat from './blow-player-seat'
 
 type Props = {
@@ -23,7 +27,7 @@ export default function BlowBoardChallenge(props: Props) {
     setSelected(cardIndex)
     setFetching(true)
 
-    const value = revealChallengeCard({ role, cardIndex })
+    const value = revealCard({ role, cardIndex })
 
     try {
       await postCommand(game.type, game.room, 'action', value)
@@ -108,6 +112,7 @@ function BlowBoardChallengeContent(
       <BlowBoardTitle
         title="CHALLENGE"
         player={[challenger, target]}
+        playerSeparator="vs."
         selected={winner === 'challenger' ? 0 : winner === 'target' ? 1 : null}
       />
 
@@ -153,7 +158,9 @@ function getTargetMessage(
         case 'target':
           return 'won & drew a new card'
         case 'challenger':
-          return 'lost a life'
+          return player.cardsKilled.every(Boolean)
+            ? 'were eliminated'
+            : 'lost a life'
         default:
           return 'must reveal a card...'
       }
@@ -162,7 +169,9 @@ function getTargetMessage(
         case 'target':
           return 'won & drew a new card'
         case 'challenger':
-          return 'lost a life'
+          return player.cardsKilled.every(Boolean)
+            ? 'was eliminated'
+            : 'lost a life'
         default:
           return 'is revealing a card...'
       }
@@ -173,14 +182,18 @@ function getTargetMessage(
         case 'target':
           return 'lost & must reveal a card...'
         default:
-          return 'lost a life'
+          return player.cardsKilled.every(Boolean)
+            ? 'were eliminated'
+            : 'lost a life'
       }
     } else {
       switch (winner) {
         case 'target':
           return 'lost & is revealing a card'
         default:
-          return 'lost a life'
+          return player.cardsKilled.every(Boolean)
+            ? 'was eliminated'
+            : 'lost a life'
       }
     }
   }

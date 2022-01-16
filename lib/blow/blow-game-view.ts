@@ -65,16 +65,18 @@ export function buildBlowGameView(
     const { blow: state } = store.getState()
 
     // Create the frontend's game view from the up-to-date game state
-    const view = {
+    const view: BlowGameView = {
       ...game,
       type: 'blow' as GameType,
       roles: state.roles,
       commands: state.commands,
       messages: state.messages,
       actionState: state.actionState,
-      challenge: state.challenge,
       players: state.players,
       currentPlayer: findCurrentPlayer(state.players, userID),
+      pickTarget: state.pickTarget,
+      challenge: state.challenge,
+      pickLossCard: state.pickLossCard,
       winner: state.winner,
     }
     if (withState) {

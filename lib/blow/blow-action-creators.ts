@@ -19,10 +19,9 @@ export const challenge = createAction<BlowActionPayload, BlowActionID>(
   'challenge'
 )
 
-export const revealChallengeCard = createAction<
-  BlowActionPayload,
-  BlowActionID
->('reveal-challenge-card')
+export const revealCard = createAction<BlowActionPayload, BlowActionID>(
+  'reveal-card'
+)
 
 export const nextTurn = createAction<BlowActionPayload, BlowActionID>(
   'next-turn'

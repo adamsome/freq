@@ -26,17 +26,20 @@ export const BLOW_ROLE_ACTIONS_DEFS: Record<
     name: 'Blow',
     label: 'Kill target',
     coins: 7,
+    targetEffect: 'kill',
   },
   activate_kill: {
     id: 'activate_kill',
     name: 'Kill',
     label: 'Kill target',
     coins: 3,
+    targetEffect: 'kill',
   },
   activate_raid: {
     id: 'activate_raid',
     name: 'Raid',
     label: ['Steal', { type: 'coin', value: 2 }],
+    targetEffect: 'steal',
   },
   counter_raid: {
     id: 'counter_raid',

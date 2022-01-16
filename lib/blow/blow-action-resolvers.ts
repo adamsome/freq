@@ -1,18 +1,64 @@
-import { BlowAction, BlowRoleActionID } from '../types/blow.types'
+import invariant from 'tiny-invariant'
+import { BlowActionTurnInfo, BlowRoleActionID } from '../types/blow.types'
 import BlowState from './blow-state'
+
+const kill = (s: BlowState, x: BlowActionTurnInfo): BlowState => {
+  invariant(x.payload.target != null, 'Blow action needs a target')
+  const lastRemaining = s.getLastRemainingPlayerCardIndex(x.payload.target)
+  if (lastRemaining != null) {
+    // Target has only one card left: reveal it automatically
+    const target = s.getPlayer(x.payload.target)
+    target.cardsKilled[lastRemaining] = true
+    return s.setupPickLossCard(x, lastRemaining).setCommand('next-turn')
+  }
+  if (s.isPlayerEliminated(x.payload.target)) {
+    return s.setCommand('next-turn')
+  }
+  return s.setupPickLossCard(x).setCommand('next-turn', { disabled: true })
+}
+
+const steal =
+  (maxCoins: number) =>
+  (s: BlowState, x: BlowActionTurnInfo): BlowState => {
+    invariant(x.payload.target != null, 'Blow action needs a target')
+    if (s.isPlayerEliminated(x.payload.target)) {
+      return s.setCommand('next-turn')
+    }
+
+    let coins = maxCoins
+    const target = s.getPlayer(x.payload.target)
+    if (target.coins < maxCoins) {
+      coins = target.coins
+    }
+    return s
+      .addCoins(x.payload.target, -coins)
+      .addCoins(x.payload.subject, coins)
+      .setCommand('next-turn')
+  }
+
+const addCoins =
+  (coins: number) =>
+  (s: BlowState, x: BlowActionTurnInfo): BlowState =>
+    s.addCoins(x.payload.subject, coins).setCommand('next-turn')
+
+const noop = (s: BlowState, _x: BlowActionTurnInfo): BlowState =>
+  s.setCommand('next-turn')
 
 export const BLOW_ACTION_RESOLVERS: Record<
   BlowRoleActionID,
-  (s: BlowState, x: BlowAction) => BlowState
+  (s: BlowState, x: BlowActionTurnInfo) => BlowState
 > = {
-  activate_blow: (s) => s,
-  activate_explore: (s) => s,
-  activate_extort: (s, x) => s.addCoins(x.payload.subject, 2),
-  activate_income: (s, x) => s.addCoins(x.payload.subject, 1),
-  activate_kill: (s) => s,
-  activate_raid: (s) => s,
-  activate_trade: (s, x) => s.addCoins(x.payload.subject, 3),
-  counter_extort: (s) => s,
-  counter_kill: (s) => s,
-  counter_raid: (s) => s,
+  activate_blow: kill,
+  activate_explore: (s) => {
+    // TODO
+    return s.setCommand('next-turn')
+  },
+  activate_extort: addCoins(2),
+  activate_income: addCoins(1),
+  activate_kill: kill,
+  activate_raid: steal(2),
+  activate_trade: addCoins(3),
+  counter_extort: noop,
+  counter_kill: noop,
+  counter_raid: noop,
 }

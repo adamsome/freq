@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import BlowLayout from '../../components/blow/blow-layout'
+import BlowContainer from '../../components/blow/blow-container'
 import GameGuard from '../../components/game-guard'
 import TeamGameBoard from '../../components/team-game-board'
 import { isTeamGuessGame } from '../../lib/game'
@@ -15,7 +15,7 @@ export default function FreqRoomPage() {
       {isTeamGuessGame(type) ? (
         <TeamGameBoard type={type} />
       ) : type === 'blow' ? (
-        <BlowLayout />
+        <BlowContainer />
       ) : null}
     </GameGuard>
   )

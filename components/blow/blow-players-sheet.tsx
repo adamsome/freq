@@ -1,7 +1,13 @@
 import { BottomSheet } from 'react-spring-bottom-sheet'
+import { CommandError } from '../../lib/types/game.types'
 import BlowPlayerSeatsContainer from './blow-player-seats-container'
 
-export default function BlowPlayersSheet() {
+type Props = {
+  onCommandError?: (error: CommandError) => void
+}
+
+export default function BlowPlayersSheet(props: Props) {
+  const { onCommandError } = props
   return (
     <BottomSheet
       className="freq-disable-scroll"
@@ -18,7 +24,7 @@ export default function BlowPlayersSheet() {
       defaultSnap={({ minHeight }) => minHeight}
     >
       <div className="flex-center px-2 pb-5 full overflow-hidden">
-        <BlowPlayerSeatsContainer />
+        <BlowPlayerSeatsContainer onCommandError={onCommandError} />
       </div>
     </BottomSheet>
   )

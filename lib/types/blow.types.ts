@@ -16,31 +16,42 @@ export const BLOW_PHASES = ['prep', 'guess', 'win'] as const
 
 export type BlowPhase = typeof BLOW_PHASES[number]
 
-export interface BlowTokenCoin {
+interface BlowTokenBase {
+  className?: string
+}
+export interface BlowTokenText extends BlowTokenBase {
+  type: 'text'
+  value: string
+}
+
+export interface BlowTokenCoin extends BlowTokenBase {
   type: 'coin'
   value: number
 }
 
-export interface BlowTokenCard {
+export interface BlowTokenCard extends BlowTokenBase {
   type: 'card'
   value: number
 }
 
-export interface BlowTokenPlayer {
+export interface BlowTokenPlayer extends BlowTokenBase {
   type: 'player'
   value: BlowPlayerView | string
 }
 
-export interface BlowTokenRole {
+export interface BlowTokenRole extends BlowTokenBase {
   type: 'role'
   value: BlowRoleID
 }
 
 export type BlowToken =
+  | BlowTokenText
   | BlowTokenCoin
   | BlowTokenCard
   | BlowTokenPlayer
   | BlowTokenRole
+
+export type BlowLabelItem = string | BlowToken
 
 export const BLOW_ROLE_ACTION_IDS = [
   'activate_income',
@@ -65,6 +76,8 @@ export function isBlowRoleActionID(id: unknown): id is BlowRoleActionID {
   )
 }
 
+export type BlowTargetEffect = 'kill' | 'steal'
+
 export interface BlowRoleActionDef {
   id: BlowRoleActionID
   name?: string
@@ -72,11 +85,12 @@ export interface BlowRoleActionDef {
   description?: string | (string | BlowToken)[]
   coins?: number
   counter?: BlowRoleActionID
+  targetEffect?: BlowTargetEffect
 }
 
 export const BLOW_CORE_ACTION_IDS = [
   'challenge',
-  'reveal-challenge-card',
+  'reveal-card',
   'decline-counter',
   'continue-turn',
   'next-turn',
@@ -84,7 +98,7 @@ export const BLOW_CORE_ACTION_IDS = [
 
 export type BlowCoreActionID = typeof BLOW_CORE_ACTION_IDS[number]
 
-export type BlowTimerType = Exclude<BlowCoreActionID, 'reveal-challenge-card'>
+export type BlowTimerType = Exclude<BlowCoreActionID, 'reveal-card'>
 
 export function isBlowCoreActionID(id: unknown): id is BlowCoreActionID {
   return (
@@ -152,6 +166,7 @@ export interface BlowMessage {
   text: string
   /** Number is player index; String is player ID or '__dealer' for dealer */
   subject?: string | number
+  target?: number
   error?: true
 }
 
@@ -172,6 +187,23 @@ export interface BlowSettings {
   timer: Record<BlowTimerType, number>
 }
 
+export interface BlowActionTurnInfo extends BlowAction {
+  def: BlowRoleActionDef
+  hadChallengeOpportunity?: boolean
+  hadCounterOpportunity?: boolean
+  countersDeclined?: number
+  countered?: boolean
+  paid?: boolean
+}
+
+export interface BlowPickTarget {
+  action: BlowRoleAction
+  description: string | BlowLabelItem[]
+  targets: number[]
+  target?: number
+  fetching?: number
+}
+
 export interface BlowChallenge {
   challenger: number
   target: number
@@ -180,6 +212,11 @@ export interface BlowChallenge {
   cardIndex?: number
   challengerLoss?: true
   challengerCardIndex?: number
+}
+
+export interface BlowPickLossCard {
+  action: BlowActionTurnInfo
+  cardIndex?: number
 }
 
 export interface BlowGame extends BaseGame {
@@ -213,7 +250,9 @@ export type BlowGameView = Omit<BlowGame, 'players'> & {
   messages: BlowMessage[]
   /** Map of role action to its state (active, clickable, counter, normal) */
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
+  pickTarget?: BlowPickTarget
   challenge?: BlowChallenge
+  pickLossCard?: BlowPickLossCard
   winner?: BlowPlayerView
 }
 

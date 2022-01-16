@@ -11,6 +11,7 @@ import { finalize } from '../blow-action-reducer'
 import { fromBlowGames } from '../blow-game-store'
 import { buildBlowGameView } from '../blow-game-view'
 import { upsertManyBlowPlayerStatsByID } from '../blow-player-stats-store'
+import { getBlowRoleAction } from '../blow-role-action-defs'
 import { updateBlowPlayerStats } from '../blow-stats'
 
 export default async function actionCommand(
@@ -44,7 +45,7 @@ export default async function actionCommand(
     view.winner = state.winner
   } catch (e) {
     const payload = JSON.stringify(action.payload)
-    console.error(`Error running action '${action.type}' (${payload})`)
+    console.error(`Error validating action '${action.type}' (${payload})`)
     throw e
   }
 
@@ -77,27 +78,61 @@ function validateCoreAction(view: BlowGameView, action: BlowAction): boolean {
   const type = action.type
 
   if (isBlowRoleActionID(type)) {
-    if (view.actionState[type] !== 'clickable') {
-      throw new Error('Role action is not clickable.')
+    if (view.actionState[type] === 'clickable') return true
+
+    // Validate two-step targetable active actions (i.e. Kill & Steal)
+    const xdef = getBlowRoleAction(type)
+    if (xdef.targetEffect && view.pickTarget) {
+      if (
+        action.payload.target != null &&
+        view.pickTarget.targets.includes(action.payload.target) &&
+        view.pickTarget.action.type === action.type &&
+        view.pickTarget.action.payload.subject === action.payload.subject
+      ) {
+        return true
+      } else {
+        throw new Error('Cannot target that player.')
+      }
     }
-    return true
+
+    throw new Error('Role action is not clickable.')
   }
 
   switch (type) {
-    case 'reveal-challenge-card': {
-      if (!view.challenge) {
-        throw new Error('Can only reveal challenge card during challenge.')
-      }
-      if (view.challenge.challengerLoss) {
-        if (view.challenge.challenger !== view.currentPlayer?.index) {
-          throw new Error('Only challenger can reveal challenge card.')
+    case 'reveal-card': {
+      if (view.challenge) {
+        if (view.challenge.challengerLoss) {
+          if (view.challenge.challenger !== view.currentPlayer?.index) {
+            throw new Error('Only challenger can reveal challenge card.')
+          }
+        } else {
+          if (view.challenge.target !== view.currentPlayer?.index) {
+            throw new Error('Only target can reveal challenge card.')
+          }
         }
-      } else {
-        if (view.challenge.target !== view.currentPlayer?.index) {
-          throw new Error('Only target can reveal challenge card.')
-        }
+        return true
       }
-      return true
+      if (view.pickLossCard) {
+        const targetIdx = view.pickLossCard.action.payload.target
+        if (targetIdx == null) {
+          throw new Error('To reveal, target must be specified.')
+        }
+        if (targetIdx !== view.currentPlayer?.index) {
+          throw new Error('Only target can reveal card.')
+        }
+        const cardIndex = action.payload.cardIndex
+        if (cardIndex == null) {
+          throw new Error('Card must be picked to reveal.')
+        }
+        const target = view.players[targetIdx]
+        if (target?.cardsKilled[cardIndex] !== false) {
+          throw new Error('Card revealed cannot have been previously revealed.')
+        }
+        return true
+      }
+      throw new Error(
+        'Can only reveal card during challenge or pick loss card.'
+      )
     }
     // Regular command panel commands
     case 'challenge':

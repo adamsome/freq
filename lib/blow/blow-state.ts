@@ -6,8 +6,11 @@ import {
   BlowActionState,
   BlowChallenge,
   BlowGame,
+  BlowLabelItem,
   BlowMessage,
+  BlowPickTarget,
   BlowPlayerView,
+  BlowRoleAction,
   BlowRoleActionDef,
   BlowRoleActionID,
   BlowRoleActionPair,
@@ -15,6 +18,8 @@ import {
   BlowRoleID,
   BlowTimerType,
   isBlowRoleActionID,
+  BlowActionTurnInfo,
+  BlowPickLossCard,
 } from '../types/blow.types'
 import { Command } from '../types/game.types'
 import { prngShuffle } from '../util/prng'
@@ -38,18 +43,9 @@ type ActionStatePredicateMap = Partial<
   >
 >
 
-type WithDef<T> = T & {
-  def: BlowRoleActionDef
-  hadChallengeOpportunity?: boolean
-  hadCounterOpportunity?: boolean
-  countersDeclined?: number
-  countered?: boolean
-  paid?: boolean
-}
-
 interface TurnActions {
-  active?: WithDef<BlowAction>
-  counter?: WithDef<BlowAction>
+  active?: BlowActionTurnInfo
+  counter?: BlowActionTurnInfo
 }
 
 export interface IBlowState {
@@ -61,12 +57,13 @@ export interface IBlowState {
   messages: BlowMessage[]
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
   players: BlowPlayerView[]
-  order: number[]
   turn: number
   active?: number
   counter?: number[]
   turnActions: TurnActions
+  pickTarget?: BlowPickTarget
   challenge?: BlowChallenge
+  pickLossCard?: BlowPickLossCard
   winner?: BlowPlayerView
 }
 
@@ -77,7 +74,6 @@ export const initialBlowState: IBlowState = {
   commands: [],
   messages: [],
   players: [],
-  order: [],
   turn: 0,
   turnActions: {},
   actionState: {},
@@ -109,7 +105,13 @@ export default class BlowState {
     return this.counterPlayers.some((p) => p.id === this.s.userID)
   }
 
-  get latestTurnRoleAction(): WithDef<BlowAction> | undefined {
+  get lastMessage(): BlowMessage {
+    const msg = this.s.messages[this.s.messages.length - 1]
+    invariant(msg != null, 'Last message is empty')
+    return msg
+  }
+
+  get latestTurnRoleAction(): BlowActionTurnInfo | undefined {
     const { active, counter } = this.s.turnActions
     return counter ?? active
   }
@@ -180,7 +182,6 @@ export default class BlowState {
 
   init(): this {
     this.s.roles = getBlowRoles(this.s.game.settings.variant) as BlowRoleID[]
-    this.s.order = this.s.game.player_order
 
     // Establish deck of cards, three of each role
     this.s.deck = this.s.roles
@@ -249,35 +250,35 @@ export default class BlowState {
 
   // Fluent methods
 
-  addMessage(text?: string, { as }: { as?: string | number } = {}): this {
-    const action = this.latestTurnRoleAction
-    if (!action) return this
-
-    const counter = action.def.counter
-      ? getBlowRoleAction(action.def.counter)
-      : undefined
-
-    const roleText = counter
-      ? `counters ${counter.name}`
-      : `plays ${action.def.name}`
-
-    const date = new Date().toISOString()
-    const msg: BlowMessage = { date, text: text ?? roleText }
-    if (as) {
-      msg.subject = as
-    } else {
-      const i = action.payload.subject
-      if (i != null) msg.subject = i
-    }
-    this.s.messages.push(msg)
-    return this
-  }
-
   addCoins(
     playerIDOrIdx: string | number | BlowPlayerView | null | undefined,
     coins: number
   ): this {
     this.getPlayer(playerIDOrIdx).coins += coins
+    return this
+  }
+
+  addMessage(text?: string, { as }: { as?: string | number } = {}): this {
+    const action = this.latestTurnRoleAction
+
+    let _text = text ?? ''
+    if (!_text && action) {
+      const counter = action.def.counter
+        ? getBlowRoleAction(action.def.counter)
+        : undefined
+
+      _text = counter ? `counters ${counter.name}` : `plays ${action.def.name}`
+    }
+
+    const date = new Date().toISOString()
+    const msg: BlowMessage = { date, text: _text }
+    if (as) {
+      msg.subject = as
+    } else {
+      const i = action?.payload.subject
+      if (i != null) msg.subject = i
+    }
+    this.s.messages.push(msg)
     return this
   }
 
@@ -299,11 +300,11 @@ export default class BlowState {
     // Go to the next player in turn order that is still alive
     let i = this.playersAlive.length
     do {
-      this.s.turn = (this.s.turn + 1) % this.s.order.length
+      this.s.turn = (this.s.turn + 1) % this.s.game.player_order.length
       i--
       if (i < 0)
         throw new Error(`'incrementTurn': No alive player to increment turn to`)
-    } while (this.isPlayerEliminated(this.s.order[this.s.turn]))
+    } while (this.isPlayerEliminated(this.s.game.player_order[this.s.turn]))
     return this
   }
 
@@ -312,6 +313,25 @@ export default class BlowState {
     const x = counter ?? active
     invariant(x, 'Need role action to process')
     const target = x.payload.target
+
+    // Check if action needs a target
+    if (x.def.targetEffect) {
+      if (x.payload.target == null) {
+        // Show target picker and return
+        return this.setPickTarget(x).setActionStates()
+      } else {
+        delete this.s.pickTarget
+
+        if (this.isPlayerEliminated(x.payload.target)) {
+          // If active action target has been eliminated (i.e. through
+          // a challenge loss), immediately show next turn timer
+          return this.setActionStates().setCommand('next-turn')
+        }
+
+        this.s.counter = [x.payload.target]
+        this.lastMessage.target = x.payload.target
+      }
+    }
 
     // Check if action can be challenged
     if (
@@ -322,8 +342,7 @@ export default class BlowState {
       !getBlowRole(x.payload.role).common
     ) {
       // Challenge
-      this.setChallengeMode()
-      return this
+      return this.setupChallengeMode()
     } else {
       // Action payment happens after the active action challenge opportunity
       if (!active?.paid && active?.def.coins) {
@@ -339,28 +358,23 @@ export default class BlowState {
       // and hasn't already had an opportunity to be countered,
       !x.hadCounterOpportunity &&
       // and has no target, or target wasn't already eliminated,
-      (!target || !this.isPlayerEliminated(target)) &&
+      (target == null || !this.isPlayerEliminated(target)) &&
       // and any of the matches' roles' actions can counter this action
       this.roleActions.some((xdef) => xdef.counter === x.type)
     ) {
       // Counter
-      this.setCounterMode()
-      return this
+      return this.setupCounterMode()
     }
 
-    // Resolve active action if not countered
-    if (!active?.countered) {
-      invariant(active, 'Cannot resolve empty action')
-      invariant(
-        isBlowRoleActionID(active.type),
-        'Cannot resolve w/ non-role action'
-      )
-      BLOW_ACTION_RESOLVERS[active.type](this, active)
-    }
+    const actionToResolve = !active?.countered ? active : counter
+    invariant(actionToResolve, 'Cannot resolve empty action')
+    invariant(
+      isBlowRoleActionID(actionToResolve.type),
+      'Cannot resolve w/ non-role action'
+    )
+    BLOW_ACTION_RESOLVERS[actionToResolve.type](this, actionToResolve)
 
-    this.setActionStates().setTimerCommand('next-turn')
-
-    return this
+    return this.setActionStates()
   }
 
   setActionStates(
@@ -394,87 +408,10 @@ export default class BlowState {
     return this
   }
 
-  setActiveMode(): this {
-    delete this.s.counter
-    delete this.s.challenge
-    this.s.turnActions = {}
-    this.s.active = this.s.order[this.s.turn]
-    this.setTimerCommand('challenge', true)
-
-    const activePlayer = this.s.players[this.s.active]
-    if (this.isActivePlayer) {
-      const canAfford = (xdef: BlowRoleActionDef) =>
-        (activePlayer.coins ?? 0) > (xdef.coins ?? 0)
-
-      this.setActionStates({
-        clickable: (xdef) =>
-          activePlayer.coins >= 10
-            ? // If player has more than 10 coins, forced to play blow action;
-              xdef.id === 'activate_blow'
-            : // Otherwise, can play any non-counter action that they can afford
-              !xdef.counter && canAfford(xdef),
-      })
-    } else {
-      // All actions normal for non-active players
-      this.s.actionState = {}
-    }
-    return this
-  }
-
-  setChallengeMode(): this {
-    const action = this.latestTurnRoleAction
-
-    if (action?.def.counter) {
-      // Set the player who played the counter action as the counter player
-      const pidx = action.payload.subject
-      if (pidx != null) this.s.counter = [pidx]
-    }
-
-    this.setActionStates()
-
-    const disable =
-      // Disable Challenge for the player who performed the action, and
-      this.getPlayer(action?.payload?.subject).id === this.s.userID ||
-      // For the current player if eliminated
-      this.isPlayerEliminated(this.s.userID)
-    this.setTimerCommand('challenge', disable)
-
-    return this
-  }
-
-  setCounterMode(): this {
-    const action = this.latestTurnRoleAction
-    invariant(!action?.def.counter, 'Cannot counter a counter action')
-    invariant(action, 'Cannot counter an empty action')
-
-    action.hadCounterOpportunity = true
-
-    if (action.payload.target != null) {
-      // Active action is targetable, only target can counter
-      this.s.counter = [action.payload.target]
-    } else {
-      // Active action is not targetable, all other alive players can counter
-      this.s.counter = this.playersAlive
-        .filter((p) => p.index !== this.s.active)
-        .map((p) => p.index)
-    }
-
-    // Disable decline counter command for non-counterable players
-    const disable = !this.isCounterPlayer
-    this.setTimerCommand('decline-counter', disable)
-
-    this.setActionStates()
-
-    if (this.isCounterPlayer) {
-      const counterID = action?.def.id
-      this.updateActionStates({
-        clickable: (xdef) => xdef.counter === counterID,
-      })
-    }
-    return this
-  }
-
-  setTimerCommand(type: BlowTimerType, disabled?: boolean): this {
+  setCommand(
+    type: BlowTimerType,
+    { disabled }: { disabled?: boolean } = {}
+  ): this {
     const timer = disabled ? undefined : this.s.game.settings.timer[type] ?? 5
 
     switch (type) {
@@ -505,6 +442,84 @@ export default class BlowState {
     }
   }
 
+  setupActiveMode(): this {
+    delete this.s.counter
+    delete this.s.challenge
+    delete this.s.pickLossCard
+    this.s.turnActions = {}
+    this.s.active = this.s.game.player_order[this.s.turn]
+    this.setCommand('challenge', { disabled: true })
+
+    const activePlayer = this.s.players[this.s.active]
+    if (this.isActivePlayer) {
+      this.setActionStates({
+        clickable: this.makeIsActiveActionClickable(activePlayer),
+      })
+    } else {
+      // All actions normal for non-active players
+      this.s.actionState = {}
+    }
+    return this
+  }
+
+  setupChallengeMode(): this {
+    const action = this.latestTurnRoleAction
+
+    if (action?.def.counter) {
+      // Set the player who played the counter action as the counter player
+      const pidx = action.payload.subject
+      if (pidx != null) this.s.counter = [pidx]
+    }
+
+    this.setActionStates()
+
+    const disabled =
+      !this.s.userID ||
+      // Disable Challenge for the player who performed the action, and
+      this.getPlayer(action?.payload?.subject).id === this.s.userID ||
+      // For the current player if eliminated
+      this.isPlayerEliminated(this.s.userID)
+    return this.setCommand('challenge', { disabled })
+  }
+
+  setupCounterMode(): this {
+    const action = this.latestTurnRoleAction
+    invariant(!action?.def.counter, 'Cannot counter a counter action')
+    invariant(action, 'Cannot counter an empty action')
+
+    action.hadCounterOpportunity = true
+
+    if (action.payload.target != null) {
+      // Active action is targetable, only target can counter
+      this.s.counter = [action.payload.target]
+    } else {
+      // Active action is not targetable, all other alive players can counter
+      this.s.counter = this.playersAlive
+        .filter((p) => p.index !== this.s.active)
+        .map((p) => p.index)
+    }
+
+    // Disable decline counter command for non-counterable players
+    const disabled = !this.isCounterPlayer
+    this.setCommand('decline-counter', { disabled })
+
+    this.setActionStates()
+
+    if (this.isCounterPlayer) {
+      const counterID = action?.def.id
+      this.updateActionStates({
+        clickable: (xdef) => xdef.counter === counterID,
+      })
+    }
+    return this
+  }
+
+  setupPickLossCard(x: BlowActionTurnInfo, cardIndex?: number): this {
+    this.s.pickLossCard = { action: x }
+    if (cardIndex != null) this.s.pickLossCard.cardIndex = cardIndex
+    return this
+  }
+
   shuffle(): this {
     this.s.deck = prngShuffle(this.s.deck)
     return this
@@ -521,5 +536,57 @@ export default class BlowState {
 
   updateActionStates(predicateByState: ActionStatePredicateMap): this {
     return this.setActionStates(predicateByState, { resetState: false })
+  }
+
+  private getActiveTargets(xdef: BlowRoleActionDef): number[] {
+    return (
+      this.playersAlive
+        .filter((p) => p.index !== this.s.active)
+        // If potential tarket has no coins, cannot steal from them
+        .filter((p) => (xdef.targetEffect === 'steal' ? p.coins > 0 : true))
+        .map((p) => p.index)
+    )
+  }
+
+  private makeIsActiveActionClickable(player: BlowPlayerView) {
+    return (xdef: BlowRoleActionDef): boolean => {
+      // Cannot play counters as an active action
+      if (xdef.counter) return false
+
+      // If player has more than 10 coins, forced to play blow action
+      if (player.coins >= 10) return xdef.id === 'activate_blow'
+
+      // If this is a targetable action, only allow if targets are available
+      if (xdef.targetEffect && this.getActiveTargets(xdef).length === 0)
+        return false
+
+      // Cannot play if player cannot affort the action
+      if (xdef.coins && player.coins < xdef.coins) return false
+
+      return true
+    }
+  }
+
+  private setPickTarget(x: BlowActionTurnInfo): this {
+    invariant(isBlowRoleActionID(x.type), 'Target effect must be role action')
+    const action: BlowRoleAction = { type: x.type, payload: x.payload }
+    const verb = x.def.name ?? 'act against'
+    const className = 'text-red-600 dark:text-red-500'
+    const targetText = { type: 'text' as const, value: 'target', className }
+    let description: BlowLabelItem[] = []
+    if (this.isActivePlayer) {
+      description = [`Pick a`, targetText, `to ${verb} below`]
+    } else {
+      const activePlayer = this.activePlayer
+      description = [
+        { type: 'player', value: activePlayer ?? 'Unknown' },
+        `is picking a`,
+        targetText,
+        `to ${verb}...`,
+      ]
+    }
+    const targets = this.getActiveTargets(x.def)
+    this.s.pickTarget = { action, description, targets }
+    return this
   }
 }

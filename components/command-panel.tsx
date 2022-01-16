@@ -12,7 +12,7 @@ type Props = {
   button?: Partial<ButtonProps>
   spacingClassName?: string
   hideError?: boolean
-  onError?: (error: CommandError) => void
+  onCommandError?: (error: CommandError) => void
 }
 
 interface HasPayload {
@@ -27,7 +27,7 @@ export default function CommandPanel({
   button = {},
   spacingClassName,
   hideError,
-  onError,
+  onCommandError,
 }: Props) {
   const { game, mutate } = useGame()
 
@@ -95,7 +95,7 @@ export default function CommandPanel({
       const message = String(data?.message ?? err?.message ?? '')
       console.error(`Error posting command '${cmd.type}'.`, data)
       setError(message)
-      onError?.({ command: cmd, data, message, date: new Date() })
+      onCommandError?.({ command: cmd, data, message, date: new Date() })
     }
 
     setFetching(false)

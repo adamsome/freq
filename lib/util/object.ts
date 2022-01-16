@@ -1,4 +1,7 @@
 /*! chakra-ui v1.2.3 | MIT License | https://github.com/chakra-ui/chakra-ui/blob/develop/packages/utils/src/object.ts */
+
+import { WithIndex } from '../types/object.types'
+
 export function isObject(obj: unknown): obj is Record<string, unknown> {
   return typeof obj === 'object' && obj != null
 }
@@ -47,4 +50,12 @@ export function toTruthMap<T, TKey extends string | number | symbol = string>(
     acc[keyFn(it)] = true
     return acc
   }, {} as Record<TKey, boolean>)
+}
+
+export function withIndex<T extends object>(
+  obj: T,
+  index: number,
+  _arr: T[]
+): WithIndex<T> {
+  return { ...obj, index }
 }

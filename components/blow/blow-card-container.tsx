@@ -11,34 +11,35 @@ import useGame from '../../lib/util/use-game'
 import BlowCard, { BlowCardProps } from './blow-card'
 
 type Props = Omit<BlowCardProps, 'onActionClick'> & {
-  onError?: (error: CommandError) => void
+  onCommandError?: (error: CommandError) => void
 }
 
-export default function BlowCardContainer({ onError, ...props }: Props) {
+export default function BlowCardContainer({ onCommandError, ...props }: Props) {
   const { game, mutate } = useGame()
   const [fetching, setFetching] = useState<BlowRoleActionID | null>(null)
-  const role = props.id
+  const { id: rid } = props
   const fetchingAction =
     fetching ?? (isBlowRoleActionID(game?.fetching) ? game?.fetching : null)
 
-  const handleActionClick = async (id: BlowRoleActionID): Promise<void> => {
-    if (fetching != null || !game || !role) return
-    setFetching(id)
+  const handleActionClick = async (xid: BlowRoleActionID): Promise<void> => {
+    if (fetching != null || !game || !rid) return
+
+    setFetching(xid)
 
     try {
-      const action: BlowAction = { type: id, payload: { role } }
+      const action: BlowAction = { type: xid, payload: { role: rid } }
       await postCommand(game.type, game.room, 'action', action)
       mutate(
         produce((game) => {
-          if (game) game.fetching = id
+          if (game) game.fetching = xid
         }, game)
       )
     } catch (err) {
       const data = err?.data ?? err
       const message = String(data?.message ?? err?.message ?? '')
-      console.error(`Error posting command action ${id}.`, data)
-      const command: Command = { type: 'action', text: id }
-      onError?.({ command, data, message, date: new Date() })
+      console.error(`Error posting command action ${xid}.`, data)
+      const command: Command = { type: 'action', text: xid }
+      onCommandError?.({ command, data, message, date: new Date() })
     }
     setFetching(null)
   }

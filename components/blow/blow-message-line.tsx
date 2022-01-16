@@ -1,6 +1,6 @@
-import { BlowMessage } from '../../lib/types/blow.types'
+import { BlowLabelItem, BlowMessage } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
-import BlowLabel, { BlowLabelItem } from './blow-label'
+import BlowLabel from './blow-label'
 
 type Props = {
   children: BlowMessage

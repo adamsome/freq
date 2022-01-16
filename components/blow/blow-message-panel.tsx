@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { BlowMessage, BlowPlayerView } from '../../lib/types/blow.types'
 import { WithIndex } from '../../lib/types/object.types'
-import { createPropComparer } from '../../lib/util/array'
 import { cx } from '../../lib/util/dom'
 import GameLink from '../game-link'
 import BlowMessageLine from './blow-message-line'
@@ -9,33 +8,21 @@ import BlowMessageLine from './blow-message-line'
 type Props = {
   className?: string
   roomUrl?: string
-  messages?: BlowMessage[]
-  errors: WithIndex<BlowMessage>[]
+  messages?: WithIndex<BlowMessage>[]
   players?: BlowPlayerView[]
 }
-
-const indexComparer = createPropComparer((m: WithIndex<unknown>) => m.index)
 
 export default function BlowMessagePanel({
   className = '',
   roomUrl,
   messages = [],
-  errors,
   players,
 }: Props) {
   const ref = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    if (ref) {
-      ref.current?.scroll({ top: ref.current.scrollHeight, behavior: 'smooth' })
-    }
-    return
-  }, [messages.length, errors.length])
-
-  const allMessages = [
-    ...messages.map((m, index) => ({ ...m, index })),
-    ...errors,
-  ].sort(indexComparer)
+    ref?.current?.scroll({ top: ref.current.scrollHeight, behavior: 'smooth' })
+  }, [messages.length])
 
   const getSubject = (msg: BlowMessage) =>
     msg.subject === '__dealer'
@@ -66,7 +53,8 @@ export default function BlowMessagePanel({
           url={roomUrl}
           button={{ color: 'cyan', bgHover: false }}
         />
-        {allMessages.length > 0 && (
+
+        {messages.length > 0 && (
           <div className={cx('w-full', 'my-2 px-4')}>
             <div
               className={cx('w-full h-px', 'bg-gray-100 dark:bg-gray-900')}
@@ -74,9 +62,9 @@ export default function BlowMessagePanel({
           </div>
         )}
 
-        {allMessages.length > 0 && (
+        {messages.length > 0 && (
           <div className={cx('max-w-sm m-auto px-5 space-y-1.5')}>
-            {allMessages.map((msg) => (
+            {messages.map((msg) => (
               <BlowMessageLine key={msg.index} subject={getSubject(msg)}>
                 {msg}
               </BlowMessageLine>
@@ -85,7 +73,7 @@ export default function BlowMessagePanel({
         )}
       </div>
 
-      {allMessages.length > 0 && (
+      {messages.length > 0 && (
         <div
           className={cx(
             'absolute top-0 left-0 right-3.5',

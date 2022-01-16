@@ -6,7 +6,7 @@ import GameJoinButtons from '../game-join-buttons'
 import SkeletonBox from '../layout/skeleton-box'
 
 type Props = {
-  onError?: (error: CommandError) => void
+  onCommandError?: (error: CommandError) => void
 }
 
 const BUTTON_DEFAULTS: ButtonProps = {
@@ -17,7 +17,7 @@ const BUTTON_DEFAULTS: ButtonProps = {
   round: false,
 }
 
-export default function BlowBoardCommand({ onError }: Props) {
+export default function BlowBoardCommand({ onCommandError }: Props) {
   const { game } = useBlowGame()
   const { currentPlayer, commands } = game ?? {}
 
@@ -35,7 +35,7 @@ export default function BlowBoardCommand({ onError }: Props) {
         variant: 'dim',
       }}
       spacingClassName="m-0 px-0.5 py-0.5 xs:px-1 xs:py-1 sm:px-2 sm:px-2"
-      onError={onError}
+      onCommandError={onCommandError}
     />
   )
 }

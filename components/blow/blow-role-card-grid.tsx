@@ -12,9 +12,10 @@ type Props = {
   className?: string
 }
 
-export default function BlowRoleCardGrid({ className }: Props) {
+export default function BlowRoleCardGrid(props: Props) {
   const { game } = useBlowGame()
   const { currentPlayer, roles, actionState } = game ?? {}
+  const { className } = props
 
   return (
     <div

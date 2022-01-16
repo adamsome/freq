@@ -6,11 +6,12 @@ import BlowPlayerLabel from './blow-player-label'
 type Props = {
   title: string
   player: BlowPlayerView | BlowPlayerView[]
+  playerSeparator?: string
   selected?: number | boolean | null
 }
 
 export default function BlowBoardTitle(props: Props) {
-  const { title, player, selected: rawSelected } = props
+  const { title, player, playerSeparator, selected: rawSelected } = props
   const players = Array.isArray(player) ? player : [player]
   const selected = typeof rawSelected === 'boolean' ? 0 : rawSelected
   return (
@@ -22,7 +23,11 @@ export default function BlowBoardTitle(props: Props) {
       <div className="xs:mb-1 text-xl whitespace-nowrap">
         {players.map((p, i) => (
           <Fragment key={i}>
-            {i !== 0 && <span className="text-gray-400 italic mx-2">vs.</span>}
+            {i !== 0 && playerSeparator && (
+              <span className="text-gray-400 italic mx-2">
+                {playerSeparator}
+              </span>
+            )}
             <LitPlayerLabel player={p} lit={i === selected} />
           </Fragment>
         ))}

@@ -1,3 +1,4 @@
+import { WithIndex } from '../types/object.types'
 import { isNil } from './assertion'
 
 export function arrayEquals<T>(a?: T[], b?: T[]): boolean {
@@ -127,3 +128,7 @@ export const createPropComparer =
     if (order === 'desc') return pa < pb ? 1 : pa > pb ? -1 : 0
     return pa < pb ? -1 : pa > pb ? 1 : 0
   }
+
+export const withIndexComparer = createPropComparer(
+  (m: WithIndex<unknown>) => m.index
+)
