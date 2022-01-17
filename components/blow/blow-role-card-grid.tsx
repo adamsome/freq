@@ -1,8 +1,3 @@
-import {
-  BlowActionState,
-  BlowRoleActionID,
-  BlowRoleID,
-} from '../../lib/types/blow.types'
 import { range } from '../../lib/util/array'
 import { cx } from '../../lib/util/dom'
 import { useBlowGame } from '../../lib/util/use-game'
@@ -13,8 +8,6 @@ type Props = {
 }
 
 export default function BlowRoleCardGrid(props: Props) {
-  const { game } = useBlowGame()
-  const { currentPlayer, roles, actionState } = game ?? {}
   const { className } = props
 
   return (
@@ -26,33 +19,31 @@ export default function BlowRoleCardGrid(props: Props) {
       )}
     >
       {range(0, 6).map((i) => (
-        <BlowRoleCardGridItem
-          key={i}
-          index={i}
-          role={roles?.[i]}
-          cards={currentPlayer?.cards}
-          actionState={actionState}
-        />
+        <BlowRoleCardGridItem key={i} index={i} {...props} />
       ))}
     </div>
   )
 }
 
-type BlowRoleCardBoardGridItemProps = {
-  role?: BlowRoleID
-  cards?: (BlowRoleID | null)[]
-  actionState?: Partial<Record<BlowRoleActionID, BlowActionState>>
-  index: number
-}
+function BlowRoleCardGridItem(props: Props & { index: number }) {
+  const { index } = props
+  const { game } = useBlowGame()
+  const { currentPlayer, roles, actionState } = game ?? {}
 
-function BlowRoleCardGridItem(props: BlowRoleCardBoardGridItemProps) {
-  const { index, role, cards = [], actionState } = props
-  const currentCards = role ? cards.filter((r) => r === role).length : 0
+  const role = roles?.[index]
+  const cards = currentPlayer?.cards ?? []
+  const cardsKilled = currentPlayer?.cardsKilled
+
+  let currentCards = 0
+  if (role && cardsKilled) {
+    currentCards = cards.filter((r, i) => r === role && !cardsKilled[i]).length
+  }
+
   return (
     <BlowCardContainer
       id={role}
       index={index}
-      size="md"
+      size="lg"
       orientation="horizontal"
       variant="faceup"
       actions={actionState}

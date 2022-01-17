@@ -1,15 +1,18 @@
 import type { ReactNode } from 'react'
 import {
   BlowActionState,
+  BlowCardSelection,
   BlowCardSize,
+  BlowCardSource,
   BlowCardVariant,
   BlowPlayerSeatSize,
   BlowPlayerView,
   BlowRoleActionID,
+  BlowRoleID,
 } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import SkeletonBox from '../layout/skeleton-box'
-import { BlowCardProps } from './blow-card'
+import BlowCard, { BlowCardProps } from './blow-card'
 import BlowCardContainer from './blow-card-container'
 import BlowCoin from './blow-coin'
 import BlowPlayerSeatOutline from './blow-player-seat-outline'
@@ -21,8 +24,9 @@ type Props = {
   actions?: Partial<Record<BlowRoleActionID, BlowActionState>>
   size?: BlowPlayerSeatSize
   titleSuffix?: string
+  drawnCards?: (BlowRoleID | null)[]
   card?: BlowCardProps
-  cardSelected?: number
+  cardSelection?: number | BlowCardSelection[]
   description?: ReactNode
   targetable?: boolean
   onClick?: (player: BlowPlayerView) => void
@@ -96,46 +100,109 @@ function BlowPlayerSeatCoins(props: Props) {
   if (player?.coins == null) return null
 
   return (
-    <BlowCoin size="md" showIndividualCoins={false}>
+    <BlowCoin size="lg" showIndividualCoins={false}>
       {player.coins}
     </BlowCoin>
   )
 }
 
 function BlowPlayerSeatHand(props: Props) {
-  const { className, player, size, card = {}, cardSelected, actions } = props
-  const cards = player?.cards
-  const cardSize: BlowCardSize = size === 'lg' ? 'md' : 'sm'
+  const {
+    className,
+    player,
+    size,
+    drawnCards,
+    card = {},
+    cardSelection,
+    actions,
+  } = props
 
-  const getVariant = (i: number): BlowCardVariant =>
+  const cardSize: BlowCardSize = size === 'lg' ? 'lg' : 'sm'
+  const handCx = cx(
+    'flex',
+    size !== 'lg' ? 'space-x-[3px]' : 'space-x-3',
+    className
+  )
+
+  const getVariant = (
+    i: number,
+    cards?: (BlowRoleID | null)[]
+  ): BlowCardVariant =>
     cards?.[i] === undefined
       ? 'empty'
       : cards?.[i] === null
       ? 'facedown'
       : 'faceup'
 
-  const getCardDefaults = (i: number): BlowCardProps => {
-    const variant = getVariant(i)
+  const getCardDefaults = (
+    i: number,
+    source: BlowCardSource = 'hand'
+  ): BlowCardProps => {
+    const cards = source === 'drawn' ? drawnCards : player?.cards
+    const cardsKilled =
+      source === 'drawn' ? [false, false] : player?.cardsKilled
+
+    const variant = getVariant(i, cards)
     const id = cards?.[i]
-    const cardsKilled = player?.cardsKilled ?? [false, false]
-    const killed = cardsKilled[i]
+    const killed = (cardsKilled ?? [false, false])[i]
     const props = { id, index: i, size: cardSize, variant, actions, killed }
-    const cardsProps = { ...props, ...card }
-    if (cardSelected === i) cardsProps.selected = true
+    const { onClick: rawOnClick, ...rest } = card
+    const onClick = rawOnClick
+      ? (id: BlowRoleID, i: number, rawSource?: BlowCardSource) =>
+          rawOnClick?.(id, i, rawSource ?? source)
+      : undefined
+    const cardsProps = { ...props, ...rest, onClick }
+
+    const isSelected =
+      typeof cardSelection === 'number'
+        ? cardSelection === i
+        : cardSelection?.some((s) => s.index === i && s.type === source)
+    if (isSelected) cardsProps.selected = true
+
     return cardsProps
   }
 
   return (
     <div
-      className={cx(
-        'flex',
-        size !== 'lg' ? 'space-x-[3px]' : 'space-x-3',
-        className
-      )}
+      className={cx({
+        'w-full flex-center flex-col': drawnCards?.length,
+      })}
     >
-      {[0, 1].map((i) => (
-        <BlowCardContainer key={i} {...getCardDefaults(i)} />
-      ))}
+      {drawnCards && drawnCards.length > 0 && (
+        <div className={handCx}>
+          {drawnCards?.map((_, i) => (
+            <BlowCard key={i} {...getCardDefaults(i, 'drawn')} />
+          ))}
+        </div>
+      )}
+
+      {drawnCards && drawnCards.length > 0 && (
+        <div
+          className={cx(
+            'mt-0.5 mb-3',
+            'font-normal text-xs text-gray-400 dark:text-gray-600'
+          )}
+        >
+          DRAWN CARDS
+        </div>
+      )}
+
+      <div className={handCx}>
+        {[0, 1].map((i) => (
+          <BlowCardContainer key={i} {...getCardDefaults(i)} />
+        ))}
+      </div>
+
+      {drawnCards && drawnCards.length > 0 && (
+        <div
+          className={cx(
+            'mt-0.5',
+            'font-normal text-xs text-gray-400 dark:text-gray-600'
+          )}
+        >
+          CURRENT HAND
+        </div>
+      )}
     </div>
   )
 }

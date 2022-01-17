@@ -20,8 +20,10 @@ import {
   isBlowRoleActionID,
   BlowActionTurnInfo,
   BlowPickLossCard,
+  BlowDrawCards,
 } from '../types/blow.types'
 import { Command } from '../types/game.types'
+import { range } from '../util/array'
 import { prngShuffle } from '../util/prng'
 import {
   challenge,
@@ -63,6 +65,7 @@ export interface IBlowState {
   turnActions: TurnActions
   pickTarget?: BlowPickTarget
   challenge?: BlowChallenge
+  drawCards?: BlowDrawCards
   pickLossCard?: BlowPickLossCard
   winner?: BlowPlayerView
 }
@@ -243,6 +246,11 @@ export default class BlowState {
         this.s.commands = [{ type: 'prep_new_match', text: 'New Match' }]
         this.addMessage('won the match!', { as: this.s.winner.index })
       }
+    }
+
+    // Hide the drawn cards for selection except if this is the active player
+    if (this.s.drawCards && !this.isActivePlayer) {
+      this.s.drawCards.drawnCards = this.s.drawCards.drawnCards.map(() => null)
     }
 
     return this
@@ -445,6 +453,7 @@ export default class BlowState {
   setupActiveMode(): this {
     delete this.s.counter
     delete this.s.challenge
+    delete this.s.drawCards
     delete this.s.pickLossCard
     this.s.turnActions = {}
     this.s.active = this.s.game.player_order[this.s.turn]
@@ -511,6 +520,12 @@ export default class BlowState {
         clickable: (xdef) => xdef.counter === counterID,
       })
     }
+    return this
+  }
+
+  setupDrawCard(x: BlowActionTurnInfo, cardCount: number): this {
+    const cards = range(0, cardCount).map(() => this.drawCard())
+    this.s.drawCards = { action: x, drawnCards: cards }
     return this
   }
 

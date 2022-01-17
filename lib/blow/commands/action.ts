@@ -6,7 +6,10 @@ import {
   isBlowRoleActionID,
 } from '../../types/blow.types'
 import { connectToDatabase } from '../../util/mongodb'
-import { isBlowAction } from '../blow-action-creators'
+import {
+  isActionWithBlowDrawSelectionPaylod,
+  isBlowAction,
+} from '../blow-action-creators'
 import { finalize } from '../blow-action-reducer'
 import { fromBlowGames } from '../blow-game-store'
 import { buildBlowGameView } from '../blow-game-view'
@@ -41,8 +44,8 @@ export default async function actionCommand(
   try {
     store.dispatch(action)
     store.dispatch(finalize())
-    const { blow: state } = store.getState()
-    view.winner = state.winner
+    const { blow: futureState } = store.getState()
+    view.winner = futureState.winner
   } catch (e) {
     const payload = JSON.stringify(action.payload)
     console.error(`Error validating action '${action.type}' (${payload})`)
@@ -133,6 +136,40 @@ function validateCoreAction(view: BlowGameView, action: BlowAction): boolean {
       throw new Error(
         'Can only reveal card during challenge or pick loss card.'
       )
+    }
+    case 'select_cards': {
+      const drawCards = view.drawCards
+      if (!drawCards) {
+        throw new Error('Can only select cards while drawing.')
+      }
+      if (!isActionWithBlowDrawSelectionPaylod(action)) {
+        throw new Error('`select_cards` action is malformed.')
+      }
+      const player = view.currentPlayer
+      if (!player) {
+        throw new Error('Must be logged in to select cards')
+      }
+      if (player.index !== drawCards.action.payload.subject) {
+        throw new Error('Only active player can select cards.')
+      }
+      const handCards = player.cardsKilled
+      const aliveCards = handCards.filter((k) => !k) ?? []
+      if (action.payload.length !== aliveCards.length) {
+        throw new Error('Must select same number of cards as were in hand.')
+      }
+      const validSelection = action.payload.every((s) => {
+        if (s.type === 'hand') {
+          return (
+            player.cardsKilled[s.index] !== true &&
+            player.cards[s.index] != null
+          )
+        } else if (s.type === 'drawn') {
+          return drawCards.drawnCards[s.index] != null
+        }
+      })
+      if (validSelection) return true
+
+      throw new Error('Selected cards do not match hand or drawn cards.')
     }
     // Regular command panel commands
     case 'challenge':

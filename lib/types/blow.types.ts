@@ -84,6 +84,7 @@ export interface BlowRoleActionDef {
   label?: string | (string | BlowToken)[]
   description?: string | (string | BlowToken)[]
   coins?: number
+  cards?: number
   counter?: BlowRoleActionID
   targetEffect?: BlowTargetEffect
 }
@@ -91,14 +92,18 @@ export interface BlowRoleActionDef {
 export const BLOW_CORE_ACTION_IDS = [
   'challenge',
   'reveal_card',
-  'decline_counter',
   'continue_turn',
+  'decline_counter',
+  'select_cards',
   'next_turn',
 ] as const
 
 export type BlowCoreActionID = typeof BLOW_CORE_ACTION_IDS[number]
 
-export type BlowTimerType = Exclude<BlowCoreActionID, 'reveal_card'>
+export type BlowTimerType = Exclude<
+  BlowCoreActionID,
+  'reveal_card' | 'select_cards'
+>
 
 export function isBlowCoreActionID(id: unknown): id is BlowCoreActionID {
   return (
@@ -174,12 +179,12 @@ export type BlowActionState = 'normal' | 'active' | 'counter' | 'clickable'
 export type BlowActionButtonColor = 'gray' | 'black' | 'cyan'
 
 export type BlowCardVariant = 'empty' | 'facedown' | 'faceup'
-export type BlowCardSize = 'xs' | 'sm' | 'md'
+export type BlowCardSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 export type BlowCardColor = 'gray' | 'cyan'
 
 export type BlowPlayerSeatSize = 'md' | 'lg'
 
-export type BlowCoinSize = 'xs' | 'sm' | 'md'
+export type BlowCoinSize = 'xs' | 'sm' | 'md' | 'lg'
 
 export interface BlowSettings {
   variant: BlowVariantID
@@ -212,6 +217,16 @@ export interface BlowChallenge {
   cardIndex?: number
   challengerLoss?: true
   challengerCardIndex?: number
+}
+
+export type BlowCardSource = 'hand' | 'drawn'
+
+export type BlowCardSelection = { type: BlowCardSource; index: number }
+
+export interface BlowDrawCards {
+  action: BlowActionTurnInfo
+  drawnCards: (BlowRoleID | null)[]
+  selected?: boolean
 }
 
 export interface BlowPickLossCard {
@@ -252,6 +267,7 @@ export type BlowGameView = Omit<BlowGame, 'players'> & {
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
   pickTarget?: BlowPickTarget
   challenge?: BlowChallenge
+  drawCards?: BlowDrawCards
   pickLossCard?: BlowPickLossCard
   winner?: BlowPlayerView
 }

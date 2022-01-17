@@ -57,8 +57,12 @@ export default function BlowActionButton({
   onClick,
 }: Props) {
   const sm = size === 'xs' || size === 'sm'
+  const md = size === 'md'
+  const lg = size === 'lg' || size === 'xl'
   const heightCx = sm
     ? 'h-1'
+    : md
+    ? 'h-4'
     : 'h-[var(--blow-action-button-min-height)] min-h-[var(--blow-action-button-min-height)]'
 
   if (!id) {
@@ -98,8 +102,12 @@ export default function BlowActionButton({
       className={cx(
         'relative align-baseline flex-center group transition',
         'w-full m-0',
-        sm ? 'pt-[0.09375rem]' : 'pl-0.5 py-0.5',
-        sm ? 'text-[2.25px] leading-normal' : 'text-sm',
+        sm ? 'pt-[0.09375rem]' : md ? '-my-px' : 'pl-0.5 py-0.5',
+        sm
+          ? 'text-[2.25px] leading-normal'
+          : md
+          ? 'text-[0.6288625rem]'
+          : 'text-sm',
         !sm && 'rounded-sm',
         heightCx,
         'tracking-normal',
@@ -122,7 +130,7 @@ export default function BlowActionButton({
         ],
         invert ? TEXT.black : TEXT.body,
         invert || state === 'clickable' ? TEXT_OPACITY[100] : TEXT_OPACITY[80],
-        sm ? 'border-0' : 'border',
+        !lg ? 'border-0' : 'border',
         state !== 'clickable' && 'border-transparent dark:border-transparent',
         'focus:outline-none',
         state !== 'normal' && !sm && 'shadow',
@@ -130,7 +138,12 @@ export default function BlowActionButton({
       )}
       onClick={handleClick}
     >
-      <div className={cx('flex self-baseline', sm ? 'w-[3px]' : 'w-[19px]')}>
+      <div
+        className={cx(
+          'flex self-baseline',
+          sm ? 'w-[3px]' : md ? 'w-[14px]' : 'w-[19px]'
+        )}
+      >
         <BlowActionButtonIcon
           action={action}
           counter={counter}
@@ -149,7 +162,7 @@ export default function BlowActionButton({
         <span
           className={cx(
             'transition-all',
-            sm ? 'mr-0' : 'mr-0.5',
+            !lg ? 'mr-0' : 'mr-0.5',
             !counter && 'font-semibold'
           )}
         >
@@ -176,7 +189,7 @@ export default function BlowActionButton({
             counter && 'font-semibold'
           )}
           label={counter?.name ?? action.label}
-          coinProps={{ color, size: sm ? 'xs' : 'sm' }}
+          coinProps={{ color, size: sm ? 'xs' : md ? 'sm' : 'md' }}
         />
       </div>
     </Component>

@@ -22,9 +22,10 @@ export default function BlowCardShape({
         'flex-center': true,
         '[--blow-card-unit:0.1875rem]': size === 'xs',
         '[--blow-card-unit:0.28125rem]': size === 'sm',
-        // Width of 'md' vertical card same as width of 'md' horizontal card
-        '[--blow-card-unit:1.4375rem]': size === 'md' && horizontal,
-        '[--blow-card-unit:2rem]': size === 'md' && !horizontal,
+        '[--blow-card-unit:1.4374rem]': size === 'md',
+        // Width of 'lg' vertical card same as width of 'lg' horizontal card
+        '[--blow-card-unit:1.4375rem]': size === 'lg' && horizontal,
+        '[--blow-card-unit:2rem]': size === 'lg' && !horizontal,
         'w-[calc(var(--blow-card-unit)*5)]': !horizontal,
         'h-[calc(var(--blow-card-unit)*7)]': !horizontal,
         'w-[calc(var(--blow-card-unit)*7)]': horizontal,

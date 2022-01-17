@@ -76,6 +76,7 @@ export function buildBlowGameView(
       currentPlayer: findCurrentPlayer(state.players, userID),
       pickTarget: state.pickTarget,
       challenge: state.challenge,
+      drawCards: state.drawCards,
       pickLossCard: state.pickLossCard,
       winner: state.winner,
     }

@@ -5,6 +5,7 @@ import {
   BlowActionState,
   BlowCardColor,
   BlowCardSize,
+  BlowCardSource,
   BlowCardVariant,
   BlowRoleActionID,
   BlowRoleID,
@@ -30,7 +31,7 @@ type Props = {
   currentCards?: number
   fetching?: BlowRoleActionID | null
   onActionClick?: (id: BlowRoleActionID) => void
-  onClick?: (id: BlowRoleID, i: number) => void
+  onClick?: (id: BlowRoleID, i: number, source?: BlowCardSource) => void
 }
 
 export type BlowCardProps = Props
@@ -60,6 +61,8 @@ function BlowCardContent(props: Props) {
 
   const vertical = orientation !== 'horizontal'
   const sm = size === 'xs' || size === 'sm'
+  const md = size === 'md'
+  const lg = size === 'lg' || size === 'xl'
 
   return (
     <BlowCardContentWrapper {...props} center={role.common}>
@@ -84,8 +87,9 @@ function BlowCardContent(props: Props) {
           'flex flex-col justify-between': role.common,
           'h-full': role.common,
           'space-y-0.5': sm,
-          'space-y-0.5 xs:space-y-1.5': !sm && !vertical,
-          'space-y-3': !sm && vertical,
+          'space-y-2': md,
+          'space-y-0.5 xs:space-y-1.5': lg && !vertical,
+          'space-y-3': lg && vertical,
         })}
       >
         {role.actions.map((a) => (

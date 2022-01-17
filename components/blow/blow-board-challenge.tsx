@@ -128,7 +128,7 @@ function BlowBoardChallengeContent(
           selectable: selectableCards,
           onClick: handleClick,
         }}
-        cardSelected={cardSelected}
+        cardSelection={cardSelected}
       />
 
       {!winner && (

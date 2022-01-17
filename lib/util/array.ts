@@ -132,3 +132,8 @@ export const createPropComparer =
 export const withIndexComparer = createPropComparer(
   (m: WithIndex<unknown>) => m.index
 )
+
+export function allNonNil<T>(arr: (T | null | undefined)[]): arr is T[] {
+  if (!arr || !Array.isArray(arr)) return false
+  return arr.every((it) => it != null)
+}

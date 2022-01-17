@@ -100,7 +100,7 @@ function BlowBoardPickLossCardContent(
           selectable: selectableCards,
           onClick: handleClick,
         }}
-        cardSelected={cardSelected}
+        cardSelection={cardSelected}
       />
     </div>
   )

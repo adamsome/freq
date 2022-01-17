@@ -25,6 +25,8 @@ export default function BlowCardButton(props: Props) {
     onClick,
   } = props
   const sm = size === 'xs' || size === 'sm'
+  const md = size === 'md'
+  const lg = size === 'lg' || size === 'xl'
   const bright = sm || selectable
 
   const asButton = selectable && onClick
@@ -130,7 +132,8 @@ export default function BlowCardButton(props: Props) {
           <IconSvg
             className={cx({
               'w-[14.4295px] h-[16.666px]': sm,
-              'w-[86.577px] h-[100px]': !sm,
+              'w-[62.22721875px] h-[71.875px]': md,
+              'w-[86.577px] h-[100px]': lg,
               'text-red-500/75': true,
             })}
             name="skull"

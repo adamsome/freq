@@ -50,7 +50,7 @@ const getTextColor = (color: BlowActionButtonColor) => {
 
 export default function BlowCoin({
   children,
-  size = 'sm',
+  size = 'md',
   lit,
   color = 'gray',
   dimLabelWhenOne = true,
@@ -72,7 +72,13 @@ export default function BlowCoin({
   const { className = '', ...divProps } = props
 
   const sizeCx =
-    size === 'xs' ? 'w-0.5 h-0.5' : size === 'sm' ? 'w-4 h-3.5' : 'w-6 h-6'
+    size === 'xs'
+      ? 'w-0.5 h-0.5'
+      : size === 'sm'
+      ? 'w-3 h-3'
+      : size === 'md'
+      ? 'w-4 h-3.5'
+      : 'w-6 h-6'
 
   const dim = dimLabelWhenOne && children === 1
 
@@ -84,8 +90,10 @@ export default function BlowCoin({
           size === 'xs'
             ? '-top-0.5 left-0 w-0.5 h-0.5'
             : size === 'sm'
-            ? '-left-0.5 -top-[3px] w-5 h-5'
-            : '-left-0.5 -top-0.5 w-7 h-7',
+            ? '-top-px -left-0.5 w-4 h-4'
+            : size === 'md'
+            ? '-top-[3px] -left-0.5 w-5 h-5'
+            : '-top-0.5 -left-0.5 w-7 h-7',
           'tracking-normal',
           '[background-image:radial-gradient(ellipse_at_center,var(--tw-gradient-from)_0%,var(--tw-gradient-from)_35%,rgb(0_0_0_/_0%)_65%,rgb(0_0_0_/_0%)_100%)]',
           getCoinColor(color, lit),
@@ -103,7 +111,7 @@ export default function BlowCoin({
               dim
                 ? 'text-opacity-20 dark:text-opacity-30'
                 : 'text-opacity-95 dark:text-opacity-95',
-              size === 'sm'
+              size === 'sm' || size === 'md'
                 ? dim
                   ? 'text-[0.7rem]'
                   : 'text-[0.875rem]'

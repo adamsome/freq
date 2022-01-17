@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import invariant from 'tiny-invariant'
+import { BlowCardSource, BlowRoleID } from '../types/blow.types'
+import { allNonNil } from '../util/array'
 import {
   challenge,
   continueTurn,
@@ -7,6 +9,7 @@ import {
   isBlowRoleAction,
   nextTurn,
   revealCard,
+  selectCards,
 } from './blow-action-creators'
 import BlowState, { initialBlowState } from './blow-state'
 
@@ -185,6 +188,56 @@ const blowSlice = createSlice({
           state.commands[0].text = 'Waiting for others...'
           state.commands[0].disabled = true
         }
+      })
+      .addCase(selectCards, (state, action) => {
+        const s = new BlowState(state)
+        const player = s.activePlayer
+        invariant(player, 'Need active player to select cards')
+        invariant(state.drawCards, 'Need to be drawing cards to select cards')
+
+        const drawn = state.drawCards.drawnCards
+        const prev = player.cards
+        const selected = action.payload
+        invariant(allNonNil(drawn), 'Drawn cards cannot be empty')
+        invariant(allNonNil(prev), 'Player cards cannot be empty')
+
+        // Prepare the players next cards, keeping faceup ones in place
+        const next: (BlowRoleID | null)[] = prev.map((c, i) =>
+          player.cardsKilled[i] ? c : null
+        )
+        const discard: BlowRoleID[] = []
+
+        // Of the drawn cards and current hand cards, determine from the active
+        // player's selection which should be kept, and which discarded
+        const partitionIntoKeepOrDiscard = (type: BlowCardSource) => {
+          return (c: BlowRoleID, index: number) => {
+            if (type === 'hand' && player.cardsKilled[index] === true) {
+              // Keep faceup cards in the hand where they are currently
+              next[index] = c
+              return
+            }
+            if (selected.find((s) => s.type === type && s.index === index)) {
+              // Put the selected card in the next available hand spot
+              const i = next[0] == null ? 0 : 1
+              next[i] = c
+              return
+            }
+            discard.push(c)
+          }
+        }
+
+        drawn.forEach(partitionIntoKeepOrDiscard('drawn'))
+        prev.forEach(partitionIntoKeepOrDiscard('hand'))
+
+        // Put the selected cards in the active player's hand
+        player.cards = next
+
+        // Put non-selected cards back in the deck and shuffle
+        discard.forEach((c) => state.deck.push(c))
+        s.shuffle()
+
+        state.drawCards.selected = true
+        s.setCommand('next_turn')
       })
       .addCase(nextTurn, (state) => {
         new BlowState(state).incrementTurn().setupActiveMode()

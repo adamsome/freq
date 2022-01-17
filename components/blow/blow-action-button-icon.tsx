@@ -52,9 +52,11 @@ export default function BlowActionButtonIcon({
   fetching,
 }: Props) {
   const sm = size === 'xs' || size === 'sm'
+  const md = size === 'md'
+  const lg = size === 'lg' || size === 'xl'
 
   if (fetching) {
-    if (sm) return null
+    if (!lg) return null
     return (
       <IconSvg name="spinner" className="w-3 h-3 ml-0.5 text-white" top="3px" />
     )
@@ -66,7 +68,7 @@ export default function BlowActionButtonIcon({
         className="mt-0.5"
         lit
         color={color}
-        size={sm ? 'xs' : 'sm'}
+        size={sm ? 'xs' : md ? 'sm' : 'md'}
         showIndividualCoins={false}
       >
         {action.coins}
@@ -79,11 +81,15 @@ export default function BlowActionButtonIcon({
       <IconSvg
         className={cx(
           'relative transition-all',
-          sm ? 'w-0.5 h-0.5 ml-0' : 'w-3 h-5 ml-0.5',
+          sm
+            ? 'w-0.5 h-0.5 ml-0'
+            : md
+            ? 'w-2.5 h-2.5 ml-0.5'
+            : 'w-3 h-5 ml-0.5',
           getColorClass(action, color),
           getOpacityClass(color)
         )}
-        top={sm ? '-0.5px' : '-1.5px'}
+        top={sm ? '-0.5px' : md ? '3px' : '-1.5px'}
         name="shield"
       />
     )
@@ -92,8 +98,12 @@ export default function BlowActionButtonIcon({
   return (
     <div
       className={cx(
-        'transition-all leading-tight',
-        sm ? 'ml-0' : 'ml-0.5',
+        'transition-all',
+        sm
+          ? 'ml-0 leading-tight'
+          : md
+          ? 'ml-0.5 leading-normal'
+          : 'ml-0.5 leading-tight',
         getColorClass(action, color),
         getOpacityClass(color)
       )}

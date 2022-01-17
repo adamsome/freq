@@ -65,6 +65,7 @@ export const BLOW_ROLE_ACTIONS_DEFS: Record<
     id: 'activate_explore',
     name: 'Explore',
     label: ['Draw', { type: 'card', value: 2 }],
+    cards: 2,
   },
 }
 

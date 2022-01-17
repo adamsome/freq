@@ -5,7 +5,7 @@ import { WithIndex } from '../../lib/types/object.types'
 import { cx } from '../../lib/util/dom'
 import Layout from '../layout/layout'
 import LayoutMain from '../layout/layout-main'
-import BlowGameBoard from './blow-board'
+import BlowBoardLayout from './blow-board-layout'
 import BlowMessagePanel from './blow-message-panel'
 import BlowPlayersSheet from './blow-players-sheet'
 
@@ -49,7 +49,7 @@ export default function BlowLayout(props: Props) {
             'md:max-h-[calc(100vh-theme(spacing.12)-theme(spacing.20))]'
           )}
         >
-          <BlowGameBoard
+          <BlowBoardLayout
             className="full pt-2 xs:pt-3 sm:pt-4"
             // Height of the players sheet's seat grid + chrome
             bottomSpacerClass="min-h-[theme(spacing.48)]"
