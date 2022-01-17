@@ -5,6 +5,7 @@ import beginRound from './commands/begin-round'
 import editPlayer from './commands/edit-player'
 import kickPlayer from './commands/kick-player'
 import prepNewMatch from './commands/prep-new-match'
+import shuffleTeams from './commands/shuffle-teams'
 
 export default async function handleBlowCommand(
   game: BlowGame,
@@ -18,6 +19,9 @@ export default async function handleBlowCommand(
     // Player Commands
     case 'edit_player':
       return await editPlayer(game, userID, value)
+
+    case 'shuffle_teams':
+      return await shuffleTeams(game)
 
     // TODO: Implement player shuffle
     // case 'shuffle_teams':

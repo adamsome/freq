@@ -6,6 +6,7 @@ import { postCommand } from '../../lib/util/fetch-json'
 import { useBlowGame } from '../../lib/util/use-game'
 import SeatGrid from '../layout/seat-grid'
 import BlowPlayerSeat from './blow-player-seat'
+import BlowPlayerSeatsShuffle from './blow-player-seats-shuffle'
 
 type Props = {
   onPlayerClick?: (player: BlowPlayerView) => void
@@ -14,11 +15,9 @@ type Props = {
 
 export default function BlowPlayerSeatsContainer(props: Props) {
   const { game, mutate } = useBlowGame()
+
   const { currentPlayer, pickTarget } = game ?? {}
   const { action, targets, fetching } = pickTarget ?? {}
-  const { onPlayerClick, onCommandError } = props
-
-  const players = preparePlayersArray(game?.players)
 
   const isTargetable = (p?: BlowPlayerView | null): boolean => {
     if (!p) return false
@@ -26,6 +25,8 @@ export default function BlowPlayerSeatsContainer(props: Props) {
     if (!currentPlayer?.active) return false
     return targets?.includes(p.index) ?? false
   }
+
+  const { onPlayerClick, onCommandError } = props
 
   const handlePlayerClick = async (p: BlowPlayerView) => {
     if (!isTargetable(p)) return onPlayerClick?.(p)
@@ -50,41 +51,64 @@ export default function BlowPlayerSeatsContainer(props: Props) {
     }
   }
 
+  const { players: rawPlayers, player_order: order } = game ?? {}
+  const { players, firstPlayerID } = preparePlayersArray(rawPlayers, order)
+
   return (
-    <SeatGrid classNames="max-w-sm [--blow-card-unit:0.28125rem]">
-      {players.map((p, i) => (
-        <BlowPlayerSeat
-          key={p?.id ?? i}
-          player={p}
-          actions={game?.actionState}
-          card={{ color: 'gray' }}
-          targetable={isTargetable(p)}
-          onClick={handlePlayerClick}
-        />
-      ))}
-    </SeatGrid>
+    <>
+      <SeatGrid classNames="max-w-sm [--blow-card-unit:0.28125rem]">
+        {players.map((p, i) => (
+          <BlowPlayerSeat
+            key={p?.id ?? i}
+            player={p}
+            active={p?.id === firstPlayerID}
+            actions={game?.actionState}
+            card={{ color: 'gray' }}
+            targetable={isTargetable(p)}
+            onClick={handlePlayerClick}
+          />
+        ))}
+      </SeatGrid>
+
+      {game?.phase === 'prep' && (
+        <div className="absolute full flex-center">
+          <BlowPlayerSeatsShuffle onCommandError={onCommandError} />
+        </div>
+      )}
+    </>
   )
 }
 
+interface PreparePlayersResult {
+  players: (BlowPlayerView | null | undefined)[]
+  firstPlayerID: string | null
+}
+
 function preparePlayersArray(
-  players?: BlowPlayerView[]
-): (BlowPlayerView | null | undefined)[] {
-  if (!players) {
+  players?: BlowPlayerView[],
+  order?: number[]
+): PreparePlayersResult {
+  if (!players || !order) {
     // Game hasn't loaded yet, set 3 undefined to show loading skeleton
-    return range(0, 3).map(() => undefined)
+    return { players: range(0, 3).map(() => undefined), firstPlayerID: null }
   } else {
     // Game requires a minimum of 3 players
     const size = Math.max(3, players.length)
 
     const playerSeats: (BlowPlayerView | null)[] = []
-    for (let i = 0; i < size; i++) {
-      const p = players[i]
+    for (let seatIndex = 0; seatIndex < size; seatIndex++) {
+      const index: number | undefined = order[seatIndex]
+      const p = index != null ? players[index] : null
       // If no player for this seat, set to null to indicate its empty
-      playerSeats[i] = p != null ? { ...p } : null
+      playerSeats[seatIndex] = p != null ? { ...p } : null
     }
+
+    const firstPlayerID = playerSeats[0] != null ? playerSeats[0].id : null
 
     // Shift the array order so that current player is first
     const i = playerSeats.findIndex((p) => p?.current)
-    return i >= 0 ? shiftOrder(playerSeats, i) : playerSeats
+    const _players = i >= 0 ? shiftOrder(playerSeats, i) : playerSeats
+
+    return { players: _players, firstPlayerID }
   }
 }

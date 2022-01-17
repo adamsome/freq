@@ -21,6 +21,7 @@ type Props = {
   className?: string
   player?: BlowPlayerView | null
   name?: string
+  active?: boolean
   actions?: Partial<Record<BlowRoleActionID, BlowActionState>>
   size?: BlowPlayerSeatSize
   titleSuffix?: string
@@ -73,14 +74,14 @@ function BlowPlayerSeatContent(props: Props) {
 }
 
 function BlowPlayerSeatTitle(props: Props) {
-  const { player, size, name, titleSuffix } = props
+  const { player, size, name, titleSuffix, active } = props
   if (!player) return null
   return (
     <div
       className={cx({
         'mb-1 xs:mb-3': size === 'lg',
         'text-lg': size === 'lg',
-        'text-cyan-600 dark:text-cyan-400': player.active,
+        'text-cyan-600 dark:text-cyan-400': player.active || active,
         'text-red-600 dark:text-red-500': player.counter,
         'text-overflow': true,
       })}
