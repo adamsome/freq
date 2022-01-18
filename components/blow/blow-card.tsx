@@ -128,9 +128,11 @@ function BlowCardContentWrapper({
   size = 'sm',
   selectable,
   selected,
+  currentCards,
   center = false,
 }: ContentWrapperProps) {
   const sm = size === 'xs' || size === 'sm'
+  const hasCard = (currentCards ?? 0) > 0
   return (
     <div
       className={cx({
@@ -140,8 +142,10 @@ function BlowCardContentWrapper({
         'px-1.5 pt-0.5 pb-1.5': !sm && !center,
         'p-1.5': !sm && center,
         'bg-cyan-200 dark:bg-cyan-925': sm,
-        'bg-cyan-100 dark:bg-cyan-975': !sm,
-        'bg-cyan-200 dark:bg-cyan-950': !sm && selected,
+        'bg-cyan-100 dark:bg-cyan-975':
+          !sm && !selected && (!hasCard || selectable),
+        'bg-cyan-200 dark:bg-cyan-950':
+          !sm && (selected || (hasCard && !selectable)),
         'group-hover:bg-cyan-200 dark:group-hover:bg-cyan-950':
           !sm && selectable,
         'transition-colors': !sm && selectable,
