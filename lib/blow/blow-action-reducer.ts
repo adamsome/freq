@@ -187,6 +187,7 @@ const blowSlice = createSlice({
           s.setActionStates()
           state.commands[0].text = 'Waiting for others...'
           state.commands[0].disabled = true
+          state.commands[0].allowExpiredWhenDisabled = true
         }
       })
       .addCase(selectCards, (state, action) => {

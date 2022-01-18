@@ -132,6 +132,11 @@ export interface Command {
   text: string
   type?: CommandType
   disabled?: boolean
+  /** Allows command to be processed even when the command is set to disabled.
+   * Useful, e.g., when we want to allow a timer expired command to still be
+   * processed when the command has been previously set to disabled on click.
+   */
+  allowExpiredWhenDisabled?: boolean
   color?: string
   colorLit?: number
   colorBorder?: number

@@ -182,7 +182,8 @@ function validateCoreAction(view: BlowGameView, action: BlowAction): boolean {
       const msg =
         !value || value.type !== action.type
           ? 'Action no longer available.'
-          : cmd?.disabled && !action.payload.expired
+          : cmd?.disabled &&
+            (!cmd.allowExpiredWhenDisabled || !action.payload.expired)
           ? 'Action is disabled.'
           : null
       if (msg) {
