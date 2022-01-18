@@ -1,4 +1,4 @@
-import { Db, WithId } from 'mongodb'
+import { Db, OptionalUnlessRequiredId } from 'mongodb'
 import { addPlayer, getTeamPlayers, hasPlayer } from '../player'
 import {
   CurrentFreqGameView,
@@ -13,7 +13,8 @@ import createNewFreqGame from './create-new-freq-game'
 import { isCurrentFreqGameView, toFreqGameView } from './freq-game-view'
 import { getNextPsychic } from './freq-psychic'
 
-export const fromGames = (db: Db) => db.collection<WithId<FreqGame>>('games')
+export const fromGames = (db: Db) =>
+  db.collection<OptionalUnlessRequiredId<FreqGame>>('games')
 
 export async function fetchFreqGame(room?: string): Promise<FreqGame | null> {
   const { db } = await connectToDatabase()

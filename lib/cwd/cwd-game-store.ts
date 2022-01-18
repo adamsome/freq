@@ -1,4 +1,4 @@
-import { Db, WithId } from 'mongodb'
+import { Db, OptionalUnlessRequiredId } from 'mongodb'
 import { addPlayer, getTeamPlayers, hasPlayer } from '../player'
 import { CwdGame, CwdGameView, FullCwdGameView } from '../types/cwd.types'
 import { User } from '../types/user.types'
@@ -9,7 +9,7 @@ import createNewCwdGame from './create-new-cwd-game'
 import { toCwdGameView, toFullCwdGameView } from './cwd-game-view'
 
 export const fromCwdGames = (db: Db) =>
-  db.collection<WithId<CwdGame>>('cwd_games')
+  db.collection<OptionalUnlessRequiredId<CwdGame>>('cwd_games')
 
 export async function fetchCwdGame(room?: string): Promise<CwdGame | null> {
   const { db } = await connectToDatabase()

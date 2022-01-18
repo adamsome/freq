@@ -1,10 +1,10 @@
-import { Db, OptionalId, WithId } from 'mongodb'
+import { Db, OptionalUnlessRequiredId } from 'mongodb'
 import { FreqPlayerStats } from '../types/freq.types'
 import { Dict } from '../types/object.types'
 import { connectToDatabase } from '../util/mongodb'
 
 export const fromFreqPlayerStats = (db: Db) =>
-  db.collection<WithId<FreqPlayerStats>>('player_stats')
+  db.collection<OptionalUnlessRequiredId<FreqPlayerStats>>('player_stats')
 
 export async function findManyFreqPlayerStatsByID(
   playerIDs: string[]
@@ -16,7 +16,9 @@ export async function findManyFreqPlayerStatsByID(
     .toArray()
 
   return stats.reduce((acc, statsRecord) => {
-    const playerStats: OptionalId<WithId<FreqPlayerStats>> = { ...statsRecord }
+    const playerStats: OptionalUnlessRequiredId<FreqPlayerStats> = {
+      ...statsRecord,
+    }
     delete playerStats._id
     acc[playerStats.id] = playerStats
     return acc

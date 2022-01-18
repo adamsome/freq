@@ -1,13 +1,16 @@
 import { AfterCallback, UserProfile } from '@auth0/nextjs-auth0'
-import { Db, MatchKeysAndValues, WithId } from 'mongodb'
-import { User } from './types/user.types'
-import { connectToDatabase } from './util/mongodb'
+import { Db, MatchKeysAndValues, OptionalUnlessRequiredId } from 'mongodb'
 import { randomIcon } from './icon'
 import { randomName } from './name'
+import { User } from './types/user.types'
+import { connectToDatabase } from './util/mongodb'
 
-export const fromUsers = (db: Db) => db.collection<WithId<User>>('users')
+export const fromUsers = (db: Db) =>
+  db.collection<OptionalUnlessRequiredId<User>>('users')
 
-export async function fetchUser(id?: string): Promise<WithId<User> | null> {
+export async function fetchUser(
+  id?: string
+): Promise<OptionalUnlessRequiredId<User> | null> {
   const { db } = await connectToDatabase()
   if (!id) {
     return Promise.resolve(null)

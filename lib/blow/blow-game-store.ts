@@ -1,4 +1,4 @@
-import { Db, WithId } from 'mongodb'
+import { Db, OptionalUnlessRequiredId } from 'mongodb'
 import { addPlayer, createPlayer, hasPlayer } from '../player'
 import { BlowGame, BlowGameView } from '../types/blow.types'
 import { User } from '../types/user.types'
@@ -8,7 +8,7 @@ import { buildBlowGameView } from './blow-game-view'
 import initBlowGame from './init-blow-game'
 
 export const fromBlowGames = (db: Db) =>
-  db.collection<WithId<BlowGame>>('blow_games')
+  db.collection<OptionalUnlessRequiredId<BlowGame>>('blow_games')
 
 export async function fetchBlowGame(room?: string): Promise<BlowGame | null> {
   const { db } = await connectToDatabase()
@@ -48,7 +48,7 @@ export async function joinBlowGame(
   }
 
   // Find existing game if it exists
-  let game = await fetchBlowGame(room)
+  let game: BlowGame | null = await fetchBlowGame(room)
   if (!game) {
     // Create new game
     const player = createPlayer(user)
