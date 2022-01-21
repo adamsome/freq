@@ -5,6 +5,8 @@ import { BaseGameView } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
 import Scoreboard from './scoreboard'
 import Title from './control/title'
+import { isBlowGameView } from '../lib/blow/blow-game-view'
+import BlowPlayerSeatsGrid from './blow/blow-player-seats-grid'
 
 type Props = typeof defaultProps & {
   game: BaseGameView
@@ -15,7 +17,7 @@ const defaultProps = {
   className: '',
 }
 
-const formatDate = formatDistanceWithOptions({ addSuffix: true })
+const formatDateDistance = formatDistanceWithOptions({ addSuffix: true })
 
 export default function RoomCard({ game, className, onClick }: Props) {
   const handleClick = (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -31,7 +33,7 @@ export default function RoomCard({ game, className, onClick }: Props) {
 
   if (timestamp) {
     const date = parseISO(timestamp)
-    lastUpdated = formatDate(new Date(), date)
+    lastUpdated = formatDateDistance(new Date(), date)
     lastUpdatedISO = formatISO9075(date)
   }
 
@@ -113,6 +115,8 @@ export default function RoomCard({ game, className, onClick }: Props) {
       >
         {isTeamGuessGame(game.type) ? (
           <Scoreboard game={game} readonly></Scoreboard>
+        ) : isBlowGameView(game) ? (
+          <BlowPlayerSeatsGrid className="m-auto" game={game} />
         ) : (
           <div>Scores not yet implemented.</div>
         )}
