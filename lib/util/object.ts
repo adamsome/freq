@@ -54,8 +54,8 @@ export function toTruthMap<T, TKey extends string | number | symbol = string>(
 
 export function withIndex<T extends object>(
   obj: T,
-  index: number,
+  i: number,
   _arr: T[]
 ): WithIndex<T> {
-  return { ...obj, index }
+  return { ...obj, i }
 }

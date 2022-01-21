@@ -3,6 +3,7 @@ import { BlowMessage, BlowPlayerView } from '../../lib/types/blow.types'
 import { WithIndex } from '../../lib/types/object.types'
 import { cx } from '../../lib/util/dom'
 import GameLink from '../game-link'
+import BlowMessageCurrent from './blow-message-current'
 import BlowMessageLine from './blow-message-line'
 
 type Props = {
@@ -23,13 +24,6 @@ export default function BlowMessagePanel({
   useEffect(() => {
     ref?.current?.scroll({ top: ref.current.scrollHeight, behavior: 'smooth' })
   }, [messages.length])
-
-  const getSubject = (msg: BlowMessage) =>
-    msg.subject === '__dealer'
-      ? 'Dealer'
-      : typeof msg.subject === 'number'
-      ? players?.[msg.subject]?.name
-      : players?.find((p) => p.id === msg.subject)?.name ?? msg.subject
 
   return (
     <div
@@ -63,12 +57,23 @@ export default function BlowMessagePanel({
         )}
 
         {messages.length > 0 && (
-          <div className={cx('max-w-sm m-auto px-5 space-y-1.5')}>
+          <div className={cx('max-w-sm m-auto px-5 space-y-1.5 font-narrow')}>
             {messages.map((msg) => (
-              <BlowMessageLine key={msg.index} subject={getSubject(msg)}>
+              <BlowMessageLine key={msg.i} players={players}>
                 {msg}
               </BlowMessageLine>
             ))}
+
+            <div>
+              <BlowMessageCurrent
+                onChange={() =>
+                  ref?.current?.scroll({
+                    top: ref.current.scrollHeight,
+                    behavior: 'smooth',
+                  })
+                }
+              />
+            </div>
           </div>
         )}
       </div>

@@ -4,10 +4,13 @@ import { isPlayer } from '../player'
 import {
   BlowAction,
   BlowActionState,
+  BlowActionTurnInfo,
   BlowChallenge,
+  BlowDrawCards,
   BlowGame,
   BlowLabelItem,
   BlowMessage,
+  BlowPickLossCard,
   BlowPickTarget,
   BlowPlayerView,
   BlowRoleAction,
@@ -18,12 +21,9 @@ import {
   BlowRoleID,
   BlowTimerType,
   isBlowRoleActionID,
-  BlowActionTurnInfo,
-  BlowPickLossCard,
-  BlowDrawCards,
 } from '../types/blow.types'
 import { Command } from '../types/game.types'
-import { range } from '../util/array'
+import { asArray, range } from '../util/array'
 import { prngShuffle } from '../util/prng'
 import {
   challenge,
@@ -244,7 +244,10 @@ export default class BlowState {
       if (!this.s.challenge) {
         // Set command to Start New Match
         this.s.commands = [{ type: 'prep_new_match', text: 'New Match' }]
-        this.addMessage('won the match!', { as: this.s.winner.index })
+
+        const winnerIndex = this.s.winner.index
+        const winnerToken = { type: 'player' as const, value: winnerIndex }
+        this.addMessage([winnerToken, 'won the match!'])
       }
     }
 
@@ -266,27 +269,43 @@ export default class BlowState {
     return this
   }
 
-  addMessage(text?: string, { as }: { as?: string | number } = {}): this {
-    const action = this.latestTurnRoleAction
+  addActionMessage(): this {
+    const { active, counter } = this.s.turnActions
+    const action = counter ?? active
+    invariant(action != null, 'Need action to write action message')
 
-    let _text = text ?? ''
-    if (!_text && action) {
-      const counter = action.def.counter
-        ? getBlowRoleAction(action.def.counter)
-        : undefined
+    const subject = action?.payload.subject
+    invariant(subject != null, 'Need player to write action message')
 
-      _text = counter ? `counters ${counter.name}` : `plays ${action.def.name}`
-    }
+    const player: BlowLabelItem = { type: 'player', value: subject }
+    const text: BlowLabelItem[] = [player]
 
-    const date = new Date().toISOString()
-    const msg: BlowMessage = { date, text: _text }
-    if (as) {
-      msg.subject = as
+    const role = action.payload.role
+    invariant(role != null, 'Need role to write counter action message')
+
+    if (counter && active) {
+      if (counter.addedMessage) return this
+      counter.addedMessage = true
+
+      text.push('counters w/ ', {
+        type: 'action',
+        value: counter.def.id,
+        role,
+      })
     } else {
-      const i = action?.payload.subject
-      if (i != null) msg.subject = i
+      if (action.addedMessage) return this
+      action.addedMessage = true
+
+      text.push('plays', { type: 'action', value: action.def.id, role })
     }
-    this.s.messages.push(msg)
+
+    this.s.messages.push({ text, i: this.s.messages.length })
+
+    return this
+  }
+
+  addMessage(text: BlowLabelItem | BlowLabelItem[], _date?: string): this {
+    this.s.messages.push({ text, i: this.s.messages.length })
     return this
   }
 
@@ -324,20 +343,28 @@ export default class BlowState {
 
     // Check if action needs a target
     if (x.def.targetEffect) {
-      if (x.payload.target == null) {
+      if (target == null) {
         // Show target picker and return
         return this.setPickTarget(x).setActionStates()
       } else {
         delete this.s.pickTarget
 
-        if (this.isPlayerEliminated(x.payload.target)) {
+        if (this.isPlayerEliminated(target)) {
           // If active action target has been eliminated (i.e. through
           // a challenge loss), immediately show next turn timer
           return this.setActionStates().setCommand('next_turn')
         }
 
-        this.s.counter = [x.payload.target]
-        this.lastMessage.target = x.payload.target
+        this.s.counter = [target]
+
+        if (!x.addedTargetMessage && !x.def.counter) {
+          // Add targeting to latest message
+          x.addedTargetMessage = true
+          let text = this.lastMessage.text
+          if (!Array.isArray(text)) text = asArray(text)
+          const player = { type: 'player' as const, value: target }
+          text.push('targeting', player)
+        }
       }
     }
 
@@ -545,7 +572,7 @@ export default class BlowState {
     invariant(isBlowRoleActionID(x.type), `Action '${x.type} not a role action`)
     const def = getBlowRoleAction(x.type)
     const key = !def.counter ? 'active' : 'counter'
-    this.s.turnActions[key] = { ...x, def }
+    this.s.turnActions[key] = { ...(this.s.turnActions[key] ?? {}), ...x, def }
     return this
   }
 

@@ -36,12 +36,18 @@ export interface BlowTokenCard extends BlowTokenBase {
 
 export interface BlowTokenPlayer extends BlowTokenBase {
   type: 'player'
-  value: BlowPlayerView | string
+  value: BlowPlayerView | string | number
 }
 
 export interface BlowTokenRole extends BlowTokenBase {
   type: 'role'
   value: BlowRoleID
+}
+
+export interface BlowTokenRoleAction extends BlowTokenBase {
+  type: 'action'
+  value: BlowRoleActionID
+  role: BlowRoleID
 }
 
 export type BlowToken =
@@ -50,6 +56,7 @@ export type BlowToken =
   | BlowTokenCard
   | BlowTokenPlayer
   | BlowTokenRole
+  | BlowTokenRoleAction
 
 export type BlowLabelItem = string | BlowToken
 
@@ -167,11 +174,9 @@ export interface BlowAction extends PayloadAction<BlowActionPayload> {
 }
 
 export interface BlowMessage {
-  date: string
-  text: string
-  /** Number is player index; String is player ID or '__dealer' for dealer */
-  subject?: string | number
-  target?: number
+  text: BlowLabelItem | BlowLabelItem[]
+  /** Index of the associated action */
+  i: number
   error?: true
 }
 
@@ -194,6 +199,8 @@ export interface BlowSettings {
 
 export interface BlowActionTurnInfo extends BlowAction {
   def: BlowRoleActionDef
+  addedTargetMessage?: boolean
+  addedMessage?: boolean
   hadChallengeOpportunity?: boolean
   hadCounterOpportunity?: boolean
   countersDeclined?: number
@@ -265,6 +272,10 @@ export type BlowGameView = Omit<BlowGame, 'players'> & {
   messages: BlowMessage[]
   /** Map of role action to its state (active, clickable, counter, normal) */
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
+  /** Index of player who can play the active action this turn */
+  active?: number
+  /** Index of player(s) who can play the counter action this turn */
+  counter?: number[]
   pickTarget?: BlowPickTarget
   challenge?: BlowChallenge
   drawCards?: BlowDrawCards

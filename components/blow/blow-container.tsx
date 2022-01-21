@@ -7,8 +7,9 @@ export default function BlowContainer() {
   const { game } = useBlowGame()
   const { messages: rawMessages = [], players, room } = game ?? {}
 
+  const last = rawMessages[rawMessages.length - 1]
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const memoedMessages = useMemo(() => rawMessages, [rawMessages.length])
+  const memoedMessages = useMemo(() => rawMessages, [rawMessages.length, last])
 
   const [messages, addError, resetErrors] =
     useSortedListWithExtras(memoedMessages)
@@ -24,9 +25,7 @@ export default function BlowContainer() {
       messages={messages}
       players={players}
       room={room}
-      onCommandError={(e) =>
-        addError({ date: e.date.toISOString(), text: e.message, error: true })
-      }
+      onCommandError={(e) => addError({ text: e.message, i: 0, error: true })}
     />
   )
 }

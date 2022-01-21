@@ -37,12 +37,12 @@ export const BLOW_ROLE_DEFS: Record<BlowRoleID, BlowRoleDef> = {
   },
 }
 
-export function getBlowRole(rid: BlowRoleID): BlowRoleDef {
-  return BLOW_ROLE_DEFS[rid]
-}
-
-export function tryGetBlowRole(
-  rid: string | BlowRoleID = ''
+export function getBlowRole(rid: BlowRoleID): BlowRoleDef
+export function getBlowRole(
+  rid: BlowRoleID | string | undefined
+): BlowRoleDef | undefined
+export function getBlowRole(
+  rid: BlowRoleID | string | undefined
 ): BlowRoleDef | undefined {
   return BLOW_ROLE_DEFS[rid as BlowRoleID]
 }

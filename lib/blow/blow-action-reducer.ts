@@ -22,13 +22,13 @@ const blowSlice = createSlice({
     },
     shuffle(state) {
       new BlowState(state)
-        .addMessage('Shuffling cards', { as: '__dealer' })
+        .addMessage([{ type: 'player', value: 'Dealer' }, 'shuffled the cards'])
         .shuffle()
     },
     deal(state) {
-      const text = `Dealing cards to ${state.game.players.length} players`
+      const text = `dealt cards to ${state.game.players.length} players`
       new BlowState(state)
-        .addMessage(text, { as: '__dealer' })
+        .addMessage([{ type: 'player', value: 'Dealer' }, text])
         .deal()
         .setupActiveMode()
     },
@@ -60,11 +60,17 @@ const blowSlice = createSlice({
         const target = latestRoleAction?.payload.subject
         const role = latestRoleAction?.payload.role
 
-        const hasProps = challenger != null && target != null && role
+        const hasProps = challenger != null && target != null && role != null
         invariant(hasProps, `Missing challenge properties`)
 
         state.challenge = { challenger, target, role }
-        s.setCommand('continue_turn', { disabled: true })
+        s.addMessage([
+          { type: 'player', value: challenger },
+          'challenges',
+          { type: 'player', value: target },
+          'over',
+          { type: 'role', value: role },
+        ]).setCommand('continue_turn', { disabled: true })
       })
       .addCase(revealCard, (state, action) => {
         const s = new BlowState(state)
@@ -91,6 +97,13 @@ const blowSlice = createSlice({
               s.shuffle()
               target.cards[cardIndex] = s.drawCard()
 
+              s.addMessage([
+                { type: 'player', value: challenge.target },
+                'has',
+                { type: 'role', value: challenge.role },
+                'and wins challenge',
+              ])
+
               // If target was the counter action, active action now countered
               const latestRoleAction = s.latestTurnRoleAction
               invariant(latestRoleAction, 'No turn role action')
@@ -103,6 +116,15 @@ const blowSlice = createSlice({
               challenge.winner = 'challenger'
               // Flip over the losing challenge target's chosen card
               target.cardsKilled[cardIndex] = true
+
+              s.addMessage([
+                { type: 'player', value: challenge.target },
+                "doesn't have",
+                { type: 'role', value: challenge.role },
+                target.cardsKilled.every(Boolean)
+                  ? 'is eliminated'
+                  : 'and loses challenge',
+              ])
             }
           } else {
             // Handle the challenger who lost revealing their card
@@ -145,11 +167,18 @@ const blowSlice = createSlice({
           s.setCommand('continue_turn', { disabled: true })
 
           const pidx = state.challenge.challenger
-          const lastRemaining = s.getLastRemainingPlayerCardIndex(pidx)
-          if (lastRemaining != null) {
+          const lastRemainingIndex = s.getLastRemainingPlayerCardIndex(pidx)
+          if (lastRemainingIndex != null) {
             // Challenger has only one card left: reveal it automatically
-            state.challenge.challengerCardIndex = lastRemaining
-            s.setCommand('continue_turn')
+            state.challenge.challengerCardIndex = lastRemainingIndex
+            // Flip over the losing challenge challenger's chosen card
+            const challenger = s.getPlayer(state.challenge.challenger)
+            challenger.cardsKilled[lastRemainingIndex] = true
+
+            s.addMessage([
+              { type: 'player', value: state.challenge.challenger },
+              'loses last card & is eliminated',
+            ]).setCommand('continue_turn')
           }
         } else if (state.challenge?.winner === 'challenger') {
           // Challenge target lost challenge
@@ -246,7 +275,7 @@ const blowSlice = createSlice({
       .addMatcher(isBlowRoleAction, (state, action) => {
         new BlowState(state)
           .updateTurnActions(action)
-          .addMessage()
+          .addActionMessage()
           .processRoleActions()
       }),
 })

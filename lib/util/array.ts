@@ -12,14 +12,20 @@ export function arrayEquals<T>(a?: T[], b?: T[]): boolean {
   return true
 }
 
-export function asArray<T>(arrayOrElement?: T | T[] | null): T[] | undefined {
+export function asArray<T>(arrayOrElement: T | T[]): T[]
+export function asArray<T>(
+  arrayOrElement: T | T[] | null | undefined
+): T[] | undefined
+export function asArray<T>(
+  arrayOrElement: T | T[] | null | undefined
+): T[] | undefined {
   if (arrayOrElement != null) {
     return Array.isArray(arrayOrElement) ? arrayOrElement : [arrayOrElement]
   }
 }
 
 export function head<T>(arrayOrElement?: T | T[] | null): T | undefined {
-  const array = asArray(arrayOrElement)
+  const array = asArray<T>(arrayOrElement)
   return array != null && array.length ? array[0] : undefined
 }
 
@@ -102,7 +108,7 @@ export function reverse<T>(arrayOrElement: T | T[]): T[]
 export function reverse<T>(
   arrayOrElement: T | T[] | null | undefined
 ): T[] | undefined {
-  const array = asArray(arrayOrElement)
+  const array = asArray<T>(arrayOrElement)
   return array != null && array.length ? array.slice().reverse() : undefined
 }
 
@@ -111,7 +117,7 @@ export function tail<T>(arrayOrElement: T | T[]): T[]
 export function tail<T>(
   arrayOrElement: T | T[] | null | undefined
 ): T[] | undefined {
-  const array = asArray(arrayOrElement)
+  const array = asArray<T>(arrayOrElement)
   return array != null && array.length ? array.slice(1) : undefined
 }
 
@@ -130,7 +136,7 @@ export const createPropComparer =
   }
 
 export const withIndexComparer = createPropComparer(
-  (m: WithIndex<unknown>) => m.index
+  (m: WithIndex<unknown>) => m.i
 )
 
 export function allNonNil<T>(arr: (T | null | undefined)[]): arr is T[] {

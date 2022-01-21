@@ -22,9 +22,9 @@ export function useSortedListWithExtras<T extends object>(
   function addExtra(extraItem: T): void {
     const length = list.length ?? 0
     const prevListIndex = length > 0 ? length - 1 : 0
-    const prevExtrasIndex = extras.length ? extras[extras.length - 1].index : 0
-    const index = Math.max(prevListIndex, prevExtrasIndex) + 0.1
-    setExtras([...extras, { ...extraItem, index }])
+    const prevExtrasIndex = extras.length ? extras[extras.length - 1].i : 0
+    const i = Math.max(prevListIndex, prevExtrasIndex) + 0.1
+    setExtras([...extras, { ...extraItem, i }])
   }
 
   const resetExtras = useCallback((): void => setExtras([]), [setExtras])

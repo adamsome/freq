@@ -1,19 +1,16 @@
-import { BlowLabelItem, BlowMessage } from '../../lib/types/blow.types'
+import { BlowMessage, BlowPlayerView } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import BlowLabel from './blow-label'
 
 type Props = {
   children: BlowMessage
-  subject?: string
+  players?: BlowPlayerView[]
 }
 
-export default function BlowMessageLine({ children: msg, subject }: Props) {
-  const label: string | BlowLabelItem[] = subject
-    ? [{ type: 'player', value: subject }, msg.text]
-    : [msg.text]
+export default function BlowMessageLine({ children: msg, players }: Props) {
   return (
     <div className={cx({ 'text-red-500': msg.error })}>
-      <BlowLabel label={label} />
+      <BlowLabel label={msg.text} players={players} />
     </div>
   )
 }

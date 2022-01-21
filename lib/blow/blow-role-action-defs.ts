@@ -72,11 +72,15 @@ export const BLOW_ROLE_ACTIONS_DEFS: Record<
 export function getBlowRoleAction(id: BlowRoleActionID): BlowRoleActionDef
 export function getBlowRoleAction(x: BlowAction): BlowRoleActionDef | undefined
 export function getBlowRoleAction(
-  idOrAction: BlowAction | BlowRoleActionID
+  x: string | undefined
+): BlowRoleActionDef | undefined
+export function getBlowRoleAction(
+  idOrAction: BlowAction | BlowRoleActionID | string | undefined
 ): BlowRoleActionDef | undefined {
+  if (idOrAction == null) return
   let id: BlowRoleActionID
   if (typeof idOrAction === 'string') {
-    id = idOrAction
+    id = idOrAction as BlowRoleActionID
   } else if (isBlowRoleActionID(idOrAction.type)) {
     id = idOrAction.type
   } else {

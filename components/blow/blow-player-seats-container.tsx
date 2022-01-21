@@ -16,7 +16,7 @@ type Props = {
 export default function BlowPlayerSeatsContainer(props: Props) {
   const { game, mutate } = useBlowGame()
 
-  const { currentPlayer, pickTarget } = game ?? {}
+  const { phase, currentPlayer, pickTarget } = game ?? {}
   const { action, targets, fetching } = pickTarget ?? {}
 
   const isTargetable = (p?: BlowPlayerView | null): boolean => {
@@ -61,7 +61,7 @@ export default function BlowPlayerSeatsContainer(props: Props) {
           <BlowPlayerSeat
             key={p?.id ?? i}
             player={p}
-            active={p?.id === firstPlayerID}
+            active={phase === 'prep' && p?.id === firstPlayerID}
             actions={game?.actionState}
             card={{ color: 'gray' }}
             targetable={isTargetable(p)}
