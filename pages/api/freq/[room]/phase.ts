@@ -15,7 +15,8 @@ export default withApiAuthRequired(async (req, res) => {
       const phase = req.body?.phase
 
       if (!phase) {
-        return res.status(500).end('Phase required.')
+        res.status(500).end('Phase required.')
+        return
       }
 
       await updateFreqGamePath(room, 'phase', phase)

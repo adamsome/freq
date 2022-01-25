@@ -1,5 +1,5 @@
 import { getSession, UserProfile } from '@auth0/nextjs-auth0'
-import { WithId } from 'mongodb'
+import { OptionalUnlessRequiredId } from 'mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { isRoomValid } from './room'
 import { User } from './types/user.types'
@@ -9,7 +9,7 @@ import { head } from './util/array'
 interface RoomUserSuccess {
   status: 'ok'
   room: string
-  user: WithId<User>
+  user: OptionalUnlessRequiredId<User>
 }
 
 interface RoomUserError {

@@ -1,5 +1,5 @@
 import { getSession, UserProfile } from '@auth0/nextjs-auth0'
-import { WithId } from 'mongodb'
+import { OptionalUnlessRequiredId } from 'mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
 import {
   fetchFreqGame,
@@ -27,7 +27,7 @@ export default async function getFreqRoom(
       const session = getSession(req, res)
       const userProfile: UserProfile | undefined = session?.user
 
-      let user: WithId<User> | null = null
+      let user: OptionalUnlessRequiredId<User> | null = null
       if (userProfile?.sub) {
         user = await fetchUser(userProfile.sub)
       }
