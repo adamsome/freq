@@ -101,7 +101,7 @@ function BlowPlayerSeatCoins(props: Props) {
   if (player?.coins == null) return null
 
   return (
-    <BlowCoin size="lg" showIndividualCoins={false}>
+    <BlowCoin size="lg" showIndividualCoins={false} animate>
       {player.coins}
     </BlowCoin>
   )

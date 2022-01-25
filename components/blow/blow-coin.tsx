@@ -1,18 +1,34 @@
-import type { HTMLAttributes } from 'react'
+import { HTMLAttributes, useState } from 'react'
 import { BlowActionButtonColor, BlowCoinSize } from '../../lib/types/blow.types'
 import { range } from '../../lib/util/array'
 import { cx } from '../../lib/util/dom'
+import useUpdateEffect from '../../lib/util/use-update-effect'
 
 type Props = HTMLAttributes<HTMLDivElement> & {
   children: number
   size?: BlowCoinSize
   lit?: boolean
   color?: BlowActionButtonColor
+  animate?: boolean
   dimLabelWhenOne?: boolean
   showIndividualCoins?: boolean
 }
 
 export type BlowCoinProps = Props
+
+const SHOCKWAVE_ANIMATION = [
+  'animate-shockwave-jump',
+  "after:content-['']",
+  'after:absolute',
+  'after:inset-0',
+  'after:rounded-full',
+  'after:animate-shockwave',
+  "before:content-['']",
+  'before:absolute',
+  'before:inset-0',
+  'before:rounded-full',
+  'before:animate-shockwave-short',
+]
 
 const getCoinColor = (color: BlowActionButtonColor, lit = false) => {
   switch (color) {
@@ -53,10 +69,23 @@ export default function BlowCoin({
   size = 'md',
   lit,
   color = 'gray',
+  animate,
   dimLabelWhenOne = true,
   showIndividualCoins = true,
   ...props
 }: Props) {
+  const [doAnimate, setDoAnimate] = useState(false)
+
+  useUpdateEffect(() => {
+    setDoAnimate(true)
+
+    const interval = setInterval(() => {
+      setDoAnimate(false)
+    }, 2000)
+
+    return () => clearInterval(interval)
+  }, [children])
+
   if (showIndividualCoins && children > 1) {
     return (
       <div className="inline-block">
@@ -97,6 +126,7 @@ export default function BlowCoin({
           'tracking-normal',
           '[background-image:radial-gradient(ellipse_at_center,var(--tw-gradient-from)_0%,var(--tw-gradient-from)_35%,rgb(0_0_0_/_0%)_65%,rgb(0_0_0_/_0%)_100%)]',
           getCoinColor(color, lit),
+          animate && doAnimate && SHOCKWAVE_ANIMATION,
           className
         )}
         {...divProps}

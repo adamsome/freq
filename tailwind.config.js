@@ -42,6 +42,9 @@ module.exports = {
         shift: 'shift 30s ease-in-out infinite',
         shake: 'shift 30s ease-in-out infinite, 0.8s shake',
         shine: 'shine 1.4s ease-in-out infinite ',
+        shockwave: 'shockwave 1s .65s ease-out 1',
+        'shockwave-short': 'shockwave 1s .5s ease-out 1',
+        'shockwave-jump': 'shockwave-jump 1s ease-out 1',
       },
       backgroundSize: {
         skeleton: '200px 100%',
@@ -107,6 +110,40 @@ module.exports = {
         shine: {
           '0%': { backgroundPosition: '-200px 0' },
           '40%, 100%': { backgroundPosition: 'calc(200px + 100%) 0' },
+        },
+        shockwave: {
+          '0%': {
+            transform: 'scale(1)',
+            boxShadow:
+              '0 0 2px rgb(6 182 212 / 50%), inset 0 0 1px rgb(6 182 212 / 50%)',
+          },
+          '95%': {
+            boxShadow:
+              '0 0 50px rgba(0 0 0 / 0%), inset 0 0 30px rgba(0 0 0 / 0%)',
+          },
+          '100%': {
+            transform: 'scale(2.25)',
+          },
+        },
+        'shockwave-jump': {
+          '0%': {
+            transform: 'scale(1)',
+          },
+          '40%': {
+            transform: 'scale(1.08)',
+          },
+          '50%': {
+            transform: 'scale(0.98)',
+          },
+          '55%': {
+            transform: 'scale(1.02)',
+          },
+          '60%': {
+            transform: 'scale(0.98)',
+          },
+          '100%': {
+            transform: 'scale(1)',
+          },
         },
       },
     },
