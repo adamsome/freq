@@ -29,8 +29,11 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# versal
+# versel
 .vercel
 
 # local notes
 *.local.*
+
+# typescript
+*.tsbuildinfo
