@@ -7,15 +7,15 @@ import {
 } from '../../lib/types/blow.types'
 import { Command, CommandError } from '../../lib/types/game.types'
 import { postCommand } from '../../lib/util/fetch-json'
-import useGame from '../../lib/util/use-game'
+import { useBlowGame } from '../../lib/util/use-game'
 import BlowCard, { BlowCardProps } from './blow-card'
 
-type Props = Omit<BlowCardProps, 'onActionClick'> & {
+type Props = Omit<BlowCardProps, 'theme' | 'onActionClick'> & {
   onCommandError?: (error: CommandError) => void
 }
 
 export default function BlowCardContainer({ onCommandError, ...props }: Props) {
-  const { game, mutate } = useGame()
+  const { game, mutate } = useBlowGame()
   const [fetching, setFetching] = useState<BlowRoleActionID | null>(null)
   const { id: rid } = props
   const fetchingAction =
@@ -47,6 +47,7 @@ export default function BlowCardContainer({ onCommandError, ...props }: Props) {
   return (
     <BlowCard
       {...props}
+      theme={game?.settings.theme}
       fetching={fetchingAction}
       onActionClick={handleActionClick}
     />

@@ -12,7 +12,7 @@ type Props = {
 
 export default function BlowPlayerSeatsGrid(props: Props) {
   const { className, game, onPlayerClick } = props
-  const { phase, currentPlayer, pickTarget } = game ?? {}
+  const { phase, currentPlayer, pickTarget, settings } = game ?? {}
   const { targets, fetching } = pickTarget ?? {}
 
   const isTargetable = (p?: BlowPlayerView | null): boolean => {
@@ -36,6 +36,7 @@ export default function BlowPlayerSeatsGrid(props: Props) {
             player={p}
             active={phase === 'prep' && p?.id === firstPlayerID}
             actions={game?.actionState}
+            theme={settings?.theme ?? 'classic'}
             card={{ color: 'gray' }}
             targetable={isTargetable(p)}
             onClick={onPlayerClick}

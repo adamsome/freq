@@ -1,16 +1,12 @@
 import {
-  BlowAction,
   BlowRoleActionDef,
   BlowRoleActionID,
-  isBlowRoleActionID,
+  BlowThemeID,
 } from '../types/blow.types'
 import { isObject } from '../util/object'
 import { isNotEmpty, isNotNil } from '../util/string'
 
-export const BLOW_ROLE_ACTIONS_DEFS: Record<
-  BlowRoleActionID,
-  BlowRoleActionDef
-> = {
+const DEFS_BY_ID: Record<BlowRoleActionID, BlowRoleActionDef> = {
   activate_income: {
     id: 'activate_income',
     name: 'Income',
@@ -69,24 +65,41 @@ export const BLOW_ROLE_ACTIONS_DEFS: Record<
   },
 }
 
-export function getBlowRoleAction(id: BlowRoleActionID): BlowRoleActionDef
-export function getBlowRoleAction(x: BlowAction): BlowRoleActionDef | undefined
-export function getBlowRoleAction(
-  x: string | undefined
-): BlowRoleActionDef | undefined
-export function getBlowRoleAction(
-  idOrAction: BlowAction | BlowRoleActionID | string | undefined
-): BlowRoleActionDef | undefined {
-  if (idOrAction == null) return
-  let id: BlowRoleActionID
-  if (typeof idOrAction === 'string') {
-    id = idOrAction as BlowRoleActionID
-  } else if (isBlowRoleActionID(idOrAction.type)) {
-    id = idOrAction.type
-  } else {
-    return
+const THEMED_DEFS_BY_ID: Partial<
+  Record<
+    BlowThemeID,
+    Partial<Record<BlowRoleActionID, Partial<BlowRoleActionDef>>>
+  >
+> = {
+  magic: {
+    activate_kill: { label: 'Attack target' },
+  },
+}
+
+const _getRoleAction = (tid: BlowThemeID) => {
+  const themedDefs = THEMED_DEFS_BY_ID[tid]
+
+  return (xid: BlowRoleActionID): BlowRoleActionDef => {
+    const def = DEFS_BY_ID[xid]
+    const themedDef = themedDefs?.[xid]
+    return { ...def, ...(themedDef ?? {}) }
   }
-  return BLOW_ROLE_ACTIONS_DEFS[id]
+}
+
+export function getBlowRoleAction(
+  tid: BlowThemeID
+): (xid: BlowRoleActionID) => BlowRoleActionDef
+export function getBlowRoleAction(
+  tid: BlowThemeID,
+  xid: BlowRoleActionID
+): BlowRoleActionDef
+export function getBlowRoleAction(
+  tid: BlowThemeID,
+  xid?: BlowRoleActionID
+): BlowRoleActionDef | ((xid: BlowRoleActionID) => BlowRoleActionDef) {
+  const getRole = _getRoleAction(tid)
+  if (xid == null) return getRole
+  return getRole(xid)
 }
 
 export function isBlowRoleActionDef(

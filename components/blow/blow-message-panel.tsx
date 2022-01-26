@@ -1,5 +1,9 @@
 import { useEffect, useRef } from 'react'
-import { BlowMessage, BlowPlayerView } from '../../lib/types/blow.types'
+import {
+  BlowMessage,
+  BlowPlayerView,
+  BlowThemeID,
+} from '../../lib/types/blow.types'
 import { WithIndex } from '../../lib/types/object.types'
 import { cx } from '../../lib/util/dom'
 import GameLink from '../game-link'
@@ -11,19 +15,22 @@ type Props = {
   roomUrl?: string
   messages?: WithIndex<BlowMessage>[]
   players?: BlowPlayerView[]
+  theme?: BlowThemeID
 }
 
-export default function BlowMessagePanel({
-  className = '',
-  roomUrl,
-  messages = [],
-  players,
-}: Props) {
+export default function BlowMessagePanel(props: Props) {
+  const { className = '', roomUrl, messages = [], players, theme } = props
+
   const ref = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     ref?.current?.scroll({ top: ref.current.scrollHeight, behavior: 'smooth' })
   }, [messages.length])
+
+  const hasMessages = messages.length > 0 && theme != null
+  if (!hasMessages) {
+    console.log('no-msgs', messages, theme)
+  }
 
   return (
     <div
@@ -48,7 +55,7 @@ export default function BlowMessagePanel({
           button={{ color: 'cyan', bgHover: false }}
         />
 
-        {messages.length > 0 && (
+        {hasMessages && (
           <div className={cx('w-full', 'my-2 px-4')}>
             <div
               className={cx('w-full h-px', 'bg-gray-100 dark:bg-gray-900')}
@@ -56,16 +63,17 @@ export default function BlowMessagePanel({
           </div>
         )}
 
-        {messages.length > 0 && (
+        {hasMessages && (
           <div className={cx('max-w-sm m-auto px-5 space-y-1.5 font-narrow')}>
             {messages.map((msg) => (
-              <BlowMessageLine key={msg.i} players={players}>
+              <BlowMessageLine key={msg.i} players={players} theme={theme}>
                 {msg}
               </BlowMessageLine>
             ))}
 
             <div>
               <BlowMessageCurrent
+                theme={theme}
                 onChange={() =>
                   ref?.current?.scroll({
                     top: ref.current.scrollHeight,
@@ -78,7 +86,7 @@ export default function BlowMessagePanel({
         )}
       </div>
 
-      {messages.length > 0 && (
+      {hasMessages && (
         <div
           className={cx(
             'absolute top-0 left-0 right-3.5',

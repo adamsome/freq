@@ -84,7 +84,7 @@ function validateCoreAction(view: BlowGameView, action: BlowAction): boolean {
     if (view.actionState[type] === 'clickable') return true
 
     // Validate two-step targetable active actions (i.e. Kill & Steal)
-    const xdef = getBlowRoleAction(type)
+    const xdef = getBlowRoleAction(view.settings.theme, type)
     if (xdef.targetEffect && view.pickTarget) {
       if (
         action.payload.target != null &&

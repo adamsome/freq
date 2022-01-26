@@ -1,5 +1,9 @@
 import { getGameTitle } from '../../lib/game'
-import { BlowMessage, BlowPlayerView } from '../../lib/types/blow.types'
+import {
+  BlowMessage,
+  BlowPlayerView,
+  BlowThemeID,
+} from '../../lib/types/blow.types'
 import { CommandError } from '../../lib/types/game.types'
 import { WithIndex } from '../../lib/types/object.types'
 import { cx } from '../../lib/util/dom'
@@ -12,12 +16,13 @@ import BlowPlayersSheet from './blow-players-sheet'
 type Props = {
   messages: WithIndex<BlowMessage>[]
   players?: BlowPlayerView[]
+  theme?: BlowThemeID
   room?: string
   onCommandError?: (error: CommandError) => void
 }
 
 export default function BlowLayout(props: Props) {
-  const { messages, players, room, onCommandError } = props
+  const { messages, players, room, theme, onCommandError } = props
 
   const roomUrl = room && `${process.env.NEXT_PUBLIC_BASE_URL}/blow/${room}`
 
@@ -38,6 +43,7 @@ export default function BlowLayout(props: Props) {
           roomUrl={roomUrl}
           messages={messages}
           players={players}
+          theme={theme}
         />
         <div
           className={cx(

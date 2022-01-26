@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import invariant from 'tiny-invariant'
-import { BLOW_ROLE_DEFS, isBlowRoleDef } from '../../lib/blow/blow-role-defs'
+import { getBlowRole, isBlowRoleDef } from '../../lib/blow/blow-role-defs'
 import {
   BlowActionState,
   BlowCardColor,
@@ -9,6 +9,7 @@ import {
   BlowCardVariant,
   BlowRoleActionID,
   BlowRoleID,
+  BlowThemeID,
 } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import SkeletonBox from '../layout/skeleton-box'
@@ -29,6 +30,7 @@ type Props = {
   selected?: boolean
   actions?: Partial<Record<BlowRoleActionID, BlowActionState>>
   currentCards?: number
+  theme?: BlowThemeID
   fetching?: BlowRoleActionID | null
   onActionClick?: (id: BlowRoleActionID) => void
   onClick?: (id: BlowRoleID, i: number, source?: BlowCardSource) => void
@@ -45,19 +47,27 @@ export default function BlowCard(props: Props) {
 }
 
 function BlowCardContent(props: Props) {
-  const { id, size = 'sm', variant = 'facedown' } = props
+  const {
+    id,
+    size = 'sm',
+    variant = 'facedown',
+    theme,
+    actions = {},
+    currentCards = 0,
+    orientation,
+    fetching,
+    selectable,
+    onActionClick,
+  } = props
 
   if (variant === 'empty') return null
 
   if (variant === 'facedown') return <BlowCardFacedownPattern {...props} />
 
-  if (!id) return <SkeletonBox color="cyan" className="full" />
+  if (!id || !theme) return <SkeletonBox color="cyan" className="full" />
 
-  const role = BLOW_ROLE_DEFS[id]
+  const role = getBlowRole(theme, id)
   invariant(isBlowRoleDef(role), `BlowCard: BlowCardRole for '${id}' invalid`)
-
-  const { actions = {}, currentCards = 0, orientation, fetching } = props
-  const { selectable, onActionClick } = props
 
   const vertical = orientation !== 'horizontal'
   const sm = size === 'xs' || size === 'sm'
@@ -71,6 +81,7 @@ function BlowCardContent(props: Props) {
           className="mb-1"
           {...props}
           currentCards={!sm ? currentCards : 0}
+          theme={theme}
         >
           {role.name}
         </BlowCardTitle>
@@ -104,6 +115,7 @@ function BlowCardContent(props: Props) {
                 : actions[a]
             }
             passClicks={selectable}
+            theme={theme}
             fetching={fetching === a}
             onClick={(id) => !selectable && onActionClick?.(id)}
           />
@@ -111,7 +123,11 @@ function BlowCardContent(props: Props) {
 
         {!role.common && role.actions.length < 2 && role.hasNoCounters && (
           // Blank space where counter actions usually appear
-          <BlowActionButton className="hidden xs:flex" size={size} />
+          <BlowActionButton
+            className="hidden xs:flex"
+            size={size}
+            theme={theme}
+          />
         )}
       </div>
     </BlowCardContentWrapper>

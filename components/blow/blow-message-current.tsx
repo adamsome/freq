@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { isBlowAction } from '../../lib/blow/blow-action-creators'
-import { BlowLabelItem } from '../../lib/types/blow.types'
+import { BlowLabelItem, BlowThemeID } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import { useBlowGame } from '../../lib/util/use-game'
 import BlowLabel from './blow-label'
 
 type Props = {
   className?: string
+  theme: BlowThemeID
   onChange?: () => void
 }
 
@@ -67,6 +68,7 @@ export default function BlowMessageCurrent(props: Props) {
       className={cx('opacity-60', className)}
       label={label}
       players={game.players}
+      theme={game.settings.theme}
     />
   )
 }

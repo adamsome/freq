@@ -12,7 +12,10 @@ export default function BlowBoardWinner(props: Props) {
   const { game } = useBlowGame()
   if (!game?.winner) return null
 
-  const { winner: player } = game
+  const {
+    winner: player,
+    settings: { theme },
+  } = game
   const { className } = props
 
   return (
@@ -24,6 +27,7 @@ export default function BlowBoardWinner(props: Props) {
         player={player}
         name={player.current ? 'You' : undefined}
         actions={game.actionState}
+        theme={theme}
         size="lg"
         titleSuffix={'won the match!'}
         card={{ color: 'cyan' }}

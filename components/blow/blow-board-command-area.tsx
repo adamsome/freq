@@ -23,6 +23,7 @@ export default function BlowBoardCommandArea(props: Props) {
     return null
 
   if (game?.pickTarget) {
+    const { pickTarget, settings } = game
     return (
       <div
         className={cx(
@@ -32,8 +33,8 @@ export default function BlowBoardCommandArea(props: Props) {
           className
         )}
       >
-        {!game.pickTarget.fetching ? (
-          <BlowLabel label={game.pickTarget.description} />
+        {!pickTarget.fetching ? (
+          <BlowLabel label={pickTarget.description} theme={settings.theme} />
         ) : (
           <IconSvg
             name="spinner"

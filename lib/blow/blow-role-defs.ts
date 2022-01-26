@@ -1,8 +1,13 @@
-import { BlowRoleDef, BlowRoleID, BLOW_ROLE_IDS } from '../types/blow.types'
+import {
+  BlowRoleDef,
+  BlowRoleID,
+  BlowThemeID,
+  BLOW_ROLE_IDS,
+} from '../types/blow.types'
 import { isObject } from '../util/object'
 import { isNotEmpty, isNotNil } from '../util/string'
 
-export const BLOW_ROLE_DEFS: Record<BlowRoleID, BlowRoleDef> = {
+const DEFS_BY_ID: Record<BlowRoleID, BlowRoleDef> = {
   common: {
     id: 'common',
     common: true,
@@ -37,14 +42,37 @@ export const BLOW_ROLE_DEFS: Record<BlowRoleID, BlowRoleDef> = {
   },
 }
 
-export function getBlowRole(rid: BlowRoleID): BlowRoleDef
+const THEMED_DEFS_BY_ID: Partial<
+  Record<BlowThemeID, Partial<Record<BlowRoleID, Partial<BlowRoleDef>>>>
+> = {
+  magic: {
+    killer: { name: 'Evocation' },
+    thief: { name: 'Necromancy' },
+    merchant: { name: 'Transmutation' },
+    guard: { name: 'Abjuration' },
+    explorer: { name: 'Enchantment' },
+  },
+}
+
+const _getRole = (tid: BlowThemeID) => {
+  const themeDefs = THEMED_DEFS_BY_ID[tid]
+
+  return (rid: BlowRoleID): BlowRoleDef => {
+    const def = DEFS_BY_ID[rid as BlowRoleID]
+    const themeDef = themeDefs?.[rid as BlowRoleID]
+    return { ...def, ...(themeDef ?? {}) }
+  }
+}
+
+export function getBlowRole(tid: BlowThemeID): (rid: BlowRoleID) => BlowRoleDef
+export function getBlowRole(tid: BlowThemeID, rid: BlowRoleID): BlowRoleDef
 export function getBlowRole(
-  rid: BlowRoleID | string | undefined
-): BlowRoleDef | undefined
-export function getBlowRole(
-  rid: BlowRoleID | string | undefined
-): BlowRoleDef | undefined {
-  return BLOW_ROLE_DEFS[rid as BlowRoleID]
+  tid: BlowThemeID,
+  rid?: BlowRoleID
+): BlowRoleDef | ((rid: BlowRoleID) => BlowRoleDef) {
+  const getRole = _getRole(tid)
+  if (rid == null) return getRole
+  return getRole(rid)
 }
 
 export function isBlowRoleDef(role: unknown): role is BlowRoleDef {

@@ -152,6 +152,10 @@ const BLOW_VARIANT_IDS = ['basic'] as const
 
 export type BlowVariantID = typeof BLOW_VARIANT_IDS[number]
 
+const BLOW_THEME_IDS = ['classic', 'magic'] as const
+
+export type BlowThemeID = typeof BLOW_THEME_IDS[number]
+
 export interface BlowVariantDef {
   id: BlowVariantID
   name: string
@@ -192,9 +196,10 @@ export type BlowPlayerSeatSize = 'md' | 'lg'
 export type BlowCoinSize = 'xs' | 'sm' | 'md' | 'lg'
 
 export interface BlowSettings {
-  variant: BlowVariantID
   /** Map timer type to the number of seconds in the countdown */
   timer: Record<BlowTimerType, number>
+  variant: BlowVariantID
+  theme: BlowThemeID
 }
 
 export interface BlowActionTurnInfo extends BlowAction {

@@ -9,6 +9,7 @@ import {
   BlowPlayerView,
   BlowRoleActionID,
   BlowRoleID,
+  BlowThemeID,
 } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import SkeletonBox from '../layout/skeleton-box'
@@ -23,6 +24,7 @@ type Props = {
   name?: string
   active?: boolean
   actions?: Partial<Record<BlowRoleActionID, BlowActionState>>
+  theme: BlowThemeID
   size?: BlowPlayerSeatSize
   titleSuffix?: string
   drawnCards?: (BlowRoleID | null)[]
@@ -116,6 +118,7 @@ function BlowPlayerSeatHand(props: Props) {
     card = {},
     cardSelection,
     actions,
+    theme,
   } = props
 
   const cardSize: BlowCardSize = size === 'lg' ? 'lg' : 'sm'
@@ -172,7 +175,7 @@ function BlowPlayerSeatHand(props: Props) {
       {drawnCards && drawnCards.length > 0 && (
         <div className={handCx}>
           {drawnCards?.map((_, i) => (
-            <BlowCard key={i} {...getCardDefaults(i, 'drawn')} />
+            <BlowCard key={i} {...getCardDefaults(i, 'drawn')} theme={theme} />
           ))}
         </div>
       )}

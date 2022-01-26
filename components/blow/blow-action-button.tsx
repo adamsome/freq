@@ -1,14 +1,15 @@
 import type { MouseEvent } from 'react'
 import invariant from 'tiny-invariant'
 import {
-  BLOW_ROLE_ACTIONS_DEFS,
+  getBlowRoleAction,
   isBlowRoleActionDef,
 } from '../../lib/blow/blow-role-action-defs'
 import {
-  BlowRoleActionDef,
-  BlowRoleActionID,
   BlowActionState,
   BlowCardSize,
+  BlowRoleActionDef,
+  BlowRoleActionID,
+  BlowThemeID,
 } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import BlowActionButtonIcon from './blow-action-button-icon'
@@ -19,6 +20,7 @@ type Props = {
   id?: BlowRoleActionID
   size?: BlowCardSize
   state?: BlowActionState
+  theme?: BlowThemeID
   passClicks?: boolean
   fetching?: boolean
   onClick?: (id: BlowRoleActionID) => void
@@ -52,6 +54,7 @@ export default function BlowActionButton({
   id,
   size = 'sm',
   state = 'normal',
+  theme,
   passClicks,
   fetching,
   onClick,
@@ -69,7 +72,9 @@ export default function BlowActionButton({
     return <div className={cx(heightCx, className)}></div>
   }
 
-  const action = BLOW_ROLE_ACTIONS_DEFS[id]
+  invariant(theme != null, 'BlowActionButton: Theme must be provided')
+
+  const action = getBlowRoleAction(theme, id)
   invariant(
     isBlowRoleActionDef(action),
     `BlowActionButton: BlowActionDef for '${id}' invalid`
@@ -77,7 +82,7 @@ export default function BlowActionButton({
 
   let counter: BlowRoleActionDef | undefined
   if (action.counter) {
-    counter = BLOW_ROLE_ACTIONS_DEFS[action.counter as BlowRoleActionID]
+    counter = getBlowRoleAction(theme, action.counter)
     invariant(
       isBlowRoleActionDef(counter),
       `BlowActionButton: BlowActionDef counter for '${action.counter}' invalid`
@@ -189,6 +194,7 @@ export default function BlowActionButton({
             counter && 'font-semibold'
           )}
           label={counter?.name ?? action.label}
+          theme={theme}
           coinProps={{ color, size: sm ? 'xs' : md ? 'sm' : 'md' }}
         />
       </div>

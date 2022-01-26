@@ -62,7 +62,11 @@ function BlowBoardChallengeContent(
   const { game } = useBlowGame()
   if (!game?.challenge) return null
 
-  const { players, challenge } = game
+  const {
+    players,
+    challenge,
+    settings: { theme },
+  } = game
   const { className, selected, onCardClick } = props
   const { winner, cardIndex, challengerLoss, challengerCardIndex } = challenge
 
@@ -121,6 +125,7 @@ function BlowBoardChallengeContent(
         player={player}
         name={player.current ? 'You' : undefined}
         actions={game.actionState}
+        theme={theme}
         size="lg"
         titleSuffix={targetMsg}
         card={{
@@ -140,7 +145,7 @@ function BlowBoardChallengeContent(
             'text-gray-400 dark:text-gray-500 text-sm'
           )}
         >
-          <BlowLabel label={label} />
+          <BlowLabel label={label} theme={theme} />
         </div>
       )}
     </div>

@@ -58,7 +58,11 @@ function BlowBoardPickLossCardContent(
   const { game } = useBlowGame()
   if (!game?.pickLossCard) return null
 
-  const { players, pickLossCard } = game
+  const {
+    players,
+    pickLossCard,
+    settings: { theme },
+  } = game
   const { className, selected, onCardClick } = props
   const { action, cardIndex } = pickLossCard
 
@@ -93,6 +97,7 @@ function BlowBoardPickLossCardContent(
         player={player}
         name={player.current ? 'You' : undefined}
         actions={game.actionState}
+        theme={theme}
         size="lg"
         titleSuffix={targetMsg}
         card={{

@@ -3,6 +3,7 @@ import type { HTMLAttributes } from 'react'
 import {
   BlowLabelItem,
   BlowPlayerView,
+  BlowThemeID,
   BlowToken,
 } from '../../lib/types/blow.types'
 import BlowCoin, { BlowCoinProps } from './blow-coin'
@@ -13,6 +14,7 @@ import BlowRoleLabel from './blow-role-label'
 type Props = HTMLAttributes<HTMLSpanElement> & {
   className?: string
   label?: BlowLabelItem | BlowLabelItem[]
+  theme: BlowThemeID
   players?: BlowPlayerView[]
   coinProps?: Partial<BlowCoinProps>
 }
@@ -39,7 +41,7 @@ type PartProps = {
 }
 
 function Part(props: Props & PartProps) {
-  const { token, index: i, allTokens, coinProps, players } = props
+  const { token, index: i, allTokens, theme, coinProps, players } = props
   let p = token
   if (isString(p)) {
     p = { type: 'text', value: p }
@@ -62,7 +64,9 @@ function Part(props: Props & PartProps) {
       return <BlowPlayerLabel className={p.className} value={value} />
     }
     case 'role': {
-      return <BlowRoleLabel className={p.className} value={p.value} />
+      return (
+        <BlowRoleLabel className={p.className} value={p.value} theme={theme} />
+      )
     }
     case 'action': {
       return (
@@ -70,6 +74,7 @@ function Part(props: Props & PartProps) {
           className={p.className}
           value={p.value}
           role={p.role}
+          theme={theme}
         />
       )
     }

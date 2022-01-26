@@ -5,7 +5,7 @@ import BlowLayout from './blow-layout'
 
 export default function BlowContainer() {
   const { game } = useBlowGame()
-  const { messages: rawMessages = [], players, room } = game ?? {}
+  const { messages: rawMessages = [], players, room, settings } = game ?? {}
 
   const last = rawMessages[rawMessages.length - 1]
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -25,6 +25,7 @@ export default function BlowContainer() {
       messages={messages}
       players={players}
       room={room}
+      theme={settings?.theme}
       onCommandError={(e) => addError({ text: e.message, i: 0, error: true })}
     />
   )

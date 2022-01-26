@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { BlowThemeID } from '../../lib/types/blow.types'
 import { range } from '../../lib/util/array'
 import { cx } from '../../lib/util/dom'
 import BlowCard, { BlowCardProps } from './blow-card'
@@ -6,10 +7,12 @@ import BlowCard, { BlowCardProps } from './blow-card'
 type Props = BlowCardProps & {
   children: ReactNode
   className?: string
+  theme?: BlowThemeID
 }
 
 export default function BlowCardTitle(props: Props) {
   const { children, className, size = 'sm', orientation = 'vertical' } = props
+
   const sm = size === 'xs' || size === 'sm'
   const md = size === 'md'
   const lg = size === 'lg' || size === 'xl'
@@ -33,11 +36,11 @@ export default function BlowCardTitle(props: Props) {
 }
 
 function Icons(props: Props) {
-  const { currentCards = 0 } = props
+  const { currentCards = 0, theme } = props
   return (
     <>
       {range(0, currentCards).map((i) => (
-        <BlowCard key={i} size="xs" color="cyan" />
+        <BlowCard key={i} size="xs" color="cyan" theme={theme} />
       ))}
     </>
   )

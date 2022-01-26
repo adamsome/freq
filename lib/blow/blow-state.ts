@@ -84,9 +84,13 @@ export const initialBlowState: IBlowState = {
 
 export default class BlowState {
   private s: IBlowState
+  private toRole: (rid: BlowRoleID) => BlowRoleDef
+  private toAction: (rid: BlowRoleActionID) => BlowRoleActionDef
 
   constructor(state: IBlowState) {
     this.s = state
+    this.toRole = getBlowRole(state.game.settings.theme)
+    this.toAction = getBlowRoleAction(state.game.settings.theme)
   }
 
   get activePlayer(): BlowPlayerView | undefined {
@@ -125,15 +129,15 @@ export default class BlowState {
 
   get roleActions(): BlowRoleActionDef[] {
     return this.s.roles.flatMap((rid) =>
-      getBlowRole(rid).actions.map((xid) => getBlowRoleAction(xid))
+      this.toRole(rid).actions.map((xid) => this.toAction(xid))
     )
   }
 
   get roleActionPairs(): BlowRoleActionPair[] {
     return this.s.roles.flatMap((rid) => {
-      const role = getBlowRole(rid)
+      const role = this.toRole(rid)
       return role.actions.map(
-        (xid): BlowRoleActionPair => [role, getBlowRoleAction(xid)]
+        (xid): BlowRoleActionPair => [role, this.toAction(xid)]
       )
     })
   }
@@ -188,7 +192,7 @@ export default class BlowState {
 
     // Establish deck of cards, three of each role
     this.s.deck = this.s.roles
-      .map((rid) => getBlowRole(rid))
+      .map((rid) => this.toRole(rid))
       .filter((role) => !role.common)
       .flatMap((role) => [role.id, role.id, role.id])
 
@@ -374,7 +378,7 @@ export default class BlowState {
       !x.hadChallengeOpportunity &&
       // and has a non-common role (common roles cannot be challenged)
       x.payload.role != null &&
-      !getBlowRole(x.payload.role).common
+      !this.toRole(x.payload.role).common
     ) {
       // Challenge
       return this.setupChallengeMode()
@@ -570,7 +574,7 @@ export default class BlowState {
   /** Update the current turn's action (active/counter played) tracker */
   updateTurnActions(x: BlowAction): this {
     invariant(isBlowRoleActionID(x.type), `Action '${x.type} not a role action`)
-    const def = getBlowRoleAction(x.type)
+    const def = this.toAction(x.type)
     const key = !def.counter ? 'active' : 'counter'
     this.s.turnActions[key] = { ...(this.s.turnActions[key] ?? {}), ...x, def }
     return this
