@@ -1,6 +1,7 @@
 import produce from 'immer'
 import { useState } from 'react'
 import { Command, CommandError } from '../lib/types/game.types'
+import { cx } from '../lib/util/dom'
 import { postCommand } from '../lib/util/fetch-json'
 import { isObject } from '../lib/util/object'
 import { isNotNil } from '../lib/util/string'
@@ -9,8 +10,10 @@ import CommandButton from './command-button'
 import { ButtonProps } from './control/button'
 
 type Props = {
+  className?: string
   button?: Partial<ButtonProps>
   spacingClassName?: string
+  fullHeight?: boolean
   hideError?: boolean
   onCommandError?: (error: CommandError) => void
 }
@@ -24,8 +27,10 @@ function hasPayload(value: unknown): value is HasPayload {
 }
 
 export default function CommandPanel({
+  className = 'w-full px-4 mb-6',
   button = {},
   spacingClassName,
+  fullHeight,
   hideError,
   onCommandError,
 }: Props) {
@@ -102,10 +107,10 @@ export default function CommandPanel({
   }
 
   return (
-    <div className="w-full px-4 mb-6">
+    <div className={className}>
       {commands.map((cmd, rowIndex) => (
         <div
-          className="mb-2 last:mb-0"
+          className={cx('mb-2 last:mb-0', { 'h-full': fullHeight })}
           key={cmd.type + cmd.text + cmd.info + cmd.rightText}
         >
           <CommandButton
@@ -115,6 +120,7 @@ export default function CommandPanel({
             button={button}
             rightButton={button}
             spacingClassName={spacingClassName}
+            fullHeight={fullHeight}
             onClick={(event, cmd, colIndex) =>
               handleCommandClick(event, cmd, rowIndex, colIndex)
             }

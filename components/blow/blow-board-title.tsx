@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { BlowPlayerView } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
-import BlowPlayerLabel from './blow-player-label'
+import BlowPlayerLabel from './tokens/blow-player-label'
 
 type Props = {
   title: string

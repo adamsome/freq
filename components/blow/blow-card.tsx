@@ -17,6 +17,7 @@ import BlowActionButton from './blow-action-button'
 import BlowCardButton from './blow-card-button'
 import BlowCardFacedownPattern from './blow-card-facedown-pattern'
 import BlowCardTitle from './blow-card-title'
+import getBlowRoleView, { BlowRoleView } from './blow-role-card-view'
 
 type Props = {
   id?: BlowRoleID | null
@@ -39,14 +40,19 @@ type Props = {
 export type BlowCardProps = Props
 
 export default function BlowCard(props: Props) {
+  const { theme, id, actions, killed } = props
+  const view = getBlowRoleView(theme, id, actions, {
+    clickable: true,
+    disable: killed,
+  })
   return (
-    <BlowCardButton {...props}>
-      <BlowCardContent {...props} />
+    <BlowCardButton {...props} view={view}>
+      <BlowCardContent {...props} view={view} />
     </BlowCardButton>
   )
 }
 
-function BlowCardContent(props: Props) {
+function BlowCardContent(props: Props & { view: BlowRoleView }) {
   const {
     id,
     size = 'sm',
@@ -57,6 +63,7 @@ function BlowCardContent(props: Props) {
     orientation,
     fetching,
     selectable,
+    view,
     onActionClick,
   } = props
 
@@ -75,7 +82,7 @@ function BlowCardContent(props: Props) {
   const lg = size === 'lg' || size === 'xl'
 
   return (
-    <BlowCardContentWrapper {...props} center={role.common}>
+    <BlowCardContentWrapper {...props} view={view} center={role.common}>
       {!role.common && (
         <BlowCardTitle
           className="mb-1"
@@ -93,43 +100,46 @@ function BlowCardContent(props: Props) {
         ></div>
       )}
 
-      <div
-        className={cx({
-          'flex flex-col justify-between': role.common,
-          'h-full': role.common,
-          'space-y-0.5': sm,
-          'space-y-2': md,
-          'space-y-0.5 xs:space-y-1.5': lg && !vertical,
-          'space-y-3': lg && vertical,
-        })}
-      >
-        {role.actions.map((a) => (
-          <BlowActionButton
-            key={a}
-            id={a}
-            size={size}
-            state={
-              // If we're fetching, set clickable actions to normal
-              fetching && fetching !== a && actions[a] === 'clickable'
-                ? 'normal'
-                : actions[a]
-            }
-            passClicks={selectable}
-            theme={theme}
-            fetching={fetching === a}
-            onClick={(id) => !selectable && onActionClick?.(id)}
-          />
-        ))}
+      {!sm && (
+        <div
+          className={cx({
+            'flex flex-col justify-between': role.common,
+            'h-full': role.common,
+            'space-y-0': sm,
+            'space-y-1.5': md,
+            'space-y-0.5 xs:space-y-1.5': lg && !vertical,
+            'space-y-1': lg && vertical,
+          })}
+        >
+          {role.actions.map((a) => (
+            <BlowActionButton
+              key={a}
+              id={a}
+              size={size}
+              state={
+                // If we're fetching, set clickable actions to normal
+                (fetching && fetching !== a && actions[a] === 'clickable') ||
+                theme === 'magic'
+                  ? 'normal'
+                  : actions[a]
+              }
+              passClicks={selectable}
+              theme={theme}
+              fetching={fetching === a}
+              onClick={(id) => !selectable && onActionClick?.(id)}
+            />
+          ))}
 
-        {!role.common && role.actions.length < 2 && role.hasNoCounters && (
-          // Blank space where counter actions usually appear
-          <BlowActionButton
-            className="hidden xs:flex"
-            size={size}
-            theme={theme}
-          />
-        )}
-      </div>
+          {!role.common && role.actions.length < 2 && role.hasNoCounters && (
+            // Blank space where counter actions usually appear
+            <BlowActionButton
+              className="hidden xs:flex"
+              size={size}
+              theme={theme}
+            />
+          )}
+        </div>
+      )}
     </BlowCardContentWrapper>
   )
 }
@@ -137,35 +147,30 @@ function BlowCardContent(props: Props) {
 type ContentWrapperProps = Omit<Props, 'onActionClick'> & {
   children: ReactNode
   center?: boolean
+  view: BlowRoleView
 }
 
-function BlowCardContentWrapper({
-  children,
-  size = 'sm',
-  selectable,
-  selected,
-  currentCards,
-  center = false,
-}: ContentWrapperProps) {
+function BlowCardContentWrapper(props: ContentWrapperProps) {
+  const { children, size = 'sm', selectable, view, center = false } = props
   const sm = size === 'xs' || size === 'sm'
-  const hasCard = (currentCards ?? 0) > 0
   return (
     <div
-      className={cx({
+      className={cx(view.classes.button, {
         'flex flex-col full': true,
         'justify-center': center,
-        'px-0.5 pt-0.5 pb-[3px]': sm,
+        'px-0.5 pt-0 pb-0.5': sm,
         'px-1.5 pt-0.5 pb-1.5': !sm && !center,
         'p-1.5': !sm && center,
-        'bg-cyan-200 dark:bg-cyan-925': sm,
-        'bg-cyan-100 dark:bg-cyan-975':
-          !sm && !selected && (!hasCard || selectable),
-        'bg-cyan-200 dark:bg-cyan-950':
-          !sm && (selected || (hasCard && !selectable)),
-        'group-hover:bg-cyan-200 dark:group-hover:bg-cyan-950':
-          !sm && selectable,
+        // 'bg-cyan-200 dark:bg-cyan-925': sm,
+        // 'bg-cyan-100 dark:bg-cyan-975':
+        //   !sm && !selected && (!hasCard || selectable),
+        // 'bg-cyan-200 dark:bg-cyan-950':
+        //   !sm && (selected || (hasCard && !selectable)),
+        // 'group-hover:bg-cyan-200 dark:group-hover:bg-cyan-950':
+        //   !sm && selectable,
+        border: true,
         'transition-colors': !sm && selectable,
-        'font-spaced-narrow': true,
+        'font-narrow': true,
         'text-black dark:text-white': true,
         'rounded-sm': true,
         'select-none': true,

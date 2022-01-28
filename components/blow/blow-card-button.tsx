@@ -4,10 +4,13 @@ import { cx } from '../../lib/util/dom'
 import IconSvg from '../control/icon-svg'
 import { BlowCardProps } from './blow-card'
 import BlowCardShape from './blow-card-shape'
+import { BlowRoleView } from './blow-role-card-view'
+import BlowRoleIcon from './icons/blow-role-icon'
 
 type Props = BlowCardProps & {
   children?: ReactNode
   className?: string
+  view: BlowRoleView
 }
 
 export default function BlowCardButton(props: Props) {
@@ -20,6 +23,8 @@ export default function BlowCardButton(props: Props) {
     variant = 'facedown',
     color = 'gray',
     killed,
+    theme,
+    view,
     selectable,
     selected,
     onClick,
@@ -28,6 +33,7 @@ export default function BlowCardButton(props: Props) {
   const md = size === 'md'
   const lg = size === 'lg' || size === 'xl'
   const bright = sm || selectable
+  const magicRole = theme === 'magic'
 
   const asButton = selectable && onClick
   const Component = asButton ? 'button' : 'div'
@@ -37,6 +43,7 @@ export default function BlowCardButton(props: Props) {
       <Component
         type={asButton ? 'button' : undefined}
         className={cx(className, {
+          relative: true,
           full: true,
           'p-px': sm && variant === 'facedown',
           'p-0.5 xs:p-1.5': !sm,
@@ -122,12 +129,31 @@ export default function BlowCardButton(props: Props) {
         </Component>
       )}
 
+      {magicRole && id && (
+        <div
+          className={cx('absolute full flex-center pointer-events-none', {
+            'top-0.5': sm,
+            '-top-2': md,
+            '-top-4': lg,
+          })}
+        >
+          <BlowRoleIcon
+            className={cx(view.classes.roleIcon, {
+              'w-5': sm,
+              'w-20': md,
+              'w-28': lg,
+            })}
+            role={id}
+          />
+        </div>
+      )}
+
       {killed && (
         <div
-          className={cx(
-            'absolute full flex-center',
-            'bg-white/50 dark:bg-black/25'
-          )}
+          className={cx('absolute full flex-center', {
+            'bg-white/50 dark:bg-black/50': !sm,
+            'bg-white/25 dark:bg-black/5': sm,
+          })}
         >
           <IconSvg
             className={cx({

@@ -12,6 +12,7 @@ type Props = {
   button?: ButtonProps
   rightButton?: ButtonProps
   spacingClassName?: string
+  fullHeight?: boolean
   fetching?: boolean
   onClick?: (e: MouseEvent, cmd: Command, colIndex?: number) => Promise<void>
   onTimerFinish?: (colIndex?: number) => void
@@ -25,6 +26,7 @@ export default function CommandButton(props: Props) {
       <div
         key={cmd.type + cmd.text + cmd.info + cmd.rightText}
         className={cx('flex-center w-full', {
+          'h-full': props.fullHeight,
           'text-xl': !cmd.rightText,
           'text-lg': cmd.rightText,
         })}
@@ -54,6 +56,7 @@ function SideButton(props: Props & { right?: boolean }) {
     button = {},
     rightButton = {},
     spacingClassName = 'm-0 px-2 py-2',
+    fullHeight,
     fetching = false,
     onClick,
   } = props
@@ -93,7 +96,7 @@ function SideButton(props: Props & { right?: boolean }) {
         'flex-1 w-full text-xl',
         'opacity-80 hover:opacity-100 transition-opacity',
         'inline-flex justify-center items-center',
-        { 'ml-2': right },
+        { 'ml-2': right, 'h-full': fullHeight },
         className
       )}
       color="none"

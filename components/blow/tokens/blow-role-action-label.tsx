@@ -1,10 +1,10 @@
-import { getBlowRoleAction } from '../../lib/blow/blow-role-action-defs'
+import { getBlowRoleAction } from '../../../lib/blow/blow-role-action-defs'
 import {
   BlowRoleActionID,
   BlowRoleID,
   BlowThemeID,
-} from '../../lib/types/blow.types'
-import { cx } from '../../lib/util/dom'
+} from '../../../lib/types/blow.types'
+import { cx } from '../../../lib/util/dom'
 import BlowRoleLabel from './blow-role-label'
 
 type Props = {
@@ -21,6 +21,11 @@ export default function BlowRoleActionLabel({
   theme,
 }: Props) {
   const className = rawClassName ?? 'text-gray-500 dark:text-gray-400'
+
+  if (theme === 'magic') {
+    return <BlowRoleLabel value={rid} theme={theme} action={value} />
+  }
+
   const action = getBlowRoleAction(theme, value)
   let label = action.name
   let counter: string | undefined

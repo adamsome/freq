@@ -3,7 +3,7 @@ import { isBlowAction } from '../../lib/blow/blow-action-creators'
 import { BlowLabelItem, BlowThemeID } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import { useBlowGame } from '../../lib/util/use-game'
-import BlowLabel from './blow-label'
+import BlowLabel from './tokens/blow-label'
 
 type Props = {
   className?: string

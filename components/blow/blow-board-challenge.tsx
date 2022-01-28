@@ -10,7 +10,7 @@ import { cx } from '../../lib/util/dom'
 import { postCommand } from '../../lib/util/fetch-json'
 import { useBlowGame } from '../../lib/util/use-game'
 import BlowBoardTitle from './blow-board-title'
-import BlowLabel from './blow-label'
+import BlowLabel from './tokens/blow-label'
 import BlowPlayerSeat from './blow-player-seat'
 
 type Props = {

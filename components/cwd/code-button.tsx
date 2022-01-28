@@ -85,7 +85,7 @@ export default function CodeButton({
         'border border-transparent select-none',
         textSize,
         {
-          'text-amber-dark': code.state === -1,
+          'text-amber-400': code.state === -1,
           'cursor-pointer hover:border-blue-700': code.clickable,
           'cursor-default': !code.clickable,
         }

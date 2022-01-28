@@ -1,3 +1,4 @@
+import { CommandError } from '../../lib/types/game.types'
 import { useBlowGame } from '../../lib/util/use-game'
 import BlowBoardChallenge from './blow-board-challenge'
 import BlowBoardDrawCards from './blow-board-draw-cards'
@@ -7,6 +8,7 @@ import BlowRoleCardGrid from './blow-role-card-grid'
 
 type Props = {
   className?: string
+  onCommandError?: (error: CommandError) => void
 }
 
 export default function BlowBoardContent(props: Props) {

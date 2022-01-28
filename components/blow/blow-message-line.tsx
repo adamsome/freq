@@ -4,7 +4,7 @@ import {
   BlowThemeID,
 } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
-import BlowLabel from './blow-label'
+import BlowLabel from './tokens/blow-label'
 
 type Props = {
   children: BlowMessage

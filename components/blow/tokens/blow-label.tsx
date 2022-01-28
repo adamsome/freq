@@ -5,7 +5,7 @@ import {
   BlowPlayerView,
   BlowThemeID,
   BlowToken,
-} from '../../lib/types/blow.types'
+} from '../../../lib/types/blow.types'
 import BlowCoin, { BlowCoinProps } from './blow-coin'
 import BlowPlayerLabel from './blow-player-label'
 import BlowRoleActionLabel from './blow-role-action-label'
@@ -50,7 +50,11 @@ function Part(props: Props & PartProps) {
   switch (p.type) {
     case 'coin': {
       return (
-        <BlowCoin className={p.className ?? 'mt-0.5'} {...coinProps}>
+        <BlowCoin
+          className={p.className ?? 'mt-0.5'}
+          {...coinProps}
+          showIndividualCoins={p.showIndividualCoins}
+        >
           {p.value}
         </BlowCoin>
       )

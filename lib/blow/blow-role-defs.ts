@@ -6,6 +6,7 @@ import {
 } from '../types/blow.types'
 import { isObject } from '../util/object'
 import { isNotEmpty, isNotNil } from '../util/string'
+import { BLOW_COLOR_COMBOS } from './blow-color-classes'
 
 const DEFS_BY_ID: Record<BlowRoleID, BlowRoleDef> = {
   common: {
@@ -19,26 +20,32 @@ const DEFS_BY_ID: Record<BlowRoleID, BlowRoleDef> = {
     name: 'Hitman',
     hasNoCounters: true,
     actions: ['activate_kill'],
+    classes: BLOW_COLOR_COMBOS.orangeTeal,
   },
   thief: {
     id: 'thief',
     name: 'Marauder',
     actions: ['activate_raid', 'counter_raid'],
+    classes: BLOW_COLOR_COMBOS.purpleBlue,
   },
   merchant: {
     id: 'merchant',
     name: 'Tycoon',
     actions: ['activate_trade', 'counter_extort'],
+    classes: BLOW_COLOR_COMBOS.yellowRed,
   },
   guard: {
     id: 'guard',
     name: 'Bodyguard',
+    hasNoActive: true,
     actions: ['counter_kill'],
+    classes: BLOW_COLOR_COMBOS.fuchsiaFuchsia,
   },
   explorer: {
     id: 'explorer',
     name: 'Explorer',
-    actions: ['activate_explore', 'counter_raid'],
+    actions: ['activate_explore', 'counter_raid_explore'],
+    classes: BLOW_COLOR_COMBOS.emeraldViolet,
   },
 }
 
@@ -50,7 +57,7 @@ const THEMED_DEFS_BY_ID: Partial<
     thief: { name: 'Necromancy' },
     merchant: { name: 'Transmutation' },
     guard: { name: 'Abjuration' },
-    explorer: { name: 'Enchantment' },
+    explorer: { name: 'Conjuration' },
   },
 }
 

@@ -13,8 +13,10 @@ export default function BlowCardShape({
   className = '',
   size = 'sm',
   orientation = 'vertical',
+  theme,
 }: Props) {
   const horizontal = orientation === 'horizontal'
+  const magicRole = theme === 'magic' && horizontal
   return (
     <div
       className={cx(className, {
@@ -28,8 +30,9 @@ export default function BlowCardShape({
         '[--blow-card-unit:2rem]': size === 'lg' && !horizontal,
         'w-[calc(var(--blow-card-unit)*5)]': !horizontal,
         'h-[calc(var(--blow-card-unit)*7)]': !horizontal,
-        'w-[calc(var(--blow-card-unit)*7)]': horizontal,
-        'xs:h-[calc(var(--blow-card-unit)*5)]': horizontal,
+        'w-[calc(var(--blow-card-unit)*7)]': horizontal && !magicRole,
+        'xs:h-[calc(var(--blow-card-unit)*5)]': horizontal && !magicRole,
+        'w-full': magicRole,
       })}
     >
       {children}

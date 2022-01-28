@@ -1,5 +1,7 @@
 import { BlowGame } from '../types/blow.types'
 
+const DEFAULT_TIMEOUT = 7
+
 export default function initBlowGame(): BlowGame {
   return {
     room: '',
@@ -8,11 +10,12 @@ export default function initBlowGame(): BlowGame {
     round_number: 0,
     settings: {
       variant: 'basic',
+      theme: 'magic',
       timer: {
-        challenge: 5,
-        continue_turn: 5,
-        next_turn: 5,
-        decline_counter: 5,
+        challenge: DEFAULT_TIMEOUT,
+        continue_turn: DEFAULT_TIMEOUT,
+        next_turn: DEFAULT_TIMEOUT,
+        decline_counter: DEFAULT_TIMEOUT,
       },
     },
     phase: 'prep',

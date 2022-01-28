@@ -1,5 +1,5 @@
-import { BlowPlayerView } from '../../lib/types/blow.types'
-import { cx } from '../../lib/util/dom'
+import { BlowPlayerView } from '../../../lib/types/blow.types'
+import { cx } from '../../../lib/util/dom'
 
 type Props = {
   children?: BlowPlayerView | string

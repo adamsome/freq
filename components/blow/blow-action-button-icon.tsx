@@ -5,7 +5,7 @@ import {
 } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import IconSvg from '../control/icon-svg'
-import BlowCoin from './blow-coin'
+import BlowCoin from './tokens/blow-coin'
 
 type Props = {
   action: BlowRoleActionDef
@@ -67,7 +67,7 @@ export default function BlowActionButtonIcon({
       <BlowCoin
         className="mt-0.5"
         lit
-        color={color}
+        color={color as string}
         size={sm ? 'xs' : md ? 'sm' : 'md'}
         showIndividualCoins={false}
       >

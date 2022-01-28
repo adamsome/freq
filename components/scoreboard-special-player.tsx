@@ -24,7 +24,7 @@ export default function ScoreboardSpecialPlayer({
           className={cx(
             'flex justify-between items-center',
             'overflow-hidden whitespace-nowrap',
-            'text-base sm:text-lg text-amber dark:text-amber-dark'
+            'text-base sm:text-lg text-amber-600 dark:text-amber-400'
           )}
         >
           <ScoreboardIcon>{player.icon}</ScoreboardIcon>

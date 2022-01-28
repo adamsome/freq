@@ -122,7 +122,7 @@ const blowSlice = createSlice({
                 "doesn't have",
                 { type: 'role', value: challenge.role },
                 target.cardsKilled.every(Boolean)
-                  ? 'is eliminated'
+                  ? 'and is eliminated'
                   : 'and loses challenge',
               ])
             }
@@ -184,7 +184,7 @@ const blowSlice = createSlice({
           // Challenge target lost challenge
           const latestRoleAction = s.latestTurnRoleAction
           invariant(latestRoleAction, 'No turn role action')
-          if (!latestRoleAction.def.counter) {
+          if (!latestRoleAction.def.counter && s.playersAlive.length > 1) {
             // Active action challenged successfully, next turn
             s.incrementTurn().setupActiveMode()
           } else {

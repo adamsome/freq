@@ -28,7 +28,11 @@ export default function BlowLayout(props: Props) {
 
   return (
     <Layout
-      className="[--freq-button-weight:400]"
+      className={
+        theme === 'magic'
+          ? '[--freq-button-weight:600]'
+          : '[--freq-button-weight:400]'
+      }
       type="blow"
       title={getGameTitle('blow')}
       room={room}
@@ -57,8 +61,9 @@ export default function BlowLayout(props: Props) {
         >
           <BlowBoardLayout
             className="full pt-2 xs:pt-3 sm:pt-4"
+            theme={theme}
             // Height of the players sheet's seat grid + chrome
-            bottomSpacerClass="min-h-[theme(spacing.48)]"
+            bottomSpacerClass="min-h-[theme(spacing.56)]"
             onCommandError={onCommandError}
           />
         </div>

@@ -116,4 +116,5 @@ export const BLOW_ACTION_RESOLVERS: Record<
   counter_extort: noop,
   counter_kill: noop,
   activate_explore: draw,
+  counter_raid_explore: noop,
 }

@@ -16,21 +16,26 @@ import {
 import { isTeamGuessGame } from '../lib/game'
 import { getPreferredTeam } from '../lib/player'
 import { Command, TeamGuessGameView } from '../lib/types/game.types'
+import { cx } from '../lib/util/dom'
 import { postJson } from '../lib/util/fetch-json'
 import useGame from '../lib/util/use-game'
 import CommandButton from './command-button'
 import { ButtonProps } from './control/button'
 
 type Props = {
+  className?: string
   room: string
   commandDefaults?: Partial<Command>
   button?: ButtonProps
   rightButton?: ButtonProps
+  fullHeight?: boolean
 }
 
 export default function GameJoinButtons({
+  className = 'w-full px-4 mb-6',
   room,
   commandDefaults = {},
+  fullHeight,
   ...props
 }: Props) {
   const router = useRouter()
@@ -114,11 +119,12 @@ export default function GameJoinButtons({
   }
 
   return (
-    <div className="w-full px-4 mb-6">
-      <div className="mb-2 last:mb-0">
+    <div className={className}>
+      <div className={cx('mb-2 last:mb-0', { 'h-full': fullHeight })}>
         <CommandButton
           command={command}
           currentPlayer={game.currentPlayer}
+          fullHeight={fullHeight}
           fetching={fetching}
           onClick={handleJoinClick}
           {...props}

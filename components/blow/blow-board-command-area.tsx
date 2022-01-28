@@ -3,15 +3,16 @@ import { cx } from '../../lib/util/dom'
 import { useBlowGame } from '../../lib/util/use-game'
 import IconSvg from '../control/icon-svg'
 import BlowBoardCommand from './blow-board-command'
-import BlowLabel from './blow-label'
+import BlowLabel from './tokens/blow-label'
 
 type Props = {
   className?: string
+  position: 'bottom' | 'grid-item'
   onCommandError?: (error: CommandError) => void
 }
 
 export default function BlowBoardCommandArea(props: Props) {
-  const { className, onCommandError } = props
+  const { className, position, onCommandError } = props
   const { game } = useBlowGame()
   // Hide command area during initial challenge sequence since
   // `BlowBoardChallenge` provides its own description in this area,
@@ -26,12 +27,13 @@ export default function BlowBoardCommandArea(props: Props) {
     const { pickTarget, settings } = game
     return (
       <div
-        className={cx(
-          'max-w-xs h-12 px-6 text-center',
-          'font-narrow text-lg',
-          'text-gray-400 dark:text-gray-500',
-          className
-        )}
+        className={cx(className, {
+          'max-w-xs text-center': true,
+          'h-12 px-6': position === 'bottom',
+          'flex-center h-20 px-1': position === 'grid-item',
+          'font-narrow text-lg': true,
+          'text-gray-400 dark:text-gray-500': true,
+        })}
       >
         {!pickTarget.fetching ? (
           <BlowLabel label={pickTarget.description} theme={settings.theme} />
@@ -46,8 +48,13 @@ export default function BlowBoardCommandArea(props: Props) {
   }
 
   return (
-    <div className={cx('w-full h-12 px-6', className)}>
-      <BlowBoardCommand onCommandError={onCommandError} />
+    <div
+      className={cx(className, {
+        'h-20 pt-0 pl-0': position === 'grid-item',
+        'w-full h-12 px-6': position === 'bottom',
+      })}
+    >
+      <BlowBoardCommand position={position} onCommandError={onCommandError} />
     </div>
   )
 }

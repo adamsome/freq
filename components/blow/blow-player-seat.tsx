@@ -15,7 +15,7 @@ import { cx } from '../../lib/util/dom'
 import SkeletonBox from '../layout/skeleton-box'
 import BlowCard, { BlowCardProps } from './blow-card'
 import BlowCardContainer from './blow-card-container'
-import BlowCoin from './blow-coin'
+import BlowCoin from './tokens/blow-coin'
 import BlowPlayerSeatOutline from './blow-player-seat-outline'
 
 type Props = {
@@ -150,11 +150,13 @@ function BlowPlayerSeatHand(props: Props) {
     const id = cards?.[i]
     const killed = (cardsKilled ?? [false, false])[i]
     const props = { id, index: i, size: cardSize, variant, actions, killed }
+
     const { onClick: rawOnClick, ...rest } = card
     const onClick = rawOnClick
       ? (id: BlowRoleID, i: number, rawSource?: BlowCardSource) =>
           rawOnClick?.(id, i, rawSource ?? source)
       : undefined
+
     const cardsProps = { ...props, ...rest, onClick }
 
     const isSelected =

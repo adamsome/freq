@@ -9,15 +9,18 @@ import { Command, CommandError } from '../../lib/types/game.types'
 import { postCommand } from '../../lib/util/fetch-json'
 import { useBlowGame } from '../../lib/util/use-game'
 import BlowCard, { BlowCardProps } from './blow-card'
+import BlowRoleCard from './blow-role-card'
+import BlowRoleCardCommon from './blow-role-card-common'
 
 type Props = Omit<BlowCardProps, 'theme' | 'onActionClick'> & {
+  type?: 'card' | 'role' | 'role-common'
   onCommandError?: (error: CommandError) => void
 }
 
 export default function BlowCardContainer({ onCommandError, ...props }: Props) {
   const { game, mutate } = useBlowGame()
   const [fetching, setFetching] = useState<BlowRoleActionID | null>(null)
-  const { id: rid } = props
+  const { id: rid, type = 'card' } = props
   const fetchingAction =
     fetching ?? (isBlowRoleActionID(game?.fetching) ? game?.fetching : null)
 
@@ -44,10 +47,20 @@ export default function BlowCardContainer({ onCommandError, ...props }: Props) {
     setFetching(null)
   }
 
+  const theme = game?.settings.theme
+
+  const Card =
+    type === 'role' && theme === 'magic'
+      ? BlowRoleCard
+      : type === 'role-common' && theme === 'magic'
+      ? BlowRoleCardCommon
+      : BlowCard
+
   return (
-    <BlowCard
+    <Card
       {...props}
-      theme={game?.settings.theme}
+      theme={theme}
+      phase={game?.phase}
       fetching={fetchingAction}
       onActionClick={handleActionClick}
     />

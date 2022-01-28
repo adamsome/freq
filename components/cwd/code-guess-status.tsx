@@ -67,7 +67,7 @@ function createLines(guess?: CwdLastAct): TerminalLine<Word>[] {
     const text = '[[CRITICAL ERROR]] Terminating...'
     const word = {
       text,
-      className: 'font-bold text-amber dark:text-amber-dark',
+      className: 'font-bold text-amber-600 dark:text-amber-400',
     }
     return [line1, { words: [word] }]
   }

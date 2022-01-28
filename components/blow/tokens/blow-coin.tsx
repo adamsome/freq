@@ -1,8 +1,11 @@
 import { HTMLAttributes, useState } from 'react'
-import { BlowActionButtonColor, BlowCoinSize } from '../../lib/types/blow.types'
-import { range } from '../../lib/util/array'
-import { cx } from '../../lib/util/dom'
-import useUpdateEffect from '../../lib/util/use-update-effect'
+import {
+  BlowActionButtonColor,
+  BlowCoinSize,
+} from '../../../lib/types/blow.types'
+import { range } from '../../../lib/util/array'
+import { cx } from '../../../lib/util/dom'
+import useUpdateEffect from '../../../lib/util/use-update-effect'
 
 type Props = HTMLAttributes<HTMLDivElement> & {
   children: number
@@ -30,7 +33,7 @@ const SHOCKWAVE_ANIMATION = [
   'before:animate-shockwave-short',
 ]
 
-const getCoinColor = (color: BlowActionButtonColor, lit = false) => {
+const getCoinColor = (color: BlowActionButtonColor, lit = false): string => {
   switch (color) {
     case 'gray': {
       return lit
@@ -47,10 +50,20 @@ const getCoinColor = (color: BlowActionButtonColor, lit = false) => {
         ? 'from-cyan-700 dark:from-cyan-400'
         : 'from-cyan-600 dark:from-cyan-500'
     }
+    case 'body': {
+      return lit
+        ? 'from-blue-400/70 dark:from-slate-200/50'
+        : 'from-blue-300/70 dark:from-slate-300/40'
+    }
+    default: {
+      return lit
+        ? 'from-blue-100/70 dark:from-slate-800/90'
+        : 'from-blue-100/70 dark:from-slate-800/60'
+    }
   }
 }
 
-const getTextColor = (color: BlowActionButtonColor) => {
+const getTextColor = (color: BlowActionButtonColor): string | string[] => {
   switch (color) {
     case 'gray': {
       return 'text-white dark:text-black'
@@ -60,6 +73,12 @@ const getTextColor = (color: BlowActionButtonColor) => {
     }
     case 'cyan': {
       return 'text-cyan-100 dark:text-black'
+    }
+    case 'body': {
+      return 'text-black dark:text-slate-900'
+    }
+    default: {
+      return color
     }
   }
 }

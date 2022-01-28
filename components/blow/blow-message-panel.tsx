@@ -28,9 +28,6 @@ export default function BlowMessagePanel(props: Props) {
   }, [messages.length])
 
   const hasMessages = messages.length > 0 && theme != null
-  if (!hasMessages) {
-    console.log('no-msgs', messages, theme)
-  }
 
   return (
     <div
@@ -45,7 +42,7 @@ export default function BlowMessagePanel(props: Props) {
         ref={ref}
         className={cx(
           'full max-h-full overflow-auto',
-          'm-auto py-2',
+          'm-auto pt-2 pb-1',
           'text-sm text-gray-500'
         )}
       >
@@ -56,7 +53,7 @@ export default function BlowMessagePanel(props: Props) {
         />
 
         {hasMessages && (
-          <div className={cx('w-full', 'my-2 px-4')}>
+          <div className={cx('w-full my-2 px-4')}>
             <div
               className={cx('w-full h-px', 'bg-gray-100 dark:bg-gray-900')}
             ></div>
@@ -64,7 +61,7 @@ export default function BlowMessagePanel(props: Props) {
         )}
 
         {hasMessages && (
-          <div className={cx('max-w-sm m-auto px-5 space-y-1.5 font-narrow')}>
+          <div className={cx('max-w-sm m-auto px-5 space-y-1 font-narrow')}>
             {messages.map((msg) => (
               <BlowMessageLine key={msg.i} players={players} theme={theme}>
                 {msg}

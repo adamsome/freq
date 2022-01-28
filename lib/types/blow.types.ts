@@ -27,6 +27,7 @@ export interface BlowTokenText extends BlowTokenBase {
 export interface BlowTokenCoin extends BlowTokenBase {
   type: 'coin'
   value: number
+  showIndividualCoins?: boolean
 }
 
 export interface BlowTokenCard extends BlowTokenBase {
@@ -71,6 +72,7 @@ export const BLOW_ROLE_ACTION_IDS = [
   'counter_extort',
   'counter_kill',
   'activate_explore',
+  'counter_raid_explore',
 ] as const
 
 export type BlowRoleActionID = typeof BLOW_ROLE_ACTION_IDS[number]
@@ -93,7 +95,9 @@ export interface BlowRoleActionDef {
   coins?: number
   cards?: number
   counter?: BlowRoleActionID
+  counterLabel?: string
   targetEffect?: BlowTargetEffect
+  classes?: BlowRoleClasses
 }
 
 export const BLOW_CORE_ACTION_IDS = [
@@ -137,13 +141,27 @@ export const BLOW_ROLE_IDS = [
 
 export type BlowRoleID = typeof BLOW_ROLE_IDS[number]
 
+export interface BlowRoleClasses {
+  text?: string[]
+  textMods?: string[]
+  bg?: string[]
+  bgActive?: string[]
+  bgMods?: string[]
+  border?: string[]
+  borderMods?: string[]
+  borderFocus?: string[]
+  ring?: string[]
+  ringMods?: string[]
+}
+
 export interface BlowRoleDef {
   id: BlowRoleID
   common?: boolean
+  hasNoActive?: boolean
   hasNoCounters?: boolean
   name: string
   actions: BlowRoleActionID[]
-  color?: string
+  classes?: BlowRoleClasses
 }
 
 export type BlowRoleActionPair = [role: BlowRoleDef, action: BlowRoleActionDef]
@@ -185,7 +203,13 @@ export interface BlowMessage {
 }
 
 export type BlowActionState = 'normal' | 'active' | 'counter' | 'clickable'
-export type BlowActionButtonColor = 'gray' | 'black' | 'cyan'
+export type BlowActionButtonColor =
+  | 'gray'
+  | 'black'
+  | 'cyan'
+  | 'body'
+  | string
+  | string[]
 
 export type BlowCardVariant = 'empty' | 'facedown' | 'faceup'
 export type BlowCardSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'

@@ -242,7 +242,7 @@ export default class BlowState {
     })
 
     invariant(alive.length !== 0, 'All players cannot be eliminated')
-    if (alive.length === 1) {
+    if (alive.length === 1 && this.s.game.phase !== 'prep') {
       this.s.winner = alive[0]
 
       if (!this.s.challenge) {

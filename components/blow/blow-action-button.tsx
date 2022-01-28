@@ -13,7 +13,7 @@ import {
 } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import BlowActionButtonIcon from './blow-action-button-icon'
-import BlowLabel from './blow-label'
+import BlowLabel from './tokens/blow-label'
 
 type Props = {
   className?: string
@@ -143,20 +143,22 @@ export default function BlowActionButton({
       )}
       onClick={handleClick}
     >
-      <div
-        className={cx(
-          'flex self-baseline',
-          sm ? 'w-[3px]' : md ? 'w-[14px]' : 'w-[19px]'
-        )}
-      >
-        <BlowActionButtonIcon
-          action={action}
-          counter={counter}
-          fetching={fetching}
-          color={color}
-          size={size}
-        />
-      </div>
+      {(counter || action.coins != null) && (
+        <div
+          className={cx(
+            'flex self-baseline',
+            sm ? 'w-[3px]' : md ? 'w-[14px]' : 'w-[19px]'
+          )}
+        >
+          <BlowActionButtonIcon
+            action={action}
+            counter={counter}
+            fetching={fetching}
+            color={color}
+            size={size}
+          />
+        </div>
+      )}
 
       <div
         className={cx(
@@ -164,15 +166,17 @@ export default function BlowActionButton({
           sm ? 'leading-normal' : 'leading-tight'
         )}
       >
-        <span
-          className={cx(
-            'transition-all',
-            !lg ? 'mr-0' : 'mr-0.5',
-            !counter && 'font-semibold'
-          )}
-        >
-          {action.name}:{' '}
-        </span>
+        {counter && (
+          <span
+            className={cx(
+              'transition-all',
+              !lg ? 'mr-0' : 'mr-0.5',
+              !counter && 'font-semibold'
+            )}
+          >
+            {action.name}:{' '}
+          </span>
+        )}
 
         <BlowLabel
           className={cx(
@@ -184,16 +188,12 @@ export default function BlowActionButton({
               : invert
               ? TEXT.black
               : TEXT.body,
-            counter
-              ? invert || state === 'clickable'
-                ? TEXT_OPACITY[100]
-                : TEXT_OPACITY[80]
-              : invert || state === 'clickable'
-              ? TEXT_OPACITY[80]
-              : TEXT_OPACITY[40],
+            invert || state === 'clickable'
+              ? TEXT_OPACITY[100]
+              : TEXT_OPACITY[80],
             counter && 'font-semibold'
           )}
-          label={counter?.name ?? action.label}
+          label={action?.counterLabel ?? counter?.name ?? action.label}
           theme={theme}
           coinProps={{ color, size: sm ? 'xs' : md ? 'sm' : 'md' }}
         />
