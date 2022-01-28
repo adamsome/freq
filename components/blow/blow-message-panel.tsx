@@ -32,8 +32,7 @@ export default function BlowMessagePanel(props: Props) {
   return (
     <div
       className={cx(
-        'flex flex-col w-full px-0 py-0',
-        'relative overflow-hidden',
+        'relative w-full px-0 py-0',
         'border-b border-gray-100 dark:border-gray-950',
         className
       )}
@@ -41,7 +40,7 @@ export default function BlowMessagePanel(props: Props) {
       <div
         ref={ref}
         className={cx(
-          'flex-1 full max-h-full overflow-scroll-fix',
+          'block full max-h-full overflow-y-auto',
           'm-auto pt-2 pb-1',
           'text-sm text-gray-500'
         )}

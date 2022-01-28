@@ -146,12 +146,6 @@ html.dark {
     writing-mode: vertical-rl;
     text-orientation: mixed;
   }
-
-  .overflow-scroll-fix {
-    overflow-y: scroll;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
-  }
 }
 
 .freq-disable-scroll [data-rsbs-scroll] {
