@@ -41,7 +41,7 @@ export default function BlowMessagePanel(props: Props) {
       <div
         ref={ref}
         className={cx(
-          'full max-h-full overflow-auto',
+          'full max-h-full overflow-scroll-fix',
           'm-auto pt-2 pb-1',
           'text-sm text-gray-500'
         )}

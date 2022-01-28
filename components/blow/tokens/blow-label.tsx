@@ -6,6 +6,7 @@ import {
   BlowThemeID,
   BlowToken,
 } from '../../../lib/types/blow.types'
+import { cx } from '../../../lib/util/dom'
 import BlowCoin, { BlowCoinProps } from './blow-coin'
 import BlowPlayerLabel from './blow-player-label'
 import BlowRoleActionLabel from './blow-role-action-label'
@@ -26,7 +27,7 @@ export default function BlowLabel(props: Props) {
   delete spanProps.coinProps
   const parts = Array.isArray(label) ? label : [label]
   return (
-    <span className={className} {...spanProps}>
+    <span className={cx('whitespace-normal', className)} {...spanProps}>
       {parts.map((p, i, arr) => (
         <Part key={i} {...props} token={p} index={i} allTokens={arr} />
       ))}
