@@ -14,6 +14,7 @@ type Props = {
   room?: string
   big?: boolean
   button?: Partial<ButtonProps>
+  overflowAuto?: boolean
   onLogoClick?: () => void
   onTitleClick?: () => void
 }
@@ -26,6 +27,7 @@ export default function Layout({
   room,
   big,
   button = {},
+  overflowAuto = true,
   onLogoClick,
   onTitleClick,
 }: Props) {
@@ -74,7 +76,8 @@ export default function Layout({
       <div
         className={cx(
           'flex-1 flex flex-col items-center',
-          'w-full h-full overflow-auto',
+          'w-full h-full',
+          overflowAuto && 'overflow-auto',
           big ? 'pt-16' : 'pt-12'
         )}
       >

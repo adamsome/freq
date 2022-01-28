@@ -11,6 +11,7 @@ import Layout from '../layout/layout'
 import LayoutMain from '../layout/layout-main'
 import BlowBoardLayout from './blow-board-layout'
 import BlowMessagePanel from './blow-message-panel'
+import BlowPlayersSheet from './blow-players-sheet'
 
 type Props = {
   messages: WithIndex<BlowMessage>[]
@@ -39,6 +40,7 @@ export default function BlowLayout(props: Props) {
         color: 'cyan',
         className: 'inline-flex font-spaced-narrow font-light',
       }}
+      overflowAuto={false}
     >
       <LayoutMain paddingClass="md:px-2">
         <BlowMessagePanel
@@ -67,7 +69,7 @@ export default function BlowLayout(props: Props) {
           />
         </div>
 
-        {/* <BlowPlayersSheet onCommandError={onCommandError} /> */}
+        <BlowPlayersSheet onCommandError={onCommandError} />
       </LayoutMain>
     </Layout>
   )

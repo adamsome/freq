@@ -36,6 +36,7 @@ export default function BlowMessagePanel(props: Props) {
         'border-b border-gray-100 dark:border-gray-950',
         className
       )}
+      data-body-scroll-lock-ignore
     >
       <div
         ref={ref}
