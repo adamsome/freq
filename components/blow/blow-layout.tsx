@@ -52,7 +52,7 @@ export default function BlowLayout(props: Props) {
         <div
           className={cx(
             'w-full flex justify-center',
-            'overflow-auto',
+            'overflow-scroll-fix',
             // Explicitly set height to full window minus the header & messages
             // panel to allow the board to scroll past the players sheet
             'max-h-[calc(100vh-theme(spacing.12)-theme(spacing.16))]',

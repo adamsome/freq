@@ -32,7 +32,7 @@ export default function BlowMessagePanel(props: Props) {
   return (
     <div
       className={cx(
-        'w-full px-0 py-0',
+        'flex flex-col w-full px-0 py-0',
         'relative overflow-hidden',
         'border-b border-gray-100 dark:border-gray-950',
         className
@@ -41,7 +41,7 @@ export default function BlowMessagePanel(props: Props) {
       <div
         ref={ref}
         className={cx(
-          'full max-h-full overflow-auto',
+          'flex-1 full max-h-full overflow-scroll-fix',
           'm-auto pt-2 pb-1',
           'text-sm text-gray-500'
         )}
@@ -61,7 +61,9 @@ export default function BlowMessagePanel(props: Props) {
         )}
 
         {hasMessages && (
-          <div className={cx('max-w-sm m-auto px-5 space-y-1 font-narrow')}>
+          <div
+            className={cx('block max-w-sm m-auto px-5 space-y-1 font-narrow')}
+          >
             {messages.map((msg) => (
               <BlowMessageLine key={msg.i} players={players} theme={theme}>
                 {msg}

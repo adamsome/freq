@@ -35,7 +35,9 @@ export default function BlowCardTitle(props: Props) {
         'text-lg ml-1': lg && orientation === 'vertical',
       })}
     >
-      <span className="flex-1 text-left text-overflow">{children}</span>
+      <span className={cx('flex-1 text-left', { 'text-overflow': !sm })}>
+        {children}
+      </span>
 
       <Icons {...props} />
     </div>

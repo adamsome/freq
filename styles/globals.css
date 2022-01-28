@@ -24,6 +24,8 @@ html.dark {
   }
 
   body {
+    position: relative;
+    overflow-x: hidden;
     text-rendering: optimizeLegibility;
     -webkit-overflow-scrolling: touch;
     -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
@@ -143,6 +145,12 @@ html.dark {
   .vertical-rl {
     writing-mode: vertical-rl;
     text-orientation: mixed;
+  }
+
+  .overflow-scroll-fix {
+    overflow-y: scroll;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
