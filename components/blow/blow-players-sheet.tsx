@@ -10,7 +10,7 @@ export default function BlowPlayersSheet(props: Props) {
   const { onCommandError } = props
   return (
     <BottomSheet
-      className="freq-disable-scroll"
+      className="freq-disable-scroll relative z-30"
       open
       skipInitialTransition
       expandOnContentDrag
