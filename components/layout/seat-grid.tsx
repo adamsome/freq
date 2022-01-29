@@ -105,7 +105,7 @@ export default function SeatGrid({ children, classNames }: Props) {
       className={cx(
         'grid',
         'grid-cols-[repeat(2,minmax(0,1fr)_1.5rem)_minmax(0,1fr)]',
-        'grid-rows-[minmax(5rem,1fr)_1.5rem_minmax(5rem,1fr)]',
+        'grid-rows-[minmax(4.5rem,1fr)_1rem_minmax(4.5rem,1fr)]',
         'items-center',
         classNames
       )}
@@ -124,7 +124,7 @@ export default function SeatGrid({ children, classNames }: Props) {
               <div
                 key={i + 'arrow'}
                 className={cx(
-                  'text-center w-full h-full flex p-1.5',
+                  'text-center w-full h-full flex p-1',
                   arrow.classes,
                   !arrow.classes.includes('items-') && 'items-center'
                 )}

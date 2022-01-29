@@ -33,7 +33,7 @@ export default function BlowMessagePanel(props: Props) {
     <div
       className={cx(
         'relative w-full p-0',
-        'bg-white/80 dark:bg-black/80',
+        'bg-white/50 dark:bg-black/50',
         'backdrop-blur-[10px]',
         'border-b border-gray-100 dark:border-gray-950',
         className

@@ -37,12 +37,16 @@ export default function RoomCard({ game, className, onClick }: Props) {
     lastUpdatedISO = formatISO9075(date)
   }
 
+  const isTeamGame = isTeamGuessGame(game.type)
+  const isBlowGame = isBlowGameView(game)
+
   return (
     <button
       type="button"
       className={cx(
         'flex flex-col items-center w-full',
-        'px-0 md:px-4 py-3 bg-gray-100 dark:bg-gray-900',
+        'px-0 md:px-4 bg-gray-100 dark:bg-gray-900',
+        isBlowGame ? 'pt-3 pb-1' : 'py-3',
         'border-t border-b border-gray-200 dark:border-gray-800',
         'md:border-l md:border-r md:rounded-lg',
         'transition cursor-pointer group',
@@ -108,14 +112,15 @@ export default function RoomCard({ game, className, onClick }: Props) {
       <div
         className={cx(
           'w-full pr-2 md:pr-0 opacity-70 group-hover:opacity-100 transition-opacity',
-          'pt-3 mt-3 transition-colors',
+          'mt-3 transition-colors',
+          isBlowGame ? 'pt-1' : 'pt-3',
           'border-t border-gray-300 dark:border-gray-800',
           'group-hover:border-gray-300 dark:group-hover:border-gray-700'
         )}
       >
-        {isTeamGuessGame(game.type) ? (
+        {isTeamGame ? (
           <Scoreboard game={game} readonly></Scoreboard>
-        ) : isBlowGameView(game) ? (
+        ) : isBlowGame ? (
           <BlowPlayerSeatsGrid className="m-auto" game={game} />
         ) : (
           <div>Scores not yet implemented.</div>

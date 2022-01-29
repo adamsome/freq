@@ -10,7 +10,7 @@ type Props = typeof defaultProps & {
 
 const defaultProps = {
   classNames: '',
-  colorClass: 'bg-gray-200 dark:bg-gray-800',
+  colorClass: 'bg-gray-200 dark:bg-gray-700',
 }
 
 export default function Arrow({
@@ -37,7 +37,7 @@ export default function Arrow({
     >
       <span
         className={cx(
-          'absolute w-px h-1 -rotate-45',
+          'absolute w-px h-1',
           {
             'left-0.5': left && !hasY,
             'right-0.5': (hasY && !hasX) || (right && !hasY),

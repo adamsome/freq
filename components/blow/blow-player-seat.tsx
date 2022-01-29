@@ -5,6 +5,7 @@ import {
   BlowCardSize,
   BlowCardSource,
   BlowCardVariant,
+  BlowGameView,
   BlowPlayerSeatSize,
   BlowPlayerView,
   BlowRoleActionID,
@@ -20,6 +21,7 @@ import BlowPlayerSeatOutline from './blow-player-seat-outline'
 
 type Props = {
   className?: string
+  game?: BlowGameView
   player?: BlowPlayerView | null
   name?: string
   active?: boolean
@@ -112,6 +114,7 @@ function BlowPlayerSeatCoins(props: Props) {
 function BlowPlayerSeatHand(props: Props) {
   const {
     className,
+    game,
     player,
     size,
     drawnCards,
@@ -195,7 +198,7 @@ function BlowPlayerSeatHand(props: Props) {
 
       <div className={handCx}>
         {[0, 1].map((i) => (
-          <BlowCardContainer key={i} {...getCardDefaults(i)} />
+          <BlowCardContainer key={i} {...getCardDefaults(i)} game={game} />
         ))}
       </div>
 

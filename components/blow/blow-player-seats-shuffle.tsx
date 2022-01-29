@@ -41,8 +41,9 @@ export default function BlowPlayerSeatsShuffle(props: Props) {
 
   return (
     <Button
-      className={cx('w-24 h-8 font-spaced-narrow', {
-        'relative -top-7': (players?.length ?? 0) < 4,
+      className={cx('relative w-24 h-8 font-spaced-narrow', {
+        '-top-6': (players?.length ?? 0) < 4,
+        '-top-px': (players?.length ?? 0) >= 4,
       })}
       color="cyan"
       onClick={handleShuffle}

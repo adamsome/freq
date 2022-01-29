@@ -9,6 +9,7 @@ import Header from './header'
 type Props = {
   children: ReactNode
   className?: string
+  contentClassName?: string
   type?: GameType
   title?: string
   room?: string
@@ -22,16 +23,32 @@ type Props = {
 }
 
 export default function Layout(props: Props) {
-  const { children, ...headerProps } = props
-
+  const {
+    children,
+    className,
+    contentClassName,
+    title,
+    room,
+    big,
+    flexWrapper = true,
+    overflowAuto = true,
+    ...headerProps
+  } = props
   return (
     <>
-      <Wrapper {...props}>
-        <Helmet {...props} />
+      <Wrapper className={className} flexWrapper={flexWrapper}>
+        <Helmet title={title} room={room} />
 
         <Header {...headerProps} />
 
-        <ContentWrapper {...props}>{children}</ContentWrapper>
+        <ContentWrapper
+          className={contentClassName}
+          big={big}
+          overflowAuto={overflowAuto}
+          flexWrapper={flexWrapper}
+        >
+          {children}
+        </ContentWrapper>
       </Wrapper>
     </>
   )
@@ -39,7 +56,7 @@ export default function Layout(props: Props) {
 
 function Wrapper(props: Props) {
   const { children, className, flexWrapper } = props
-  if (!flexWrapper) return <>{children}</>
+  if (!flexWrapper) return <div className={className}>{children}</div>
   return (
     <div
       className={cx(
@@ -55,21 +72,24 @@ function Wrapper(props: Props) {
 }
 
 function ContentWrapper(props: Props) {
-  const { children, overflowAuto, big, flexWrapper } = props
-  if (!flexWrapper) return <div>{children}</div>
+  const { children, className, big, overflowAuto, flexWrapper } = props
+  if (!flexWrapper) return <div className={className}>{children}</div>
   return (
     <div
-      className={cx(
-        'flex-1 flex flex-col items-center',
-        'w-full h-full',
-        overflowAuto && 'overflow-auto',
-        big ? 'pt-16' : 'pt-12'
-      )}
-    ></div>
+      className={cx(className, {
+        'flex-1 flex flex-col items-center': true,
+        'w-full h-full': true,
+        'overflow-auto': overflowAuto,
+        'pt-16': big,
+        'pt-12': !big,
+      })}
+    >
+      {children}
+    </div>
   )
 }
 
-function Helmet(props: Props) {
+function Helmet(props: Omit<Props, 'children'>) {
   const { title, room } = props
   const titlePrefix = `${title ?? ''}${room ? ` / ${room}` : ''}`
   const fullTitle = `${titlePrefix}${titlePrefix ? ' / ' : ''}adamsome`

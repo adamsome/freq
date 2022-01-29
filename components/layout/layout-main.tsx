@@ -20,7 +20,6 @@ export default function LayoutMain({
         paddingClass,
         className
       )}
-      data-body-scroll-lock-ignore
     >
       {children}
     </main>

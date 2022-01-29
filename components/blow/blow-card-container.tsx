@@ -2,6 +2,7 @@ import produce from 'immer'
 import { useState } from 'react'
 import {
   BlowAction,
+  BlowGameView,
   BlowRoleActionID,
   isBlowRoleActionID,
 } from '../../lib/types/blow.types'
@@ -14,13 +15,16 @@ import BlowRoleCardCommon from './blow-role-card-common'
 
 type Props = Omit<BlowCardProps, 'theme' | 'onActionClick'> & {
   type?: 'card' | 'role' | 'role-common'
+  game?: BlowGameView
   onCommandError?: (error: CommandError) => void
 }
 
 export default function BlowCardContainer({ onCommandError, ...props }: Props) {
-  const { game, mutate } = useBlowGame()
+  const { game: rawGame, mutate } = useBlowGame()
   const [fetching, setFetching] = useState<BlowRoleActionID | null>(null)
-  const { id: rid, type = 'card' } = props
+  const { id: rid, type = 'card', game: gameProp } = props
+  const game = rawGame ?? gameProp
+
   const fetchingAction =
     fetching ?? (isBlowRoleActionID(game?.fetching) ? game?.fetching : null)
 

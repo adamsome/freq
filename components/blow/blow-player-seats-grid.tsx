@@ -36,6 +36,7 @@ export default function BlowPlayerSeatsGrid(props: Props) {
         {players.map((p, i) => (
           <BlowPlayerSeat
             key={p?.id ?? i}
+            game={game}
             player={p}
             active={phase === 'prep' && p?.id === firstPlayerID}
             actions={game?.actionState}
