@@ -135,8 +135,8 @@ export function isBlowActionID(id: unknown): id is BlowActionID {
 
 export const BLOW_ROLE_IDS = [
   'merchant',
-  'thief',
   'killer',
+  'thief',
   'guard',
   'explorer',
   'common',

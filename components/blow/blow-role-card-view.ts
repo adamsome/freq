@@ -291,7 +291,7 @@ function getClickableRoleAction(
   if (lit) {
     return {
       text: [TEXT.body, TEXT.alpha70],
-      counterText: [...textColor, TEXT.alpha70],
+      counterText: [...textColor, TEXT.alpha50],
       icon: [...textColor, TEXT.alpha50],
       hint: [TEXT.body, TEXT.alpha20],
       coinColor,

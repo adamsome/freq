@@ -32,13 +32,8 @@ export default function BlowRoleCardActionIcon({
   if (counter) {
     return (
       <IconSvg
-        className={cx(
-          classes.icon,
-          'relative transition-all',
-          'w-3 h-5 ml-0.5'
-        )}
+        className={cx(classes.icon, 'relative transition-all', 'w-3 h-5')}
         name="shield"
-        top="-2px"
       />
     )
   }

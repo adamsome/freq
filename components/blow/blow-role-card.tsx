@@ -8,7 +8,6 @@ import {
   BlowThemeID,
 } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
-import IconSvg from '../control/icon-svg'
 import SkeletonBox from '../layout/skeleton-box'
 import BlowCardTitle from './blow-card-title'
 import BlowRoleCardAction from './blow-role-card-action'
@@ -120,34 +119,6 @@ function BlowRoleCardContent(props: Props) {
           </div>
         )}
       </div>
-
-      {counter && (
-        <div
-          className={cx(
-            'absolute bottom-0.5 xs:bottom-0 left-1 inline-flex',
-            view.classes.counter.text
-          )}
-        >
-          <IconSvg
-            className={cx(
-              view.classes.counter.icon,
-              'relative transition-all',
-              'w-3 h-4 xs:h-5 mr-1'
-            )}
-            name="shield"
-            // top="-2px"
-          />
-
-          <span
-            className={cx(
-              'text-xs xs:text-sm',
-              view.classes.counter.counterText
-            )}
-          >
-            Counter:
-          </span>
-        </div>
-      )}
     </div>
   )
 }

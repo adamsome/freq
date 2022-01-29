@@ -50,8 +50,13 @@ export default function BlowRoleCardAction(props: Props) {
         className
       )}
     >
-      {action.coins != null && (
-        <div className={cx('flex self-baseline w-[19px]')}>
+      {(counter || action.coins != null) && (
+        <div
+          className={cx('flex self-baseline', {
+            'w-5': action.coins != null,
+            'w-4': counter,
+          })}
+        >
           <BlowRoleCardActionIcon
             action={action}
             counter={counter}
