@@ -23,7 +23,7 @@ type Props = HTMLAttributes<HTMLSpanElement> & {
 const isString = (p: unknown): p is string => typeof p === 'string'
 
 export default function BlowLabel(props: Props) {
-  const { className, label = '', ...spanProps } = props
+  const { className, label = '', theme, ...spanProps } = props
   delete spanProps.coinProps
   const parts = Array.isArray(label) ? label : [label]
   return (

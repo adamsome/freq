@@ -14,6 +14,7 @@ export default function BlowPlayersSheet(props: Props) {
       open
       skipInitialTransition
       expandOnContentDrag
+      scrollLocking={false}
       blocking={false}
       snapPoints={({ minHeight, maxHeight }) => [
         32,

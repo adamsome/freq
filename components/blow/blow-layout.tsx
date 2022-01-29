@@ -7,9 +7,10 @@ import {
 import { CommandError } from '../../lib/types/game.types'
 import { WithIndex } from '../../lib/types/object.types'
 import { cx } from '../../lib/util/dom'
+import { useBlowGame } from '../../lib/util/use-game'
 import Layout from '../layout/layout'
-import LayoutMain from '../layout/layout-main'
-import BlowBoardLayout from './blow-board-layout'
+import BlowBoardCommandArea from './blow-board-command-area'
+import BlowBoardContent from './blow-board-content'
 import BlowMessagePanel from './blow-message-panel'
 import BlowPlayersSheet from './blow-players-sheet'
 
@@ -24,15 +25,19 @@ type Props = {
 export default function BlowLayout(props: Props) {
   const { messages, players, room, theme, onCommandError } = props
 
+  const { game } = useBlowGame()
+
+  const showBottomCommandArea =
+    theme !== 'magic' ||
+    (game?.challenge && game.challenge.winner != null) ||
+    (game?.drawCards && game.drawCards.selected) ||
+    game?.pickLossCard ||
+    game?.winner
+
   const roomUrl = room && `${process.env.NEXT_PUBLIC_BASE_URL}/blow/${room}`
 
   return (
     <Layout
-      className={
-        theme === 'magic'
-          ? '[--freq-button-weight:600]'
-          : '[--freq-button-weight:400]'
-      }
       type="blow"
       title={getGameTitle('blow')}
       room={room}
@@ -40,37 +45,41 @@ export default function BlowLayout(props: Props) {
         color: 'cyan',
         className: 'inline-flex font-spaced-narrow font-light',
       }}
-      overflowAuto={false}
+      sticky
+      flexWrapper={false}
     >
-      <LayoutMain paddingClass="md:px-2">
-        <BlowMessagePanel
-          className="h-16 md:h-20"
-          roomUrl={roomUrl}
-          messages={messages}
-          players={players}
-          theme={theme}
-        />
-        <div
-          className={cx(
-            'w-full flex justify-center',
-            'overflow-y-auto',
-            // Explicitly set height to full window minus the header & messages
-            // panel to allow the board to scroll past the players sheet
-            'max-h-[calc(100vh-theme(spacing.12)-theme(spacing.16))]',
-            'md:max-h-[calc(100vh-theme(spacing.12)-theme(spacing.20))]'
-          )}
-        >
-          <BlowBoardLayout
-            className="full pt-2 xs:pt-3 sm:pt-4"
-            theme={theme}
-            // Height of the players sheet's seat grid + chrome
-            bottomSpacerClass="min-h-[theme(spacing.56)]"
+      <BlowMessagePanel
+        className="sticky top-12 z-20 h-16 md:h-20"
+        roomUrl={roomUrl}
+        messages={messages}
+        players={players}
+        theme={theme}
+      />
+
+      <div
+        className={cx(
+          'w-full max-w-screen-md',
+          'mx-auto pt-1.5 xs:pt-2 sm:pt-4 md:px-2',
+          'space-y-1.5 xs:space-y-2 sm:space-y-4',
+          theme === 'magic'
+            ? '[--freq-button-weight:600]'
+            : '[--freq-button-weight:400]'
+        )}
+      >
+        <BlowBoardContent onCommandError={onCommandError} />
+
+        {showBottomCommandArea && (
+          <BlowBoardCommandArea
+            position="bottom"
             onCommandError={onCommandError}
           />
-        </div>
+        )}
 
-        <BlowPlayersSheet onCommandError={onCommandError} />
-      </LayoutMain>
+        {/* Empty space, height of player seats bottom sheet, for scrolling */}
+        <div className={cx('w-full h-56')}></div>
+      </div>
+
+      <BlowPlayersSheet onCommandError={onCommandError} />
     </Layout>
   )
 }

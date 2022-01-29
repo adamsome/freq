@@ -25,11 +25,7 @@ export default function BlowBoardLayout(props: Props) {
 
   return (
     <div
-      className={cx(
-        'flex flex-col items-center',
-        'full max-w-sm space-y-2 xs:space-y-3 sm:space-y-4',
-        className
-      )}
+      className={cx('max-w-sm space-y-2 xs:space-y-3 sm:space-y-4', className)}
     >
       <BlowBoardContent onCommandError={onCommandError} />
 
@@ -40,7 +36,7 @@ export default function BlowBoardLayout(props: Props) {
         />
       )}
 
-      <div className={cx('flex-1 w-full', bottomSpacerClass)}></div>
+      <div className={cx('w-full', bottomSpacerClass)}></div>
     </div>
   )
 }

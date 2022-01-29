@@ -10,6 +10,7 @@ type Props = {
   type?: GameType
   big?: boolean
   button?: Partial<ButtonProps>
+  sticky?: boolean
   onLogoClick?: () => void
   onTitleClick?: () => void
 }
@@ -18,6 +19,7 @@ export default function Header({
   type,
   big,
   button = {},
+  sticky,
   onLogoClick,
   onTitleClick,
 }: Props) {
@@ -33,9 +35,10 @@ export default function Header({
   return (
     <header
       className={cx(
-        'fixed left-0 top-0 flex-center flex-col',
+        sticky ? 'sticky' : 'fixed',
+        'left-0 top-0 flex-center flex-col',
         'w-full z-30',
-        'bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-80',
+        'bg-white/80 dark:bg-black/80',
         'backdrop-blur-[10px]',
         'border-b border-gray-200 dark:border-gray-900',
         heightClass
