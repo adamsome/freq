@@ -20,8 +20,17 @@ export default function BlowContainer() {
     resetErrors()
   }, [phase, resetErrors])
 
+  const showBottomCommandArea =
+    settings?.theme === 'classic' ||
+    (game?.challenge && game.challenge.winner != null) ||
+    (game?.drawCards && game.drawCards.selected) ||
+    game?.pickLossCard != null ||
+    game?.winner != null
+
   return (
     <BlowLayout
+      loading={!game}
+      showBottomCommandArea={showBottomCommandArea}
       messages={messages}
       players={players}
       room={room}

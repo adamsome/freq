@@ -33,7 +33,7 @@ export default function BlowCardButton(props: Props) {
   const md = size === 'md'
   const lg = size === 'lg' || size === 'xl'
   const bright = sm || selectable
-  const magicRole = theme === 'magic'
+  const magicRole = theme !== 'classic'
 
   const asButton = selectable && onClick
   const Component = asButton ? 'button' : 'div'

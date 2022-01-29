@@ -31,7 +31,7 @@ export default function BlowCardTitle(props: Props) {
         'font-semibold w-full overflow-hidden whitespace-nowrap': true,
         'text-[3.5px] leading-normal': sm,
         'text-xs mt-1.5 ml-0': md && orientation === 'vertical',
-        'tracking-normal': theme === 'magic',
+        'tracking-normal': theme !== 'classic',
         'text-lg ml-1': lg && orientation === 'vertical',
       })}
     >
@@ -47,7 +47,7 @@ export default function BlowCardTitle(props: Props) {
 function Icons(props: Props) {
   const { currentCards = 0, theme } = props
   return (
-    <div className={cx('flex-center', { 'pr-0.5': theme === 'magic' })}>
+    <div className={cx('flex-center', { 'pr-0.5': theme !== 'classic' })}>
       {range(0, currentCards).map((i) => (
         <BlowCard key={i} size="xs" color="cyan" theme={theme} />
       ))}

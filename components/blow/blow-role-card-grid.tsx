@@ -13,7 +13,7 @@ type Props = {
 export default function BlowRoleCardGrid(props: Props) {
   const { game } = useBlowGame()
   const { className, onCommandError } = props
-  const magicRole = game?.settings.theme === 'magic'
+  const magicRole = game?.settings.theme !== 'classic'
   const showCommandAreaInGrid = magicRole
   const gridItemCount = magicRole ? 5 : 6
 

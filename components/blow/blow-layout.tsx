@@ -7,7 +7,6 @@ import {
 import { CommandError } from '../../lib/types/game.types'
 import { WithIndex } from '../../lib/types/object.types'
 import { cx } from '../../lib/util/dom'
-import { useBlowGame } from '../../lib/util/use-game'
 import Layout from '../layout/layout'
 import BlowBoardCommandArea from './blow-board-command-area'
 import BlowBoardContent from './blow-board-content'
@@ -15,6 +14,8 @@ import BlowMessagePanel from './blow-message-panel'
 import BlowPlayersSheet from './blow-players-sheet'
 
 type Props = {
+  loading?: boolean
+  showBottomCommandArea: boolean
   messages: WithIndex<BlowMessage>[]
   players?: BlowPlayerView[]
   theme?: BlowThemeID
@@ -23,16 +24,15 @@ type Props = {
 }
 
 export default function BlowLayout(props: Props) {
-  const { messages, players, room, theme, onCommandError } = props
-
-  const { game } = useBlowGame()
-
-  const showBottomCommandArea =
-    theme !== 'magic' ||
-    (game?.challenge && game.challenge.winner != null) ||
-    (game?.drawCards && game.drawCards.selected) ||
-    game?.pickLossCard ||
-    game?.winner
+  const {
+    loading,
+    showBottomCommandArea,
+    messages,
+    players,
+    room,
+    theme,
+    onCommandError,
+  } = props
 
   const roomUrl = room && `${process.env.NEXT_PUBLIC_BASE_URL}/blow/${room}`
 
@@ -51,6 +51,7 @@ export default function BlowLayout(props: Props) {
     >
       <BlowMessagePanel
         className="sticky top-12 z-20 h-16 md:h-20"
+        loading={loading}
         roomUrl={roomUrl}
         messages={messages}
         players={players}
@@ -62,7 +63,7 @@ export default function BlowLayout(props: Props) {
           'w-full max-w-screen-md',
           'mx-auto pt-1.5 xs:pt-2 sm:pt-4 md:px-2',
           'space-y-1.5 xs:space-y-2 sm:space-y-4',
-          theme === 'magic'
+          theme !== 'classic'
             ? '[--freq-button-weight:600]'
             : '[--freq-button-weight:400]'
         )}

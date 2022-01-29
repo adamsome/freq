@@ -32,20 +32,20 @@ export default function useGame<T extends BaseGameView = BaseGameView>(
   options: Partial<UseGameOptions<T>> = {}
 ): UseGameResult<T> {
   const router = useRouter()
-  const game = head(router.query?.game as string | undefined)?.toLowerCase()
+  const type = head(router.query?.game as string | undefined)?.toLowerCase()
   const room = head(router.query?.room as string | undefined)?.toLowerCase()
 
   const { useRequired, required, ...opts } = withDefaults(options)
 
   const path =
-    game && room && (useRequired ? required != null : true)
-      ? API_GAME.replace('%0', game).replace('%1', room)
+    type && room && (useRequired ? required != null : true)
+      ? API_GAME.replace('%0', type).replace('%1', room)
       : null
 
-  const { data, error, mutate } = useSWR<T>(path, opts)
+  const { data: game, error, mutate } = useSWR<T>(path, opts)
 
-  const loading = !error && !data
-  return { game: data, loading, error, mutate }
+  const loading = !error && !game
+  return { game, loading, error, mutate }
 }
 
 export function useCwdGame(

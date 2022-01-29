@@ -21,9 +21,10 @@ export default function BlowBoardCommand(props: Props) {
       <SkeletonBox
         className={cx('w-full', {
           'h-12 mb-6 md:px-4': position === 'bottom',
-          'h-20 rounded-md': position === 'grid-item',
+          'h-[4.85rem]': position === 'grid-item',
         })}
         innerClassName={position === 'grid-item' ? 'rounded-md' : undefined}
+        roundedClassName={position === 'grid-item' ? 'rounded-md' : undefined}
       />
     )
 

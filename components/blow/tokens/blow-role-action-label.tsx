@@ -24,7 +24,7 @@ export default function BlowRoleActionLabel({
 }: Props) {
   const className = rawClassName ?? 'text-gray-500 dark:text-gray-400'
 
-  if (theme === 'magic') {
+  if (theme !== 'classic') {
     return (
       <BlowRoleLabel
         className={rawClassName}

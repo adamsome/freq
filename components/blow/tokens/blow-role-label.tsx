@@ -36,7 +36,7 @@ export default function BlowRoleLabel({
   if (hideIfCommon && role?.common) return null
   let label = role ? role.name : children ?? value
 
-  if (theme === 'magic') {
+  if (theme !== 'classic') {
     const view = getBlowRoleView(theme, rid, {
       clickable: true,
       useActionID: action,

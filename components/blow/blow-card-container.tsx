@@ -54,9 +54,9 @@ export default function BlowCardContainer({ onCommandError, ...props }: Props) {
   const theme = game?.settings.theme
 
   const Card =
-    type === 'role' && theme === 'magic'
+    type === 'role' && theme !== 'classic'
       ? BlowRoleCard
-      : type === 'role-common' && theme === 'magic'
+      : type === 'role-common' && theme !== 'classic'
       ? BlowRoleCardCommon
       : BlowCard
 

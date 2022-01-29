@@ -16,7 +16,7 @@ export default function BlowCardShape({
   theme,
 }: Props) {
   const horizontal = orientation === 'horizontal'
-  const magicRole = theme === 'magic' && horizontal
+  const magicRole = theme !== 'classic' && horizontal
   return (
     <div
       className={cx(className, {

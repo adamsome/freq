@@ -7,11 +7,13 @@ import {
 import { WithIndex } from '../../lib/types/object.types'
 import { cx } from '../../lib/util/dom'
 import GameLink from '../game-link'
+import SkeletonBox from '../layout/skeleton-box'
 import BlowMessageCurrent from './blow-message-current'
 import BlowMessageLine from './blow-message-line'
 
 type Props = {
   className?: string
+  loading?: boolean
   roomUrl?: string
   messages?: WithIndex<BlowMessage>[]
   players?: BlowPlayerView[]
@@ -19,7 +21,7 @@ type Props = {
 }
 
 export default function BlowMessagePanel(props: Props) {
-  const { className = '', roomUrl, messages = [], players, theme } = props
+  const { className, loading, roomUrl, messages = [], players, theme } = props
 
   const ref = useRef<HTMLDivElement | null>(null)
 
@@ -28,6 +30,8 @@ export default function BlowMessagePanel(props: Props) {
   }, [messages.length])
 
   const hasMessages = messages.length > 0 && theme != null
+
+  if (loading) return <SkeletonBox className={cx(className)} rounded={false} />
 
   return (
     <div

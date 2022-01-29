@@ -39,7 +39,7 @@ function BlowRoleCardContent(props: Props) {
   const { theme, actions = {}, phase, index } = props
 
   if (!theme || index == null)
-    return <SkeletonBox color="cyan" className="full" />
+    return <SkeletonBox className="w-full h-12" roundedClassName="rounded-md" />
 
   const { role, classes } = getBlowRoleView(theme, 'common', actions, {
     clickable: phase === 'prep',

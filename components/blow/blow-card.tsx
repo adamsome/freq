@@ -119,7 +119,7 @@ function BlowCardContent(props: Props & { view: BlowRoleView }) {
               state={
                 // If we're fetching, set clickable actions to normal
                 (fetching && fetching !== a && actions[a] === 'clickable') ||
-                theme === 'magic'
+                theme !== 'classic'
                   ? 'normal'
                   : actions[a]
               }

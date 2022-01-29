@@ -7,6 +7,7 @@ type Props = {
   innerClassName?: string
   color?: SkeletonBoxColor
   rounded?: boolean
+  roundedClassName?: string
 }
 
 const GRAY_COLORS = [
@@ -40,6 +41,7 @@ export default function SkeletonBox({
   innerClassName = '',
   color = 'gray',
   rounded = true,
+  roundedClassName,
 }: Props) {
   return (
     <div className={className}>
@@ -51,7 +53,7 @@ export default function SkeletonBox({
           'md:border-l md:border-r',
           'focus:outline-none cursor-default',
           getColorClasses(color),
-          rounded && 'md:rounded-lg',
+          rounded && (roundedClassName ? roundedClassName : 'md:rounded-lg'),
           innerClassName
         )}
       ></div>
