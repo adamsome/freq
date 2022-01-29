@@ -18,7 +18,7 @@ export default function BlowRoleCardActionIcon({
   if (action?.coins) {
     return (
       <BlowCoin
-        className="mt-px"
+        wrapperClassName="top-[3px]"
         lit
         color={classes.coinColor as string}
         size="md"

@@ -30,7 +30,7 @@ export default function BlowBoardCommandArea(props: Props) {
         className={cx(className, {
           'max-w-xs text-center': true,
           'h-12 px-6': position === 'bottom',
-          'flex-center h-20 px-1': position === 'grid-item',
+          'flex-center h-18 px-1': position === 'grid-item',
           'font-narrow text-lg': true,
           'text-gray-400 dark:text-gray-500': true,
         })}
@@ -50,7 +50,7 @@ export default function BlowBoardCommandArea(props: Props) {
   return (
     <div
       className={cx(className, {
-        'h-20 pt-0 pl-0': position === 'grid-item',
+        'h-18 pt-0 pl-0': position === 'grid-item',
         'w-full h-12 px-6': position === 'bottom',
       })}
     >

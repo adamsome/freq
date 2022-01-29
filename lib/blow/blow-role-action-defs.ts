@@ -43,6 +43,8 @@ const DEFS_BY_ID: Record<BlowRoleActionID, BlowRoleActionDef> = {
     id: 'counter_raid',
     name: 'Counter',
     counter: 'activate_raid',
+    counterRole: 'thief',
+    counterLabel: 'Raid',
   },
   activate_trade: {
     id: 'activate_trade',
@@ -53,12 +55,14 @@ const DEFS_BY_ID: Record<BlowRoleActionID, BlowRoleActionDef> = {
     id: 'counter_extort',
     name: 'Counter',
     counter: 'activate_extort',
+    counterRole: 'common',
     counterLabel: 'Extort',
   },
   counter_kill: {
     id: 'counter_kill',
     name: 'Counter',
     counter: 'activate_kill',
+    counterRole: 'killer',
     counterLabel: 'Kill',
   },
   activate_explore: {
@@ -66,12 +70,14 @@ const DEFS_BY_ID: Record<BlowRoleActionID, BlowRoleActionDef> = {
     name: 'Explore',
     label: ['Draw', { type: 'card', value: 2 }],
     counterLabel: 'Raid',
+    counterRole: 'thief',
     cards: 2,
   },
   counter_raid_explore: {
     id: 'counter_raid_explore',
     name: 'Counter',
     counter: 'activate_raid',
+    counterRole: 'thief',
     counterLabel: 'Raid',
   },
 }
@@ -101,10 +107,39 @@ const THEMED_DEFS_BY_ID: Partial<
       name: 'Leech',
       label: ['Leech', { type: 'coin', value: 2 }],
     },
-    counter_extort: { counterLabel: 'Potion' },
-    counter_kill: { counterLabel: 'Evocation' },
-    counter_raid: { counterLabel: 'Necromancy' },
-    counter_raid_explore: { counterLabel: 'Necromancy' },
+    counter_extort: {
+      counterLabel: {
+        type: 'action',
+        value: 'activate_extort',
+        role: 'common',
+        border: false,
+        className: 'text-xs xs:text-sm',
+      },
+    },
+    counter_kill: {
+      counterLabel: {
+        type: 'role',
+        value: 'killer',
+        border: false,
+        className: 'text-xs xs:text-sm',
+      },
+    },
+    counter_raid: {
+      counterLabel: {
+        type: 'role',
+        value: 'thief',
+        border: false,
+        className: 'text-xs xs:text-sm',
+      },
+    },
+    counter_raid_explore: {
+      counterLabel: {
+        type: 'role',
+        value: 'thief',
+        border: false,
+        className: 'text-xs xs:text-sm',
+      },
+    },
   },
 }
 

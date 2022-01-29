@@ -54,7 +54,7 @@ function BlowRoleCardContent(props: Props) {
   return (
     <div className="flex justify-start items-center w-full">
       <BlowRoleIcon
-        className={cx(classes.roleIcon, 'w-8')}
+        className={cx(classes.roleIcon, 'w-8 ml-1 mr-1 xs:ml-1.5 xs:mr-1.5')}
         role="common"
         action={xid}
       />

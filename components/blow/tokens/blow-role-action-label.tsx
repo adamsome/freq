@@ -12,6 +12,7 @@ type Props = {
   value: BlowRoleActionID
   role?: BlowRoleID
   theme: BlowThemeID
+  border?: boolean
 }
 
 export default function BlowRoleActionLabel({
@@ -19,11 +20,20 @@ export default function BlowRoleActionLabel({
   value,
   role: rid,
   theme,
+  border,
 }: Props) {
   const className = rawClassName ?? 'text-gray-500 dark:text-gray-400'
 
   if (theme === 'magic') {
-    return <BlowRoleLabel value={rid} theme={theme} action={value} />
+    return (
+      <BlowRoleLabel
+        className={rawClassName}
+        value={rid}
+        theme={theme}
+        action={value}
+        border={border}
+      />
+    )
   }
 
   const action = getBlowRoleAction(theme, value)
@@ -36,7 +46,13 @@ export default function BlowRoleActionLabel({
   }
   return (
     <>
-      <BlowRoleLabel value={rid} theme={theme} suffix=" → " hideIfCommon />
+      <BlowRoleLabel
+        value={rid}
+        theme={theme}
+        suffix=" → "
+        border={border}
+        hideIfCommon
+      />
 
       <span
         className={cx('font-narrow', className, { 'font-semibold': !counter })}

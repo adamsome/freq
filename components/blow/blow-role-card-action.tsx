@@ -11,17 +11,14 @@ import { BlowRoleViewActionClasses } from './blow-role-card-view'
 
 type Props = {
   className?: string
+  sizeClassName?: string
   action?: BlowRoleActionDef
   theme?: BlowThemeID
   classes: BlowRoleViewActionClasses
 }
 
-export default function BlowRoleCardAction({
-  className = '',
-  action,
-  theme,
-  classes,
-}: Props) {
+export default function BlowRoleCardAction(props: Props) {
+  const { className, sizeClassName = 'text-sm', action, theme, classes } = props
   const heightCx = 'h-5 min-h-5'
 
   if (!action || !theme) {
@@ -45,8 +42,8 @@ export default function BlowRoleCardAction({
     <div
       className={cx(
         'relative align-baseline flex-center group transition',
-        'w-full py-0.5',
-        'text-sm',
+        'w-full py-0',
+        sizeClassName,
         heightCx,
         'tracking-normal',
         classes.text,
@@ -64,10 +61,6 @@ export default function BlowRoleCardAction({
       )}
 
       <div className={cx('flex-1 text-left leading-tight text-overflow')}>
-        {counter && (
-          <span className={cx('mr-0.5 transition-all')}>{action.name}: </span>
-        )}
-
         <BlowLabel
           className={cx(counter && 'font-semibold text-overflow')}
           label={label}

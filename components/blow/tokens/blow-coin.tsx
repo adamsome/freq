@@ -9,6 +9,7 @@ import useUpdateEffect from '../../../lib/util/use-update-effect'
 
 type Props = HTMLAttributes<HTMLDivElement> & {
   children: number
+  wrapperClassName?: string
   size?: BlowCoinSize
   lit?: boolean
   color?: BlowActionButtonColor
@@ -85,6 +86,7 @@ const getTextColor = (color: BlowActionButtonColor): string | string[] => {
 
 export default function BlowCoin({
   children,
+  wrapperClassName,
   size = 'md',
   lit,
   color = 'gray',
@@ -131,7 +133,7 @@ export default function BlowCoin({
   const dim = dimLabelWhenOne && children === 1
 
   return (
-    <div className={'relative inline-block ' + sizeCx}>
+    <div className={cx('relative inline-block', sizeCx, wrapperClassName)}>
       <div
         className={cx(
           'absolute flex-center',

@@ -43,12 +43,14 @@ export interface BlowTokenPlayer extends BlowTokenBase {
 export interface BlowTokenRole extends BlowTokenBase {
   type: 'role'
   value: BlowRoleID
+  border?: boolean
 }
 
 export interface BlowTokenRoleAction extends BlowTokenBase {
   type: 'action'
   value: BlowRoleActionID
   role: BlowRoleID
+  border?: boolean
 }
 
 export type BlowToken =
@@ -95,7 +97,8 @@ export interface BlowRoleActionDef {
   coins?: number
   cards?: number
   counter?: BlowRoleActionID
-  counterLabel?: string
+  counterRole?: BlowRoleID
+  counterLabel?: BlowLabelItem | BlowLabelItem[]
   targetEffect?: BlowTargetEffect
   classes?: BlowRoleClasses
 }

@@ -28,7 +28,7 @@ export default function BlowRoleCardButton(props: Props) {
     useActionIndex: isCommonRole ? index : undefined,
   })
 
-  const height = isCommonRole ? 'h-13' : 'h-20'
+  const height = isCommonRole ? undefined : 'h-18'
 
   const asButton = view.clickableID != null && onActionClick
   const Component = asButton ? 'button' : 'div'
@@ -40,7 +40,7 @@ export default function BlowRoleCardButton(props: Props) {
         'flex flex-col',
         'w-full',
         height,
-        'px-0.5 pt-0.5 pb-1.5',
+        'px-0.5 pt-0 xs:pt-0.5 pb-0.5',
         'font-narrow',
         'text-black dark:text-white',
         'border',

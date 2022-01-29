@@ -15,6 +15,7 @@ import { partition } from '../../lib/util/array'
 
 export interface BlowRoleViewActionClasses {
   text?: string[]
+  counterText?: string[]
   hint?: string[]
   icon?: string[]
   coinColor: BlowActionButtonColor
@@ -29,6 +30,7 @@ interface GetBlowRoleViewOptions {
 
 interface RoleViewClasses {
   fg: string[]
+  text: string[]
   bg: string[]
   bgActive: string[]
   border: string[]
@@ -65,6 +67,14 @@ const TEXT = {
 
 const ALPHA_30 = 'opacity-30 dark:opacity-30'
 
+const DEFAULT_ACTION_CLASSES = {
+  text: [TEXT.body, ALPHA_30],
+  counterText: [TEXT.body, ALPHA_30],
+  hint: [TEXT.body, TEXT.alpha20],
+  icon: [TEXT.body, TEXT.alpha30],
+  coinColor: 'gray',
+}
+
 const createDefaultClasses = (): BlowRoleViewClasses => ({
   button: [
     'bg-gray-100 dark:bg-gray-900',
@@ -72,25 +82,17 @@ const createDefaultClasses = (): BlowRoleViewClasses => ({
   ],
   title: ['text-black/30 dark:text-white/30'],
   roleIcon: ['text-black/30 dark:text-white/30'],
-  active: {
-    text: [TEXT.body, ALPHA_30],
-    hint: [TEXT.body, TEXT.alpha20],
-    icon: [TEXT.body, TEXT.alpha30],
-    coinColor: 'gray',
-  },
-  counter: {
-    text: [TEXT.body, ALPHA_30],
-    hint: [TEXT.body, TEXT.alpha20],
-    icon: [TEXT.body, TEXT.alpha30],
-    coinColor: 'gray',
-  },
+  active: { ...DEFAULT_ACTION_CLASSES },
+  counter: { ...DEFAULT_ACTION_CLASSES },
   separator: ['border-gray-200 dark:border-gray-800'],
 })
 
-const withRoleDefaults = (classes?: BlowRoleClasses) => {
+const withRoleDefaults = (classes?: BlowRoleClasses): RoleViewClasses => {
+  const text = [...(classes?.text ?? ['text-cyan-600 dark:text-cyan-400'])]
   return {
+    text,
     fg: [
-      ...(classes?.text ?? ['text-cyan-600 dark:text-cyan-400']),
+      ...text,
       ...(classes?.textMods ?? [
         'text-opacity-90 dark:text-opacity-90',
         'group-hover:text-opacity-100 dark:group-hover:text-opacity-100',
@@ -247,19 +249,18 @@ export default function getBlowRoleView(
       view.classes.title = [TEXT.body, TEXT.alpha90]
       view.classes.roleIcon = roleClasses.fg
 
-      const activeClickable = view.clickableID === view.active?.id
-      const litKey = activeClickable ? 'active' : 'counter'
-      const dimKey = activeClickable ? 'counter' : 'active'
-
-      view.classes[litKey].text = [TEXT.body, TEXT.alpha70]
-      view.classes[litKey].coinColor = 'body'
-      view.classes[litKey].icon = [TEXT.body, TEXT.alpha50]
-
-      const textAlpha = clickable ? TEXT.alpha70 : ALPHA_30
-      const iconAlpha = clickable ? TEXT.alpha50 : TEXT.alpha25
-      view.classes[dimKey].text = [TEXT.body, textAlpha]
-      view.classes[dimKey].coinColor = 'body'
-      view.classes[dimKey].icon = [TEXT.body, iconAlpha]
+      let counterRoleClasses: RoleViewClasses | undefined
+      if (view.counter?.counterRole) {
+        const counterRole = getBlowRole(theme, view.counter.counterRole)
+        counterRoleClasses = withRoleDefaults(counterRole.classes)
+      }
+      view.classes.active = getClickableRoleAction(
+        clickable || view.clickableID === view.active?.id
+      )
+      view.classes.counter = getClickableRoleAction(
+        clickable || view.clickableID === view.counter?.id,
+        counterRoleClasses
+      )
 
       view.classes.separator = roleClasses.border
     } else if (active || counter) {
@@ -279,6 +280,31 @@ export default function getBlowRoleView(
   }
 
   return view
+}
+
+function getClickableRoleAction(
+  lit: boolean,
+  counterRoleClasses?: RoleViewClasses
+): BlowRoleViewActionClasses {
+  const coinColor = 'body'
+  const textColor = counterRoleClasses ? counterRoleClasses.text : [TEXT.body]
+  if (lit) {
+    return {
+      text: [TEXT.body, TEXT.alpha70],
+      counterText: [...textColor, TEXT.alpha70],
+      icon: [...textColor, TEXT.alpha50],
+      hint: [TEXT.body, TEXT.alpha20],
+      coinColor,
+    }
+  } else {
+    return {
+      text: [TEXT.body, ALPHA_30],
+      counterText: [...textColor, TEXT.alpha70],
+      icon: [...textColor, counterRoleClasses ? TEXT.alpha90 : TEXT.alpha25],
+      hint: [TEXT.body, TEXT.alpha20],
+      coinColor,
+    }
+  }
 }
 
 function getActiveRoleAction(

@@ -8,10 +8,10 @@ import {
   BlowThemeID,
 } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
+import IconSvg from '../control/icon-svg'
 import SkeletonBox from '../layout/skeleton-box'
 import BlowCardTitle from './blow-card-title'
 import BlowRoleCardAction from './blow-role-card-action'
-import BlowRoleCardActionIcon from './blow-role-card-action-icon'
 import BlowRoleCardButton from './blow-role-card-button'
 import getBlowRoleView from './blow-role-card-view'
 import BlowRoleIcon from './icons/blow-role-icon'
@@ -51,14 +51,17 @@ function BlowRoleCardContent(props: Props) {
   return (
     <div className="relative flex justify-start items-start w-full">
       <BlowRoleIcon
-        className={cx(classes.roleIcon, 'flex-shrink-0 w-12')}
+        className={cx(
+          classes.roleIcon,
+          'flex-shrink-0 w-12 ml-1 mr-2 xs:ml-1.5 xs:mr-2.5'
+        )}
         role={id}
       />
 
-      <div className="flex-1 pl-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden">
         {!role.common && (
           <BlowCardTitle
-            className={cx(classes.title, 'mb-px')}
+            className={cx(classes.title, '-mb-0.5 xs:mb-px')}
             {...props}
             currentCards={currentCards}
             theme={theme}
@@ -86,7 +89,7 @@ function BlowRoleCardContent(props: Props) {
 
         <div
           className={cx(
-            'h-px my-1 mr-1 border-t border-b-0 border-l-0 border-r-0',
+            'h-px mt-0.5 xs:my-1 mb-px xs:mb-0.5 mr-1 border-t border-b-0 border-l-0 border-r-0',
             view.classes.separator
           )}
         ></div>
@@ -94,6 +97,7 @@ function BlowRoleCardContent(props: Props) {
         {counter ? (
           <>
             <BlowRoleCardAction
+              sizeClassName="text-xs xs:text-sm"
               action={counter}
               theme={theme}
               classes={view.classes.counter}
@@ -103,7 +107,7 @@ function BlowRoleCardContent(props: Props) {
           <div
             className={cx(
               classes.counter.hint,
-              'text-left text-sm italic text-overflow'
+              'pt-0.5 xs:pt-px text-left text-xs xs:text-sm italic text-overflow'
             )}
           >
             No Counter Spell
@@ -114,14 +118,28 @@ function BlowRoleCardContent(props: Props) {
       {counter && (
         <div
           className={cx(
-            'absolute -bottom-0.5 left-8',
+            'absolute bottom-0.5 xs:bottom-0 left-1 inline-flex',
             view.classes.counter.text
           )}
         >
-          <BlowRoleCardActionIcon
-            counter={counter}
-            classes={view.classes.counter}
+          <IconSvg
+            className={cx(
+              view.classes.counter.icon,
+              'relative transition-all',
+              'w-3 h-4 xs:h-5 mr-1'
+            )}
+            name="shield"
+            // top="-2px"
           />
+
+          <span
+            className={cx(
+              'text-xs xs:text-sm',
+              view.classes.counter.counterText
+            )}
+          >
+            Counter:
+          </span>
         </div>
       )}
     </div>

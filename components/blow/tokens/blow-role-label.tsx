@@ -16,6 +16,7 @@ type Props = {
   theme: BlowThemeID
   className?: string
   suffix?: string
+  border?: boolean
   hideIfCommon?: boolean
 }
 
@@ -24,8 +25,9 @@ export default function BlowRoleLabel({
   value,
   action,
   theme,
-  className = 'text-gray-600 dark:text-gray-300',
+  className,
   suffix,
+  border = true,
   hideIfCommon,
 }: Props) {
   const rid = (children ?? value) as BlowRoleID
@@ -43,18 +45,23 @@ export default function BlowRoleLabel({
       const x = getBlowRoleAction(theme, action)
       label = x.name
     }
+    let iconSizeClassName = 'w-4'
+    if ((className ?? '').includes('text-xs')) iconSizeClassName = 'w-3.5'
     return (
       <div
-        className={cx(
-          'inline-flex items-baseline',
-          'px-1 space-x-1',
-          'border rounded',
-          'pointer-events-none',
-          view.classes.button
-        )}
+        className={cx(border && view.classes.button, {
+          'inline-flex items-baseline space-x-1': true,
+          'px-1': border,
+          'border rounded': border,
+          'pointer-events-none': true,
+        })}
       >
         <BlowRoleIcon
-          className={cx(view.classes.roleIcon, 'self-center w-4')}
+          className={cx(
+            view.classes.roleIcon,
+            iconSizeClassName,
+            'self-center'
+          )}
           role={rid}
           action={action}
         />
@@ -73,7 +80,7 @@ export default function BlowRoleLabel({
       <span
         className={cx(
           'font-spaced-narrow font-semibold -mr-[0.2em]',
-          className
+          className ?? 'text-gray-600 dark:text-gray-300'
         )}
       >
         {label}

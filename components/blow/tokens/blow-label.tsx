@@ -70,16 +70,22 @@ function Part(props: Props & PartProps) {
     }
     case 'role': {
       return (
-        <BlowRoleLabel className={p.className} value={p.value} theme={theme} />
+        <BlowRoleLabel
+          className={p.className}
+          theme={theme}
+          value={p.value}
+          border={p.border}
+        />
       )
     }
     case 'action': {
       return (
         <BlowRoleActionLabel
           className={p.className}
+          theme={theme}
           value={p.value}
           role={p.role}
-          theme={theme}
+          border={p.border}
         />
       )
     }
