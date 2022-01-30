@@ -329,12 +329,12 @@ export default class BlowState {
 
   incrementTurn(): this {
     // Go to the next player in turn order that is still alive
-    let i = this.playersAlive.length
+    // let i = this.playersAlive.length
     do {
       this.s.turn = (this.s.turn + 1) % this.s.game.player_order.length
-      i--
-      if (i < 0)
-        throw new Error(`'incrementTurn': No alive player to increment turn to`)
+      // i--
+      // if (i < 0)
+      //   throw new Error(`'incrementTurn': No alive player to increment turn to`)
     } while (this.isPlayerEliminated(this.s.game.player_order[this.s.turn]))
     return this
   }
