@@ -27,7 +27,7 @@ export default function BlowCardShape({
         '[--blow-card-unit:1.4374rem]': size === 'md',
         // Width of 'lg' vertical card same as width of 'lg' horizontal card
         '[--blow-card-unit:1.4375rem]': size === 'lg' && horizontal,
-        '[--blow-card-unit:2rem]': size === 'lg' && !horizontal,
+        '[--blow-card-unit:1.7rem]': size === 'lg' && !horizontal,
         'w-[calc(var(--blow-card-unit)*5)]': !horizontal,
         'h-[calc(var(--blow-card-unit)*7)]': !horizontal,
         'w-[calc(var(--blow-card-unit)*7)]': horizontal && !magicRole,

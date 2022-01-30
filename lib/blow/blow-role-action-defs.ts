@@ -113,7 +113,6 @@ const THEMED_DEFS_BY_ID: Partial<
         value: 'activate_extort',
         role: 'common',
         border: false,
-        className: 'text-xs xs:text-sm',
       },
     },
     counter_kill: {
@@ -121,7 +120,6 @@ const THEMED_DEFS_BY_ID: Partial<
         type: 'role',
         value: 'killer',
         border: false,
-        className: 'text-xs xs:text-sm',
       },
     },
     counter_raid: {
@@ -129,7 +127,6 @@ const THEMED_DEFS_BY_ID: Partial<
         type: 'role',
         value: 'thief',
         border: false,
-        className: 'text-xs xs:text-sm',
       },
     },
     counter_raid_explore: {
@@ -137,7 +134,6 @@ const THEMED_DEFS_BY_ID: Partial<
         type: 'role',
         value: 'thief',
         border: false,
-        className: 'text-xs xs:text-sm',
       },
     },
   },

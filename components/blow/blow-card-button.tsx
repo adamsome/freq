@@ -140,8 +140,8 @@ export default function BlowCardButton(props: Props) {
           <BlowRoleIcon
             className={cx(view.classes.roleIcon, {
               'w-5': sm,
-              'w-20': md,
-              'w-28': lg,
+              'w-[4.5rem]': md,
+              'w-20': lg,
             })}
             role={id}
           />

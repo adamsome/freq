@@ -166,18 +166,6 @@ export default function BlowActionButton({
           sm ? 'leading-normal' : 'leading-tight'
         )}
       >
-        {counter && (
-          <span
-            className={cx(
-              'transition-all',
-              !lg ? 'mr-0' : 'mr-0.5',
-              !counter && 'font-semibold'
-            )}
-          >
-            {action.name}:{' '}
-          </span>
-        )}
-
         <BlowLabel
           className={cx(
             state === 'clickable'
