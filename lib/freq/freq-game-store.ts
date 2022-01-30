@@ -24,13 +24,16 @@ export async function fetchFreqGame(room?: string): Promise<FreqGame | null> {
   return await fromGames(db).findOne({ room: room.toLowerCase() })
 }
 
-export async function findManyFreqGames(rooms: string[]): Promise<FreqGame[]> {
+export async function findManyFreqGames(
+  rooms: string[],
+  { limit = 10 }: { limit?: number } = {}
+): Promise<FreqGame[]> {
   const { db } = await connectToDatabase()
 
   return await fromGames(db)
     .find({ room: { $in: rooms } })
     .sort({ round_started_at: -1 })
-    .limit(10)
+    .limit(limit)
     .toArray()
 }
 

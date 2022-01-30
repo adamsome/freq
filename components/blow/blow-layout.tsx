@@ -7,6 +7,7 @@ import {
 import { CommandError } from '../../lib/types/game.types'
 import { WithIndex } from '../../lib/types/object.types'
 import { cx } from '../../lib/util/dom'
+import useWindowSize from '../../lib/util/use-window-size'
 import Layout from '../layout/layout'
 import BlowBoardCommandArea from './blow-board-command-area'
 import BlowBoardContent from './blow-board-content'
@@ -34,6 +35,9 @@ export default function BlowLayout(props: Props) {
     onCommandError,
   } = props
 
+  const windowSize = useWindowSize()
+  const messagePanelHeight = getMessagePanelHeight(windowSize)
+
   const roomUrl = room && `${process.env.NEXT_PUBLIC_BASE_URL}/blow/${room}`
 
   return (
@@ -50,7 +54,8 @@ export default function BlowLayout(props: Props) {
       flexWrapper={false}
     >
       <BlowMessagePanel
-        className="sticky top-12 z-20 h-16 md:h-20"
+        style={{ height: `${messagePanelHeight}px` }}
+        className="sticky top-12 z-20"
         loading={loading}
         roomUrl={roomUrl}
         messages={messages}
@@ -84,4 +89,37 @@ export default function BlowLayout(props: Props) {
       <BlowPlayersSheet onCommandError={onCommandError} />
     </Layout>
   )
+}
+
+interface Size {
+  width: number
+  height: number
+}
+
+/**
+ * Calculate height of message panel by taking window height and subtracting
+ * the height of the non-message panel components:
+ *
+ * ```markdown
+ * | Resolution:        | xxs (<384)  | xs (<640)   | sm (<768)   |
+ * | ------------------ | ----------- | ----------- | ----------- |
+ * | Header             |  48px       |  48px       |  48px       |
+ * | Common Actions     |  49px       |  51px       |  51px       |
+ * | Role Actions (x3)  | 210px       | 237px       | 237px       |
+ * | Padding/Gaps (x5)  |  30px       |  40px       |  80px       |
+ * | Bottom Spacer      | 188px       | 188px       | 188px       |
+ * | ------------------ | ----------- | ----------- | ----------- |
+ * | Total              | 525px       | 564px       | 604px       |
+ * ```
+ */
+function getMessagePanelHeight(window: Size): number {
+  let otherHeight: number
+  if (window.width < 384) {
+    otherHeight = 525
+  } else if (window.width < 640) {
+    otherHeight = 564
+  } else {
+    otherHeight = 604
+  }
+  return Math.min(Math.max(window.height - otherHeight, 64), 200)
 }

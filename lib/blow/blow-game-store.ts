@@ -20,7 +20,7 @@ export async function fetchBlowGame(room?: string): Promise<BlowGame | null> {
 
 export async function findManyBlowGames(
   rooms: string[],
-  limit = 10
+  { limit = 10 }: { limit?: number } = {}
 ): Promise<BlowGame[]> {
   const { db } = await connectToDatabase()
 

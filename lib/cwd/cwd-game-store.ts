@@ -21,7 +21,7 @@ export async function fetchCwdGame(room?: string): Promise<CwdGame | null> {
 
 export async function findManyCwdGames(
   rooms: string[],
-  limit = 10
+  { limit = 10 }: { limit?: number } = {}
 ): Promise<CwdGame[]> {
   const { db } = await connectToDatabase()
 

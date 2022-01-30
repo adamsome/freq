@@ -28,9 +28,11 @@ export default withApiAuthRequired(async function getUser(req, res) {
       return res.json([])
     }
 
-    const freqGames = await findManyFreqGames(Object.keys(user.rooms))
-    const cwdGames = await findManyCwdGames(Object.keys(user.rooms))
-    const blowGames = await findManyBlowGames(Object.keys(user.rooms))
+    const roomIDs = Object.keys(user.rooms)
+
+    const freqGames = await findManyFreqGames(roomIDs, { limit: 5 })
+    const cwdGames = await findManyCwdGames(roomIDs, { limit: 5 })
+    const blowGames = await findManyBlowGames(roomIDs, { limit: 5 })
 
     const freqViews = freqGames.map((g) => toFreqGameView(user.id, g))
     const cwdViews = cwdGames.map((g) => toCwdGameView(user.id, g))

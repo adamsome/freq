@@ -1,3 +1,4 @@
+import type { HTMLAttributes } from 'react'
 import { useEffect, useRef } from 'react'
 import {
   BlowMessage,
@@ -11,8 +12,7 @@ import SkeletonBox from '../layout/skeleton-box'
 import BlowMessageCurrent from './blow-message-current'
 import BlowMessageLine from './blow-message-line'
 
-type Props = {
-  className?: string
+type Props = HTMLAttributes<HTMLDivElement> & {
   loading?: boolean
   roomUrl?: string
   messages?: WithIndex<BlowMessage>[]
@@ -21,7 +21,15 @@ type Props = {
 }
 
 export default function BlowMessagePanel(props: Props) {
-  const { className, loading, roomUrl, messages = [], players, theme } = props
+  const {
+    className,
+    loading,
+    roomUrl,
+    messages = [],
+    players,
+    theme,
+    ...divProps
+  } = props
 
   const ref = useRef<HTMLDivElement | null>(null)
 
@@ -35,6 +43,7 @@ export default function BlowMessagePanel(props: Props) {
 
   return (
     <div
+      {...divProps}
       className={cx(
         'relative w-full p-0',
         'bg-white/50 dark:bg-black/50',
