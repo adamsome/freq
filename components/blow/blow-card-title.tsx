@@ -47,7 +47,11 @@ export default function BlowCardTitle(props: Props) {
 function Icons(props: Props) {
   const { currentCards = 0, theme } = props
   return (
-    <div className={cx('flex-center', { 'pr-0.5': theme !== 'classic' })}>
+    <div
+      className={cx('flex-center space-x-0.5', {
+        'pr-0.5': theme !== 'classic',
+      })}
+    >
       {range(0, currentCards).map((i) => (
         <BlowCard key={i} size="xs" color="cyan" theme={theme} />
       ))}
