@@ -65,8 +65,9 @@ export async function joinBlowGame(
   } else {
     // Add player to game if not already
     if (!hasPlayer(game.players, user.id)) {
+      const playerCount = game.players.length
       game.players = addPlayer(game.players, user, { forceLeader: true })
-      game.player_order = [...game.player_order, game.players.length]
+      game.player_order = [...game.player_order, playerCount]
 
       const gameFilter = { room: game.room.toLowerCase() }
       const changes: Partial<BlowGame> = {}
