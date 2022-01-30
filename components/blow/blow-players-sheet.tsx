@@ -24,7 +24,7 @@ export default function BlowPlayersSheet(props: Props) {
       ]}
       defaultSnap={({ minHeight }) => minHeight}
     >
-      <div className="flex-center px-2 pb-2 full overflow-hidden">
+      <div className="flex-center full overflow-hidden px-2 pb-2">
         <BlowPlayerSeatsContainer onCommandError={onCommandError} />
       </div>
     </BottomSheet>

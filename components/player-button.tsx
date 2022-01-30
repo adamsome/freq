@@ -25,13 +25,17 @@ export default function PlayerButton({
 
   return (
     <Button
-      className={cx('flex text-center', {
-        'text-xl pl-1 sm:pl-3 pr-0 sm:pr-2': !hero,
-        'text-3xl': hero,
-        'border border-gray-300 dark:border-gray-700': hero,
-        'focus:border-blue-700 dark:focus:border-blue-700': hero,
-        'pt-1.5 pr-0.5 pb-1 pl-3.5': hero,
-      })}
+      className={cx(
+        'flex text-center',
+        hero
+          ? `border-gray-30 border
+            pt-1.5 pr-0.5 pb-1 pl-3.5
+            text-3xl
+            focus:border-blue-700
+            dark:border-gray-700
+            dark:focus:border-blue-700`
+          : `pl-1 pr-0 text-xl sm:pl-3 sm:pr-2`
+      )}
       color={player?.team != null ? 'none' : 'blue'}
       style={styleColor(player)}
       onClick={onClick}
@@ -46,10 +50,7 @@ export default function PlayerButton({
         <IconSvg
           name="dropdown"
           top={hero ? '0' : '1px'}
-          className={cx('items-center', {
-            'w-6 h-6': !hero,
-            'w-8 h-8': hero,
-          })}
+          className={cx(`items-center ${!hero ? `h-6 w-6` : `h-8 w-8`}`)}
         />
       </div>
     </Button>

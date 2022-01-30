@@ -58,7 +58,7 @@ export default function BlowActionButtonIcon({
   if (fetching) {
     if (!lg) return null
     return (
-      <IconSvg name="spinner" className="w-3 h-3 ml-0.5 text-white" top="3px" />
+      <IconSvg name="spinner" className="ml-0.5 h-3 w-3 text-white" top="3px" />
     )
   }
 
@@ -82,10 +82,10 @@ export default function BlowActionButtonIcon({
         className={cx(
           'relative transition-all',
           sm
-            ? 'w-0.5 h-0.5 ml-0'
+            ? 'ml-0 h-0.5 w-0.5'
             : md
-            ? 'w-2.5 h-2.5 ml-0.5'
-            : 'w-3 h-5 ml-0.5',
+            ? 'ml-0.5 h-2.5 w-2.5'
+            : 'ml-0.5 h-5 w-3',
           getColorClass(action, color),
           getOpacityClass(color)
         )}

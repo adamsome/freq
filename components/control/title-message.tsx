@@ -27,15 +27,15 @@ export default function TitleMessage({
   return (
     <Layout type={type}>
       <main
-        className={cx(
-          'flex-1 flex-center flex-col px-6 py-4',
-          'text-black dark:text-white'
-        )}
+        className={cx(`
+          flex-center flex-1 flex-col px-6 py-4
+          text-black dark:text-white
+        `)}
       >
         <Title type={type} animate={true} />
 
         <div
-          className={cx('flex flex-col items-center text-center h-96', {
+          className={cx('flex h-96 flex-col items-center text-center', {
             hidden: invisible,
             'text-gray-500': subtle,
             'text-red-700': error,

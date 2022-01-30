@@ -131,7 +131,7 @@ export default function GameJoinButtons({
         />
       </div>
 
-      {error && <div className="text-red-700 text-center mt-2">{error}</div>}
+      {error && <div className="mt-2 text-center text-red-700">{error}</div>}
     </div>
   )
 }

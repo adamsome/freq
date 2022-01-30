@@ -20,7 +20,7 @@ export default function ScoreboardIcon({
   return (
     <div
       className={cx(
-        'w-6 text-center self-center',
+        'w-6 self-center text-center',
         right ? 'ml-0 mr-0 sm:ml-1 sm:mr-0' : 'ml-0 mr-0 sm:ml-0 sm:mr-1',
         xl ? 'text-xl' : 'text-lg sm:text-xl',
         className

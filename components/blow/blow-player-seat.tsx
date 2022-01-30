@@ -53,15 +53,15 @@ function BlowPlayerSeatContent(props: Props) {
   if (player === null)
     return <div className="text-overflow text-center text-gray-500">Empty</div>
 
-  if (player === undefined) return <SkeletonBox className="w-full h-full" />
+  if (player === undefined) return <SkeletonBox className="h-full w-full" />
 
   return (
-    <div className={cx('flex flex-col space-y-0.5 select-none')}>
+    <div className={cx('flex select-none flex-col space-y-0.5')}>
       <BlowPlayerSeatTitle {...props} />
 
-      <div className="flex-1 flex">
+      <div className="flex flex-1">
         {size !== 'lg' && (
-          <div className="flex-1 flex-center">
+          <div className="flex-center flex-1">
             <BlowPlayerSeatCoins {...props} />
           </div>
         )}
@@ -174,7 +174,7 @@ function BlowPlayerSeatHand(props: Props) {
   return (
     <div
       className={cx({
-        'w-full flex-center flex-col': drawnCards?.length,
+        'flex-center w-full flex-col': drawnCards?.length,
       })}
     >
       {drawnCards && drawnCards.length > 0 && (
@@ -189,7 +189,7 @@ function BlowPlayerSeatHand(props: Props) {
         <div
           className={cx(
             'mt-0.5 mb-3',
-            'font-normal text-xs text-gray-400 dark:text-gray-600'
+            'text-xs font-normal text-gray-400 dark:text-gray-600'
           )}
         >
           DRAWN CARDS
@@ -206,7 +206,7 @@ function BlowPlayerSeatHand(props: Props) {
         <div
           className={cx(
             'mt-0.5',
-            'font-normal text-xs text-gray-400 dark:text-gray-600'
+            'text-xs font-normal text-gray-400 dark:text-gray-600'
           )}
         >
           CURRENT HAND

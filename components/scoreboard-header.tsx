@@ -23,11 +23,10 @@ export default function ScoreboardHeader({ scores, readonly }: Props) {
 
   return (
     <div
-      className={cx(
-        'flex justify-between items-baseline w-full px-2',
-        'font-black border-b border-black dark:border-white',
-        'text-2xl whitespace-nowrap'
-      )}
+      className={cx(`
+        flex w-full items-baseline justify-between whitespace-nowrap
+        border-b border-black px-2 text-2xl font-black dark:border-white
+      `)}
     >
       {!readonly && <ScoreboardIcon xl>{icon1}</ScoreboardIcon>}
       {!readonly && <div className="w-20 whitespace-nowrap">{team1}</div>}

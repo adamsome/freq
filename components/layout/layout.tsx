@@ -59,12 +59,13 @@ function Wrapper(props: Props) {
   if (!flexWrapper) return <div className={className}>{children}</div>
   return (
     <div
-      className={cx(
-        'flex-center flex-col min-h-screen min-w-min overflow-hidden',
-        'bg-white dark:bg-black text-black dark:text-white',
-        'transition',
-        className
-      )}
+      className={cx(`
+        flex-center min-h-screen min-w-min flex-col overflow-hidden
+        bg-white text-black
+        transition
+        dark:bg-black dark:text-white
+        ${className}
+      `)}
     >
       {children}
     </div>
@@ -78,8 +79,8 @@ function ContentWrapper(props: Props) {
       className={cx(
         className,
         flexWrapper && {
-          'flex-1 flex flex-col items-center': true,
-          'w-full h-full': true,
+          'flex flex-1 flex-col items-center': true,
+          'h-full w-full': true,
           'overflow-auto': overflowAuto,
           'pt-16': big,
           'pt-12': !big,

@@ -20,16 +20,15 @@ const ClueCard = ({ children, clue, label, hasSlider }: Props) => {
 
   return (
     <div
-      className={cx(
-        'absolute top-0 bottom-0 left-4 right-4 overflow-hidden',
-        'flex justify-between items-start px-2 py-1',
-        'bg-gray-100 dark:bg-gray-900 bg-[length:125%] bg-center',
-        'text-black font-bold border border-transparent rounded-md',
-        {
-          'bottom-0': !hasSlider,
-          'bottom-8': hasSlider,
-        }
-      )}
+      className={cx(`
+        absolute top-0 bottom-0 left-4 right-4
+        flex items-start justify-between overflow-hidden
+        rounded-md border border-transparent
+        bg-gray-100 bg-[length:125%] bg-center
+        px-2 py-1
+        font-bold text-black dark:bg-gray-900
+        ${hasSlider ? 'bottom-8' : 'bottom-0'}
+      `)}
       style={styleLinearGradient(clue.gradient)}
     >
       {children}
@@ -48,10 +47,10 @@ const ClueCard = ({ children, clue, label, hasSlider }: Props) => {
 
       {label != null && (
         <div
-          className={cx(
-            'absolute top-0 bottom-0 left-0 right-0 flex-center text-8xl',
-            'text-black/20 dark:text-white/20'
-          )}
+          className={cx(`
+            flex-center absolute top-0 bottom-0 left-0 right-0
+            text-8xl text-black/20 dark:text-white/20
+          `)}
         >
           <div>{label}</div>
         </div>

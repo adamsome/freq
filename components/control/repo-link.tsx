@@ -11,7 +11,7 @@ const defaultProps = {
 export default function RepoLink({ classNames }: Props) {
   return (
     <Button
-      className={cx('flex items-center text-center text-xl group', classNames)}
+      className={cx('group flex items-center text-center text-xl', classNames)}
       href="https://github.com/adamsome/freq"
       target="_blank"
       rel="noreferrer"

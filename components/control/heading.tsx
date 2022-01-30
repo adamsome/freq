@@ -1,26 +1,23 @@
 import type { ReactNode } from 'react'
 import { cx } from '../../lib/util/dom'
 
-type Props = typeof defaultProps & {
+type Props = {
   children: ReactNode
+  className?: string
 }
 
-const defaultProps = {
-  classNames: '',
-}
-
-export default function Heading({ children, classNames }: Props) {
+export default function Heading({ children, className }: Props) {
   return (
     <h1
-      className={cx(
-        'flex items-center w-full',
-        'text-3xl font-semibold mb-6 md:mb-8 pl-4 md:pl-0',
-        classNames
-      )}
+      className={cx(`
+        mb-6 flex w-full items-center
+        pl-4
+        text-3xl font-semibold
+        md:mb-8 md:pl-0
+        ${className}
+      `)}
     >
       {children}
     </h1>
   )
 }
-
-Heading.defaultProps = defaultProps

@@ -12,10 +12,10 @@ const defaultProps = {
 export default function ScoreboardSettings({ scoreType, onTypeToggle }: Props) {
   const isWins = scoreType === 'wins'
   return (
-    <div className="flex-center w-full my-3 sm:text-lg">
-      <div className="flex-center p-1 bg-gray-100 dark:bg-gray-900 rounded-lg">
+    <div className="flex-center my-3 w-full sm:text-lg">
+      <div className="flex-center rounded-lg bg-gray-100 p-1 dark:bg-gray-900">
         <Button
-          className="w-20 mr-0.5 text-sm sm:text-base"
+          className="mr-0.5 w-20 text-sm sm:text-base"
           color="gray"
           variant={isWins && 'solid'}
           onClick={() => onTypeToggle('wins')}
@@ -23,7 +23,7 @@ export default function ScoreboardSettings({ scoreType, onTypeToggle }: Props) {
           Wins
         </Button>
         <Button
-          className="w-20 ml-0.5 text-sm sm:text-base"
+          className="ml-0.5 w-20 text-sm sm:text-base"
           color="gray"
           variant={!isWins && 'solid'}
           onClick={() => onTypeToggle('points')}

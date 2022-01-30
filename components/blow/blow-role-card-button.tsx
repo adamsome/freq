@@ -34,20 +34,22 @@ export default function BlowRoleCardButton(props: Props) {
   return (
     <Component
       type={asButton ? 'button' : undefined}
-      className={cx(className, id != null && view.classes.button, [
-        'flex flex-col',
-        'w-full',
-        id != null && 'px-0.5 pt-0 xs:pt-0.5 pb-0.5',
-        'font-narrow',
-        'text-black dark:text-white',
-        'border',
-        !id && 'border-transparent',
-        'rounded-md',
-        'focus:outline-none focus:dark:outline-none',
-        'group',
-        'shadow',
-        'select-none',
-      ])}
+      className={cx(
+        className,
+        id != null && view.classes.button,
+        !id ? 'border-transparent' : 'px-0.5 pt-0 pb-0.5 xs:pt-0.5',
+        `group
+        w-full
+        select-none
+        rounded-md
+        border
+        font-narrow
+        text-black
+        shadow
+        focus:outline-none
+        dark:text-white
+        focus:dark:outline-none`
+      )}
       onClick={(e) => {
         e.preventDefault()
         if (view.clickableID == null) return

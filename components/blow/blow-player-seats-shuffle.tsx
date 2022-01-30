@@ -41,7 +41,7 @@ export default function BlowPlayerSeatsShuffle(props: Props) {
 
   return (
     <Button
-      className={cx('relative w-24 h-8 font-spaced-narrow', {
+      className={cx('font-spaced-narrow relative h-8 w-24', {
         '-top-6': (players?.length ?? 0) < 4,
         '-top-px': (players?.length ?? 0) >= 4,
       })}
@@ -51,7 +51,7 @@ export default function BlowPlayerSeatsShuffle(props: Props) {
       {shuffling || gameShuffling ? (
         <IconSvg
           name="spinner"
-          className="w-5 h-5 m-auto text-black dark:text-white"
+          className="m-auto h-5 w-5 text-black dark:text-white"
         />
       ) : (
         <span className="-mr-[0.2em]">Shuffle</span>

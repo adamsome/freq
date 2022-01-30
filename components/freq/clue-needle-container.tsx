@@ -86,7 +86,7 @@ const ClueNeedleContainer = ({ children, onGuessChange }: Props) => {
 
   return (
     <>
-      <div ref={meterWrapperRef} className="relative w-full h-full">
+      <div ref={meterWrapperRef} className="relative h-full w-full">
         {children}
 
         {game.averageGuess != null && (

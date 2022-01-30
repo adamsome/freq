@@ -62,10 +62,10 @@ export default function BlowRoleActionLabel({
 
       {counter && (
         <span
-          className={cx(
-            'font-narrow font-semibold',
-            'text-gray-500 dark:text-gray-400'
-          )}
+          className={cx(`
+            font-narrow font-semibold
+            text-gray-500 dark:text-gray-400
+          `)}
         >
           {counter}
         </span>

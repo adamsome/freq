@@ -125,7 +125,7 @@ export default function CodeGuessStatus({ guess, turn }: Props) {
   )
 
   const toLine = (line: TypedTerminalLine<Word>, i: number) => (
-    <div key={i} className="flex justify-start items-center px-2 sm:px-4">
+    <div key={i} className="flex items-center justify-start px-2 sm:px-4">
       <span className="font-mono">
         {line.words.map((word, j) => toWord(i + j, word))}
 
@@ -137,7 +137,7 @@ export default function CodeGuessStatus({ guess, turn }: Props) {
   )
 
   return (
-    <div className="flex flex-col w-full h-16 py-2">
+    <div className="flex h-16 w-full flex-col py-2">
       {terminalLines.map(toLine)}
     </div>
   )

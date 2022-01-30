@@ -20,10 +20,10 @@ export default function HomeGames({
   onGameChange,
 }: Props) {
   return (
-    <div className="h-80 flex flex-col justify-center">
+    <div className="flex h-80 flex-col justify-center">
       {!loading && !gameType && (
-        <div className="flex flex-col justify-center items-center mb-3.5 pt-12">
-          <Heading classNames="hidden md:block">Choose Game</Heading>
+        <div className="mb-3.5 flex flex-col items-center justify-center pt-12">
+          <Heading className="hidden md:block">Choose Game</Heading>
           <GamePicker horizontal onClick={onGameChange} />
         </div>
       )}
@@ -36,8 +36,8 @@ export default function HomeGames({
             animate={true}
           />
 
-          <div className="flex flex-col justify-center h-24 px-6 sm:px-24 md:my-4">
-            <p className="text-xl text-center">
+          <div className="flex h-24 flex-col justify-center px-6 sm:px-24 md:my-4">
+            <p className="text-center text-xl">
               Type an existing game&apos;s name to join or just click Start to
               create a new game.
             </p>

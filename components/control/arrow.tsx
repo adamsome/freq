@@ -26,7 +26,7 @@ export default function Arrow({
   return (
     <span
       className={cx(
-        'relative block mx-auto',
+        'relative mx-auto block',
         left || right ? 'w-full' : 'h-full',
         {
           'rotate-45': (left && up) || (right && down),
@@ -37,7 +37,7 @@ export default function Arrow({
     >
       <span
         className={cx(
-          'absolute w-px h-1',
+          'absolute h-1 w-px',
           {
             'left-0.5': left && !hasY,
             'right-0.5': (hasY && !hasX) || (right && !hasY),
@@ -52,7 +52,7 @@ export default function Arrow({
       ></span>
       <span
         className={cx(
-          'absolute w-px h-1',
+          'absolute h-1 w-px',
           {
             'left-0.5': left && !hasY,
             'right-0.5': right && !hasY,

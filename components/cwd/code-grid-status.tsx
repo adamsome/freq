@@ -28,7 +28,7 @@ export default function CodeGridStatus({
   const turn = useConditionalDebounce(rawTurn, { debounceTime })
   const winner = useConditionalDebounce(rawWinner, { debounceTime })
 
-  if (!turn && !winner) return <SkeletonBox className="w-full h-8 px-0" />
+  if (!turn && !winner) return <SkeletonBox className="h-8 w-full px-0" />
 
   const team = winner ?? turn
   const color = getTeamColor(team)
@@ -38,12 +38,16 @@ export default function CodeGridStatus({
 
   return (
     <div
-      className={cx(
-        'bg-gray-100 dark:bg-gray-950',
-        'text-base sm:text-lg font-mono font-bold',
-        'w-full px-2 sm:px-4 py-0.5 sm:py-1',
-        { 'text-center': winner }
-      )}
+      className={cx(`
+        w-full
+        bg-gray-100
+        px-2 py-0.5
+        font-mono text-base font-bold
+        dark:bg-gray-950
+        sm:px-4 sm:py-1
+        sm:text-lg
+        ${winner ? 'text-center' : ''}
+      `)}
       style={styleColor(color, winner ? 1 : 0)}
     >
       {winner && range(0, 3).map((_, i) => <span key={i}>{icon}</span>)}

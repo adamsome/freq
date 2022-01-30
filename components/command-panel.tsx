@@ -132,7 +132,7 @@ export default function CommandPanel({
       ))}
 
       {error && !hideError && (
-        <div className="text-red-700 text-center mt-2">{error}</div>
+        <div className="mt-2 text-center text-red-700">{error}</div>
       )}
     </div>
   )

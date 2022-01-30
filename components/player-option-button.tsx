@@ -29,7 +29,7 @@ export default function PlayerOptionButton({
   return (
     <Button
       className={cx(
-        'w-full px-4 py-3 rounded-none text-left',
+        'w-full rounded-none px-4 py-3 text-left',
         {
           'border-l-0 border-r-0 border-t-0 last:border-b-0': !noDivider,
           'border-gray-300 dark:border-gray-700': !noDivider,

@@ -81,47 +81,36 @@ export default function BlowCardButton(props: Props) {
       {(selectable || selected != null) && !killed && (
         <Component
           type={asButton ? 'button' : undefined}
-          className={cx(
-            'absolute top-2 right-2',
-            !asButton && 'flex-center flex-col',
-            'w-8 h-8',
-            'leading-none',
-            'text-center',
-            'bg-none',
-            'no-underline',
-            'touch-manipulation',
-            'select-none',
-            'outline-none',
-            'transition-all',
-            'pointer-events-none'
-          )}
+          className={cx(`
+            pointer-events-none
+            absolute top-2 right-2
+            ${!asButton ? 'flex-center flex-col' : ''}
+            h-8 w-8
+            touch-manipulation select-none
+            bg-none
+            text-center leading-none no-underline outline-none
+            transition-all
+          `)}
         >
           <div
-            className={cx({
-              relative: true,
-              'inline-block': true,
-              'w-4 h-4': true,
-              'text-[9px]': true,
-              'leading-none': true,
-              'text-center': true,
-              'text-black/75': true,
-              'bg-cyan-500': selected,
-              'border-2': true,
-              'border-cyan-500/70': !selected,
-              'border-cyan-500': true,
-              shadow: selected,
-              'rounded-full': true,
-              'scale-150': selected,
-              'transition-all': true,
-            })}
+            className={cx(`
+              ${
+                selected ? 'scale-150 bg-cyan-500 shadow' : 'border-cyan-500/70'
+              }
+              relative inline-block
+              h-4 w-4
+              rounded-full border-2 border-cyan-500
+              text-center text-[9px] leading-none text-black/75
+              transition-all
+            `)}
           >
             {selected && (
               <IconSvg
-                className={cx(
-                  'overflow-hidden',
-                  'absolute top-2/4 left-2/4',
-                  '-translate-x-2/4 -translate-y-2/4'
-                )}
+                className={cx(`
+                  absolute top-2/4 left-2/4
+                  -translate-x-2/4 -translate-y-2/4
+                  overflow-hidden
+                `)}
                 name="checkbox"
               />
             )}
@@ -131,7 +120,7 @@ export default function BlowCardButton(props: Props) {
 
       {magicRole && id && (
         <div
-          className={cx('absolute full flex-center pointer-events-none', {
+          className={cx('full flex-center pointer-events-none absolute', {
             'top-0.5': sm,
             '-top-2': md,
             '-top-4': lg,
@@ -150,16 +139,16 @@ export default function BlowCardButton(props: Props) {
 
       {killed && (
         <div
-          className={cx('absolute full flex-center', {
+          className={cx('full flex-center absolute', {
             'bg-white/50 dark:bg-black/50': !sm,
             'bg-white/25 dark:bg-black/5': sm,
           })}
         >
           <IconSvg
             className={cx({
-              'w-[14.4295px] h-[16.666px]': sm,
-              'w-[62.22721875px] h-[71.875px]': md,
-              'w-[86.577px] h-[100px]': lg,
+              'h-[16.666px] w-[14.4295px]': sm,
+              'h-[71.875px] w-[62.22721875px]': md,
+              'h-[100px] w-[86.577px]': lg,
               'text-red-500/75': true,
             })}
             name="skull"

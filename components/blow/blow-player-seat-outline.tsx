@@ -24,7 +24,7 @@ export default function BlowPlayerSeatOutline(props: Props) {
       type={asButton ? 'button' : undefined}
       className={cx(className, {
         'flex-center': player === null,
-        'w-24 h-16': size !== 'lg',
+        'h-16 w-24': size !== 'lg',
         'px-1.5 pt-0.5': size !== 'lg' && player && !player.current,
         'px-1 pt-0.5': size !== 'lg' && player && player.current,
         'pb-px': size !== 'lg' && player,

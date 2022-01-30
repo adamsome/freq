@@ -136,14 +136,14 @@ export default function BlowCoin({
     <div className={cx('relative inline-block', sizeCx, wrapperClassName)}>
       <div
         className={cx(
-          'absolute flex-center',
+          'flex-center absolute',
           size === 'xs'
-            ? '-top-0.5 left-0 w-0.5 h-0.5'
+            ? '-top-0.5 left-0 h-0.5 w-0.5'
             : size === 'sm'
-            ? '-top-px -left-0.5 w-4 h-4'
+            ? '-top-px -left-0.5 h-4 w-4'
             : size === 'md'
-            ? '-top-[3px] -left-0.5 w-5 h-5'
-            : '-top-0.5 -left-0.5 w-7 h-7',
+            ? '-top-[3px] -left-0.5 h-5 w-5'
+            : '-top-0.5 -left-0.5 h-7 w-7',
           'tracking-normal',
           '[background-image:radial-gradient(ellipse_at_center,var(--tw-gradient-from)_0%,var(--tw-gradient-from)_35%,rgb(0_0_0_/_0%)_65%,rgb(0_0_0_/_0%)_100%)]',
           getCoinColor(color, lit),

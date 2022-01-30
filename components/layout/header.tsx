@@ -34,19 +34,21 @@ export default function Header({
 
   return (
     <header
-      className={cx(
-        sticky ? 'sticky' : 'fixed',
-        'left-0 top-0 flex-center flex-col',
-        'w-full z-30',
-        'bg-white/80 dark:bg-black/80',
-        'backdrop-blur-[10px]',
-        'border-b border-gray-200 dark:border-gray-900',
-        heightClass
-      )}
+      className={cx(`
+        ${sticky ? 'sticky' : 'fixed'}
+        flex-center left-0 top-0 z-30 w-full flex-col
+        border-b
+        border-gray-200
+        bg-white/80
+        backdrop-blur-[10px]
+        dark:border-gray-900
+        dark:bg-black/80
+        ${heightClass}
+      `)}
     >
       {showDebug && <DebugBar />}
 
-      <div className="flex-center w-full h-12 pl-2 sm:pl-4 pr-2 sm:pr-4">
+      <div className="flex-center h-12 w-full pl-2 pr-2 sm:pl-4 sm:pr-4">
         <HeaderTitle
           type={type}
           big={big}

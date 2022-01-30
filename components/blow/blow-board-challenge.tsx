@@ -138,12 +138,11 @@ function BlowBoardChallengeContent(
 
       {!winner && (
         <div
-          className={cx(
-            'max-w-xs',
-            'text-center',
-            'font-narrow',
-            'text-gray-400 dark:text-gray-500 text-sm'
-          )}
+          className={cx(`
+            max-w-xs
+            text-center font-narrow text-sm
+            text-gray-400 dark:text-gray-500
+          `)}
         >
           <BlowLabel label={label} theme={theme} />
         </div>

@@ -28,11 +28,11 @@ export default function BlowCardTitle(props: Props) {
       className={cx(className, {
         relative: true,
         'flex-center space-x-1': true,
-        'font-semibold w-full overflow-hidden whitespace-nowrap': true,
+        'w-full overflow-hidden whitespace-nowrap font-semibold': true,
         'text-[3.5px] leading-normal': sm,
-        'text-xs mt-1.5 ml-0': md && orientation === 'vertical',
+        'mt-1.5 ml-0 text-xs': md && orientation === 'vertical',
         'tracking-normal': theme !== 'classic',
-        'text-lg ml-1': lg && orientation === 'vertical',
+        'ml-1 text-lg': lg && orientation === 'vertical',
       })}
     >
       <span className={cx('flex-1 text-left', { 'text-overflow': !sm })}>

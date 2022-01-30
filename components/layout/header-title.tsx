@@ -46,13 +46,15 @@ export default function HeaderTitle({
 
   return (
     <h1
-      className={cx(
-        'flex-1 flex items-center m-0 overflow-hidden',
-        'text-xl font-extrabold whitespace-nowrap'
-      )}
+      className={cx(`
+        m-0
+        flex flex-1 items-center
+        overflow-hidden whitespace-nowrap
+        text-xl font-extrabold
+      `)}
     >
       <div
-        className={cx('mr-2 sm:mr-4 cursor-pointer group', hideMobileLogoClass)}
+        className={cx('group mr-2 cursor-pointer sm:mr-4', hideMobileLogoClass)}
         onClick={handleLogoClick}
       >
         <Logo
@@ -75,19 +77,22 @@ export default function HeaderTitle({
       {game?.room && (
         <>
           <div
-            className={cx(
-              'text-gray-300 dark:text-gray-700',
-              'font-light ml-1.5 mr-1 animate-fade-in'
-            )}
+            className={cx(`
+              ml-1.5 mr-1
+              animate-fade-in
+              font-light text-gray-300 dark:text-gray-700
+            `)}
           >
             /
           </div>
 
           <div
-            className={cx(
-              'flex-1 overflow-hidden text-ellipsis whitespace-nowrap',
-              'text-gray-500 font-light animate-fade-in'
-            )}
+            className={cx(`
+              flex-1
+              animate-fade-in
+              overflow-hidden text-ellipsis whitespace-nowrap
+              font-light text-gray-500
+            `)}
           >
             <span>{game.room.toLowerCase()}</span>
           </div>

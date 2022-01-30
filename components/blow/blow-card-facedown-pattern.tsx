@@ -28,10 +28,10 @@ export default function BlowCardFacedownPattern({
         'border-cyan-300 dark:border-cyan-900': !sm && color === 'cyan',
       })}
     >
-      <div className="relative full">
+      <div className="full relative">
         <div
           className={cx(DIAMOND_POLKA_DOTS_PATTERN_CLASSES, {
-            'absolute full': true,
+            'full absolute': true,
             'from-gray-300 dark:from-gray-700': color === 'gray',
             'from-cyan-500 dark:from-cyan-500': sm && color === 'cyan',
             'from-cyan-200 dark:from-cyan-925': !sm && color === 'cyan',

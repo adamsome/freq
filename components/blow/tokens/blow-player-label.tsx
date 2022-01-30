@@ -16,7 +16,7 @@ export default function BlowPlayerLabel({
   const label = typeof player === 'string' ? player : player?.name
   return (
     <span
-      className={cx('font-spaced-narrow font-semibold -mr-[0.2em]', className)}
+      className={cx('font-spaced-narrow -mr-[0.2em] font-semibold', className)}
     >
       {label}
     </span>

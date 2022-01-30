@@ -54,7 +54,7 @@ export default function BlowPlayerSeatsContainer(props: Props) {
       <BlowPlayerSeatsGrid game={game} onPlayerClick={handlePlayerClick} />
 
       {game?.phase === 'prep' && (
-        <div className="absolute full flex-center">
+        <div className="full flex-center absolute">
           <BlowPlayerSeatsShuffle onCommandError={onCommandError} />
         </div>
       )}

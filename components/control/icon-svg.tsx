@@ -86,7 +86,7 @@ export default function IconSvg({ className = '', name, top = '0' }: Props) {
       return (
         <svg
           className={cx(
-            'inline-block w-[1em] h-[1em] leading-none fill-current align-middle',
+            'inline-block h-[1em] w-[1em] fill-current align-middle leading-none',
             top !== '0' && 'relative',
             className
           )}

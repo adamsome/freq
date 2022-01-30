@@ -22,7 +22,7 @@ export default function BlowRoleCardGrid(props: Props) {
       {magicRole && (
         <div
           className={cx(className, {
-            'grid gap-1.5 xs:gap-2 sm:gap-4 grid-cols-3 grid-rows-1': true,
+            'grid grid-cols-3 grid-rows-1 gap-1.5 xs:gap-2 sm:gap-4': true,
             'w-full px-1.5 xs:px-2 sm:px-4': magicRole,
           })}
         >
@@ -43,8 +43,8 @@ export default function BlowRoleCardGrid(props: Props) {
 
       <div
         className={cx(className, {
-          'grid gap-1.5 xs:gap-2 sm:gap-4 grid-cols-2': true,
-          'grid-rows-[repeat(3,minmax(0,auto))] xs:grid-rows-3': true,
+          'grid grid-cols-2 grid-rows-[repeat(3,minmax(0,auto))]': true,
+          'gap-1.5 xs:grid-rows-3 xs:gap-2 sm:gap-4': true,
           'w-full px-1.5 xs:px-2 sm:px-4': magicRole,
         })}
       >

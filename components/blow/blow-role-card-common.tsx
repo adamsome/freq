@@ -39,7 +39,7 @@ function BlowRoleCardContent(props: Props) {
   const { theme, actions = {}, phase, index } = props
 
   if (!theme || index == null)
-    return <SkeletonBox className="w-full h-12" roundedClassName="rounded-md" />
+    return <SkeletonBox className="h-12 w-full" roundedClassName="rounded-md" />
 
   const { role, classes } = getBlowRoleView(theme, 'common', actions, {
     clickable: phase === 'prep',
@@ -52,14 +52,14 @@ function BlowRoleCardContent(props: Props) {
   invariant(isBlowRoleActionDef(action), `BlowRoleCardCommon: Action invalid`)
 
   return (
-    <div className="flex justify-start items-center w-full">
+    <div className="flex w-full items-center justify-start">
       <BlowRoleIcon
-        className={cx(classes.roleIcon, 'w-8 ml-1 mr-1 xs:ml-1.5 xs:mr-1.5')}
+        className={cx(classes.roleIcon, 'ml-1 mr-1 w-8 xs:ml-1.5 xs:mr-1.5')}
         role="common"
         action={xid}
       />
 
-      <div className="relative flex-1 pl-1 overflow-hidden">
+      <div className="relative flex-1 overflow-hidden pl-1">
         <BlowCardTitle
           className={cx(classes.title, 'mb-px')}
           {...props}

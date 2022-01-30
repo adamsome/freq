@@ -49,10 +49,10 @@ export default function RoomForm({
       >
         <div className="w-72 max-w-full space-y-3">
           {generatedRoom == null ? (
-            <SkeletonBox className="w-full h-12" />
+            <SkeletonBox className="h-12 w-full" />
           ) : (
             <Input
-              className="w-full h-12 px-3 py-1 text-3xl font-medium"
+              className="h-12 w-full px-3 py-1 text-3xl font-medium"
               htmlType="text"
               name="room"
               placeholder="Room Code"
@@ -64,7 +64,7 @@ export default function RoomForm({
           )}
 
           <Button
-            className={cx('w-full h-12 font-bold text-3xl text-center', {
+            className={cx('h-12 w-full text-center text-3xl font-bold', {
               'opacity-20': fetching,
               'text-black hover:text-white': animate,
               'animate-shift': animate,
@@ -82,7 +82,7 @@ export default function RoomForm({
           </Button>
 
           <Button
-            className={cx('w-full font-bold text-xl text-center', {
+            className={cx('w-full text-center text-xl font-bold', {
               'opacity-20': fetching,
             })}
             color="blue"
@@ -93,7 +93,7 @@ export default function RoomForm({
           </Button>
         </div>
 
-        {error && <p className="mt-6 text-red-700 text-xl">{error}</p>}
+        {error && <p className="mt-6 text-xl text-red-700">{error}</p>}
       </form>
     </>
   )

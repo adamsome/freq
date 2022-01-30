@@ -7,15 +7,12 @@ interface Arrow {
   classes: string
 }
 
-type Props = typeof defaultProps & {
+type Props = {
   children: ReactNode | ReactNode[]
+  className?: string
 }
 
-const defaultProps = {
-  classNames: '',
-}
-
-export default function SeatGrid({ children, classNames }: Props) {
+export default function SeatGrid({ children, className }: Props) {
   const count = Children.count(children)
 
   const classesPerItemByCount: Record<number, string[]> = {
@@ -102,13 +99,13 @@ export default function SeatGrid({ children, classNames }: Props) {
 
   return (
     <div
-      className={cx(
-        'grid',
-        'grid-cols-[repeat(2,minmax(0,1fr)_1.5rem)_minmax(0,1fr)]',
-        'grid-rows-[minmax(4.5rem,1fr)_1rem_minmax(4.5rem,1fr)]',
-        'items-center',
-        classNames
-      )}
+      className={cx(`
+        grid
+        grid-cols-[repeat(2,minmax(0,1fr)_1.5rem)_minmax(0,1fr)]
+        grid-rows-[minmax(4.5rem,1fr)_1rem_minmax(4.5rem,1fr)]
+        items-center
+        ${className}
+      `)}
     >
       {Children.map(children, (child, i) => {
         const classesPerItem = classesPerItemByCount[count] ?? []
@@ -124,7 +121,7 @@ export default function SeatGrid({ children, classNames }: Props) {
               <div
                 key={i + 'arrow'}
                 className={cx(
-                  'text-center w-full h-full flex p-1',
+                  'flex h-full w-full p-1 text-center',
                   arrow.classes,
                   !arrow.classes.includes('items-') && 'items-center'
                 )}
@@ -138,5 +135,3 @@ export default function SeatGrid({ children, classNames }: Props) {
     </div>
   )
 }
-
-SeatGrid.defaultProps = defaultProps

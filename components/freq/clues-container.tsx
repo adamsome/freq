@@ -16,7 +16,7 @@ export default function CluesContainer(_: Props) {
   const { game, mutate } = useFreqGame()
 
   if (!game)
-    return <SkeletonBox className="w-full h-32 sm:h-40 md:px-4 mb-4 sm:mb-5" />
+    return <SkeletonBox className="mb-4 h-32 w-full sm:mb-5 sm:h-40 md:px-4" />
 
   const isPsychic = game.currentPlayer?.id === game.psychic
   const isGuessing = game.phase === 'guess'

@@ -28,7 +28,7 @@ export default function ClueOption({
 
   return (
     <div
-      className={cx('w-full mb-4 sm:mb-5 transform transition-all', {
+      className={cx('mb-4 w-full transform transition-all sm:mb-5', {
         'h-32 sm:h-40': hasSlider,
         'h-24 sm:h-32': !hasSlider,
         'scale-90': selectable,

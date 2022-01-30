@@ -42,7 +42,7 @@ export default function ScoreboardGrid({
     function Player(player: PlayerView | undefined, i: number) {
       if (!player)
         return (
-          <SkeletonBox key={i} className="w-full h-8 mb-2" rounded={false} />
+          <SkeletonBox key={i} className="mb-2 h-8 w-full" rounded={false} />
         )
 
       const score = (scoreType === 'points' ? player.points : player.wins) ?? 0
@@ -74,14 +74,14 @@ export default function ScoreboardGrid({
     <div
       key={i}
       className={cx('pt-1', {
-        'border-r border-black dark:border-white last:border-r-0': !readonly,
+        'border-r border-black last:border-r-0 dark:border-white': !readonly,
       })}
     >
       {team.map(createPlayer(i === 1))}
     </div>
   )
 
-  return <div className="grid grid-cols-2 w-full">{teams.map(Team)}</div>
+  return <div className="grid w-full grid-cols-2">{teams.map(Team)}</div>
 }
 
 ScoreboardGrid.defaultProps = defaultProps

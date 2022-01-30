@@ -20,7 +20,7 @@ export default function CodeGrid({ game, onCodeClick }: Props) {
     game?.codes ?? range(0, 25).map(() => undefined)
 
   return (
-    <div className="grid grid-cols-5 w-full gap-1 mb-4 sm:mb-8 px-0 sm:px-4 font-mono">
+    <div className="mb-4 grid w-full grid-cols-5 gap-1 px-0 font-mono sm:mb-8 sm:px-4">
       <div className="col-span-5">
         <CodeGuessStatus guess={game?.last_act} turn={game?.team_turn} />
       </div>

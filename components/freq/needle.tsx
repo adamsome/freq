@@ -13,48 +13,34 @@ const defaultProps = {
 const Needle = ({ player, size }: Props) => {
   const { color = 'Taupe', icon = '😃', locked } = player
   const hex = colorDict[color]?.hex
+  const lg = size === 'lg'
 
   return (
     <div
-      className={cx('h-full flex-center select-none', {
-        'w-6': size !== 'lg',
-        'w-8': size === 'lg',
-      })}
+      className={cx(`flex-center h-full select-none ${!lg ? 'w-6' : 'w-8'}`)}
     >
       <div
-        className={cx(
-          'bg-black rounded select-none',
-          'ring-1 ring-inset ring-black shadow',
-          {
-            'w-1 h-24 sm:h-32': size !== 'lg',
-            'w-1.5 h-28 sm:h-36': size === 'lg',
-            'ring-opacity-10 shadow': !locked,
-            'ring-opacity-30 shadow': locked,
-          }
-        )}
+        className={cx(`
+          select-none rounded bg-black shadow ring-1 ring-inset ring-black
+          ${!lg ? 'h-24 w-1 sm:h-32' : 'h-28 w-1.5 sm:h-36'}
+          ${!locked ? 'ring-opacity-10' : 'ring-opacity-30'}`)}
         style={{ background: hex }}
       ></div>
       <div
-        className={cx(
-          'absolute flex-center rounded-full',
-          'bg-black text-white dark:text-white',
-          'ring-1 ring-inset ring-black shadow',
-          {
-            'bottom-2 w-6 h-6 text-md': size !== 'lg',
-            'bottom-0 w-8 h-8 text-2xl': size === 'lg',
-            'ring-opacity-10 shadow': !locked,
-            'ring-opacity-30 shadow': locked,
-          }
-        )}
+        className={cx(`
+          flex-center absolute rounded-full
+          bg-black text-white shadow
+          ring-1 ring-inset ring-black dark:text-white
+          ${!lg ? 'text-md bottom-2 h-6 w-6' : 'bottom-0 h-8 w-8 text-2xl'}
+          ${!locked ? 'ring-opacity-10' : 'ring-opacity-30'}`)}
         style={{ background: hex }}
       >
         <span>{icon}</span>
       </div>
       <div
-        className={cx('absolute bottom-[1.875rem] bg-transparent', {
-          'h-0.5 w-0.5': size !== 'lg',
-          'h-1 w-1': size === 'lg',
-        })}
+        className={cx(`
+          absolute bottom-[1.875rem] bg-transparent
+          ${size !== 'lg' ? 'h-0.5 w-0.5' : 'h-1 w-1'}`)}
         style={{ background: hex }}
       ></div>
     </div>

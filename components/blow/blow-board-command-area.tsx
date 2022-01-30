@@ -27,20 +27,20 @@ export default function BlowBoardCommandArea(props: Props) {
     const { pickTarget, settings } = game
     return (
       <div
-        className={cx(className, {
-          'max-w-xs text-center': true,
-          'h-12 px-6': position === 'bottom',
-          'flex-center px-1': position === 'grid-item',
-          'font-narrow text-lg': true,
-          'text-gray-400 dark:text-gray-500': true,
-        })}
+        className={cx(`
+          ${className}
+          ${position === 'bottom' ? 'h-12 px-6' : 'flex-center px-1'}
+          max-w-xs
+          text-center font-narrow text-lg
+          text-gray-400 dark:text-gray-500
+        `)}
       >
         {!pickTarget.fetching ? (
           <BlowLabel label={pickTarget.description} theme={settings.theme} />
         ) : (
           <IconSvg
             name="spinner"
-            className="w-7 h-7 text-black dark:text-white"
+            className="h-7 w-7 text-black dark:text-white"
           />
         )}
       </div>
@@ -51,7 +51,7 @@ export default function BlowBoardCommandArea(props: Props) {
     <div
       className={cx(className, {
         'pt-0 pl-0': position === 'grid-item',
-        'w-full h-12 px-6': position === 'bottom',
+        'h-12 w-full px-6': position === 'bottom',
       })}
     >
       <BlowBoardCommand position={position} onCommandError={onCommandError} />

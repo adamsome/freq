@@ -16,15 +16,15 @@ export default function BlowBoardTitle(props: Props) {
   const selected = typeof rawSelected === 'boolean' ? 0 : rawSelected
   return (
     <>
-      <div className="text-center font-spaced-narrow text-cyan-500 text-xs">
+      <div className="font-spaced-narrow text-center text-xs text-cyan-500">
         {title}
       </div>
 
-      <div className="xs:mb-1 text-xl whitespace-nowrap">
+      <div className="whitespace-nowrap text-xl xs:mb-1">
         {players.map((p, i) => (
           <Fragment key={i}>
             {i !== 0 && playerSeparator && (
-              <span className="text-gray-400 italic mx-2">
+              <span className="mx-2 italic text-gray-400">
                 {playerSeparator}
               </span>
             )}
@@ -47,7 +47,7 @@ function LitPlayerLabel({ className, player, lit }: LitPlayerLabelProps) {
     <BlowPlayerLabel
       className={cx(className, {
         'mr-1': true,
-        'pl-1.5 pr-0.5 py-0 font-light text-black bg-cyan-400 rounded': lit,
+        'rounded bg-cyan-400 py-0 pl-1.5 pr-0.5 font-light text-black': lit,
       })}
       value={player}
     />

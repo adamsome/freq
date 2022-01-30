@@ -48,7 +48,7 @@ export default function TeamGameBoard({ type }: Props) {
         )}
 
         {!type ? (
-          <SkeletonBox className="w-full h-32 sm:h-40 md:px-4 mb-4 sm:mb-5" />
+          <SkeletonBox className="mb-4 h-32 w-full sm:mb-5 sm:h-40 md:px-4" />
         ) : type === 'freq' ? (
           <CluesContainer />
         ) : type === 'cwd' ? (
@@ -60,7 +60,7 @@ export default function TeamGameBoard({ type }: Props) {
         {isTeamGuessGame(type) && (
           <>
             {!game ? (
-              <SkeletonBox className="w-full h-14 mb-6 md:px-4" />
+              <SkeletonBox className="mb-6 h-14 w-full md:px-4" />
             ) : game.currentPlayer ? (
               <CommandPanel />
             ) : (

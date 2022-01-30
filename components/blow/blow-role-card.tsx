@@ -42,7 +42,7 @@ function BlowRoleCardContent(props: Props) {
   if (!id || !theme)
     return (
       <SkeletonBox
-        className="w-full h-[4.85rem]"
+        className="h-[4.85rem] w-full"
         roundedClassName="rounded-md"
       />
     )
@@ -54,11 +54,11 @@ function BlowRoleCardContent(props: Props) {
   invariant(isBlowRoleDef(role), `BlowRoleCard: Role for '${id}' invalid`)
 
   return (
-    <div className="relative flex justify-start items-start w-full">
+    <div className="relative flex w-full items-start justify-start">
       <BlowRoleIcon
         className={cx(
           classes.roleIcon,
-          'flex-shrink-0 w-12 ml-1 mr-2 xs:ml-1.5 xs:mr-2.5'
+          'ml-1 mr-2 w-12 flex-shrink-0 xs:ml-1.5 xs:mr-2.5'
         )}
         role={id}
       />
@@ -85,7 +85,7 @@ function BlowRoleCardContent(props: Props) {
           <div
             className={cx(
               classes.active.hint,
-              'text-left text-sm italic text-overflow'
+              'text-overflow text-left text-sm italic'
             )}
           >
             No Active Spell
@@ -94,7 +94,7 @@ function BlowRoleCardContent(props: Props) {
 
         <div
           className={cx(
-            'h-px mt-0.5 xs:my-1 mb-px xs:mb-0.5 mr-1 border-t border-b-0 border-l-0 border-r-0',
+            'mt-0.5 mb-px mr-1 h-px border-t border-b-0 border-l-0 border-r-0 xs:my-1 xs:mb-0.5',
             view.classes.separator
           )}
         ></div>
@@ -112,7 +112,7 @@ function BlowRoleCardContent(props: Props) {
           <div
             className={cx(
               classes.counter.hint,
-              'pt-0.5 xs:pt-px text-left text-xs xs:text-sm italic text-overflow'
+              'text-overflow pt-0.5 text-left text-xs italic xs:pt-px xs:text-sm'
             )}
           >
             No Counter Spell

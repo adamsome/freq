@@ -66,7 +66,8 @@ export default function BlowActionButton({
     ? 'h-1'
     : md
     ? 'h-4'
-    : 'h-[var(--blow-action-button-min-height)] min-h-[var(--blow-action-button-min-height)]'
+    : `h-[var(--blow-action-button-min-height)]
+       min-h-[var(--blow-action-button-min-height)]`
 
   if (!id) {
     return <div className={cx(heightCx, className)}></div>
@@ -105,9 +106,9 @@ export default function BlowActionButton({
     <Component
       type={asButton ? 'button' : undefined}
       className={cx(
-        'relative align-baseline flex-center group transition',
-        'w-full m-0',
-        sm ? 'pt-[0.09375rem]' : md ? '-my-px' : 'pl-0.5 py-0.5',
+        'flex-center group relative align-baseline transition',
+        'm-0 w-full',
+        sm ? 'pt-[0.09375rem]' : md ? '-my-px' : 'py-0.5 pl-0.5',
         sm
           ? 'text-[2.25px] leading-normal'
           : md
@@ -130,8 +131,8 @@ export default function BlowActionButton({
           !sm && 'shadow',
           !sm &&
             'focus:ring-4 focus:ring-opacity-25 dark:focus:ring-opacity-25',
-          'focus:ring-blue-400 focus:border-blue-700',
-          'dark:focus:ring-blue-500 dark:focus:border-blue-700',
+          'focus:border-blue-700 focus:ring-blue-400',
+          'dark:focus:border-blue-700 dark:focus:ring-blue-500',
         ],
         invert ? TEXT.black : TEXT.body,
         invert || state === 'clickable' ? TEXT_OPACITY[100] : TEXT_OPACITY[80],

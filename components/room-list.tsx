@@ -28,11 +28,11 @@ export default function RoomList({
 }: Props) {
   return (
     <>
-      <Heading classNames={classNames}>
+      <Heading className={classNames}>
         <span>Recent Games</span>
         <span className="flex-1"></span>
         <Button
-          className={cx('text-base ml-4', { 'text-right': loading })}
+          className={cx('ml-4 text-base', { 'text-right': loading })}
           color="gray"
           bgHover={false}
           disabled={loading}
@@ -41,7 +41,7 @@ export default function RoomList({
           {loading ? (
             <IconSvg
               name="spinner"
-              className="w-5 h-5 text-black dark:text-white"
+              className="h-5 w-5 text-black dark:text-white"
             />
           ) : (
             'Refresh'
@@ -63,10 +63,11 @@ export default function RoomList({
 
       {rooms && rooms.length === 0 && (
         <p
-          className={cx(
-            'w-full text-center text-xl p-8 rounded',
-            'text-gray-400 dark:text-gray-600 bg-gray-100 dark:bg-gray-950'
-          )}
+          className={cx(`
+            w-full rounded bg-gray-100 p-8
+            text-center text-xl text-gray-400
+            dark:bg-gray-950 dark:text-gray-600
+          `)}
         >
           No recents games available &mdash; start a new game above!
         </p>

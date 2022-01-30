@@ -44,7 +44,7 @@ export default function Title({
   }
 
   return (
-    <h1 style={styles} className={cx('m-0 text-7xl text-center', classes)}>
+    <h1 style={styles} className={cx('m-0 text-center text-7xl', classes)}>
       {label}
     </h1>
   )

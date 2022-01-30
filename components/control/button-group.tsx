@@ -21,7 +21,7 @@ export default function ButtonGroup({
   onClick,
 }: Props) {
   return (
-    <div className="flex-center p-1 bg-gray-100 dark:bg-gray-900 rounded-lg">
+    <div className="flex-center rounded-lg bg-gray-100 p-1 dark:bg-gray-900">
       {buttons.map((text, i) => (
         <Button
           key={text + i}

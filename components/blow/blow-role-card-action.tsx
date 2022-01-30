@@ -41,11 +41,10 @@ export default function BlowRoleCardAction(props: Props) {
   return (
     <div
       className={cx(
-        'relative align-baseline flex-center group transition',
-        'w-full py-0',
+        `flex-center group relative w-full py-0
+        align-baseline tracking-normal transition`,
         sizeClassName,
         heightCx,
-        'tracking-normal',
         classes.text,
         className
       )}
@@ -65,9 +64,9 @@ export default function BlowRoleCardAction(props: Props) {
         </div>
       )}
 
-      <div className={cx('flex-1 text-left leading-tight text-overflow')}>
+      <div className={cx('text-overflow flex-1 text-left leading-tight')}>
         <BlowLabel
-          className={cx(counter && 'font-semibold text-overflow')}
+          className={cx(counter && 'text-overflow font-semibold')}
           label={label}
           theme={theme}
           coinProps={{

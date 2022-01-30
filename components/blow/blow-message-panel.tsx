@@ -44,22 +44,24 @@ export default function BlowMessagePanel(props: Props) {
   return (
     <div
       {...divProps}
-      className={cx(
-        'relative w-full p-0',
-        'bg-white/50 dark:bg-black/50',
-        'backdrop-blur-[10px]',
-        'border-b border-gray-100 dark:border-gray-950',
-        className
-      )}
+      className={cx(`
+        relative w-full
+        border-b border-gray-100
+        bg-white/50
+        p-0
+        backdrop-blur-[10px]
+        dark:border-gray-950 dark:bg-black/50
+        ${className}
+      `)}
       data-body-scroll-lock-ignore
     >
       <div
         ref={ref}
-        className={cx(
-          'block full max-h-full overflow-y-auto',
-          'm-auto pt-2 pb-1',
-          'text-sm text-gray-500'
-        )}
+        className={cx(`
+          full m-auto block max-h-full
+          overflow-y-auto pt-2 pb-1
+          text-sm text-gray-500
+        `)}
       >
         <GameLink
           className="mt-1"
@@ -68,17 +70,13 @@ export default function BlowMessagePanel(props: Props) {
         />
 
         {hasMessages && (
-          <div className={cx('w-full my-2 px-4')}>
-            <div
-              className={cx('w-full h-px', 'bg-gray-100 dark:bg-gray-900')}
-            ></div>
+          <div className="my-2 w-full px-4">
+            <div className="h-px w-full bg-gray-100 dark:bg-gray-900"></div>
           </div>
         )}
 
         {hasMessages && (
-          <div
-            className={cx('block max-w-sm m-auto px-5 space-y-1 font-narrow')}
-          >
+          <div className="m-auto block max-w-sm space-y-1 px-5 font-narrow">
             {messages.map((msg) => (
               <BlowMessageLine key={msg.i} players={players} theme={theme}>
                 {msg}
@@ -102,12 +100,14 @@ export default function BlowMessagePanel(props: Props) {
 
       {hasMessages && (
         <div
-          className={cx(
-            'absolute top-0 left-0 right-3.5',
-            'pointer-events-none',
-            'h-6 md:h-8',
-            'from-white dark:from-black bg-gradient-to-b '
-          )}
+          className={cx(`
+            pointer-events-none
+            absolute top-0 left-0 right-3.5
+            h-6
+            bg-gradient-to-b
+            from-white dark:from-black
+            md:h-8
+          `)}
         ></div>
       )}
     </div>

@@ -67,20 +67,32 @@ export default function Input({
   return (
     <input
       {...props}
-      className={cx(
-        'bg-white dark:bg-gray-900',
-        'border border-gray-300 dark:border-gray-900 rounded-lg',
-        'hover:border-blue-700 dark:hover:border-blue-700',
-        'focus:border-blue-700 dark:focus:border-blue-700',
-        'focus:outline-none',
-        'focus:ring-4 focus:ring-blue-400 focus:ring-opacity-25',
-        'dark:focus:ring-blue-500 dark:focus:ring-opacity-25',
-        'text-black dark:text-white',
-        'placeholder-gray-400 dark:placeholder-gray-600',
-        'disabled:cursor-not-allowed disabled:color-gray-500',
-        'transition whitespace-nowrap',
-        className
-      )}
+      className={cx(`
+        disabled:color-gray-500
+        whitespace-nowrap
+        rounded-lg border
+        border-gray-300
+        bg-white
+        text-black
+        placeholder-gray-400
+        transition
+        hover:border-blue-700
+        focus:border-blue-700
+        focus:outline-none
+        focus:ring-4
+        focus:ring-blue-400
+        focus:ring-opacity-25
+        disabled:cursor-not-allowed
+        dark:border-gray-900
+        dark:bg-gray-900
+        dark:text-white
+        dark:placeholder-gray-600
+        dark:hover:border-blue-700
+        dark:focus:border-blue-700
+        dark:focus:ring-blue-500
+        dark:focus:ring-opacity-25
+        ${className}
+      `)}
       type={htmlType}
       onChange={handleChange}
       onFocus={handleFocus}

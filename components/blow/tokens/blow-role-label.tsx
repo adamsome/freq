@@ -50,10 +50,8 @@ export default function BlowRoleLabel({
     return (
       <div
         className={cx(border && view.classes.button, {
-          'inline-flex items-baseline space-x-1': true,
-          'px-1': border,
-          'border rounded': border,
-          'pointer-events-none': true,
+          'pointer-events-none inline-flex items-baseline space-x-1': true,
+          'rounded border px-1': border,
         })}
       >
         <BlowRoleIcon
@@ -79,7 +77,7 @@ export default function BlowRoleLabel({
     <>
       <span
         className={cx(
-          'font-spaced-narrow font-semibold -mr-[0.2em]',
+          'font-spaced-narrow -mr-[0.2em] font-semibold',
           className ?? 'text-gray-600 dark:text-gray-300'
         )}
       >

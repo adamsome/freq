@@ -156,18 +156,11 @@ function BlowCardContentWrapper(props: ContentWrapperProps) {
   return (
     <div
       className={cx(view.classes.button, {
-        'flex flex-col full': true,
+        'full flex flex-col': true,
         'justify-center': center,
         'px-0.5 pt-0 pb-0.5': sm,
         'px-1.5 pt-0.5 pb-1.5': !sm && !center,
         'p-1.5': !sm && center,
-        // 'bg-cyan-200 dark:bg-cyan-925': sm,
-        // 'bg-cyan-100 dark:bg-cyan-975':
-        //   !sm && !selected && (!hasCard || selectable),
-        // 'bg-cyan-200 dark:bg-cyan-950':
-        //   !sm && (selected || (hasCard && !selectable)),
-        // 'group-hover:bg-cyan-200 dark:group-hover:bg-cyan-950':
-        //   !sm && selectable,
         border: true,
         'transition-colors': !sm && selectable,
         'font-narrow': true,

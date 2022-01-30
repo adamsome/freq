@@ -57,18 +57,17 @@ const PlayerEdit = ({ onClose }: Props) => {
   return (
     <>
       <h2
-        className={cx(
-          'bg-gray-400 dark:bg-gray-700',
-          'text-3xl text-white font-semibold'
-        )}
+        className={cx(`
+          bg-gray-400
+          text-3xl font-semibold text-white
+          dark:bg-gray-700
+        `)}
         style={styleColor(player, 1)}
       >
         <input
-          className={cx(
-            'xx w-full px-12 py-2 focus:outline-none',
-            'bg-transparent',
-            'font-semibold'
-          )}
+          className={cx(`
+            w-full bg-transparent px-12 py-2 font-semibold focus:outline-none
+          `)}
           ref={inputRef}
           type="text"
           value={name}
@@ -77,19 +76,24 @@ const PlayerEdit = ({ onClose }: Props) => {
         <div className="absolute top-2 left-2.5">{icon}</div>
       </h2>
 
-      <div className="flex-start flex-col p-0 w-full max-h-[28rem] overflow-hidden">
-        <div className="flex-1 flex-center flex-wrap pt-2 overflow-auto">
+      <div className="flex-start max-h-[28rem] w-full flex-col overflow-hidden p-0">
+        <div className="flex-center flex-1 flex-wrap overflow-auto pt-2">
           {iconSet.map((i) => (
             <div
               key={i}
-              className={cx(
-                'flex-center align-middle transition-colors',
-                'text-3xl h-11 px-1.5 cursor-pointer',
-                'hover:bg-gray-200 dark:hover:bg-black',
-                'border border-transparent',
-                'hover:border-blue-700 rounded-lg',
-                { 'bg-gray-200 dark:bg-black': i === icon }
-              )}
+              className={cx(`
+                flex-center
+                h-11
+                cursor-pointer
+                rounded-lg border border-transparent
+                px-1.5
+                align-middle text-3xl
+                transition-colors
+                hover:border-blue-700
+                hover:bg-gray-200
+                dark:hover:bg-black
+                ${i === icon ? 'bg-gray-200 dark:bg-black' : ''}
+              `)}
               onClick={() => setIcon(i)}
             >
               {i}
@@ -100,17 +104,17 @@ const PlayerEdit = ({ onClose }: Props) => {
 
       <PlayerOptionButton
         noDivider
-        className={cx(
-          'inline-flex items-center',
-          'bg-blue-700 hover:bg-blue-900 dark:hover:bg-blue-600',
-          'text-white text-2xl'
-        )}
+        className={cx(`
+          inline-flex items-center
+          bg-blue-700 text-2xl text-white
+          hover:bg-blue-900 dark:hover:bg-blue-600
+        `)}
         disabled={fetching || player.fetching}
         onClick={handleSave}
       >
         Save
         {(fetching || player.fetching) && (
-          <IconSvg name="spinner" className="w-5 h-5 ml-3 text-white" />
+          <IconSvg name="spinner" className="ml-3 h-5 w-5 text-white" />
         )}
       </PlayerOptionButton>
     </>

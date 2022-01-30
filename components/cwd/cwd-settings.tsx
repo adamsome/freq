@@ -53,11 +53,13 @@ export default function CwdSettings(_: Props) {
 
       <ActionModal open={open} onClose={() => setOpen(false)}>
         <h2
-          className={cx(
-            'bg-gray-400 dark:bg-gray-700',
-            'text-3xl text-white font-semibold',
-            'm-0 px-4 py-2'
-          )}
+          className={cx(`
+            m-0
+            bg-gray-400
+            px-4 py-2
+            text-3xl font-semibold
+            text-white dark:bg-gray-700
+          `)}
         >
           Room Settings
         </h2>
@@ -88,7 +90,7 @@ export default function CwdSettings(_: Props) {
           >
             {disabled ? 'Processing' : 'Close'}
             {disabled && (
-              <IconSvg name="spinner" className="w-5 h-5 ml-3 text-white" />
+              <IconSvg name="spinner" className="ml-3 h-5 w-5 text-white" />
             )}
           </PlayerOptionButton>
         </ActionModalOptions>

@@ -45,10 +45,11 @@ export default function TimerSpinner({
 
       <div
         aria-hidden="true"
-        className={cx(
-          'absolute top-0 left-0 flex-center full opacity-50',
-          'font-sans font-semibold text-[0.9375rem] tracking-normal'
-        )}
+        className={cx(`
+          flex-center full absolute top-0 left-0
+          font-sans text-[0.9375rem] font-semibold tracking-normal
+          opacity-50
+        `)}
         style={{ color: stroke }}
       >
         {time}

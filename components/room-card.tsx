@@ -43,34 +43,45 @@ export default function RoomCard({ game, className, onClick }: Props) {
   return (
     <button
       type="button"
-      className={cx(
-        'flex flex-col items-center w-full',
-        'px-0 md:px-4 bg-gray-100 dark:bg-gray-900',
-        isBlowGame ? 'pt-3 pb-1' : 'py-3',
-        'border-t border-b border-gray-200 dark:border-gray-800',
-        'md:border-l md:border-r md:rounded-lg',
-        'transition cursor-pointer group',
-        'hover:bg-blue-100 dark:hover:bg-blue-950',
-        'hover:border-blue-400 dark:hover:border-blue-800',
-        'focus:ring-4 focus:ring-blue-400 focus:ring-opacity-25',
-        'dark:focus:ring-blue-500 dark:focus:ring-opacity-25',
-        'focus:outline-none focus:border-blue-700 dark:focus:border-blue-700',
-        className
-      )}
+      className={cx(`
+        group flex w-full cursor-pointer flex-col items-center
+        border-t border-b border-gray-200 bg-gray-100
+        px-0 ${isBlowGame ? 'pt-3 pb-1' : 'py-3'}
+        transition
+        hover:border-blue-400
+        hover:bg-blue-100
+        focus:border-blue-700
+        focus:outline-none
+        focus:ring-4
+        focus:ring-blue-400
+        focus:ring-opacity-25
+        dark:border-gray-800
+        dark:bg-gray-900
+        dark:hover:border-blue-800
+        dark:hover:bg-blue-950
+        dark:focus:border-blue-700
+        dark:focus:ring-blue-500
+        dark:focus:ring-opacity-25
+        md:rounded-lg md:border-l md:border-r
+        md:px-4
+        ${className}
+      `)}
       onClick={handleClick}
     >
-      <div className="flex items-center w-full min-w-full overflow-hidden px-4 md:px-0">
+      <div className="flex w-full min-w-full items-center overflow-hidden px-4 md:px-0">
         <h2
-          className={cx(
-            'flex flex-1 items-center',
-            'text-2xl md:text-3xl font-light whitespace-nowrap',
-            'transition-colors group-hover:text-blue-600',
-            'whitespace-nowrap overflow-hidden text-ellipsis'
-          )}
+          className={cx(`
+            flex flex-1 items-center
+            overflow-hidden text-ellipsis whitespace-nowrap
+            text-2xl font-light
+            transition-colors
+            group-hover:text-blue-600
+            md:text-3xl
+          `)}
         >
           <Title type={game.type} small />
 
-          <div className="text-gray-300 dark:text-gray-700 font-light ml-2 mr-1.5">
+          <div className="ml-2 mr-1.5 font-light text-gray-300 dark:text-gray-700">
             /
           </div>
 
@@ -78,21 +89,24 @@ export default function RoomCard({ game, className, onClick }: Props) {
 
           <div
             title={lastUpdatedISO}
-            className={cx(
-              'hidden sm:block font-light',
-              'flex-1 ml-4 text-gray-500 text-sm md:text-base text-left',
-              'whitespace-nowrap overflow-hidden text-ellipsis'
-            )}
+            className={cx(`
+              ml-4
+              hidden flex-1
+              overflow-hidden text-ellipsis whitespace-nowrap
+              text-left text-sm font-light text-gray-500
+              sm:block
+              md:text-base
+            `)}
           >
             {lastUpdated}
           </div>
         </h2>
 
         <div
-          className={cx(
-            'text-gray-300 dark:text-gray-700 text-3xl font-light',
-            'transition-colors group-hover:text-blue-600'
-          )}
+          className={cx(`
+            text-3xl font-light text-gray-300 transition-colors
+            group-hover:text-blue-600 dark:text-gray-700
+          `)}
         >
           →
         </div>
@@ -100,23 +114,29 @@ export default function RoomCard({ game, className, onClick }: Props) {
 
       <div
         title={lastUpdatedISO}
-        className={cx(
-          'block sm:hidden font-light self-start',
-          'flex-1 ml-4 text-gray-500 text-sm md:text-base text-left',
-          'whitespace-nowrap overflow-hidden text-ellipsis'
-        )}
+        className={cx(`
+          ml-4
+          block flex-1 self-start
+          overflow-hidden text-ellipsis whitespace-nowrap
+          text-left text-sm font-light
+          text-gray-500
+          sm:hidden
+          md:text-base
+        `)}
       >
         {lastUpdated}
       </div>
 
       <div
-        className={cx(
-          'w-full pr-2 md:pr-0 opacity-70 group-hover:opacity-100 transition-opacity',
-          'mt-3 transition-colors',
-          isBlowGame ? 'pt-1' : 'pt-3',
-          'border-t border-gray-300 dark:border-gray-800',
-          'group-hover:border-gray-300 dark:group-hover:border-gray-700'
-        )}
+        className={cx(`
+          mt-3 w-full
+          border-t border-gray-300
+          pr-2 ${isBlowGame ? 'pt-1' : 'pt-3'}
+          opacity-70 transition
+          group-hover:border-gray-300 group-hover:opacity-100
+          dark:border-gray-800 dark:group-hover:border-gray-700
+          md:pr-0
+        `)}
       >
         {isTeamGame ? (
           <Scoreboard game={game} readonly></Scoreboard>
@@ -140,17 +160,18 @@ export function RoomCardSkeleton({ className }: SkeletonProps) {
   return (
     <button
       type="button"
-      className={cx(
-        'w-full h-40',
-        'bg-gray-50 dark:bg-gray-950',
-        'animate-shine bg-gradient-to-r bg-skeleton bg-no-repeat',
-        'from-gray-50 via-white to-gray-50',
-        'dark:from-gray-950 dark:via-gray-900 dark:to-gray-950',
-        'border-t border-b border-transparent',
-        'md:border-l md:border-r md:rounded-lg',
-        'focus:outline-none cursor-default',
-        className
-      )}
+      className={cx(`
+        h-40 w-full
+        animate-shine cursor-default
+        border-t border-b border-transparent
+        bg-gray-50 bg-gradient-to-r from-gray-50 via-white to-gray-50
+        bg-skeleton bg-no-repeat
+        focus:outline-none
+        dark:bg-gray-950 dark:from-gray-950
+        dark:via-gray-900 dark:to-gray-950
+        md:rounded-lg md:border-l md:border-r
+        ${className}
+      `)}
     ></button>
   )
 }

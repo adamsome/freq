@@ -38,7 +38,7 @@ export default function CommandButton(props: Props) {
 
       {cmd.info && (
         <div
-          className="text-center text-gray-500 font-light mt-1 text-sm sm:text-base leading-tight"
+          className="mt-1 text-center text-sm font-light leading-tight text-gray-500 sm:text-base"
           style={styleColor(cmd.infoColor)}
         >
           {cmd.info}
@@ -93,9 +93,8 @@ function SideButton(props: Props & { right?: boolean }) {
   return (
     <Button
       className={cx(
-        'flex-1 w-full text-xl',
-        'opacity-80 hover:opacity-100 transition-opacity',
-        'inline-flex justify-center items-center',
+        `inline-flex w-full flex-1 items-center justify-center
+        text-xl opacity-80 transition-opacity hover:opacity-100`,
         { 'ml-2': right, 'h-full': fullHeight },
         className
       )}
@@ -119,7 +118,7 @@ function ButtonContent({
   onTimerFinish,
 }: Props & { right?: boolean }) {
   if (fetching || command.fetching)
-    return <IconSvg name="spinner" className="w-7 h-7 text-white" />
+    return <IconSvg name="spinner" className="h-7 w-7 text-white" />
 
   const text = right ? command.rightText : command.text
   const timer = right ? command.rightTimer : command.timer

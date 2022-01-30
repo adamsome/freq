@@ -45,7 +45,7 @@ export default function BlowLayout(props: Props) {
       type="blow"
       title={getGameTitle('blow')}
       room={room}
-      className="bg-white dark:bg-black text-black dark:text-white"
+      className="bg-white text-black dark:bg-black dark:text-white"
       button={{
         color: 'cyan',
         className: 'inline-flex font-spaced-narrow font-light',
@@ -64,14 +64,19 @@ export default function BlowLayout(props: Props) {
       />
 
       <div
-        className={cx(
-          'w-full max-w-screen-md',
-          'mx-auto pt-1.5 xs:pt-2 sm:pt-4 md:px-2',
-          'space-y-1.5 xs:space-y-2 sm:space-y-4',
+        className={cx(`
+        mx-auto w-full
+        max-w-screen-md
+        space-y-1.5 pt-1.5
+        xs:space-y-2 xs:pt-2
+        sm:space-y-4 sm:pt-4
+        md:px-2
+        ${
           theme !== 'classic'
             ? '[--freq-button-weight:600]'
             : '[--freq-button-weight:400]'
-        )}
+        }
+        `)}
       >
         <BlowBoardContent onCommandError={onCommandError} />
 
@@ -83,7 +88,7 @@ export default function BlowLayout(props: Props) {
         )}
 
         {/* Empty space, height of player seats bottom sheet, for scrolling */}
-        <div className={cx('w-full h-[11.75rem]')}></div>
+        <div className={cx('h-[11.75rem] w-full')}></div>
       </div>
 
       <BlowPlayersSheet onCommandError={onCommandError} />

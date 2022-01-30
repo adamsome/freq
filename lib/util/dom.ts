@@ -9,11 +9,21 @@ type CxParam =
   | undefined
   | (Record<string | number, unknown> & { toString?: () => string })
 
+function handleStringOrNumber(c: string | number): (string | number)[] {
+  if (typeof c === 'string') {
+    const trimmed = c.trim()
+    if (trimmed.length > 1) {
+      return trimmed.split(/\s+/g)
+    }
+  }
+  return [c]
+}
+
 export const cx = (...classNames: (CxParam | CxParam[])[]): string => {
   const classStrings = classNames.reduce((acc: (string | number)[], c) => {
     if (c) {
       if (isStringOrNumber(c)) {
-        acc.push(c)
+        acc.push(...handleStringOrNumber(c))
       } else if (Array.isArray(c)) {
         if (c.length) {
           const cs = cx(...c)

@@ -49,7 +49,7 @@ export default function CodeButton({
 
   if (!code)
     return (
-      <SkeletonBox className="w-full h-16 sm:h-24 md:h-28" rounded={false} />
+      <SkeletonBox className="h-16 w-full sm:h-24 md:h-28" rounded={false} />
     )
 
   const samePsychics = psychic1 === psychic2
@@ -79,10 +79,14 @@ export default function CodeButton({
   return (
     <div
       className={cx(
-        'flex flex-center w-full h-16 sm:h-24 md:h-28 px-4 relative',
-        'bg-gray-100 dark:bg-gray-900',
-        'break-normal text-center font-semibold',
-        'border border-transparent select-none',
+        `flex-center relative flex h-16 w-full
+        select-none break-normal
+        border border-transparent
+        bg-gray-100
+        px-4
+        text-center font-semibold
+        dark:bg-gray-900
+        sm:h-24 md:h-28`,
         textSize,
         {
           'text-amber-400': code.state === -1,
@@ -98,12 +102,12 @@ export default function CodeButton({
     >
       {code.selected && (
         <div
-          className={cx('absolute w-full h-full border-2')}
+          className={cx('absolute h-full w-full border-2')}
           style={styleBorder(currentPlayer?.color)}
         ></div>
       )}
 
-      <div className="absolute w-full bottom-0 text-sm sm:text-base md:text-2xl">
+      <div className="absolute bottom-0 w-full text-sm sm:text-base md:text-2xl">
         {code.icons.slice(0, 3).map((icon, i) => (
           <div key={i + icon}>{icon}</div>
         ))}
@@ -121,7 +125,7 @@ export default function CodeButton({
       <span
         className={cx(
           brokenTextSize,
-          'relative inline md:hidden leading-none sm:leading-none',
+          'relative inline leading-none sm:leading-none md:hidden',
           {
             'animate-bounce-5': code.lit,
             'animate-pulse': rawCode?.lit,

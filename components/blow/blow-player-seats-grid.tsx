@@ -28,10 +28,7 @@ export default function BlowPlayerSeatsGrid(props: Props) {
   return (
     <>
       <SeatGrid
-        classNames={cx(
-          className,
-          'max-w-[336px] [--blow-card-unit:0.28125rem]'
-        )}
+        className={cx(className, 'max-w-[336px] [--blow-card-unit:0.28125rem]')}
       >
         {players.map((p, i) => (
           <BlowPlayerSeat

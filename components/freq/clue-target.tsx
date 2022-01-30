@@ -22,27 +22,29 @@ const ClueTarget = ({ position, width }: Props) => {
 
   return (
     <div
-      className={cx(
-        'absolute top-0 left-0 flex w-1/6 h-full',
-        'overflow-hidden animate-fade-in-slow'
-      )}
+      className={cx(`
+        absolute top-0 left-0 flex h-full w-1/6
+        animate-fade-in-slow overflow-hidden
+      `)}
       style={{ left: `${position - width / 2}%`, width: `${width}%` }}
     >
       {bands.map(([n, opacity], i) => (
         <div
           key={`${n}_${i}`}
-          className={cx(
-            'flex-1 flex flex-col justify-between content-center h-full',
-            'bg-black dark:bg-white'
-          )}
+          className={cx(`
+            flex h-full flex-1 flex-col content-center justify-between
+            bg-black dark:bg-white
+          `)}
           style={{ opacity }}
         >
           <div
-            className={cx(
-              'flex-1 flex flex-col content-center text-center',
-              'text-white/50 dark:text-black/50',
-              'text-[length:min(4vw, 1em)] last:justify-end'
-            )}
+            className={cx(`
+              text-[length:min(4vw, 1em)]
+              flex flex-1 flex-col content-center text-center
+              text-white/50
+              last:justify-end
+              dark:text-black/50
+            `)}
           >
             {n}
           </div>
