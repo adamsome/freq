@@ -34,13 +34,14 @@ export default function BlowPlayerSeatOutline(props: Props) {
         'text-left': true,
         'text-black/90 dark:text-white/90': true,
         'font-semibold': player?.current,
-        'bg-gray-200 dark:bg-gray-800': player === null,
+        'border-2 border-dashed border-white/10': player === null,
         border: targetable || (size !== 'lg' && player && !player.current),
         'border-black dark:border-white': !targetable && player,
-        'border-gray-200 dark:border-gray-800': !targetable && !player,
+        'border-gray-200 dark:border-gray-800':
+          !targetable && player === undefined,
         'border-red-600 dark:border-red-500': targetable,
         'hover:border-red-800 dark:hover:border-red-400': targetable,
-        'border-opacity-20 dark:border-opacity-20': !targetable,
+        'border-opacity-20 dark:border-opacity-20': !targetable && player,
         'border-2': !targetable && size !== 'lg' && player?.current,
         'border-opacity-30 dark:border-opacity-30':
           !targetable && player?.current,

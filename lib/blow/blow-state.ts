@@ -4,11 +4,12 @@ import { isPlayer } from '../player'
 import {
   BlowAction,
   BlowActionState,
+  BlowActionStep,
   BlowActionTurnInfo,
   BlowChallenge,
   BlowDrawCards,
   BlowGame,
-  BlowLabelItem,
+  BlowLabelDef,
   BlowMessage,
   BlowPickLossCard,
   BlowPickTarget,
@@ -20,6 +21,7 @@ import {
   BlowRoleDef,
   BlowRoleID,
   BlowTimerType,
+  BlowTurnView,
   isBlowRoleActionID,
 } from '../types/blow.types'
 import { Command } from '../types/game.types'
@@ -29,6 +31,7 @@ import {
   challenge,
   continueTurn,
   createCommand,
+  declineChallenge,
   declineCounter,
   nextTurn,
 } from './blow-action-creators'
@@ -36,6 +39,7 @@ import { BLOW_ACTION_RESOLVERS } from './blow-action-resolvers'
 import { getBlowRoles } from './blow-role'
 import { getBlowRoleAction } from './blow-role-action-defs'
 import { getBlowRole } from './blow-role-defs'
+import createBlowTurnView from './blow-turn-view'
 import initBlowGame from './init-blow-game'
 
 type ActionStatePredicateMap = Partial<
@@ -59,10 +63,13 @@ export interface IBlowState {
   messages: BlowMessage[]
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
   players: BlowPlayerView[]
-  turn: number
+  turnIndex: number
+  step: BlowActionStep
   active?: number
   counter?: number[]
   turnActions: TurnActions
+  turn?: BlowTurnView
+  resolution?: BlowLabelDef
   pickTarget?: BlowPickTarget
   challenge?: BlowChallenge
   drawCards?: BlowDrawCards
@@ -77,7 +84,8 @@ export const initialBlowState: IBlowState = {
   commands: [],
   messages: [],
   players: [],
-  turn: 0,
+  turnIndex: 0,
+  step: 'active-choose',
   turnActions: {},
   actionState: {},
 }
@@ -98,18 +106,40 @@ export default class BlowState {
     return this.s.players[this.s.active]
   }
 
+  get canPlayerChallenge(): boolean {
+    const action = this.latestTurnRoleAction
+    return (
+      this.userID != null &&
+      // Player who performed the action cannot challenge themself, and
+      this.getPlayer(action?.payload?.subject).id !== this.userID &&
+      // cannot already be eliminated
+      !this.isPlayerEliminated(this.userID)
+    )
+  }
+
+  get counterIndices(): number[] | undefined {
+    return this.s.counter
+  }
+  set counterIndices(value: number[] | undefined) {
+    this.s.counter = value
+  }
+
   get counterPlayers(): BlowPlayerView[] {
-    return (this.s.counter ?? []).map((pidx) => this.s.players[pidx])
+    return (this.counterIndices ?? []).map((pidx) => this.s.players[pidx])
+  }
+
+  get drawCards(): BlowDrawCards | undefined {
+    return this.s.drawCards
   }
 
   get isActivePlayer(): boolean {
     if (this.s.active == null) return false
-    return this.activePlayer?.id === this.s.userID
+    return this.activePlayer?.id === this.userID
   }
 
   get isCounterPlayer(): boolean {
-    if (this.s.counter == null) return false
-    return this.counterPlayers.some((p) => p.id === this.s.userID)
+    if (this.counterIndices == null) return false
+    return this.counterPlayers.some((p) => p.id === this.userID)
   }
 
   get lastMessage(): BlowMessage {
@@ -119,12 +149,16 @@ export default class BlowState {
   }
 
   get latestTurnRoleAction(): BlowActionTurnInfo | undefined {
-    const { active, counter } = this.s.turnActions
+    const { active, counter } = this.turnActions
     return counter ?? active
   }
 
   get playersAlive(): BlowPlayerView[] {
     return this.s.players.filter((_, i) => !this.isPlayerEliminated(i))
+  }
+
+  get resolution(): BlowLabelDef | undefined {
+    return this.s.resolution
   }
 
   get roleActions(): BlowRoleActionDef[] {
@@ -140,6 +174,18 @@ export default class BlowState {
         (xid): BlowRoleActionPair => [role, this.toAction(xid)]
       )
     })
+  }
+
+  get step(): BlowActionStep {
+    return this.s.step
+  }
+
+  get turnActions(): TurnActions {
+    return this.s.turnActions
+  }
+
+  get userID(): string | undefined {
+    return this.s.userID
   }
 
   drawCard(): BlowRoleID {
@@ -177,6 +223,16 @@ export default class BlowState {
     const inRange = pidx >= 0 || pidx < this.s.players.length
     invariant(inRange, `'getPlayerIndex': No player found for '${idOrIdx}'`)
     return pidx
+  }
+
+  isChallengable(x: BlowActionTurnInfo) {
+    return (
+      // Action hasn't already had an opportunity to be challenged
+      !x.hadChallengeOpportunity &&
+      // and has a non-common role (common roles cannot be challenged)
+      x.payload.role != null &&
+      !this.toRole(x.payload.role).common
+    )
   }
 
   isPlayerEliminated(
@@ -222,12 +278,12 @@ export default class BlowState {
 
     this.s.players.forEach((p, pidx) => {
       const cardsKilled = p.cardsKilled
-      const isCurrent = p.id === this.s.userID
+      const isCurrent = p.id === this.userID
 
       // Set player statuses
       if (isCurrent) p.current = true
       if (pidx === this.s.active) p.active = true
-      if (this.s.counter?.includes(pidx)) p.counter = true
+      if (this.counterIndices?.includes(pidx)) p.counter = true
       if (this.isPlayerEliminated(p)) {
         p.eliminated = true
       } else {
@@ -260,6 +316,8 @@ export default class BlowState {
       this.s.drawCards.drawnCards = this.s.drawCards.drawnCards.map(() => null)
     }
 
+    this.s.turn = createBlowTurnView(this)
+
     return this
   }
 
@@ -274,15 +332,15 @@ export default class BlowState {
   }
 
   addActionMessage(): this {
-    const { active, counter } = this.s.turnActions
+    const { active, counter } = this.turnActions
     const action = counter ?? active
     invariant(action != null, 'Need action to write action message')
 
     const subject = action?.payload.subject
     invariant(subject != null, 'Need player to write action message')
 
-    const player: BlowLabelItem = { type: 'player', value: subject }
-    const text: BlowLabelItem[] = [player]
+    const player: BlowLabelDef = { type: 'player', value: subject }
+    const text: BlowLabelDef = [player]
 
     const role = action.payload.role
     invariant(role != null, 'Need role to write counter action message')
@@ -291,7 +349,7 @@ export default class BlowState {
       if (counter.addedMessage) return this
       counter.addedMessage = true
 
-      text.push('counters w/ ', {
+      text.push('casts counter with', {
         type: 'action',
         value: counter.def.id,
         role,
@@ -300,7 +358,7 @@ export default class BlowState {
       if (action.addedMessage) return this
       action.addedMessage = true
 
-      text.push('plays', { type: 'action', value: action.def.id, role })
+      text.push('casts', { type: 'action', value: action.def.id, role })
     }
 
     this.s.messages.push({ text, i: this.s.messages.length })
@@ -308,9 +366,52 @@ export default class BlowState {
     return this
   }
 
-  addMessage(text: BlowLabelItem | BlowLabelItem[], _date?: string): this {
-    this.s.messages.push({ text, i: this.s.messages.length })
+  addMessage(
+    text: BlowLabelDef,
+    { asResolution, asLine }: { asResolution?: boolean; asLine?: boolean } = {}
+  ): this {
+    const msg: BlowMessage = { text, i: this.s.messages.length }
+    if (asLine) msg.line = true
+    this.s.messages.push(msg)
+    if (asResolution) {
+      this.s.resolution = text
+    }
     return this
+  }
+
+  createCommand(
+    type: BlowTimerType,
+    { disabled }: { disabled?: boolean } = {}
+  ): Command {
+    const timer = disabled ? undefined : this.s.game.settings.timer[type] ?? 10
+
+    switch (type) {
+      case 'challenge': {
+        const value = challenge({})
+        const text = 'Challenge'
+        return createCommand({ value, text, timer }, disabled)
+      }
+      case 'decline_counter': {
+        const value = declineCounter({})
+        const text = 'Decline Counter'
+        return createCommand({ value, text, timer }, disabled)
+      }
+      case 'decline_challenge': {
+        const value = declineChallenge({})
+        const text = 'Decline'
+        return createCommand({ value, text, timer }, disabled)
+      }
+      case 'continue_turn': {
+        const value = continueTurn({})
+        const text = 'Continue'
+        return createCommand({ value, text, timer }, disabled)
+      }
+      case 'next_turn': {
+        const value = nextTurn({})
+        const text = 'Next Turn'
+        return createCommand({ value, text, timer }, disabled)
+      }
+    }
   }
 
   deal(): this {
@@ -329,18 +430,19 @@ export default class BlowState {
 
   incrementTurn(): this {
     // Go to the next player in turn order that is still alive
-    // let i = this.playersAlive.length
+    const order = this.s.game.player_order
+    let i = order.length
     do {
-      this.s.turn = (this.s.turn + 1) % this.s.game.player_order.length
-      // i--
-      // if (i < 0)
-      //   throw new Error(`'incrementTurn': No alive player to increment turn to`)
-    } while (this.isPlayerEliminated(this.s.game.player_order[this.s.turn]))
+      this.s.turnIndex = (this.s.turnIndex + 1) % order.length
+      i--
+      if (i < 0)
+        throw new Error(`'incrementTurn': No alive player to increment turn to`)
+    } while (this.isPlayerEliminated(order[this.s.turnIndex]))
     return this
   }
 
   processRoleActions(): this {
-    const { active, counter } = this.s.turnActions
+    const { active, counter } = this.turnActions
     const x = counter ?? active
     invariant(x, 'Need role action to process')
     const target = x.payload.target
@@ -359,7 +461,7 @@ export default class BlowState {
           return this.setActionStates().setCommand('next_turn')
         }
 
-        this.s.counter = [target]
+        this.counterIndices = [target]
 
         if (!x.addedTargetMessage && !x.def.counter) {
           // Add targeting to latest message
@@ -373,14 +475,7 @@ export default class BlowState {
     }
 
     // Check if action can be challenged
-    if (
-      // Action hasn't already had an opportunity to be challenged
-      !x.hadChallengeOpportunity &&
-      // and has a non-common role (common roles cannot be challenged)
-      x.payload.role != null &&
-      !this.toRole(x.payload.role).common
-    ) {
-      // Challenge
+    if (this.isChallengable(x)) {
       return this.setupChallengeMode()
     } else {
       // Action payment happens after the active action challenge opportunity
@@ -405,6 +500,8 @@ export default class BlowState {
       return this.setupCounterMode()
     }
 
+    this.s.step = 'next'
+
     const actionToResolve = !active?.countered ? active : counter
     invariant(actionToResolve, 'Cannot resolve empty action')
     invariant(
@@ -424,7 +521,7 @@ export default class BlowState {
       this.s.actionState = {}
 
       // If predicates not specified, auto-update the active/counter actions
-      const { active, counter } = this.s.turnActions
+      const { active, counter } = this.turnActions
       const activeID = active?.def.id
       if (activeID && !predicateByState.active) {
         predicateByState.active = (xdef) => xdef.id === activeID
@@ -447,38 +544,9 @@ export default class BlowState {
     return this
   }
 
-  setCommand(
-    type: BlowTimerType,
-    { disabled }: { disabled?: boolean } = {}
-  ): this {
-    const timer = disabled ? undefined : this.s.game.settings.timer[type] ?? 5
-
-    switch (type) {
-      case 'challenge': {
-        const value = challenge({})
-        const text = 'Challenge'
-        this.s.commands = createCommand({ value, text, timer }, disabled)
-        return this
-      }
-      case 'decline_counter': {
-        const value = declineCounter({})
-        const text = 'Decline Counter'
-        this.s.commands = createCommand({ value, text, timer }, disabled)
-        return this
-      }
-      case 'continue_turn': {
-        const value = continueTurn({})
-        const text = 'Continue'
-        this.s.commands = createCommand({ value, text, timer }, disabled)
-        return this
-      }
-      case 'next_turn': {
-        const value = nextTurn({})
-        const text = 'Next Turn'
-        this.s.commands = createCommand({ value, text, timer }, disabled)
-        return this
-      }
-    }
+  setCommand(type: BlowTimerType, opts: { disabled?: boolean } = {}): this {
+    this.s.commands = [this.createCommand(type, opts)]
+    return this
   }
 
   setupActiveMode(): this {
@@ -486,8 +554,12 @@ export default class BlowState {
     delete this.s.challenge
     delete this.s.drawCards
     delete this.s.pickLossCard
+    delete this.s.resolution
+
+    this.s.step = 'active-choose'
+    this.addMessage('', { asLine: true })
     this.s.turnActions = {}
-    this.s.active = this.s.game.player_order[this.s.turn]
+    this.s.active = this.s.game.player_order[this.s.turnIndex]
     this.setCommand('challenge', { disabled: true })
 
     const activePlayer = this.s.players[this.s.active]
@@ -498,58 +570,6 @@ export default class BlowState {
     } else {
       // All actions normal for non-active players
       this.s.actionState = {}
-    }
-    return this
-  }
-
-  setupChallengeMode(): this {
-    const action = this.latestTurnRoleAction
-
-    if (action?.def.counter) {
-      // Set the player who played the counter action as the counter player
-      const pidx = action.payload.subject
-      if (pidx != null) this.s.counter = [pidx]
-    }
-
-    this.setActionStates()
-
-    const disabled =
-      !this.s.userID ||
-      // Disable Challenge for the player who performed the action, and
-      this.getPlayer(action?.payload?.subject).id === this.s.userID ||
-      // For the current player if eliminated
-      this.isPlayerEliminated(this.s.userID)
-    return this.setCommand('challenge', { disabled })
-  }
-
-  setupCounterMode(): this {
-    const action = this.latestTurnRoleAction
-    invariant(!action?.def.counter, 'Cannot counter a counter action')
-    invariant(action, 'Cannot counter an empty action')
-
-    action.hadCounterOpportunity = true
-
-    if (action.payload.target != null) {
-      // Active action is targetable, only target can counter
-      this.s.counter = [action.payload.target]
-    } else {
-      // Active action is not targetable, all other alive players can counter
-      this.s.counter = this.playersAlive
-        .filter((p) => p.index !== this.s.active)
-        .map((p) => p.index)
-    }
-
-    // Disable decline counter command for non-counterable players
-    const disabled = !this.isCounterPlayer
-    this.setCommand('decline_counter', { disabled })
-
-    this.setActionStates()
-
-    if (this.isCounterPlayer) {
-      const counterID = action?.def.id
-      this.updateActionStates({
-        clickable: (xdef) => xdef.counter === counterID,
-      })
     }
     return this
   }
@@ -576,12 +596,8 @@ export default class BlowState {
     invariant(isBlowRoleActionID(x.type), `Action '${x.type} not a role action`)
     const def = this.toAction(x.type)
     const key = !def.counter ? 'active' : 'counter'
-    this.s.turnActions[key] = { ...(this.s.turnActions[key] ?? {}), ...x, def }
+    this.turnActions[key] = { ...(this.turnActions[key] ?? {}), ...x, def }
     return this
-  }
-
-  updateActionStates(predicateByState: ActionStatePredicateMap): this {
-    return this.setActionStates(predicateByState, { resetState: false })
   }
 
   private getActiveTargets(xdef: BlowRoleActionDef): number[] {
@@ -619,7 +635,7 @@ export default class BlowState {
     const verb = x.def.name ?? 'act against'
     const className = 'text-red-600 dark:text-red-500'
     const targetText = { type: 'text' as const, value: 'target', className }
-    let description: BlowLabelItem[] = []
+    let description: BlowLabelDef = []
     if (this.isActivePlayer) {
       description = [`Pick a`, targetText, `to ${verb} below`]
     } else {
@@ -634,5 +650,62 @@ export default class BlowState {
     const targets = this.getActiveTargets(x.def)
     this.s.pickTarget = { action, description, targets }
     return this
+  }
+
+  private setupChallengeMode(): this {
+    const action = this.latestTurnRoleAction
+    invariant(action, 'Cannot challenge an empty action')
+
+    action.hadChallengeOpportunity = true
+
+    if (action?.def.counter) {
+      this.s.step = 'counter-challenge'
+      // Set the player who played the counter action as the counter player
+      const pidx = action.payload.subject
+      if (pidx != null) this.counterIndices = [pidx]
+    } else {
+      this.s.step = 'active-challenge'
+    }
+
+    this.setActionStates()
+
+    return this.setCommand('challenge', { disabled: !this.canPlayerChallenge })
+  }
+
+  private setupCounterMode(): this {
+    const action = this.latestTurnRoleAction
+    invariant(!action?.def.counter, 'Cannot counter a counter action')
+    invariant(action, 'Cannot counter an empty action')
+
+    this.s.step = 'counter-choose'
+    action.hadCounterOpportunity = true
+
+    if (action.payload.target != null) {
+      // Active action is targetable, only target can counter
+      this.counterIndices = [action.payload.target]
+    } else {
+      // Active action is not targetable, all other alive players can counter
+      this.counterIndices = this.playersAlive
+        .filter((p) => p.index !== this.s.active)
+        .map((p) => p.index)
+    }
+
+    // Disable decline counter command for non-counterable players
+    const disabled = !this.isCounterPlayer
+    this.setCommand('decline_counter', { disabled })
+
+    this.setActionStates()
+
+    if (this.isCounterPlayer) {
+      const counterID = action?.def.id
+      this.updateActionStates({
+        clickable: (xdef) => xdef.counter === counterID,
+      })
+    }
+    return this
+  }
+
+  private updateActionStates(predicateByState: ActionStatePredicateMap): this {
+    return this.setActionStates(predicateByState, { resetState: false })
   }
 }

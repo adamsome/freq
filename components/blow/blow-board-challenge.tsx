@@ -2,7 +2,7 @@ import produce from 'immer'
 import React, { useState } from 'react'
 import { revealCard } from '../../lib/blow/blow-action-creators'
 import {
-  BlowLabelItem,
+  BlowLabelDef,
   BlowPlayerView,
   BlowRoleID,
 } from '../../lib/types/blow.types'
@@ -103,7 +103,7 @@ function BlowBoardChallengeContent(
     ? 'target'
     : undefined
   const targetMsg = getTargetMessage(player, msgResult, challengerLoss)
-  const label: BlowLabelItem[] = [
+  const label: BlowLabelDef = [
     { type: 'player', value: target },
     'must prove that they actually have',
     { type: 'role', value: game.challenge.role },

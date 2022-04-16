@@ -3,19 +3,20 @@ import React, { useState } from 'react'
 import invariant from 'tiny-invariant'
 import { selectCards } from '../../lib/blow/blow-action-creators'
 import {
-  BlowCardSource,
   BlowCardSelection,
+  BlowCardSource,
   BlowPlayerView,
   BlowRoleID,
 } from '../../lib/types/blow.types'
+import { Command, CommandError } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'
 import { postCommand } from '../../lib/util/fetch-json'
 import { useBlowGame } from '../../lib/util/use-game'
-import BlowBoardTitle from './blow-board-title'
 import BlowPlayerSeat from './blow-player-seat'
 
 type Props = {
   className?: string
+  onCommandError?: (error: CommandError) => void
 }
 
 export default function BlowBoardDrawCards(props: Props) {
@@ -28,7 +29,6 @@ export default function BlowBoardDrawCards(props: Props) {
     done: boolean
   ) => {
     if (fetching || !game || game.drawCards?.selected) return
-    console.log('card', selection, done)
 
     const nextSelection = [...selected, selection]
     setSelected(nextSelection)
@@ -45,12 +45,15 @@ export default function BlowBoardDrawCards(props: Props) {
       )
     } catch (err) {
       const data = err?.data ?? err
+      const message = String(data?.message ?? err?.message ?? '')
       console.error(`Error posting command 'action'.`, value, data)
+      const command: Command = { type: 'action', text: 'Draw Card' }
+      props.onCommandError?.({ command, data, message, date: new Date() })
     }
   }
 
   return (
-    <BlowBoardPickLossCardContent
+    <BlowBoardDrawCardContent
       {...props}
       selected={selected}
       onCardClick={handleCardClick}
@@ -58,13 +61,13 @@ export default function BlowBoardDrawCards(props: Props) {
   )
 }
 
-interface BlowBoardPickLossCardContentProps {
+interface BlowBoardDrawCardContentProps {
   onCardClick: (selection: BlowCardSelection, done: boolean) => void
   selected: BlowCardSelection[]
 }
 
-function BlowBoardPickLossCardContent(
-  props: Props & BlowBoardPickLossCardContentProps
+function BlowBoardDrawCardContent(
+  props: Props & BlowBoardDrawCardContentProps
 ) {
   const { game } = useBlowGame()
   if (!game?.drawCards) return null
@@ -79,7 +82,7 @@ function BlowBoardPickLossCardContent(
 
   invariant(
     typeof action.payload.subject === 'number',
-    'Pick loss card needs subject index'
+    'Draw card needs subject index'
   )
 
   const player = players[action.payload.subject]
@@ -87,22 +90,17 @@ function BlowBoardPickLossCardContent(
   const aliveCards = player.cardsKilled.filter((k) => !k)
   const selectableCards = player.current && !done
   const targetMsg = getTargetMessage(player, done)
-  let title = `${action.def.name}`
-  if (action.def.cards != null) title += `: Draw ${action.def.cards}`
 
   const handleClick = (_: BlowRoleID, index: number, type?: BlowCardSource) => {
     if (!selectableCards) return
-    invariant(type, 'Card select click must include a source')
+    invariant(type, 'Draw card click must include a source')
     const readyToSubmit = selected.length + 1 >= aliveCards.length
     onCardClick({ type, index }, readyToSubmit)
   }
 
   return (
     <div className={cx('flex-center flex-col', className)}>
-      <BlowBoardTitle title={title.toUpperCase()} player={[player]} />
-
       <BlowPlayerSeat
-        className="mb-1"
         player={player}
         name={player.current ? 'You' : undefined}
         actions={game.actionState}
@@ -113,7 +111,7 @@ function BlowBoardPickLossCardContent(
         card={{
           color: 'cyan',
           selectable: selectableCards,
-          size: !done ? 'md' : 'lg',
+          size: 'md',
           onClick: handleClick,
         }}
         cardSelection={selected}

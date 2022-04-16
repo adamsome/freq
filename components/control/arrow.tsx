@@ -1,16 +1,13 @@
 import React from 'react'
 import { cx } from '../../lib/util/dom'
 
-type Props = typeof defaultProps & {
+type Props = {
+  className?: string
+  colorClass?: string
   right?: boolean
   left?: boolean
   down?: boolean
   up?: boolean
-}
-
-const defaultProps = {
-  classNames: '',
-  colorClass: 'bg-gray-200 dark:bg-gray-700',
 }
 
 export default function Arrow({
@@ -18,8 +15,8 @@ export default function Arrow({
   left,
   down,
   up,
-  classNames,
-  colorClass,
+  className,
+  colorClass = 'bg-gray-200 dark:bg-gray-700',
 }: Props) {
   const hasX = left || right
   const hasY = up || down
@@ -32,7 +29,7 @@ export default function Arrow({
           'rotate-45': (left && up) || (right && down),
           '-rotate-45': (left && down) || (right && up),
         },
-        classNames
+        className
       )}
     >
       <span
@@ -78,5 +75,3 @@ export default function Arrow({
     </span>
   )
 }
-
-Arrow.defaultProps = defaultProps

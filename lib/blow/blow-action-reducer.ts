@@ -5,6 +5,7 @@ import { allNonNil } from '../util/array'
 import {
   challenge,
   continueTurn,
+  declineChallenge,
   declineCounter,
   isBlowRoleAction,
   nextTurn,
@@ -43,8 +44,6 @@ const blowSlice = createSlice({
 
         const latestRoleAction = s.latestTurnRoleAction
         invariant(latestRoleAction, 'No turn role action')
-
-        latestRoleAction.hadChallengeOpportunity = true
 
         if (action.payload.expired) {
           if (latestRoleAction.def.counter) {
@@ -184,6 +183,7 @@ const blowSlice = createSlice({
           // Challenge target lost challenge
           const latestRoleAction = s.latestTurnRoleAction
           invariant(latestRoleAction, 'No turn role action')
+
           if (!latestRoleAction.def.counter && s.playersAlive.length > 1) {
             // Active action challenged successfully, next turn
             s.incrementTurn().setupActiveMode()
@@ -194,22 +194,57 @@ const blowSlice = createSlice({
           }
         }
       })
+      .addCase(declineChallenge, (state, action) => {
+        const s = new BlowState(state)
+
+        const x = s.latestTurnRoleAction
+        invariant(x, 'Need action to decline challenge')
+        const subject = action.payload.subject
+        invariant(subject != null, 'Need player to decline challenge')
+
+        x.challengesDeclined = [...(x.challengesDeclined ?? []), subject]
+
+        const challengePlayers = s.playersAlive.filter(
+          (p) => p.index !== x.payload.subject
+        )
+        if (
+          action.payload.expired ||
+          x.challengesDeclined.length === challengePlayers.length
+        ) {
+          if (x.def.counter) {
+            // If this is a counter action where challenges were all declined,
+            // mark the active action as successfully countered
+            const active = state.turnActions.active
+            invariant(active, 'Decline challenge requires active')
+            active.countered = true
+          }
+          s.processRoleActions()
+        } else if (
+          x.challengesDeclined.length <= challengePlayers.length &&
+          s.getPlayer(subject).id === state.userID
+        ) {
+          // Player declined, but still waiting on other counter players
+          s.setActionStates()
+        }
+      })
       .addCase(declineCounter, (state, action) => {
         const s = new BlowState(state)
 
         const { active } = state.turnActions
         invariant(active, 'Need action active to counter')
+        const subject = action.payload.subject
+        invariant(subject != null, 'Need player to decline counter')
 
-        active.countersDeclined = (active.countersDeclined ?? 0) + 1
+        active.countersDeclined = [...(active.countersDeclined ?? []), subject]
 
         const counterPlayers = state.counter ?? []
         if (
           action.payload.expired ||
-          active.countersDeclined === counterPlayers.length
+          active.countersDeclined.length === counterPlayers.length
         ) {
           s.processRoleActions()
         } else if (
-          active.countersDeclined <= counterPlayers.length &&
+          active.countersDeclined.length <= counterPlayers.length &&
           s.getPlayer(action.payload.subject).id === state.userID
         ) {
           // Player declined, but still waiting on other counter players

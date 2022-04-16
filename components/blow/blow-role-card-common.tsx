@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import invariant from 'tiny-invariant'
 import {
   getBlowRoleAction,
@@ -6,6 +7,7 @@ import {
 import { isBlowRoleDef } from '../../lib/blow/blow-role-defs'
 import {
   BlowActionState,
+  BlowCardVariant,
   BlowPhase,
   BlowRoleActionID,
   BlowThemeID,
@@ -15,7 +17,7 @@ import SkeletonBox from '../layout/skeleton-box'
 import BlowCardTitle from './blow-card-title'
 import BlowRoleCardAction from './blow-role-card-action'
 import BlowRoleCardButton from './blow-role-card-button'
-import getBlowRoleView from './blow-role-card-view'
+import getBlowRoleView, { BlowRoleView } from './blow-role-card-view'
 import BlowRoleIcon from './icons/blow-role-icon'
 
 type Props = {
@@ -23,20 +25,42 @@ type Props = {
   actions?: Partial<Record<BlowRoleActionID, BlowActionState>>
   theme?: BlowThemeID
   phase?: BlowPhase
+  variant?: BlowCardVariant
+  disableOpacity?: boolean
+  emptyMessage?: ReactNode
   fetching?: BlowRoleActionID | null
   onActionClick?: (id: BlowRoleActionID) => void
 }
 
 export default function BlowRoleCardCommon(props: Props) {
+  const { theme, actions = {}, phase, index, disableOpacity } = props
+  const view = getBlowRoleView(theme, 'common', actions, {
+    clickable: phase === 'prep',
+    useActionIndex: index,
+    disableOpacity,
+  })
   return (
-    <BlowRoleCardButton {...props}>
-      <BlowRoleCardContent {...props} />
+    <BlowRoleCardButton {...props} view={view}>
+      <BlowRoleCardContent {...props} view={view} />
     </BlowRoleCardButton>
   )
 }
 
-function BlowRoleCardContent(props: Props) {
-  const { theme, actions = {}, phase, index } = props
+function BlowRoleCardContent(props: Props & { view: BlowRoleView }) {
+  const {
+    theme,
+    actions = {},
+    phase,
+    index,
+    variant,
+    disableOpacity,
+    emptyMessage,
+  } = props
+
+  if (variant === 'empty') {
+    if (emptyMessage) return <>{emptyMessage}</>
+    return null
+  }
 
   if (!theme || index == null)
     return <SkeletonBox className="h-12 w-full" roundedClassName="rounded-md" />
@@ -44,6 +68,7 @@ function BlowRoleCardContent(props: Props) {
   const { role, classes } = getBlowRoleView(theme, 'common', actions, {
     clickable: phase === 'prep',
     useActionIndex: index,
+    disableOpacity,
   })
   invariant(isBlowRoleDef(role), `BlowRoleCardCommon: Role invalid`)
 

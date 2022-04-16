@@ -55,14 +55,14 @@ const DEFS_BY_ID: Record<BlowRoleActionID, BlowRoleActionDef> = {
     id: 'counter_extort',
     name: 'Counter',
     counter: 'activate_extort',
-    counterRole: 'common',
+    counterRole: 'merchant',
     counterLabel: 'Extort',
   },
   counter_kill: {
     id: 'counter_kill',
     name: 'Counter',
     counter: 'activate_kill',
-    counterRole: 'killer',
+    counterRole: 'guard',
     counterLabel: 'Kill',
   },
   activate_explore: {
@@ -77,7 +77,7 @@ const DEFS_BY_ID: Record<BlowRoleActionID, BlowRoleActionDef> = {
     id: 'counter_raid_explore',
     name: 'Counter',
     counter: 'activate_raid',
-    counterRole: 'thief',
+    counterRole: 'explorer',
     counterLabel: 'Raid',
   },
 }

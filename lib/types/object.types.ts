@@ -7,3 +7,6 @@ export type Diff<T extends string, U extends string> = ({ [P in T]: P } & {
 } & { [x: string]: never })[T]
 
 export type WithIndex<T> = T & { i: number }
+
+export type RequireProp<T, K extends keyof T> = Omit<T, K> &
+  Required<Pick<T, K>>

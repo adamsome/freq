@@ -28,6 +28,10 @@ export const continueTurn = createAction<BlowActionPayload, BlowActionID>(
   'continue_turn'
 )
 
+export const declineChallenge = createAction<BlowActionPayload, BlowActionID>(
+  'decline_challenge'
+)
+
 export const declineCounter = createAction<BlowActionPayload, BlowActionID>(
   'decline_counter'
 )
@@ -76,8 +80,8 @@ export function isActionWithBlowDrawSelectionPaylod(
 export const createCommand = (
   command: Partial<Command>,
   disabled?: boolean
-): Command[] => {
+): Command => {
   const cmd: Command = { type: 'action', text: '', ...command }
   if (disabled) cmd.disabled = true
-  return [cmd]
+  return cmd
 }

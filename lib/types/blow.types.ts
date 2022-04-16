@@ -61,7 +61,7 @@ export type BlowToken =
   | BlowTokenRole
   | BlowTokenRoleAction
 
-export type BlowLabelItem = string | BlowToken
+export type BlowLabelDef = string | BlowToken | (string | BlowToken)[]
 
 export const BLOW_ROLE_ACTION_IDS = [
   'activate_income',
@@ -92,13 +92,13 @@ export type BlowTargetEffect = 'kill' | 'steal'
 export interface BlowRoleActionDef {
   id: BlowRoleActionID
   name?: string
-  label?: string | (string | BlowToken)[]
-  description?: string | (string | BlowToken)[]
+  label?: BlowLabelDef
+  description?: BlowLabelDef
   coins?: number
   cards?: number
   counter?: BlowRoleActionID
   counterRole?: BlowRoleID
-  counterLabel?: BlowLabelItem | BlowLabelItem[]
+  counterLabel?: BlowLabelDef
   targetEffect?: BlowTargetEffect
   classes?: BlowRoleClasses
 }
@@ -107,6 +107,7 @@ export const BLOW_CORE_ACTION_IDS = [
   'challenge',
   'reveal_card',
   'continue_turn',
+  'decline_challenge',
   'decline_counter',
   'select_cards',
   'next_turn',
@@ -146,13 +147,17 @@ export type BlowRoleID = typeof BLOW_ROLE_IDS[number]
 
 export interface BlowRoleClasses {
   text?: string[]
-  textMods?: string[]
+  textAlpha?: string[]
+  textAlphaHover?: string[]
   bg?: string[]
+  bgAlpha?: string[]
   bgActive?: string[]
-  bgMods?: string[]
+  bgAlphaHover?: string[]
   border?: string[]
-  borderMods?: string[]
+  borderAlpha?: string[]
+  borderAlphaHover?: string[]
   borderFocus?: string[]
+  shadow?: string[]
   ring?: string[]
   ringMods?: string[]
 }
@@ -199,9 +204,10 @@ export interface BlowAction extends PayloadAction<BlowActionPayload> {
 }
 
 export interface BlowMessage {
-  text: BlowLabelItem | BlowLabelItem[]
+  text: BlowLabelDef
   /** Index of the associated action */
   i: number
+  line?: boolean
   error?: true
 }
 
@@ -235,14 +241,36 @@ export interface BlowActionTurnInfo extends BlowAction {
   addedMessage?: boolean
   hadChallengeOpportunity?: boolean
   hadCounterOpportunity?: boolean
-  countersDeclined?: number
+  challengesDeclined?: number[]
+  countersDeclined?: number[]
   countered?: boolean
   paid?: boolean
 }
 
+type ActionType = 'active' | 'counter'
+type SubActionType = 'choose' | 'challenge'
+export type BlowActionStep = `${ActionType}-${SubActionType}` | 'next'
+
+export interface BlowTurnView {
+  step: BlowActionStep
+  role: BlowRoleID
+  action: BlowRoleActionID
+  targetable: boolean
+  target?: number
+  activeLabel: BlowLabelDef
+  activeCmd: Command
+  counterLabel: BlowLabelDef
+  counters: BlowRoleID[]
+  counterCmd: Command
+  counterAction?: BlowRoleActionID
+  counterRole?: BlowRoleID
+  resolution?: BlowLabelDef
+  nextCmd?: Command
+}
+
 export interface BlowPickTarget {
   action: BlowRoleAction
-  description: string | BlowLabelItem[]
+  description: BlowLabelDef
   targets: number[]
   target?: number
   fetching?: number
@@ -308,6 +336,7 @@ export type BlowGameView = Omit<BlowGame, 'players'> & {
   active?: number
   /** Index of player(s) who can play the counter action this turn */
   counter?: number[]
+  turn?: BlowTurnView
   pickTarget?: BlowPickTarget
   challenge?: BlowChallenge
   drawCards?: BlowDrawCards

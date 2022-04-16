@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import type { HTMLAttributes } from 'react'
 import {
-  BlowLabelItem,
+  BlowLabelDef,
   BlowPlayerView,
   BlowThemeID,
   BlowToken,
@@ -14,7 +14,7 @@ import BlowRoleLabel from './blow-role-label'
 
 type Props = HTMLAttributes<HTMLSpanElement> & {
   className?: string
-  label?: BlowLabelItem | BlowLabelItem[]
+  label?: BlowLabelDef
   theme: BlowThemeID
   players?: BlowPlayerView[]
   coinProps?: Partial<BlowCoinProps>

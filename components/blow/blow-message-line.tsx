@@ -16,7 +16,11 @@ export default function BlowMessageLine(props: Props) {
   const { children: msg, ...rest } = props
   return (
     <div className={cx({ 'text-red-500': msg.error })}>
-      <BlowLabel label={msg.text} {...rest} />
+      {msg.line ? (
+        <hr className="mt-1.5 border-black/10 dark:border-white/10" />
+      ) : (
+        <BlowLabel label={msg.text} {...rest} />
+      )}
     </div>
   )
 }

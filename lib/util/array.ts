@@ -143,3 +143,27 @@ export function allNonNil<T>(arr: (T | null | undefined)[]): arr is T[] {
   if (!arr || !Array.isArray(arr)) return false
   return arr.every((it) => it != null)
 }
+
+/*! ramda/ramda v1.2.3 | MIT License | https://github.com/ramda/ramda/blob/v0.28.0/source/uniqBy.js */
+export function uniqBy<T, R>(accessor: (it: T) => R, arr: T[]) {
+  const set = new Set<R>()
+  const result: T[] = []
+  let idx = 0
+  let appliedItem: R
+  let item: T
+
+  while (idx < arr.length) {
+    item = arr[idx]
+    appliedItem = accessor(item)
+    if (!set.has(appliedItem)) {
+      set.add(appliedItem)
+      result.push(item)
+    }
+    idx += 1
+  }
+  return result
+}
+
+export function uniq<T>(arr: T[]): T[] {
+  return uniqBy((it) => it, arr)
+}

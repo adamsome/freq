@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react'
 import invariant from 'tiny-invariant'
 import { isBlowRoleDef } from '../../lib/blow/blow-role-defs'
 import {
   BlowActionState,
+  BlowCardVariant,
   BlowPhase,
   BlowRoleActionID,
   BlowRoleID,
@@ -12,16 +14,22 @@ import SkeletonBox from '../layout/skeleton-box'
 import BlowCardTitle from './blow-card-title'
 import BlowRoleCardAction from './blow-role-card-action'
 import BlowRoleCardButton from './blow-role-card-button'
-import getBlowRoleView from './blow-role-card-view'
+import getBlowRoleView, { BlowRoleView } from './blow-role-card-view'
 import BlowRoleIcon from './icons/blow-role-icon'
 
 type Props = {
+  className?: string
   id?: BlowRoleID | null
   index?: number
   actions?: Partial<Record<BlowRoleActionID, BlowActionState>>
   currentCards?: number
   theme?: BlowThemeID
+  clickable?: boolean
+  disableOpacity?: boolean
+  showOnly?: 'active' | 'counter'
   phase?: BlowPhase
+  variant?: BlowCardVariant
+  emptyMessage?: ReactNode
   fetching?: BlowRoleActionID | null
   onActionClick?: (id: BlowRoleActionID) => void
 }
@@ -29,15 +37,43 @@ type Props = {
 export type BlowRoleCardProps = Props
 
 export default function BlowRoleCard(props: Props) {
+  const {
+    id,
+    index,
+    theme,
+    actions = {},
+    phase,
+    disableOpacity,
+    clickable,
+  } = props
+  const isCommonRole = id === 'common'
+  const view = getBlowRoleView(theme, id, actions, {
+    clickable: clickable ?? phase === 'prep',
+    useActionIndex: isCommonRole ? index : undefined,
+    disableOpacity,
+  })
   return (
-    <BlowRoleCardButton {...props}>
-      <BlowRoleCardContent {...props} />
+    <BlowRoleCardButton {...props} view={view}>
+      <BlowRoleCardContent {...props} view={view} />
     </BlowRoleCardButton>
   )
 }
 
-function BlowRoleCardContent(props: Props) {
-  const { id, theme, actions = {}, currentCards = 0, phase } = props
+function BlowRoleCardContent(props: Props & { view: BlowRoleView }) {
+  const {
+    view,
+    id,
+    theme,
+    currentCards = 0,
+    variant,
+    emptyMessage,
+    showOnly,
+  } = props
+
+  if (variant === 'empty') {
+    if (emptyMessage) return <>{emptyMessage}</>
+    return null
+  }
 
   if (!id || !theme)
     return (
@@ -47,9 +83,6 @@ function BlowRoleCardContent(props: Props) {
       />
     )
 
-  const view = getBlowRoleView(theme, id, actions, {
-    clickable: phase === 'prep',
-  })
   const { role, active, counter, classes } = view
   invariant(isBlowRoleDef(role), `BlowRoleCard: Role for '${id}' invalid`)
 
@@ -58,7 +91,8 @@ function BlowRoleCardContent(props: Props) {
       <BlowRoleIcon
         className={cx(
           classes.roleIcon,
-          'ml-1 mr-2 w-12 flex-shrink-0 xs:ml-1.5 xs:mr-2.5'
+          'ml-1 mr-2 flex-shrink-0 xs:ml-1.5 xs:mr-2.5',
+          showOnly ? 'w-10' : 'w-12'
         )}
         role={id}
       />
@@ -66,8 +100,8 @@ function BlowRoleCardContent(props: Props) {
       <div className="flex-1 overflow-hidden">
         {!role.common && (
           <BlowCardTitle
-            className={cx(classes.title, '-mb-0.5 xs:mb-px')}
             {...props}
+            className={cx(classes.title, '-mb-0.5 xs:mb-px')}
             currentCards={currentCards}
             theme={theme}
           >
@@ -75,48 +109,56 @@ function BlowRoleCardContent(props: Props) {
           </BlowCardTitle>
         )}
 
-        {active ? (
-          <BlowRoleCardAction
-            action={active}
-            theme={theme}
-            classes={view.classes.active}
-          />
-        ) : (
-          <div
-            className={cx(
-              classes.active.hint,
-              'text-overflow text-left text-sm italic'
+        {showOnly !== 'counter' && (
+          <>
+            {active ? (
+              <BlowRoleCardAction
+                action={active}
+                theme={theme}
+                classes={view.classes.active}
+              />
+            ) : (
+              <div
+                className={cx(
+                  classes.active.hint,
+                  'text-overflow text-left text-sm italic'
+                )}
+              >
+                No Active Spell
+              </div>
             )}
-          >
-            No Active Spell
-          </div>
+          </>
         )}
 
-        <div
-          className={cx(
-            'mt-0.5 mb-px mr-1 h-px border-t border-b-0 border-l-0 border-r-0 xs:my-1 xs:mb-0.5',
-            view.classes.separator
-          )}
-        ></div>
-
-        {counter ? (
-          <>
-            <BlowRoleCardAction
-              sizeClassName="text-xs xs:text-sm"
-              action={counter}
-              theme={theme}
-              classes={view.classes.counter}
-            />
-          </>
-        ) : (
+        {!showOnly && (
           <div
             className={cx(
-              classes.counter.hint,
-              'text-overflow pt-0.5 text-left text-xs italic xs:pt-px xs:text-sm'
+              'mt-0.5 mb-px mr-1 h-px border-t border-b-0 border-l-0 border-r-0 xs:my-1 xs:mb-0.5',
+              view.classes.separator
             )}
-          >
-            No Counter Spell
-          </div>
+          ></div>
+        )}
+
+        {showOnly !== 'active' && (
+          <>
+            {counter ? (
+              <BlowRoleCardAction
+                sizeClassName="text-xs xs:text-sm"
+                action={counter}
+                theme={theme}
+                classes={view.classes.counter}
+              />
+            ) : (
+              <div
+                className={cx(
+                  classes.counter.hint,
+                  'text-overflow pt-0.5 text-left text-xs italic xs:pt-px xs:text-sm'
+                )}
+              >
+                No Counter Spell
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

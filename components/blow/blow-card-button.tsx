@@ -9,7 +9,6 @@ import BlowRoleIcon from './icons/blow-role-icon'
 
 type Props = BlowCardProps & {
   children?: ReactNode
-  className?: string
   view: BlowRoleView
 }
 

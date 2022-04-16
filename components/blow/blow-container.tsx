@@ -23,7 +23,7 @@ export default function BlowContainer() {
   const showBottomCommandArea =
     settings?.theme === 'classic' ||
     (game?.challenge && game.challenge.winner != null) ||
-    (game?.drawCards && game.drawCards.selected) ||
+    (!game?.turn && game?.drawCards && game.drawCards.selected) ||
     game?.pickLossCard != null ||
     game?.winner != null
 

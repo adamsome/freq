@@ -11,6 +11,7 @@ import { ButtonProps } from './control/button'
 
 type Props = {
   className?: string
+  commands?: Command[]
   button?: Partial<ButtonProps>
   spacingClassName?: string
   fullHeight?: boolean
@@ -28,6 +29,7 @@ function hasPayload(value: unknown): value is HasPayload {
 
 export default function CommandPanel({
   className = 'w-full px-4 mb-6',
+  commands: overrideCommands,
   button = {},
   spacingClassName,
   fullHeight,
@@ -41,7 +43,8 @@ export default function CommandPanel({
 
   if (!game) return null
 
-  const { currentPlayer, commands } = game
+  const { currentPlayer, commands: gameCommands } = game
+  const commands = overrideCommands ?? gameCommands
 
   if (!currentPlayer) return null
 

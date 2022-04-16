@@ -51,7 +51,7 @@ export default function SeatGrid({ children, className }: Props) {
         classes: 'col-start-2 row-start-2',
       },
       {
-        content: <Arrow right classNames="" />,
+        content: <Arrow right className="" />,
         classes: 'col-start-2 col-span-3 row-start-1 items-start mt-10',
       },
       {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { isBlowAction } from '../../lib/blow/blow-action-creators'
-import { BlowLabelItem, BlowThemeID } from '../../lib/types/blow.types'
+import { BlowLabelDef, BlowThemeID } from '../../lib/types/blow.types'
 import { cx } from '../../lib/util/dom'
 import { useBlowGame } from '../../lib/util/use-game'
 import BlowLabel from './tokens/blow-label'
@@ -20,7 +20,7 @@ export default function BlowMessageCurrent(props: Props) {
     onChange?.()
   }, [state, onChange])
 
-  let label: BlowLabelItem[] = []
+  let label: BlowLabelDef = []
 
   if (
     game?.phase !== 'guess' ||

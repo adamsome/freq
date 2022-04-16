@@ -46,6 +46,11 @@ export default function BlowLayout(props: Props) {
       title={getGameTitle('blow')}
       room={room}
       className="bg-white text-black dark:bg-black dark:text-white"
+      contentClassName={
+        theme !== 'classic'
+          ? '[--freq-button-weight:600]'
+          : '[--freq-button-weight:400]'
+      }
       button={{
         color: 'cyan',
         className: 'inline-flex font-spaced-narrow font-light',
@@ -65,17 +70,12 @@ export default function BlowLayout(props: Props) {
 
       <div
         className={cx(`
-        mx-auto w-full
-        max-w-screen-md
-        space-y-1.5 pt-1.5
-        xs:space-y-2 xs:pt-2
-        sm:space-y-4 sm:pt-4
-        md:px-2
-        ${
-          theme !== 'classic'
-            ? '[--freq-button-weight:600]'
-            : '[--freq-button-weight:400]'
-        }
+          mx-auto w-full
+          max-w-screen-md
+          space-y-1.5 pt-1.5
+          xs:space-y-2 xs:pt-2
+          sm:space-y-4 sm:pt-4
+          md:px-2
         `)}
       >
         <BlowBoardContent onCommandError={onCommandError} />

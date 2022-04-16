@@ -76,6 +76,7 @@ export function buildBlowGameView(
       currentPlayer: findCurrentPlayer(state.players, userID),
       active: state.active,
       counter: state.counter,
+      turn: state.turn,
       pickTarget: state.pickTarget,
       challenge: state.challenge,
       drawCards: state.drawCards,

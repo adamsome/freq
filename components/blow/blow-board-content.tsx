@@ -1,8 +1,8 @@
 import { CommandError } from '../../lib/types/game.types'
 import { useBlowGame } from '../../lib/util/use-game'
 import BlowBoardChallenge from './blow-board-challenge'
-import BlowBoardDrawCards from './blow-board-draw-cards'
 import BlowBoardPickLossCard from './blow-board-pick-loss-card'
+import BlowBoardTurn from './blow-board-turn'
 import BlowBoardWinner from './blow-board-winner'
 import BlowRoleCardGrid from './blow-role-card-grid'
 
@@ -22,8 +22,8 @@ export default function BlowBoardContent(props: Props) {
   if (game?.pickLossCard) {
     return <BlowBoardPickLossCard {...props} />
   }
-  if (game?.drawCards) {
-    return <BlowBoardDrawCards />
+  if (game?.turn) {
+    return <BlowBoardTurn {...props} />
   }
   return <BlowRoleCardGrid {...props} />
 }

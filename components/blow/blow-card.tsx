@@ -20,11 +20,13 @@ import BlowCardTitle from './blow-card-title'
 import getBlowRoleView, { BlowRoleView } from './blow-role-card-view'
 
 type Props = {
+  className?: string
   id?: BlowRoleID | null
   index?: number
   size?: BlowCardSize
   orientation?: 'horizontal' | 'vertical'
   variant?: BlowCardVariant
+  emptyMessage?: ReactNode
   color?: BlowCardColor
   killed?: boolean
   selectable?: boolean
@@ -32,6 +34,9 @@ type Props = {
   actions?: Partial<Record<BlowRoleActionID, BlowActionState>>
   currentCards?: number
   theme?: BlowThemeID
+  clickable?: boolean
+  disableOpacity?: boolean
+  showOnly?: 'active' | 'counter'
   fetching?: BlowRoleActionID | null
   onActionClick?: (id: BlowRoleActionID) => void
   onClick?: (id: BlowRoleID, i: number, source?: BlowCardSource) => void
@@ -40,10 +45,11 @@ type Props = {
 export type BlowCardProps = Props
 
 export default function BlowCard(props: Props) {
-  const { theme, id, actions, killed } = props
+  const { theme, id, actions, killed, disableOpacity } = props
   const view = getBlowRoleView(theme, id, actions, {
     clickable: true,
     disable: killed,
+    disableOpacity,
   })
   return (
     <BlowCardButton {...props} view={view}>
@@ -57,6 +63,7 @@ function BlowCardContent(props: Props & { view: BlowRoleView }) {
     id,
     size = 'sm',
     variant = 'facedown',
+    emptyMessage,
     theme,
     actions = {},
     currentCards = 0,
@@ -67,7 +74,10 @@ function BlowCardContent(props: Props & { view: BlowRoleView }) {
     onActionClick,
   } = props
 
-  if (variant === 'empty') return null
+  if (variant === 'empty') {
+    if (emptyMessage) return <>{emptyMessage}</>
+    return null
+  }
 
   if (variant === 'facedown') return <BlowCardFacedownPattern {...props} />
 

@@ -46,11 +46,11 @@ export default function BlowMessagePanel(props: Props) {
       {...divProps}
       className={cx(`
         relative w-full
-        border-b border-gray-100
+        border-b border-black/20
         bg-white/50
         p-0
         backdrop-blur-[10px]
-        dark:border-gray-950 dark:bg-black/50
+        dark:border-white/20 dark:bg-black/50
         ${className}
       `)}
       data-body-scroll-lock-ignore
@@ -71,12 +71,12 @@ export default function BlowMessagePanel(props: Props) {
 
         {hasMessages && (
           <div className="my-2 w-full px-4">
-            <div className="h-px w-full bg-gray-100 dark:bg-gray-900"></div>
+            <div className="h-px w-full bg-black/10 dark:bg-white/10"></div>
           </div>
         )}
 
         {hasMessages && (
-          <div className="m-auto block max-w-sm space-y-1 px-5 font-narrow">
+          <div className="m-auto block max-w-screen-md space-y-1 px-5 font-narrow">
             {messages.map((msg) => (
               <BlowMessageLine key={msg.i} players={players} theme={theme}>
                 {msg}

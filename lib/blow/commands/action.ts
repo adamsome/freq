@@ -5,6 +5,8 @@ import {
   BlowGameView,
   isBlowRoleActionID,
 } from '../../types/blow.types'
+import { Command } from '../../types/game.types'
+import { rejectNil, uniq } from '../../util/array'
 import { connectToDatabase } from '../../util/mongodb'
 import {
   isActionWithBlowDrawSelectionPaylod,
@@ -174,18 +176,18 @@ function validateCoreAction(view: BlowGameView, action: BlowAction): boolean {
     // Regular command panel commands
     case 'challenge':
     case 'decline_counter':
+    case 'decline_challenge':
     case 'continue_turn':
     case 'next_turn': {
+      const allowedTypes = getAllowedTypes(view)
       const cmd = view.commands[0]
-      const value = cmd?.value as BlowAction | undefined
 
-      const msg =
-        !value || value.type !== action.type
-          ? 'Action no longer available.'
-          : cmd?.disabled &&
-            (!cmd.allowExpiredWhenDisabled || !action.payload.expired)
-          ? 'Action is disabled.'
-          : null
+      const msg = !allowedTypes.includes(action.type)
+        ? 'Action no longer available.'
+        : cmd?.disabled &&
+          (!cmd.allowExpiredWhenDisabled || !action.payload.expired)
+        ? 'Action is disabled.'
+        : null
       if (msg) {
         // If auto-generated action indicating that a timer expired, ignore;
         // otherwise throw to let frontend know that an invalid action was sent
@@ -195,4 +197,24 @@ function validateCoreAction(view: BlowGameView, action: BlowAction): boolean {
       return true
     }
   }
+}
+
+function getCommandValues(cmd: Command): BlowAction[] {
+  return rejectNil([
+    cmd.value as BlowAction | undefined,
+    cmd.rightValue as BlowAction | undefined,
+  ])
+}
+
+function getAllowedTypes(view: BlowGameView) {
+  const allowedValues = view.commands.flatMap(getCommandValues)
+  const turn = view.turn
+  if (turn) {
+    if (turn.step === 'active-challenge') {
+      allowedValues.push(...getCommandValues(turn.activeCmd))
+    } else if (turn.step === 'counter-challenge') {
+      allowedValues.push(...getCommandValues(turn.counterCmd))
+    }
+  }
+  return uniq(allowedValues.map((v) => v.type))
 }
