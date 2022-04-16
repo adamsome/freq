@@ -48,7 +48,12 @@ export default function CommandButton(props: Props) {
   )
 }
 
-function SideButton(props: Props & { right?: boolean }) {
+type SubProps = Props & {
+  right?: boolean
+  skipTimer?: boolean
+}
+
+function SideButton(props: SubProps) {
   const {
     right,
     command: cmd,
@@ -116,7 +121,7 @@ function ButtonContent({
   command,
   fetching = false,
   onTimerFinish,
-}: Props & { right?: boolean }) {
+}: SubProps) {
   if (fetching || command.fetching)
     return <IconSvg name="spinner" className="h-7 w-7 text-white" />
 

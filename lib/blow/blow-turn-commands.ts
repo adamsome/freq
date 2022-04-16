@@ -37,6 +37,7 @@ export function createBlowTurnChallengeCommand(
     cmd.rightText = 'Decline'
     cmd.rightType = cmd.type
     cmd.rightTimer = cmd.timer
+    delete cmd.timer
     cmd.rightDisabled = cmd.disabled
   }
   return cmd
