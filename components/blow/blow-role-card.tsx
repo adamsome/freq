@@ -9,7 +9,9 @@ import {
   BlowRoleID,
   BlowThemeID,
 } from '../../lib/types/blow.types'
+import { range } from '../../lib/util/array'
 import { cx } from '../../lib/util/dom'
+import IconSvg from '../control/icon-svg'
 import SkeletonBox from '../layout/skeleton-box'
 import BlowCardTitle from './blow-card-title'
 import BlowRoleCardAction from './blow-role-card-action'
@@ -27,6 +29,7 @@ type Props = {
   clickable?: boolean
   disableOpacity?: boolean
   showOnly?: 'active' | 'counter'
+  killCount?: number
   phase?: BlowPhase
   variant?: BlowCardVariant
   emptyMessage?: ReactNode
@@ -68,6 +71,7 @@ function BlowRoleCardContent(props: Props & { view: BlowRoleView }) {
     variant,
     emptyMessage,
     showOnly,
+    killCount,
   } = props
 
   if (variant === 'empty') {
@@ -96,6 +100,24 @@ function BlowRoleCardContent(props: Props & { view: BlowRoleView }) {
         )}
         role={id}
       />
+
+      {id !== 'common' && killCount != null && !showOnly && (
+        <div
+          className={cx(
+            'flex-center absolute bottom-0.5 left-1.5 space-x-0.5',
+            showOnly ? 'w-10' : 'w-12'
+          )}
+        >
+          {range(0, killCount).map((i) => (
+            <IconSvg
+              key={i}
+              className="h-[16.666px] w-[14.4295px] text-red-500/75"
+              name="skull"
+              top="0"
+            />
+          ))}
+        </div>
+      )}
 
       <div className="flex-1 overflow-hidden">
         {!role.common && (

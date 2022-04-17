@@ -1,5 +1,6 @@
 import produce from 'immer'
 import { useState } from 'react'
+import { getCardKilledCount } from '../../lib/blow/blow-cards'
 import {
   BlowAction,
   BlowGameView,
@@ -66,6 +67,7 @@ export default function BlowCardContainer({ onCommandError, ...props }: Props) {
       theme={theme}
       phase={game?.phase}
       fetching={fetchingAction}
+      killCount={getCardKilledCount(props.id, game)}
       onActionClick={handleActionClick}
     />
   )
