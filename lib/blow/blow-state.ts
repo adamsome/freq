@@ -302,11 +302,11 @@ export default class BlowState {
       this.s.winner = alive[0]
 
       if (!this.s.challenge) {
-        // Set command to Start New Match
-        this.s.commands = [{ type: 'prep_new_match', text: 'New Match' }]
-
         const winnerIndex = this.s.winner.index
         const winnerToken = { type: 'player' as const, value: winnerIndex }
+        // Set command to Start New Match
+        const text = 'New Match'
+        this.s.commands = [{ type: 'prep_new_match', text, value: winnerIndex }]
         this.addMessage([winnerToken, 'won the match!'])
       }
     }
