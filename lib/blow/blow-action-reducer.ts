@@ -281,7 +281,7 @@ const blowSlice = createSlice({
               next[index] = c
               return
             }
-            if (selected.find((s) => s.type === type && s.index === index)) {
+            if (selected?.find((s) => s.type === type && s.index === index)) {
               // Put the selected card in the next available hand spot
               const i = next[0] == null ? 0 : 1
               next[i] = c
