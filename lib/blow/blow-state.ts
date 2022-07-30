@@ -458,6 +458,7 @@ export default class BlowState {
         if (this.isPlayerEliminated(target)) {
           // If active action target has been eliminated (i.e. through
           // a challenge loss), immediately show next turn timer
+          this.resolve()
           return this.setActionStates().setCommand('next_turn')
         }
 
@@ -500,15 +501,7 @@ export default class BlowState {
       return this.setupCounterMode()
     }
 
-    this.s.step = 'next'
-
-    const actionToResolve = !active?.countered ? active : counter
-    invariant(actionToResolve, 'Cannot resolve empty action')
-    invariant(
-      isBlowRoleActionID(actionToResolve.type),
-      'Cannot resolve w/ non-role action'
-    )
-    BLOW_ACTION_RESOLVERS[actionToResolve.type](this, actionToResolve)
+    this.resolve()
 
     return this.setActionStates()
   }
@@ -627,6 +620,19 @@ export default class BlowState {
 
       return true
     }
+  }
+
+  private resolve() {
+    const { active, counter } = this.turnActions
+    this.s.step = 'next'
+
+    const actionToResolve = !active?.countered ? active : counter
+    invariant(actionToResolve, 'Cannot resolve empty action')
+    invariant(
+      isBlowRoleActionID(actionToResolve.type),
+      'Cannot resolve w/ non-role action'
+    )
+    BLOW_ACTION_RESOLVERS[actionToResolve.type](this, actionToResolve)
   }
 
   private setPickTarget(x: BlowActionTurnInfo): this {

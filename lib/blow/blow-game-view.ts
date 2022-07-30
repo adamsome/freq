@@ -50,9 +50,17 @@ export function buildBlowGameView(
     // Always run the `prep` action first to setup the state
     store.dispatch(init())
     // Iterate through each action that has taken place during the match...
-    game.actions.forEach((a) => {
+    game.actions.forEach((a, i) => {
       try {
-        store.dispatch(a)
+        if (i === game.actions.length - 1) {
+          store.dispatch({
+            ...a,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            payload: { ...((a.payload as any) ?? {}), mostRecent: true },
+          })
+        } else {
+          store.dispatch(a)
+        }
       } catch (e) {
         const payload = JSON.stringify(a.payload)
         console.error(`Error running action '${a.type}' (${payload})`)

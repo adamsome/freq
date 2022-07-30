@@ -40,11 +40,11 @@ const kill = (s: BlowState, x: BlowActionTurnInfo): BlowState => {
   }
 
   if (s.isPlayerEliminated(x.payload.target)) {
-    msg.push(
+    const msgElim: BlowLabelDef = [
       { type: 'player', value: x.payload.target },
-      'is already eliminated'
-    )
-    return s.addMessage(msg, { asResolution: true }).setCommand('next_turn')
+      'is already eliminated',
+    ]
+    return s.addMessage(msgElim, { asResolution: true }).setCommand('next_turn')
   }
 
   msg.push('kills a card from', { type: 'player', value: x.payload.target })
