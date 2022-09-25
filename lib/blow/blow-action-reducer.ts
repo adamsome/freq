@@ -178,6 +178,8 @@ const blowSlice = createSlice({
               { type: 'player', value: state.challenge.challenger },
               'loses last card & is eliminated',
             ]).setCommand('continue_turn')
+            s.incrementTurn().setupActiveMode()
+            return
           }
         } else if (state.challenge?.winner === 'challenger') {
           // Challenge target lost challenge
