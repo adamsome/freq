@@ -171,13 +171,12 @@ const blowSlice = createSlice({
             // Challenger has only one card left: reveal it automatically
             state.challenge.challengerCardIndex = lastRemainingIndex
             // Flip over the losing challenge challenger's chosen card
-            const challenger = s.getPlayer(state.challenge.challenger)
+            const challenger = s.getPlayer(pidx)
             challenger.cardsKilled[lastRemainingIndex] = true
 
-            s.addMessage([
-              { type: 'player', value: state.challenge.challenger },
-              'loses last card & is eliminated',
-            ]).setCommand('continue_turn')
+            const challengerMsg = { type: 'player' as const, value: pidx }
+            const msg = [challengerMsg, 'loses last card & is eliminated']
+            s.addMessage(msg, { asResolution: true }).setCommand('next_turn')
           }
         } else if (state.challenge?.winner === 'challenger') {
           // Challenge target lost challenge
