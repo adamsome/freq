@@ -176,6 +176,12 @@ const blowSlice = createSlice({
 
             const challengerMsg = { type: 'player' as const, value: pidx }
             const msg = [challengerMsg, 'loses last card & is eliminated']
+
+            if (s.playersAlive.length === 1) {
+              // Game is won
+              delete state.challenge
+            }
+
             s.addMessage(msg, { asResolution: true }).setCommand('next_turn')
           }
         } else if (state.challenge?.winner === 'challenger') {
