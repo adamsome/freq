@@ -12,8 +12,11 @@ import { GameType } from '../lib/types/game.types'
 import { User } from '../lib/types/user.types'
 import { head } from '../lib/util/array'
 import { postJson } from '../lib/util/fetch-json'
+import BlowSettings from './blow/blow-settings'
 import ActionModal from './control/action-modal'
 import { ButtonProps } from './control/button'
+import CwdSettings from './cwd/cwd-settings'
+import FreqSettings from './freq/freq-settings'
 import PlayerButton from './player-button'
 import PlayerEdit from './player-edit'
 import PlayerOptions from './player-options'
@@ -41,6 +44,7 @@ export default function PlayerButtonContainer({
   // Player Options modal state
   const [modelOptionsOpen, setModelOptionsOpen] = useState(false)
   const [modelEditOpen, setModelEditOpen] = useState(false)
+  const [modelRoomSettingsOpen, setModelRoomSettingsOpen] = useState(false)
 
   const handleLogout = async () => {
     router.push(API_LOGOUT)
@@ -76,6 +80,10 @@ export default function PlayerButtonContainer({
             setModelOptionsOpen(false)
             setModelEditOpen(true)
           }}
+          onOpenRoomSettings={() => {
+            setModelOptionsOpen(false)
+            setModelRoomSettingsOpen(true)
+          }}
           onLogout={handleLogout}
           onLeave={handleLeave}
           onClose={() => setModelOptionsOpen(false)}
@@ -84,6 +92,19 @@ export default function PlayerButtonContainer({
 
       <ActionModal open={modelEditOpen} onClose={() => setModelEditOpen(false)}>
         <PlayerEdit onClose={() => setModelEditOpen(false)} />
+      </ActionModal>
+
+      <ActionModal
+        open={modelRoomSettingsOpen}
+        onClose={() => setModelRoomSettingsOpen(false)}
+      >
+        {type === 'freq' ? (
+          <FreqSettings onClose={() => setModelRoomSettingsOpen(false)} />
+        ) : type === 'cwd' ? (
+          <CwdSettings onClose={() => setModelRoomSettingsOpen(false)} />
+        ) : type === 'blow' ? (
+          <BlowSettings onClose={() => setModelRoomSettingsOpen(false)} />
+        ) : null}
       </ActionModal>
     </>
   )

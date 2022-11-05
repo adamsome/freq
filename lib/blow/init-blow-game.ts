@@ -11,7 +11,7 @@ export default function initBlowGame(): BlowGame {
     round_number: 0,
     settings: {
       variant: 'basic',
-      theme: 'magic',
+      theme: 'physical',
       timer: {
         challenge: DEFAULT_TIMEOUT,
         continue_turn: DEFAULT_SHORT_TIMEOUT,

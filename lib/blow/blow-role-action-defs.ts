@@ -137,6 +137,55 @@ const THEMED_DEFS_BY_ID: Partial<
       },
     },
   },
+  physical: {
+    activate_income: {
+      name: 'Income',
+      label: ['Gain', { type: 'coin', value: 1 }],
+    },
+    activate_extort: {
+      name: 'Extort',
+      label: ['Gain', { type: 'coin', value: 2 }],
+    },
+    activate_blow: { name: 'Coup', label: 'Attack' },
+    activate_kill: {
+      name: 'Attack',
+      label: ['Attack Target'],
+    },
+    activate_trade: { label: ['Gain', { type: 'coin', value: 3 }] },
+    activate_raid: {
+      name: 'Steal',
+      label: ['Steal', { type: 'coin', value: 2 }],
+    },
+    counter_extort: {
+      counterLabel: {
+        type: 'action',
+        value: 'activate_extort',
+        role: 'common',
+        border: false,
+      },
+    },
+    counter_kill: {
+      counterLabel: {
+        type: 'role',
+        value: 'killer',
+        border: false,
+      },
+    },
+    counter_raid: {
+      counterLabel: {
+        type: 'role',
+        value: 'thief',
+        border: false,
+      },
+    },
+    counter_raid_explore: {
+      counterLabel: {
+        type: 'role',
+        value: 'thief',
+        border: false,
+      },
+    },
+  },
 }
 
 const _getRoleAction = (tid: BlowThemeID) => {

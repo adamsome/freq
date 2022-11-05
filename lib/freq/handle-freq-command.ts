@@ -67,6 +67,6 @@ export default async function handleFreqCommand(
     case 'reveal_match_results':
       return await revealMatchResults(game)
     default:
-      throw TypeError(`Cannot handle unsupported CWD command '${type}'.`)
+      throw TypeError(`Cannot handle unsupported Freq command '${type}'.`)
   }
 }

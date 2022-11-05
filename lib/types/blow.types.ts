@@ -178,9 +178,11 @@ const BLOW_VARIANT_IDS = ['basic'] as const
 
 export type BlowVariantID = typeof BLOW_VARIANT_IDS[number]
 
-const BLOW_THEME_IDS = ['classic', 'magic'] as const
+const _BLOW_THEME_IDS = ['classic', 'magic', 'physical'] as const
+// Blow 'classic' theme not currently supported
+export const BLOW_THEME_IDS = _BLOW_THEME_IDS.slice(1)
 
-export type BlowThemeID = typeof BLOW_THEME_IDS[number]
+export type BlowThemeID = typeof _BLOW_THEME_IDS[number]
 
 export interface BlowVariantDef {
   id: BlowVariantID

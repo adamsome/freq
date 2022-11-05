@@ -5,6 +5,7 @@ import beginRound from './commands/begin-round'
 import editPlayer from './commands/edit-player'
 import kickPlayer from './commands/kick-player'
 import prepNewMatch from './commands/prep-new-match'
+import setTheme from './commands/set-theme'
 import shuffleTeams from './commands/shuffle-teams'
 
 export default async function handleBlowCommand(
@@ -23,9 +24,8 @@ export default async function handleBlowCommand(
     case 'shuffle_teams':
       return await shuffleTeams(game)
 
-    // TODO: Implement player shuffle
-    // case 'shuffle_teams':
-    //   return await shuffleTeams(game)
+    case 'set_theme':
+      return await setTheme(game, value)
 
     case 'kick_player':
       return await kickPlayer(game, userID, value)
@@ -38,6 +38,6 @@ export default async function handleBlowCommand(
       return await beginRound(game)
 
     default:
-      throw TypeError(`Cannot handle unsupported CWD command '${type}'.`)
+      throw TypeError(`Cannot handle unsupported Blow command '${type}'.`)
   }
 }

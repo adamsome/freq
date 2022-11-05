@@ -4,21 +4,18 @@ import { CommandType } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'
 import { postCommand } from '../../lib/util/fetch-json'
 import { useCwdGame } from '../../lib/util/use-game'
-import ActionModal from '../control/action-modal'
 import ActionModalOptions from '../control/action-modal-options'
-import Button from '../control/button'
 import ButtonGroup from '../control/button-group'
 import IconSvg from '../control/icon-svg'
 import Setting from '../control/setting'
 import PlayerOptionButton from '../player-option-button'
 
-type Props = typeof defaultProps
+type Props = {
+  onClose: () => void
+}
 
-const defaultProps = {}
-
-export default function CwdSettings(_: Props) {
+export default function CwdSettings({ onClose }: Props) {
   const { game, mutate } = useCwdGame()
-  const [open, setOpen] = useState(false)
   const [fetching, setFetching] = useState(false)
 
   if (!game) return null
@@ -38,65 +35,55 @@ export default function CwdSettings(_: Props) {
         }, game)
       )
     } catch (err) {
-      console.error('Error setting designated psychic.', err.data ?? err)
+      console.error('Error changing room settings.', err.data ?? err)
     }
     setFetching(false)
   }
 
   return (
     <>
-      <div className="mb-6">
-        <Button className="text-xl" onClick={() => setOpen(true)}>
-          Change Room Settings
-        </Button>
-      </div>
-
-      <ActionModal open={open} onClose={() => setOpen(false)}>
-        <h2
-          className={cx(`
+      <h2
+        className={cx(`
             m-0
             bg-gray-400
             px-4 py-2
             text-3xl font-semibold
             text-white dark:bg-gray-700
           `)}
+      >
+        Room Settings
+      </h2>
+
+      <ActionModalOptions>
+        <Setting
+          label="Designated Psychic"
+          onLabelClick={() =>
+            handleCommand('set_designated_psychic_mode', !designatedPsychic)
+          }
         >
-          Room Settings
-        </h2>
-
-        <ActionModalOptions>
-          <Setting
-            label="Designated Psychic"
-            onLabelClick={() =>
-              handleCommand('set_designated_psychic_mode', !designatedPsychic)
-            }
-          >
-            <ButtonGroup
-              buttons={['Off', 'On']}
-              selected={designatedPsychic ? 1 : 0}
-              disabled={disabled}
-              width={14}
-              onClick={(_, i) =>
-                handleCommand('set_designated_psychic_mode', i === 1)
-              }
-            />
-          </Setting>
-
-          <PlayerOptionButton
-            close
+          <ButtonGroup
+            buttons={['Off', 'On']}
+            selected={designatedPsychic ? 1 : 0}
             disabled={disabled}
-            className="inline-flex items-center"
-            onClick={() => setOpen(false)}
-          >
-            {disabled ? 'Processing' : 'Close'}
-            {disabled && (
-              <IconSvg name="spinner" className="ml-3 h-5 w-5 text-white" />
-            )}
-          </PlayerOptionButton>
-        </ActionModalOptions>
-      </ActionModal>
+            width={14}
+            onClick={(_, i) =>
+              handleCommand('set_designated_psychic_mode', i === 1)
+            }
+          />
+        </Setting>
+
+        <PlayerOptionButton
+          close
+          disabled={disabled}
+          className="inline-flex items-center"
+          onClick={onClose}
+        >
+          {disabled ? 'Processing' : 'Close'}
+          {disabled && (
+            <IconSvg name="spinner" className="ml-3 h-5 w-5 text-white" />
+          )}
+        </PlayerOptionButton>
+      </ActionModalOptions>
     </>
   )
 }
-
-CwdSettings.defaultProps = defaultProps

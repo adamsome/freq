@@ -3,9 +3,9 @@ import { GameType } from '../lib/types/game.types'
 import useGame from '../lib/util/use-game'
 import CommandPanel from './command-panel'
 import CodesContainer from './cwd/codes-container'
-import CwdSettings from './cwd/cwd-settings'
+import CwdSettingsButton from './cwd/cwd-settings-button'
 import CluesContainer from './freq/clues-container'
-import FreqSettings from './freq/freq-settings'
+import FreqSettingsButton from './freq/freq-settings-button'
 import GameJoinButtons from './game-join-buttons'
 import GameLink from './game-link'
 import HeaderMessage from './header-message'
@@ -40,8 +40,8 @@ export default function TeamGameBoard({ type }: Props) {
             {game.currentPlayer && (
               <>
                 <PlayerHero />
-                {type === 'freq' && <FreqSettings />}
-                {type === 'cwd' && <CwdSettings />}
+                {type === 'freq' && <FreqSettingsButton />}
+                {type === 'cwd' && <CwdSettingsButton />}
               </>
             )}
           </>

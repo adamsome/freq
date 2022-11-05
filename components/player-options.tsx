@@ -18,6 +18,7 @@ type Props = typeof defaultProps & {
   onThemeToggle?: () => void
   onDebugToggle?: () => void
   onEditPlayer?: () => void
+  onOpenRoomSettings?: () => void
   onLogout?: () => void
   onLeave?: (room: string) => void
   onClose?: () => void
@@ -33,6 +34,7 @@ const PlayerOptions = ({
   onThemeToggle,
   onDebugToggle,
   onEditPlayer,
+  onOpenRoomSettings,
   onLogout,
   onLeave,
   onClose,
@@ -88,14 +90,18 @@ const PlayerOptions = ({
       </h2>
 
       <ActionModalOptions>
-        {allowDebugMode && <Opt onClick={onDebugToggle}>Debug mode</Opt>}
+        {allowDebugMode && <Opt onClick={onDebugToggle}>Debug Mode</Opt>}
 
         <Opt onClick={onThemeToggle}>{colorMode}</Opt>
 
-        {player && <Opt onClick={onEditPlayer}>Change name and icon</Opt>}
+        {player && <Opt onClick={onEditPlayer}>Change Name & Icon</Opt>}
 
         {(player?.leader || player?.designatedPsychic) && (
-          <Opt onClick={handleCommand('prep_new_match')}>Start a new match</Opt>
+          <Opt onClick={handleCommand('prep_new_match')}>Start a New Match</Opt>
+        )}
+
+        {game?.phase === 'prep' && (
+          <Opt onClick={onOpenRoomSettings}>Room Settings</Opt>
         )}
 
         <Opt leave onClick={handleLeave}>

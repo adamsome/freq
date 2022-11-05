@@ -59,6 +59,13 @@ const THEMED_DEFS_BY_ID: Partial<
     guard: { name: 'Abjuration' },
     explorer: { name: 'Conjuration' },
   },
+  physical: {
+    killer: { name: 'Assassin' },
+    thief: { name: 'Captain' },
+    merchant: { name: 'Duke' },
+    guard: { name: 'Contessa' },
+    explorer: { name: 'Ambassabor' },
+  },
 }
 
 const _getRole = (tid: BlowThemeID) => {
