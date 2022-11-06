@@ -39,7 +39,6 @@ html.dark {
     0 -1px 0 rgb(38 89 115 / 5%);
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 [data-rsbs-overlay],
 [data-rsbs-root]::after {
   max-width: var(--rsbs-max-w);
@@ -47,7 +46,6 @@ html.dark {
   margin-right: var(--rsbs-mr);
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 [data-rsbs-overlay],
 [data-rsbs-backdrop],
 [data-rsbs-root]::after {
@@ -147,7 +145,6 @@ html.dark {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 [data-rsbs-content] {
   /**
    * The overflow hidden is to ensure any margin on child nodes are included
@@ -173,12 +170,10 @@ html.dark {
   opacity: var(--rsbs-backdrop-opacity);
 }
 
-/* stylelint-disable-next-line max-line-length */
 [data-rsbs-is-dismissable="false"]:matches([data-rsbs-state="opening"], [data-rsbs-state="closing"]) :matches([data-rsbs-header], [data-rsbs-scroll], [data-rsbs-footer]) > * {
   opacity: var(--rsbs-content-opacity);
 }
 
-/* stylelint-disable-next-line max-line-length */
 [data-rsbs-is-dismissable="false"]:matches([data-rsbs-state="opening"], [data-rsbs-state="closing"]) [data-rsbs-backdrop] {
   opacity: var(--rsbs-backdrop-opacity);
 }

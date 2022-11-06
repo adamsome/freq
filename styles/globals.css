@@ -38,7 +38,6 @@ html.dark {
     @apply text-black;
   }
 
-  /* stylelint-disable-next-line selector-no-vendor-prefix */
   ::-moz-selection {
     @apply bg-blue-200;
     @apply text-black;
@@ -90,7 +89,6 @@ html.dark {
     @apply text-white;
   }
 
-  /* stylelint-disable-next-line selector-no-vendor-prefix */
   .dark ::-moz-selection {
     @apply bg-blue-800;
     @apply text-white;
