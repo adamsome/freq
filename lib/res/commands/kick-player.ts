@@ -1,10 +1,10 @@
 import { findCurrentPlayer, isPlayer } from '../../player'
-import { BlowGame } from '../../types/blow.types'
+import { ResGame } from '../../types/res.types'
 import { connectToDatabase } from '../../util/mongodb'
-import { fromBlowGames, leaveBlowGame } from '../blow-game-store'
+import { fromResGames, leaveResGame } from '../res-game-store'
 
 export default async function kickPlayer(
-  game: BlowGame,
+  game: ResGame,
   userID: string,
   player: unknown
 ) {
@@ -20,9 +20,9 @@ export default async function kickPlayer(
   const { db } = await connectToDatabase()
   const filter = { room: game.room.toLowerCase() }
 
-  await leaveBlowGame(game.room, player.id)
+  await leaveResGame(game.room, player.id)
 
-  await fromBlowGames(db).updateOne(filter, {
+  await fromResGames(db).updateOne(filter, {
     $set: {
       [`kicked.${player.id}`]: true,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

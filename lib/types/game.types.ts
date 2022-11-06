@@ -43,7 +43,7 @@ export const COMMON_PHASES = [
 
 export type CommonPhase = typeof COMMON_PHASES[number]
 
-export const GAME_TYPES = ['freq', 'cwd', 'blow'] as const
+export const GAME_TYPES = ['freq', 'cwd', 'blow', 'res'] as const
 export type GameType = typeof GAME_TYPES[number]
 
 export interface BaseGame {

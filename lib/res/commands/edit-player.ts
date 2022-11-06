@@ -1,11 +1,11 @@
 import { findCurrentPlayer, isPlayer } from '../../player'
-import { BlowGame } from '../../types/blow.types'
+import { ResGame } from '../../types/res.types'
 import { fromUsers } from '../../user-store'
 import { connectToDatabase } from '../../util/mongodb'
-import { fromBlowGames } from '../blow-game-store'
+import { fromResGames } from '../res-game-store'
 
 export default async function editPlayer(
-  game: BlowGame,
+  game: ResGame,
   userID: string,
   player: unknown
 ) {
@@ -30,7 +30,7 @@ export default async function editPlayer(
   const changes = { name: player.name, icon: player.icon }
   const nextPlayer = { ...currentPlayer, ...changes }
 
-  await fromBlowGames(db).updateOne(filter, {
+  await fromResGames(db).updateOne(filter, {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     $set: { [`players.${index}`]: nextPlayer } as any,
   })

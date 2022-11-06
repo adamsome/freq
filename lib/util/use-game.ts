@@ -5,6 +5,7 @@ import { BlowGameView } from '../types/blow.types'
 import { CwdGameView } from '../types/cwd.types'
 import { FreqGameView } from '../types/freq.types'
 import { BaseGameView } from '../types/game.types'
+import { ResGameView } from '../types/res.types'
 import { head } from './array'
 
 export interface UseGameOptions<T> {
@@ -64,4 +65,10 @@ export function useBlowGame(
   options: Partial<UseGameOptions<BlowGameView>> = {}
 ): UseGameResult<BlowGameView> {
   return useGame<BlowGameView>(options)
+}
+
+export function useResGame(
+  options: Partial<UseGameOptions<ResGameView>> = {}
+): UseGameResult<ResGameView> {
+  return useGame<ResGameView>(options)
 }

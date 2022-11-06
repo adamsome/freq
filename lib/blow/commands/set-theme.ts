@@ -1,10 +1,9 @@
-import { BlowGame } from '../../types/blow.types'
-import { Dict } from '../../types/object.types'
+import { BlowGame, isBlowThemeID } from '../../types/blow.types'
 import { connectToDatabase } from '../../util/mongodb'
 import { fromBlowGames } from '../blow-game-store'
 
 export default async function setTheme(game: BlowGame, value: unknown) {
-  if (!value) {
+  if (!value || !isBlowThemeID(value)) {
     const msg = "Command 'set_theme' requires value."
     throw new TypeError(msg)
   }
@@ -15,7 +14,7 @@ export default async function setTheme(game: BlowGame, value: unknown) {
   const { db } = await connectToDatabase()
   const filter = { room: game.room.toLowerCase() }
 
-  const changes: Partial<BlowGame> & Dict<unknown> = {
+  const changes = {
     ['settings.theme']: value,
   }
 

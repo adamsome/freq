@@ -20,6 +20,7 @@ import FreqSettings from './freq/freq-settings'
 import PlayerButton from './player-button'
 import PlayerEdit from './player-edit'
 import PlayerOptions from './player-options'
+import ResSettings from './res/res-settings'
 
 type Props = {
   user: User
@@ -45,6 +46,8 @@ export default function PlayerButtonContainer({
   const [modelOptionsOpen, setModelOptionsOpen] = useState(false)
   const [modelEditOpen, setModelEditOpen] = useState(false)
   const [modelRoomSettingsOpen, setModelRoomSettingsOpen] = useState(false)
+
+  const Settings = getSettingsComponent()
 
   const handleLogout = async () => {
     router.push(API_LOGOUT)
@@ -98,14 +101,23 @@ export default function PlayerButtonContainer({
         open={modelRoomSettingsOpen}
         onClose={() => setModelRoomSettingsOpen(false)}
       >
-        {type === 'freq' ? (
-          <FreqSettings onClose={() => setModelRoomSettingsOpen(false)} />
-        ) : type === 'cwd' ? (
-          <CwdSettings onClose={() => setModelRoomSettingsOpen(false)} />
-        ) : type === 'blow' ? (
-          <BlowSettings onClose={() => setModelRoomSettingsOpen(false)} />
-        ) : null}
+        {Settings && (
+          <Settings onClose={() => setModelRoomSettingsOpen(false)} />
+        )}
       </ActionModal>
     </>
   )
+}
+
+function getSettingsComponent(type?: GameType) {
+  switch (type) {
+    case 'freq':
+      return FreqSettings
+    case 'cwd':
+      return CwdSettings
+    case 'blow':
+      return BlowSettings
+    case 'res':
+      return ResSettings
+  }
 }

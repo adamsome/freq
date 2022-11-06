@@ -21,6 +21,8 @@ export function getGameTitle(
       return 'Freq'
     case 'blow':
       return 'Blow'
+    case 'res':
+      return 'Res'
   }
 }
 
@@ -30,6 +32,7 @@ export function isTeamGuessGame(type: GameType | string | undefined): boolean {
     case 'freq':
       return true
     case 'blow':
+    case 'res':
     default:
       return false
   }
@@ -40,6 +43,7 @@ export function shouldUsePlayerIcon(
 ): boolean {
   switch (type?.toLowerCase()) {
     case 'blow':
+    case 'res':
       return false
     case 'cwd':
     case 'freq':
@@ -52,9 +56,13 @@ export function doesGameHaveEnoughPlayers(
   game: BaseGame,
   type: GameType
 ): boolean {
+  const playerCount = (game.players ?? []).length
   switch (type?.toLowerCase()) {
     case 'blow': {
-      return (game.players ?? []).length >= 3
+      return playerCount >= 3
+    }
+    case 'res': {
+      return playerCount >= 5 && playerCount <= 10
     }
     default:
     case 'cwd':

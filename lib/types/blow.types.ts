@@ -184,6 +184,10 @@ export const BLOW_THEME_IDS = _BLOW_THEME_IDS.slice(1)
 
 export type BlowThemeID = typeof _BLOW_THEME_IDS[number]
 
+export function isBlowThemeID(id: unknown): id is BlowThemeID {
+  return BLOW_THEME_IDS.includes(id as BlowThemeID)
+}
+
 export interface BlowVariantDef {
   id: BlowVariantID
   name: string

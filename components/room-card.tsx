@@ -5,8 +5,8 @@ import { BaseGameView } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
 import Scoreboard from './scoreboard'
 import Title from './control/title'
-import { isBlowGameView } from '../lib/blow/blow-game-view'
 import BlowPlayerSeatsGrid from './blow/blow-player-seats-grid'
+import { BlowGameView } from '../lib/types/blow.types'
 
 type Props = typeof defaultProps & {
   game: BaseGameView
@@ -18,6 +18,10 @@ const defaultProps = {
 }
 
 const formatDateDistance = formatDistanceWithOptions({ addSuffix: true })
+
+function isBlowGameView(game: BaseGameView): game is BlowGameView {
+  return game?.type === 'blow'
+}
 
 export default function RoomCard({ game, className, onClick }: Props) {
   const handleClick = (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -131,7 +135,7 @@ export default function RoomCard({ game, className, onClick }: Props) {
         className={cx(`
           mt-3 w-full
           border-t border-gray-300
-          pr-2 ${isBlowGame ? 'pt-1' : 'pt-3'}
+          pr-2 ${game.type === 'blow' ? 'pt-1' : 'pt-3'}
           opacity-70 transition
           group-hover:border-gray-300 group-hover:opacity-100
           dark:border-gray-800 dark:group-hover:border-gray-700

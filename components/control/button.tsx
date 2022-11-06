@@ -9,7 +9,13 @@ import type {
 import { cx } from '../../lib/util/dom'
 import { omit } from '../../lib/util/object'
 
-export type ButtonColor = 'blue' | 'cyan' | 'red' | 'gray' | 'none'
+export type ButtonColor =
+  | 'blue'
+  | 'cyan'
+  | 'phosphorus'
+  | 'red'
+  | 'gray'
+  | 'none'
 export type ButtonVariant = 'link' | 'dim' | 'solid'
 
 interface ButtonColorOptions {
@@ -167,6 +173,67 @@ export default function Button({
             }
             if (border) {
               classes.push('border-cyan-400 dark:border-cyan-500')
+            }
+
+            return classes
+          }
+        }
+      }
+      case 'phosphorus': {
+        switch (variant) {
+          case 'solid': {
+            classes.push('text-white')
+            classes.push('bg-phosphorus-700')
+
+            if (bgHover) {
+              classes.push(
+                'hover:bg-phosphorus-900 dark:hover:bg-phosphorus-600'
+              )
+            }
+            if (border) {
+              classes.push('border-phosphorus-900 dark:border-phosphorus-500')
+            }
+
+            return classes
+          }
+          case 'dim': {
+            classes.push('text-phosphorus-600 dark:text-phosphorus-400')
+            classes.push(
+              'disabled:text-phosphorus-600 disabled:dark:text-phosphorus-400'
+            )
+            classes.push(
+              'hover:text-phosphorus-800 dark:hover:text-phosphorus-300'
+            )
+            classes.push('bg-phosphorus-100 dark:bg-phosphorus-975')
+
+            if (bgHover) {
+              classes.push(
+                'hover:bg-phosphorus-200 dark:hover:bg-phosphorus-900'
+              )
+            }
+            if (border) {
+              classes.push('border-phosphorus-200 dark:border-phosphorus-900')
+            }
+
+            return classes
+          }
+          default:
+          case 'link': {
+            classes.push('text-phosphorus-600 dark:text-phosphorus-500')
+            classes.push(
+              'disabled:text-phosphorus-600 disabled:dark:text-phosphorus-600'
+            )
+            classes.push(
+              'hover:text-phosphorus-800 dark:hover:text-phosphorus-500'
+            )
+
+            if (bgHover) {
+              classes.push(
+                'hover:bg-phosphorus-100 dark:hover:bg-phosphorus-950'
+              )
+            }
+            if (border) {
+              classes.push('border-phosphorus-400 dark:border-phosphorus-500')
             }
 
             return classes

@@ -136,6 +136,10 @@ html.dark {
     @apply font-narrow tracking-[0.2em];
   }
 
+  .font-spaced-medium {
+    @apply font-sans font-medium tracking-[0.125em];
+  }
+
   .modal {
     @apply max-w-md m-4 p-0 overflow-hidden;
   }

@@ -28,9 +28,10 @@ export default function Title({
   const classes = cx(classNames, {
     'animate-shift': animate,
     'hover:animate-shake': animate,
-    'font-extrabold': type !== 'blow',
+    'font-extrabold': type === 'freq' || type === 'cwd',
     'font-mono': type === 'cwd',
     'font-narrow font-light tracking-[0.2em] pl-3': type === 'blow',
+    'font-sans font-medium tracking-[0.125em] pl-3': type === 'res',
     'cursor-pointer opacity-80 hover:opacity-100 transition-opacity':
       onClick != null,
   })
