@@ -6,6 +6,7 @@ import { fromUsers } from '../user-store'
 import { connectToDatabase } from '../util/mongodb'
 import { buildResGameView } from './res-game-view'
 import initResGame from './init-res-game'
+import invariant from 'tiny-invariant'
 
 export const fromResGames = (db: Db) =>
   db.collection<OptionalUnlessRequiredId<ResGame>>('res_games')
@@ -83,6 +84,48 @@ export async function joinResGame(
     }
   }
   return buildResGameView(game, user.id)
+}
+
+export async function joinResGameAsGuests(
+  room: string,
+  users: User[]
+): Promise<ResGameView> {
+  invariant(users.length > 0, 'Cannot add zero guest users')
+
+  const { db } = await connectToDatabase()
+  const store = fromResGames(db)
+
+  // Find existing game if it exists
+  const game: ResGame | null = await fetchResGame(room)
+  invariant(game, 'Guest users can only join existing rooms')
+
+  let added = false
+  const kicked = { ...game.kicked }
+
+  users.forEach((user) => {
+    // Add player to game if not already
+    if (!hasPlayer(game.players, user.id)) {
+      const playerCount = game.players.length
+      game.players = addPlayer(game.players, user, {
+        type: user.type ?? 'guest',
+      })
+      game.player_order = [...game.player_order, playerCount]
+
+      delete kicked[user.id]
+      added = true
+    }
+  })
+
+  if (added) {
+    const gameFilter = { room: game.room.toLowerCase() }
+    const changes: Partial<ResGame> = {}
+    changes.kicked = kicked
+    changes.players = game.players
+    changes.player_order = game.player_order
+    await store.updateOne(gameFilter, { $set: changes })
+  }
+
+  return buildResGameView(game, users[0].id)
 }
 
 export async function leaveResGame(

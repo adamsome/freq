@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { GameType } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'
 import { ButtonProps } from '../control/button'
-import DebugBar from './debug-bar'
+import DebugBar from '../debug/debug-bar'
 import HeaderActions from './header-actions'
 import HeaderTitle from './header-title'
 

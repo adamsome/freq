@@ -1,7 +1,9 @@
 import { Dict } from './object.types'
+import { User } from './user.types'
 
 export interface Player {
   id: string
+  type?: User['type']
   name?: string
   team?: 1 | 2
   color?: string

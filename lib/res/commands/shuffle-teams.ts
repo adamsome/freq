@@ -8,11 +8,14 @@ export default async function shuffleTeams(game: ResGame) {
 
   const { db } = await connectToDatabase()
   const filter = { room: game.room.toLowerCase() }
-  const changes: Partial<ResGame> = {}
 
-  changes.player_order = shuffle(game.player_order)
+  const player_order = shuffle(game.player_order)
 
   await fromResGames(db).updateOne(filter, {
-    $set: changes,
+    $set: {
+      player_order,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [`rounds.${0}.lead`]: player_order[0] as any,
+    },
   })
 }

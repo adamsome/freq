@@ -85,14 +85,14 @@ export default function CommandPanel({
 
     // If the timer expired, add a 1s delay to give other players a change
     // to submit given network delay
-    const delay = timerExpired ? 1 : 0
+    const delaySeconds = timerExpired ? 1 : 0
     // If the timer expired, indicated in cmd payload, if it has one
     if (timerExpired && hasPayload(value)) {
       value = { ...value, payload: { ...value.payload, expired: true } }
     }
 
     try {
-      await postCommand(game.type, game.room, cmdType, value, delay)
+      await postCommand(game.type, game.room, cmdType, value, { delaySeconds })
       mutate(
         produce((game) => {
           if (game) game.commands[rowIndex].fetching = true

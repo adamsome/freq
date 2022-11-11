@@ -48,6 +48,13 @@ export async function postJson<T>(
 interface CommandValue {
   type: CommandType
   value?: unknown
+  asUser?: string
+}
+
+interface PostCommandOptions {
+  asUser?: string
+  /** Delay the post command in seconds */
+  delaySeconds?: number
 }
 
 export async function postCommand<T>(
@@ -55,12 +62,14 @@ export async function postCommand<T>(
   room: string,
   command: CommandType,
   value?: unknown,
-  /** Delay the post command in seconds */
-  delaySeconds?: number
+  { delaySeconds, asUser }: PostCommandOptions = {}
 ): Promise<T> {
   const body: CommandValue = { type: command }
   if (value != null) {
     body.value = value
+  }
+  if (asUser != null) {
+    body.asUser = asUser
   }
 
   const path = API_GAME_COMMAND.replace('%0', game).replace('%1', room)

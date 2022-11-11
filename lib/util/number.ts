@@ -18,3 +18,35 @@ export const roundTo = (val: number, decimals = 2): number => {
   const mult = 10 ** decimals
   return Math.round((val + Number.EPSILON) * mult) / mult
 }
+
+const NUMBER_WORDS: string[] = [
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+  'ten',
+  'eleven',
+  'twelve',
+  'thirteen',
+  'fourteen',
+  'fifteen',
+  'sixteen',
+  'seventeen',
+  'eighteen',
+  'nineteen',
+  'twenty',
+]
+
+export const toNumberWord = (val: number): string => {
+  const word = NUMBER_WORDS[val]
+  if (word != null) {
+    return word
+  }
+  return String(val)
+}

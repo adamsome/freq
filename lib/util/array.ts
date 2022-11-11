@@ -84,9 +84,13 @@ export function partition<T>(
   return partitioned
 }
 
-export const range = (from: number, to: number): number[] => {
+export const range = (fromOrTo: number, to?: number): number[] => {
+  if (to == null) {
+    to = fromOrTo
+    fromOrTo = 0
+  }
   const result = []
-  let n = from
+  let n = fromOrTo
   while (n < to) {
     result.push(n)
     n += 1

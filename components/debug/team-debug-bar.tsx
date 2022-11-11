@@ -2,16 +2,15 @@ import type { MouseEvent } from 'react'
 import { API_GAME_PHASE } from '../../lib/consts'
 import { nextCwdPhase, nextFreqPhase } from '../../lib/phase'
 import { CwdPhase } from '../../lib/types/cwd.types'
+import { BaseGameView } from '../../lib/types/game.types'
 import { postCommand, postJson } from '../../lib/util/fetch-json'
-import useGame from '../../lib/util/use-game'
 import Button from '../control/button'
 
-const defaultProps = {}
+type Props = {
+  game: BaseGameView
+}
 
-const DebugBar = () => {
-  const { game } = useGame()
-  if (!game) return null
-
+export default function TeamDebugBar({ game }: Props) {
   const handlePhaseNext = (offset: number) => async (e: MouseEvent) => {
     e.preventDefault()
     if (!game) return
@@ -53,7 +52,3 @@ const DebugBar = () => {
     </div>
   )
 }
-
-DebugBar.defaultProps = defaultProps
-
-export default DebugBar

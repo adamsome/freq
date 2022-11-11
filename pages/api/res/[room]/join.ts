@@ -1,6 +1,9 @@
 import { withApiAuthRequired } from '@auth0/nextjs-auth0'
-import { joinResGame } from '../../../../lib/res/res-game-store'
 import getRoomUser from '../../../../lib/get-room-user'
+import {
+  joinResGame,
+  joinResGameAsGuests,
+} from '../../../../lib/res/res-game-store'
 
 export default withApiAuthRequired(async (req, res) => {
   if (req.method === 'POST') {
@@ -11,9 +14,16 @@ export default withApiAuthRequired(async (req, res) => {
         return res.status(401).json({ message: roomUser.error })
       }
 
-      const { room, user } = roomUser
+      if (roomUser.user.type === 'admin') {
+        const { users } = await req.body
+        if (users) {
+          console.log(`Joining ${users.length} mock guests`)
+          const game = await joinResGameAsGuests(roomUser.room, users)
+          return res.json(game)
+        }
+      }
 
-      const game = await joinResGame(room, user)
+      const game = await joinResGame(roomUser.room, roomUser.user)
 
       return res.json(game)
     } catch (error) {

@@ -1,31 +1,41 @@
-import { getGameTitle } from '../../lib/game'
+import produce from 'immer'
+import { useState } from 'react'
+import { Player } from '../../lib/types/game.types'
+import { ResAction } from '../../lib/types/res.types'
 import { cx } from '../../lib/util/dom'
-import { useFetchUser } from '../../lib/util/use-fetch-user'
+import { postCommand } from '../../lib/util/fetch-json'
 import { useResGame } from '../../lib/util/use-game'
 import GameJoinButtons from '../game-join-buttons'
-import Layout from '../layout/layout'
+import ResBoard from './res-board'
+import ResLayout from './res-layout'
 
 export default function ResContainer() {
-  const { game } = useResGame()
-  const { user } = useFetchUser()
-  const { room } = game ?? {}
+  const { game, mutate } = useResGame()
+  const [rawFetching, setFetching] = useState(false)
+  const fetching = game?.fetching != null || rawFetching
 
-  const currentPlayer = game?.players.find((p) => p.id === user?.id)
+  async function handlePlayerSelect(player: Player): Promise<void> {
+    if (fetching || !game) return
+    console.log('select', player)
+    setFetching(true)
+    try {
+      const payload = player.id
+      const action: ResAction = { type: 'select_team_player', payload }
+      await postCommand(game.type, game.room, 'action', action)
+      mutate(
+        produce((game) => {
+          if (game) game.fetching = true
+        }, game)
+      )
+    } catch (err) {
+      const data = err?.data ?? err
+      console.error(`Error selecting mission team player.`, data)
+    }
+    setFetching(false)
+  }
 
   return (
-    <Layout
-      type="res"
-      title={getGameTitle('res')}
-      room={room}
-      className="bg-white text-black dark:bg-black dark:text-white"
-      contentClassName="[--freq-button-weight:600]"
-      button={{
-        color: 'phosphorus',
-        className: 'inline-flex font-spaced-medium',
-      }}
-      sticky
-      flexWrapper={false}
-    >
+    <ResLayout>
       <div
         className={cx(`
           mx-auto w-full
@@ -36,8 +46,9 @@ export default function ResContainer() {
           md:px-2
         `)}
       >
-        Res ({currentPlayer?.name ?? 'No Player'})
-        {!currentPlayer && game?.room && (
+        <ResBoard onPlayerSelect={handlePlayerSelect} />
+
+        {!game?.currentPlayer && game?.room && (
           <GameJoinButtons
             room={game.room}
             className=""
@@ -46,6 +57,6 @@ export default function ResContainer() {
           />
         )}
       </div>
-    </Layout>
+    </ResLayout>
   )
 }

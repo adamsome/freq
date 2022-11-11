@@ -1,4 +1,3 @@
-import { findCurrentPlayer } from '../../player'
 import { ResGame } from '../../types/res.types'
 import { shiftOrder } from '../../util/array'
 import { connectToDatabase } from '../../util/mongodb'
@@ -6,14 +5,9 @@ import { fromResGames } from '../res-game-store'
 
 export default async function prepNewMatch(
   game: ResGame,
-  userID: string,
+  _userID: string,
   startPlayerIndex?: unknown
 ) {
-  const currentPlayer = findCurrentPlayer(game.players, userID)
-
-  if (!currentPlayer?.leader)
-    throw new Error('Only leaders can start new match')
-
   if (startPlayerIndex != null && typeof startPlayerIndex !== 'number')
     throw new Error(`'prepNewMatch.startPlayerIndex' must be a number`)
 
@@ -30,7 +24,10 @@ export default async function prepNewMatch(
 
   const changes: Partial<ResGame> = {
     phase: 'prep' as const,
+    step: 'spy_reveal',
     player_order,
+    spies: [],
+    rounds: [{ lead: player_order[0], team: [], votes: [], result: [] }],
   }
 
   await fromResGames(db).updateOne(filter, { $set: changes })

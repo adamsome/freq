@@ -16,11 +16,12 @@ interface CreatePlayerOptions {
   team?: 1 | 2
   leader?: boolean
   existingPlayers?: Player[]
+  type?: User['type']
 }
 
 export function createPlayer(
   user: User,
-  { team, leader = true, existingPlayers }: CreatePlayerOptions = {}
+  { team, leader = true, existingPlayers, type }: CreatePlayerOptions = {}
 ): Player {
   const id = user.id
   const existingNames = existingPlayers?.map((p) => p.name ?? '')
@@ -32,6 +33,9 @@ export function createPlayer(
     color = assignColor(team, existingColors)
   }
   const player: Player = { id, name, icon, team, color, leader }
+  if (type) {
+    player.type = type
+  }
   return player
 }
 
@@ -76,12 +80,13 @@ interface AddPlayerOptions {
   team?: 1 | 2
   forceLeader?: boolean
   assignTeam?: boolean
+  type?: User['type']
 }
 
 export function addPlayer(
   existingPlayers: Player[],
   user: User,
-  { team, forceLeader = false, assignTeam }: AddPlayerOptions = {}
+  { team, forceLeader = false, assignTeam, type }: AddPlayerOptions = {}
   // team: 1 | 2 = getPreferredTeam(players),
   // forceLeader = false
 ): Player[] {
@@ -94,7 +99,7 @@ export function addPlayer(
   }
 
   // Return game w/ new player added
-  const player = createPlayer(user, { team, leader, existingPlayers })
+  const player = createPlayer(user, { team, leader, existingPlayers, type })
   return [...existingPlayers, player]
 }
 

@@ -169,7 +169,8 @@ export async function updateFreqGamePath(
   const games = fromGames(db)
   const filter = { room: room.toLowerCase() }
   const update = { [path]: value }
-  await games.updateOne(filter, { $set: update })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await games.updateOne(filter, { $set: update } as any)
 }
 
 export async function deleteFreqGameProp<K extends keyof FreqGame>(

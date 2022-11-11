@@ -14,6 +14,7 @@ import { findManyResGames } from '../../../lib/res/res-game-store'
 import { buildResGameView } from '../../../lib/res/res-game-view'
 import { BaseGame } from '../../../lib/types/game.types'
 import { fetchUser } from '../../../lib/user-store'
+import { rejectNil } from '../../../lib/util/array'
 
 export default withApiAuthRequired(async function getUser(req, res) {
   try {
@@ -40,14 +41,21 @@ export default withApiAuthRequired(async function getUser(req, res) {
     const freqViews = freqGames.map((g) => toFreqGameView(user.id, g))
     const cwdViews = cwdGames.map((g) => toCwdGameView(user.id, g))
     const blowViews = blowGames.map((g) => buildBlowGameView(user.id, g))
-    const resViews = resGames.map((g) => buildResGameView(g, user.id))
+    const resViews = resGames.map((g) => {
+      try {
+        return buildResGameView(g, user.id)
+      } catch (e) {
+        console.error(`Error building Res game view '${g.room}'`, e)
+        return null
+      }
+    })
 
-    const views: BaseGame[] = [
+    const views: BaseGame[] = rejectNil([
       ...freqViews,
       ...cwdViews,
       ...blowViews,
       ...resViews,
-    ]
+    ])
 
     const mruViews = views.sort(mostRecentGamesComparer)
 

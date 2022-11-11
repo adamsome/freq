@@ -11,7 +11,7 @@ export function randomName(excludeNames: string[] = [], retry = 0): string {
     // Short-curcuit retries at 5
     return 'No Name'
   }
-  const availableNames = nameSet.filter((n) => {
+  const availableNames = mockNameSet.filter((n) => {
     return !excludeNames.includes(buildName(n, retry))
   })
 
@@ -23,7 +23,7 @@ export function randomName(excludeNames: string[] = [], retry = 0): string {
   return buildName(randomItem(availableNames), retry)
 }
 
-const nameSet: string[] = [
+export const mockNameSet: string[] = [
   'Faraday',
   'Maxwell',
   'Ørsted',
@@ -40,4 +40,4 @@ const nameSet: string[] = [
   'Huygens',
 ]
 
-export default nameSet
+export default mockNameSet

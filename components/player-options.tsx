@@ -1,10 +1,9 @@
 import produce from 'immer'
 import type { MouseEvent } from 'react'
 import { useState } from 'react'
-import { KEY_DEBUG_MODE } from '../lib/consts'
 import { CommandType } from '../lib/types/game.types'
 import { User } from '../lib/types/user.types'
-import { cx, isBrowser } from '../lib/util/dom'
+import { cx } from '../lib/util/dom'
 import { styleColor } from '../lib/util/dom-style'
 import { postCommand } from '../lib/util/fetch-json'
 import useGame from '../lib/util/use-game'
@@ -43,9 +42,7 @@ const PlayerOptions = ({
   const { game, mutate } = useGame()
   const player = game?.currentPlayer
 
-  const debugModeVal: string | boolean =
-    isBrowser && localStorage[KEY_DEBUG_MODE]
-  const allowDebugMode = debugModeVal === true || debugModeVal === 'true'
+  const allowDebugMode = user.type === 'admin'
 
   const colorMode = `${theme === 'dark' ? 'Light' : 'Dark'} Mode`
   const leaveLabel = `${game ? 'Leave' : 'Log out'}`

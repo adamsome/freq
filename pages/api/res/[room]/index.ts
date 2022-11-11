@@ -31,7 +31,11 @@ export default async function getResRoom(
 
       const game = await fetchResGame(room)
       if (game) {
-        const view = buildResGameView(game, user?.id)
+        let userID = user?.id
+        if (user?.as_user && user?.type === 'admin') {
+          userID = user.as_user
+        }
+        const view = buildResGameView(game, userID)
         return res.json(view)
       }
 

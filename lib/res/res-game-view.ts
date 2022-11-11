@@ -1,12 +1,30 @@
+import produce from 'immer'
 import { OptionalId, WithId } from 'mongodb'
+import { findCurrentPlayer } from '../player'
 import { ResGame, ResGameView } from '../types/res.types'
 import { isObject } from '../util/object'
 import { setRandomNumberGeneratorSeed } from '../util/prng'
 import { isNotEmpty } from '../util/string'
+import createResCommandView from './create-res-command-view'
+import { getResRoundIndex, getResVotesAndIndex, isResSpy } from './res-engine'
+
+const sanitize = produce((game: ResGameView, userID?: string) => {
+  if (!isResSpy(game, userID) && game.phase !== 'win') {
+    game.spies = []
+  }
+  if (game.step === 'team_vote') {
+    const roundIndex = getResRoundIndex(game)
+    const [votes, voteRoundIndex] = getResVotesAndIndex(game)
+    if (game.rounds[roundIndex]?.votes?.[voteRoundIndex]) {
+      const sanitizedVotes = votes.map((v) => (v != null ? true : v))
+      game.rounds[roundIndex].votes[voteRoundIndex] = sanitizedVotes
+    }
+  }
+})
 
 export function buildResGameView(
   rawGame: OptionalId<WithId<ResGame>>,
-  _userID?: string
+  userID?: string
 ): ResGameView {
   try {
     // Delete the DB `_id` object since its not serializable
@@ -22,12 +40,15 @@ export function buildResGameView(
     setRandomNumberGeneratorSeed(seed)
 
     // Create the frontend's game view from the up-to-date game state
+    const currentPlayer = findCurrentPlayer(game.players, userID)
+    const commands = createResCommandView(game, currentPlayer)
     const view: ResGameView = {
       type: 'res',
       ...game,
-      commands: [],
+      ...commands,
+      currentPlayer,
     }
-    return view
+    return sanitize(view, userID)
   } catch (e) {
     console.error('Unexpected:', e)
     throw new Error(e)
@@ -39,6 +60,8 @@ export function isResGameView(game: unknown): game is ResGameView {
     isObject(game) &&
     isNotEmpty(game.room, game.phase) &&
     game.players != null &&
-    game.player_order != null
+    game.player_order != null &&
+    game.rounds != null &&
+    game.spies != null
   )
 }

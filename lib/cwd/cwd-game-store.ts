@@ -154,7 +154,8 @@ export async function updateCwdGamePath(
   const store = fromCwdGames(db)
   const filter = { room: room.toLowerCase() }
   const update = { [path]: value }
-  await store.updateOne(filter, { $set: update })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await store.updateOne(filter, { $set: update } as any)
 }
 
 export async function deleteCwdGameProp<K extends keyof CwdGame>(

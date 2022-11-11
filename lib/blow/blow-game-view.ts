@@ -98,6 +98,8 @@ export function isBlowGameView(game: unknown): game is BlowGameView {
     isObject(game) &&
     isNotEmpty(game.room, game.phase) &&
     game.players != null &&
-    game.player_order != null
+    game.player_order != null &&
+    game.spies == null &&
+    game.rounds == null
   )
 }

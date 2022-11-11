@@ -5,6 +5,7 @@ import editPlayer from './commands/edit-player'
 import kickPlayer from './commands/kick-player'
 import prepNewMatch from './commands/prep-new-match'
 import shuffleTeams from './commands/shuffle-teams'
+import actionCommand from './commands/action'
 
 export default async function handleResCommand(
   game: ResGame,
@@ -13,8 +14,8 @@ export default async function handleResCommand(
   value?: unknown
 ) {
   switch (type) {
-    // case 'action':
-    //   return await actionCommand(game, userID, value)
+    case 'action':
+      return await actionCommand(game, userID, value)
 
     // Player Commands
     case 'edit_player':
