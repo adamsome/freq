@@ -1,5 +1,5 @@
 import { ResGame } from '../../types/res.types'
-import { shiftOrder } from '../../util/array'
+import { range, shiftOrder } from '../../util/array'
 import { connectToDatabase } from '../../util/mongodb'
 import { fromResGames } from '../res-game-store'
 
@@ -27,7 +27,15 @@ export default async function prepNewMatch(
     step: 'spy_reveal',
     player_order,
     spies: [],
-    rounds: [{ lead: player_order[0], team: [], votes: [], result: [] }],
+    missions: [
+      [
+        {
+          lead: player_order[0],
+          team: [],
+          votes: range(game.players.length).map(() => null),
+        },
+      ],
+    ],
   }
 
   await fromResGames(db).updateOne(filter, { $set: changes })

@@ -11,6 +11,7 @@ type Props = {
   selected?: boolean
   selectable?: boolean
   voteStatus?: ResVoteStatus
+  missionResultStatus?: boolean | null
   onSelect: (player: Player) => void
 }
 
@@ -22,6 +23,7 @@ export default function ResPlayerCard({
   selected,
   selectable,
   voteStatus,
+  missionResultStatus,
   onSelect,
 }: Props) {
   return (
@@ -40,6 +42,7 @@ export default function ResPlayerCard({
       {lead && <div className="text-phosphorus-500">Lead</div>}
       {spy && <div className="text-red-500">Spy</div>}
       {voteStatus && <div>{voteStatus}</div>}
+      {missionResultStatus != null && <div>acted</div>}
     </div>
   )
 }

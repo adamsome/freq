@@ -10,7 +10,7 @@ export default function initResGame(): ResGame {
     step: 'spy_reveal',
     player_order: [],
     spies: [],
-    rounds: [{ lead: 0, team: [], votes: [], result: [] }],
+    missions: [[{ lead: 0, team: [], votes: [] }]],
     room_started_at: '',
   }
 }

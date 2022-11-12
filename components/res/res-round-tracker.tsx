@@ -1,6 +1,6 @@
 import {
   getResRejectedVoteRounds,
-  getResRoundStatus,
+  getResMissionStatus,
 } from '../../lib/res/res-engine'
 import { range } from '../../lib/util/array'
 import { useResGame } from '../../lib/util/use-game'
@@ -17,7 +17,7 @@ export default function ResRoundTracker() {
         <ResRoundIndicator
           key={i}
           index={i}
-          status={getResRoundStatus(game, i)}
+          status={getResMissionStatus(game, i)}
           rejectedVoteRounds={getResRejectedVoteRounds(game, i)}
         />
       ))}

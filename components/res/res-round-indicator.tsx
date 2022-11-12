@@ -1,10 +1,10 @@
-import { ResRoundStatus } from '../../lib/types/res.types'
+import { ResMissionStatus } from '../../lib/types/res.types'
 import { range } from '../../lib/util/array'
 import { cx } from '../../lib/util/dom'
 
 type Props = {
   index: number
-  status: ResRoundStatus
+  status: ResMissionStatus
   rejectedVoteRounds: number
 }
 

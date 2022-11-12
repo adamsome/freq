@@ -5,6 +5,7 @@ import {
   isResSpy,
   isResTeamRequiredSize,
   getResPlayerVoteStatus,
+  getResPlayerMissionResult,
 } from '../../lib/res/res-engine'
 import { Player } from '../../lib/types/game.types'
 import { useResGame } from '../../lib/util/use-game'
@@ -45,6 +46,7 @@ export default function ResBoard({ onPlayerSelect }: Props) {
               selectable={selectable}
               selected={selected}
               voteStatus={getResPlayerVoteStatus(game, player)}
+              missionResultStatus={getResPlayerMissionResult(game, player)}
               onSelect={onPlayerSelect}
             />
           )

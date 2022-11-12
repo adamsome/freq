@@ -33,7 +33,9 @@ export default async function getResRoom(
       if (game) {
         let userID = user?.id
         if (user?.as_user && user?.type === 'admin') {
-          userID = user.as_user
+          if (game.players.some((p) => p.id === user?.as_user)) {
+            userID = user.as_user
+          }
         }
         const view = buildResGameView(game, userID)
         return res.json(view)

@@ -4,20 +4,43 @@ import { findCurrentPlayer } from '../player'
 import { ResGame, ResGameView } from '../types/res.types'
 import { isObject } from '../util/object'
 import { setRandomNumberGeneratorSeed } from '../util/prng'
+import { shuffle } from '../util/random'
 import { isNotEmpty } from '../util/string'
 import createResCommandView from './create-res-command-view'
-import { getResRoundIndex, getResVotesAndIndex, isResSpy } from './res-engine'
+import { getResMissionIndex, getResRoundIndex, isResSpy } from './res-engine'
 
 const sanitize = produce((game: ResGameView, userID?: string) => {
   if (!isResSpy(game, userID) && game.phase !== 'win') {
     game.spies = []
   }
   if (game.step === 'team_vote') {
+    const missionIndex = getResMissionIndex(game)
     const roundIndex = getResRoundIndex(game)
-    const [votes, voteRoundIndex] = getResVotesAndIndex(game)
-    if (game.rounds[roundIndex]?.votes?.[voteRoundIndex]) {
+    const votes = game.missions[missionIndex]?.[roundIndex]?.votes
+    if (votes != null) {
       const sanitizedVotes = votes.map((v) => (v != null ? true : v))
-      game.rounds[roundIndex].votes[voteRoundIndex] = sanitizedVotes
+      game.missions[missionIndex][roundIndex].votes = sanitizedVotes
+    }
+  }
+  if (game.step === 'mission') {
+    const missionIndex = getResMissionIndex(game)
+    const roundIndex = getResRoundIndex(game)
+    const result = game.missions[missionIndex]?.[roundIndex]?.result
+    if (result != null) {
+      const sanitizedResults = result.map((v) => (v != null ? true : v))
+      game.missions[missionIndex][roundIndex].result = sanitizedResults
+    }
+  }
+  if (game.phase !== 'win' && game.step !== 'mission') {
+    for (let missionIdx = 0; missionIdx < game.missions.length; missionIdx++) {
+      const mission = game.missions[missionIdx]
+      for (let roundIdx = 0; roundIdx < mission.length; roundIdx++) {
+        const result = game.missions[missionIdx]?.[roundIdx]?.result
+        if (result != null) {
+          const shuffledResults = shuffle(result)
+          game.missions[missionIdx][roundIdx].result = shuffledResults
+        }
+      }
     }
   }
 })
@@ -61,7 +84,7 @@ export function isResGameView(game: unknown): game is ResGameView {
     isNotEmpty(game.room, game.phase) &&
     game.players != null &&
     game.player_order != null &&
-    game.rounds != null &&
+    game.missions != null &&
     game.spies != null
   )
 }

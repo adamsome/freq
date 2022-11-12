@@ -5,7 +5,7 @@ import {
   ResGame,
   ResGameView,
   ResRound,
-  ResRoundStatus,
+  ResMissionStatus,
   ResVoteStatus,
 } from '../types/res.types'
 import { User } from '../types/user.types'
@@ -27,7 +27,7 @@ export function getResSpyCountRequired(playerCount: number): number {
   const spyCount = RES_SPY_COUNT_BY_PLAYER_COUNT[playerCount]
   invariant(
     spyCount != null,
-    `No valid spy count for player count '${playerCount}'`
+    `No valid Spy count for player count '${playerCount}'`
   )
   return spyCount
 }
@@ -43,64 +43,48 @@ const RES_TEAM_SIZE: Record<number, number[]> = {
 
 export function getResTeamSizeRequired(
   playerCount: number,
-  roundIndex: number
+  missionIndex: number
 ): number {
-  const sizePerRound = RES_TEAM_SIZE[playerCount]
+  const sizePerMission = RES_TEAM_SIZE[playerCount]
   invariant(
-    sizePerRound != null,
-    `No mission team size for player count '${playerCount}'`
+    sizePerMission != null,
+    `No Mission Team size for player count '${playerCount}'`
   )
-  const size = sizePerRound[roundIndex]
+  const size = sizePerMission[missionIndex]
   invariant(
     size != null,
-    `No mission team size for round index '${roundIndex}'`
+    `No Mission Team size for Mission index '${missionIndex}'`
   )
   return size
 }
 
 // Rounds
 
-export function getResRoundStatus(
-  game: ResGame,
-  roundIndex: number
-): ResRoundStatus {
-  const round = game.rounds[roundIndex]
-  if (game.phase !== 'guess' || !round) {
-    return 'unplayed'
-  }
-  const playerCount = game.players.length
-  const teamSize = getResTeamSizeRequired(playerCount, roundIndex)
-  const results = round.result.filter((res) => res !== null)
-  invariant(
-    results.length <= teamSize,
-    'Round result count cannot be greater than mission team size'
-  )
-  if (results.length === teamSize) {
-    return results.every((r) => r === true) ? 'success' : 'failure'
-  }
-  return 'current'
+export function getResMissionIndex(game: ResGame): number {
+  const missionCount = game.missions.length
+  invariant(missionCount > 0, 'Match requires at least one Mission')
+  return game.missions.length - 1
 }
 
 export function getResRoundIndex(game: ResGame): number {
-  const roundCount = game.rounds.length
-  invariant(roundCount > 0, 'Match requires at least one round')
-  return game.rounds.length - 1
-}
-
-export function getResRoundAndIndex(
-  game: ResGame
-): readonly [ResRound, number] {
-  const roundIndex = getResRoundIndex(game)
-  const round = game.rounds[roundIndex]
-  return [round, roundIndex] as const
+  const missionIndex = getResMissionIndex(game)
+  const mission = game.missions[missionIndex]
+  invariant(mission.length > 0, 'Match requires at least one round')
+  return mission.length - 1
 }
 
 export function getResRound(game: ResGame): ResRound {
-  const [round] = getResRoundAndIndex(game)
-  return round
+  const missionIndex = getResMissionIndex(game)
+  const mission = game.missions[missionIndex]
+  const roundIndex = getResRoundIndex(game)
+  return mission[roundIndex]
 }
 
 // Players
+
+function getPlayerCount(game: ResGame): number {
+  return game.players.length
+}
 
 function getPlayerIndex(
   game: ResGame,
@@ -119,7 +103,7 @@ export function getResPlayersInOrder(game: ResGame): Player[] {
 export function getResLead(game: ResGame): Player {
   const round = getResRound(game)
   const lead = game.players[round.lead]
-  invariant(lead, 'Round lead not in the match')
+  invariant(lead, 'Mission Lead not in the match')
   return lead
 }
 
@@ -140,7 +124,7 @@ export function isCurrentPlayerResLead(game: ResGameView): boolean {
 }
 
 export function isResSpy(
-  game: ResGameView,
+  game: ResGame,
   userOrID?: string | Player | User
 ): boolean {
   if (userOrID == null) {
@@ -160,22 +144,18 @@ function getNextResLeadIndex(game: ResGame): number {
   return playerIndex
 }
 
-// Team
-
-function getResTeamSelectIndex(game: ResGame): number {
-  if (game.phase !== 'guess') {
-    return 0
-  }
-  const round = getResRound(game)
-  const teamSelectIndex = round.team.length - 1
-  invariant(teamSelectIndex >= 0, 'No team selections exists')
-  return teamSelectIndex
+export function getNextResLead(game: ResGame): Player {
+  const nextLeadIndex = getNextResLeadIndex(game)
+  const player = game.players[nextLeadIndex]
+  invariant(player, 'Next Lead is not in match')
+  return player
 }
+
+// Team
 
 function getResTeamMemberIndices(game: ResGame): number[] {
   const round = getResRound(game)
-  const teamSelectIndex = getResTeamSelectIndex(game)
-  return round.team[teamSelectIndex]
+  return round.team
 }
 
 export function getResTeamSize(game: ResGame): number {
@@ -191,7 +171,7 @@ export function getResTeamMembers(game: ResGame): Player[] {
   const teamMembers = teamMemberIndices.map((i) => game.players[i])
   invariant(
     teamMembers.every((m) => m),
-    'Team member not in match'
+    'Mission Team Member not in match'
   )
   return teamMembers
 }
@@ -207,9 +187,9 @@ function findTeamMemberIndex(
 
 export function isResTeamMember(
   game: ResGame,
-  userOrID: string | Player | User
+  userOrID?: string | Player | User
 ): boolean {
-  if (game.phase !== 'guess' || game.step === 'spy_reveal') {
+  if (!userOrID || game.phase !== 'guess' || game.step === 'spy_reveal') {
     return false
   }
   const teamMemberIndex = findTeamMemberIndex(game, userOrID)
@@ -217,52 +197,35 @@ export function isResTeamMember(
 }
 
 export function isResTeamRequiredSize(game: ResGame): boolean {
-  const playerCount = game.players.length
-  const roundIndex = getResRoundIndex(game)
-  const teamSizeRequired = getResTeamSizeRequired(playerCount, roundIndex)
+  if (game.phase !== 'guess' || game.step === 'spy_reveal') {
+    return false
+  }
+  const playerCount = getPlayerCount(game)
+  const missionIndex = getResMissionIndex(game)
+  const teamSizeRequired = getResTeamSizeRequired(playerCount, missionIndex)
   const teamSize = getResTeamSize(game)
   return teamSize === teamSizeRequired
 }
 
 // Votes
 
-function getResVoteRoundIndex(game: ResGame): number {
+export function getResVotes(game: ResGame): (boolean | null)[] {
   if (game.phase !== 'guess') {
-    return 0
+    return []
   }
   const round = getResRound(game)
-  const voteRoundIndex = round.votes.length - 1
-  invariant(voteRoundIndex >= 0, 'No voting rounds exists')
-  return voteRoundIndex
-}
-
-export function getResVotesAndIndex(
-  game: ResGame
-): readonly [(boolean | null)[], number] {
-  if (game.phase !== 'guess') {
-    return [[], 0]
-  }
-  const round = getResRound(game)
-  const voteRoundIndex = getResVoteRoundIndex(game)
-  invariant(voteRoundIndex >= 0, 'No voting rounds exists')
-  const votes = round.votes[voteRoundIndex]
-  return [votes, voteRoundIndex]
+  return round.votes
 }
 
 export function getResRejectedVoteRounds(
   game: ResGame,
-  roundIndex: number
+  missionIndex: number
 ): number {
-  const round = game.rounds[roundIndex]
-  if (round && round.votes.length > 0) {
-    return round.votes.length - 1
+  const mission = game.missions[missionIndex]
+  if (mission && mission.length > 0) {
+    return mission.length - 1
   }
   return 0
-}
-
-function getResVotes(game: ResGame): (boolean | null)[] {
-  const [votes] = getResVotesAndIndex(game)
-  return votes
 }
 
 export function getResCastVotes(game: ResGame): boolean[] {
@@ -271,7 +234,7 @@ export function getResCastVotes(game: ResGame): boolean[] {
 }
 
 export function isResVoteComplete(game: ResGame): boolean {
-  const playerCount = game.players.length
+  const playerCount = getPlayerCount(game)
   const votesCast = getResCastVotes(game)
   return votesCast.length === playerCount
 }
@@ -333,6 +296,101 @@ export function getResPlayerVoteStatus(
   }
 }
 
+// Results
+
+export function getResMissionResults(
+  game: ResGame
+): (boolean | null)[] | undefined {
+  if (game.phase === 'prep') {
+    return []
+  }
+  const round = getResRound(game)
+  return round.result
+}
+
+export function getResCastMissionResults(game: ResGame): boolean[] {
+  const results = getResMissionResults(game) ?? []
+  return results.filter((v) => v !== null) as boolean[]
+}
+
+export function getResPlayerMissionResult(
+  game: ResGame,
+  userOrID?: string | Player | User
+): boolean | null {
+  if (userOrID == null || game.step !== 'mission') {
+    return null
+  }
+  const playerIndex = getPlayerIndex(game, userOrID)
+  const teamIndices = getResTeamMemberIndices(game)
+  const teamIndex = teamIndices.findIndex((i) => i === playerIndex)
+  if (teamIndex >= 0) {
+    const results = getResMissionResults(game)
+    const playerVote = results?.[teamIndex]
+    invariant(playerVote !== undefined, 'Player Mission result invalid')
+    return playerVote
+  }
+  return null
+}
+
+export function isResMissionResultComplete(game: ResGame): boolean {
+  const playerCount = getPlayerCount(game)
+  const missionIndex = getResMissionIndex(game)
+  const teamSize = getResTeamSizeRequired(playerCount, missionIndex)
+  const caseMissionResults = getResCastMissionResults(game)
+  return caseMissionResults.length === teamSize
+}
+
+export function getResMissionSabotageCount(game: ResGame): number {
+  const castResults = getResCastMissionResults(game)
+  const sabotages = castResults.filter((r) => r === false)
+  return sabotages.length
+}
+
+export function isResMissionSuccessful(game: ResGame): boolean {
+  if (!isResMissionResultComplete(game)) {
+    return false
+  }
+  const sabotageCount = getResMissionSabotageCount(game)
+  return sabotageCount === 0
+}
+
+export function isResMissionFailed(game: ResGame): boolean {
+  if (!isResMissionResultComplete(game)) {
+    return false
+  }
+  const sabotageCount = getResMissionSabotageCount(game)
+  return sabotageCount > 0
+}
+
+export function getResMissionStatus(
+  game: ResGame,
+  missionIndex?: number
+): ResMissionStatus {
+  missionIndex = missionIndex ?? getResMissionIndex(game)
+  const mission = game.missions[missionIndex]
+  const round = mission?.[mission.length - 1]
+  if (game.phase === 'prep' || !mission || !round) {
+    return 'unplayed'
+  }
+  const playerCount = getPlayerCount(game)
+  const teamSize = getResTeamSizeRequired(playerCount, missionIndex)
+  if (round.result) {
+    const results = round.result.filter((res) => res !== null)
+    invariant(
+      results.length <= teamSize,
+      'Round result count cannot be greater than Mission Team size'
+    )
+    if (results.length === teamSize) {
+      return results.every((r) => r === true) ? 'success' : 'failure'
+    }
+  }
+  return 'current'
+}
+
+export function getAllResMissionResults(game: ResGame): ResMissionStatus[] {
+  return range(5).map((i) => getResMissionStatus(game, i))
+}
+
 // Actions
 
 /**
@@ -344,7 +402,8 @@ export function getResPlayerVoteStatus(
  * | Spies   | 2 | 2 | 3 | 3 | 3 | 4  |
  */
 export function generateResSpies(game: ResGame): number[] {
-  const count = getResSpyCountRequired(game.players.length)
+  const playerCount = getPlayerCount(game)
+  const count = getResSpyCountRequired(playerCount)
   const playerIndices = game.players.map((_, i) => i)
   const shuffledPlayerIndices = shuffle(playerIndices)
   return shuffledPlayerIndices.slice(0, count)
@@ -357,28 +416,64 @@ export function startResTeamSelect(
   invariant(
     game.phase === 'guess' &&
       (game.step === 'spy_reveal' ||
-        (game.step === 'team_vote_reveal' && isResVoteRejected(game))),
-    'Can only start team select from spy reveal or rejected vote reveal steps'
+        (game.step === 'team_vote_reveal' && isResVoteRejected(game)) ||
+        game.step === 'mission_reveal'),
+    'Can only start Mission Team select from this step'
   )
-  invariant(
-    isResLead(game, userID),
-    `Lead must start mission team vote. Player '${userID}' is not lead.`
-  )
+  if (game.step === 'spy_reveal') {
+    invariant(
+      isResLead(game, userID),
+      `Lead must start Mission Team vote. Player '${userID}' is not Lead.`
+    )
+  } else {
+    const nextLead = getNextResLead(game)
+    invariant(
+      nextLead?.id === userID,
+      `Next Lead must start Mission Team vote. Player '${userID}' is not Lead.`
+    )
+  }
 
-  const roundIndex = getResRoundIndex(game)
-  const teamSelectionsPath = `rounds.${roundIndex}.team`
-  const voteRoundsPath = `rounds.${roundIndex}.votes`
-  const playerCount = game.players.length
-  const newVotes = range(playerCount).map(() => null)
+  switch (game.step) {
+    case 'spy_reveal': {
+      // Spy Reveal step only occurs at start of match where the first
+      // Mission Round has already been created
+      return {
+        $set: {
+          step: 'team_select',
+        },
+      }
+    }
+    case 'team_vote_reveal': {
+      const missionIndex = getResMissionIndex(game)
+      const nextLead = getNextResLeadIndex(game)
+      const playerCount = getPlayerCount(game)
+      const newVotes = range(playerCount).map(() => null)
+      const newRound: ResRound = { lead: nextLead, team: [], votes: newVotes }
 
-  return {
-    $set: {
-      step: 'team_select',
-    },
-    $push: {
-      [teamSelectionsPath]: [],
-      [voteRoundsPath]: newVotes,
-    },
+      return {
+        $set: {
+          step: 'team_select',
+        },
+        $push: {
+          [`missions.${missionIndex}`]: newRound,
+        },
+      }
+    }
+    case 'mission_reveal': {
+      const nextLead = getNextResLeadIndex(game)
+      const playerCount = getPlayerCount(game)
+      const newVotes = range(playerCount).map(() => null)
+      const newRound: ResRound = { lead: nextLead, team: [], votes: newVotes }
+
+      return {
+        $set: {
+          step: 'team_select',
+        },
+        $push: {
+          missions: [newRound],
+        },
+      }
+    }
   }
 }
 
@@ -389,25 +484,24 @@ export function selectResTeamMember(
 ): UpdateFilter<ResGame> {
   invariant(
     game.phase === 'guess' && game.step === 'team_select',
-    'Can only select team member in team select step'
+    'Can only select Mission Team member in Mission Team select step'
   )
   invariant(
     isResLead(game, userID),
-    `Only lead can select mission team member. Player '${userID}' is not lead.`
+    `Only Lead can select Mission Team Member. Player '${userID}' is not Lead.`
   )
   const isTeamMember = isResTeamMember(game, teamMemberID)
   invariant(
     isTeamMember ? true : !isResTeamRequiredSize(game),
-    'Team is already at required size'
+    'Mission Team is already at required size'
   )
 
+  const missionIndex = getResMissionIndex(game)
   const roundIndex = getResRoundIndex(game)
-  const teamSelectIndex = getResTeamSelectIndex(game)
-  const roundTeamSelectPath = `rounds.${roundIndex}.team.${teamSelectIndex}`
   const playerIndex = getPlayerIndex(game, teamMemberID)
   return {
     [isTeamMember ? '$pull' : '$push']: {
-      [roundTeamSelectPath]: playerIndex,
+      [`missions.${missionIndex}.${roundIndex}.team`]: playerIndex,
     },
   }
 }
@@ -418,15 +512,15 @@ export function startResTeamVote(
 ): UpdateFilter<ResGame> {
   invariant(
     game.phase === 'guess' && game.step === 'team_select',
-    'Can only start team vote from the team select step'
+    'Can only start Mission Team vote from the Mission Team select step'
   )
   invariant(
     isResLead(game, userID),
-    `Lead must start mission team vote. Player '${userID}' is not lead.`
+    `Lead must start Mission Team vote. Player '${userID}' is not Lead.`
   )
   invariant(
     isResTeamRequiredSize(game),
-    'Selected team size not ready for vote'
+    'Selected Mission Team size not ready for vote'
   )
   return {
     $set: {
@@ -442,7 +536,7 @@ export function voteResTeam(
 ): UpdateFilter<ResGame> | undefined {
   invariant(
     game.phase === 'guess' && game.step === 'team_vote',
-    'Can only vote in the team vote step'
+    'Can only vote in the Mission Team vote step'
   )
 
   const alreadyVoted = getResPlayerVote(game, userID) !== null
@@ -450,14 +544,12 @@ export function voteResTeam(
     return
   }
 
+  const missionIndex = getResMissionIndex(game)
   const roundIndex = getResRoundIndex(game)
-  const voteRoundIndex = getResVoteRoundIndex(game)
   const playerIndex = getPlayerIndex(game, userID)
-  // Set only the player's vote using MongoDB's dot notation to prevent
-  // players from overwriting each other during concurrent votes
   return {
     $set: {
-      [`rounds.${roundIndex}.votes.${voteRoundIndex}.${playerIndex}`]: vote,
+      [`missions.${missionIndex}.${roundIndex}.votes.${playerIndex}`]: vote,
     },
   } as UpdateFilter<ResGame>
 }
@@ -471,8 +563,8 @@ export function revealResVote(
     isResVoteComplete(game)
   ) {
     if (isResVoteRejected(game)) {
-      const voteRoundIndex = getResVoteRoundIndex(game)
-      if (voteRoundIndex + 1 === 5) {
+      const roundIndex = getResRoundIndex(game)
+      if (roundIndex + 1 === 5) {
         // Spies win if 5 voting rounds are rejected in a single mission
         return {
           $set: {
@@ -481,21 +573,100 @@ export function revealResVote(
           },
         } as UpdateFilter<ResGame>
       }
-
-      // Round Mission Lead changes on Mission Team vote rejection
-      const roundIndex = getResRoundIndex(game)
-      const roundLeadPath = `rounds.${roundIndex}.lead`
-      const leadIndex = getNextResLeadIndex(game)
-      return {
-        $set: {
-          step: 'team_vote_reveal',
-          [roundLeadPath]: leadIndex,
-        },
-      } as UpdateFilter<ResGame>
     }
+
     return {
       $set: {
         step: 'team_vote_reveal',
+      },
+    }
+  }
+}
+
+export function startResMission(
+  game: ResGame,
+  userID: string
+): UpdateFilter<ResGame> {
+  invariant(
+    game.phase === 'guess' && game.step === 'team_vote_reveal',
+    'Can only start Mission from the Mission Team vote reveal step'
+  )
+  invariant(
+    isResLead(game, userID),
+    `Lead must start Mission. Player '${userID}' is not Lead.`
+  )
+  invariant(
+    isResTeamRequiredSize(game),
+    'Mission Team size not ready for Mission'
+  )
+  const playerCount = getPlayerCount(game)
+  const missionIndex = getResMissionIndex(game)
+  const roundIndex = getResRoundIndex(game)
+  const teamSize = getResTeamSizeRequired(playerCount, missionIndex)
+  const newResult = range(teamSize).map(() => null)
+  return {
+    $set: {
+      step: 'mission',
+      [`missions.${missionIndex}.${roundIndex}.result`]: newResult,
+    },
+  } as UpdateFilter<ResGame>
+}
+
+export function supportResMission(
+  game: ResGame,
+  userID: string,
+  doesSupport: boolean
+): UpdateFilter<ResGame> | undefined {
+  invariant(
+    game.phase === 'guess' && game.step === 'mission',
+    'Can only Support in the Mission step'
+  )
+  const playerCount = getPlayerCount(game)
+  const missionIndex = getResMissionIndex(game)
+  const teamMemberIndex = findTeamMemberIndex(game, userID)
+  const teamSize = getResTeamSizeRequired(playerCount, missionIndex)
+  invariant(
+    teamMemberIndex >= 0 && teamMemberIndex < teamSize,
+    'Only Mission Team Members can Support the Mission'
+  )
+
+  const alreadySupported = getResPlayerMissionResult(game, userID) !== null
+  if (alreadySupported) {
+    return
+  }
+
+  const roundIndex = getResRoundIndex(game)
+  return {
+    $set: {
+      [`missions.${missionIndex}.${roundIndex}.result.${teamMemberIndex}`]:
+        doesSupport,
+    },
+  } as UpdateFilter<ResGame>
+}
+
+export function revealResMission(
+  game: ResGame
+): UpdateFilter<ResGame> | undefined {
+  if (
+    game.phase === 'guess' &&
+    game.step === 'mission' &&
+    isResMissionResultComplete(game)
+  ) {
+    const statuses = getAllResMissionResults(game)
+    const successCount = statuses.filter((s) => s === 'success').length
+    const failureCount = statuses.filter((s) => s === 'failure').length
+    if (successCount === 3 || failureCount === 3) {
+      return {
+        $set: {
+          phase: 'win',
+          step: 'mission_reveal',
+        },
+      }
+    }
+
+    return {
+      $set: {
+        step: 'mission_reveal',
       },
     }
   }

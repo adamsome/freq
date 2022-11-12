@@ -15,7 +15,7 @@ export default async function shuffleTeams(game: ResGame) {
     $set: {
       player_order,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      [`rounds.${0}.lead`]: player_order[0] as any,
+      [`missions.0.0.lead`]: player_order[0] as any,
     },
   })
 }

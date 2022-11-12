@@ -10,10 +10,13 @@ import { connectToDatabase } from '../../util/mongodb'
 import { isObject } from '../../util/object'
 import { isNotEmpty } from '../../util/string'
 import {
+  revealResMission,
   revealResVote,
   selectResTeamMember,
+  startResMission,
   startResTeamSelect,
   startResTeamVote,
+  supportResMission,
   voteResTeam,
 } from '../res-engine'
 import { fromResGames } from '../res-game-store'
@@ -39,7 +42,7 @@ function getActionChanges(
       const teamMemberID = action.payload
       invariant(
         typeof teamMemberID === 'string',
-        `Team member ID '${teamMemberID}' to select is invalid`
+        `Mission Team Member ID '${teamMemberID}' to select is invalid`
       )
       return selectResTeamMember(game, userID, teamMemberID)
     }
@@ -48,11 +51,22 @@ function getActionChanges(
     }
     case 'vote_team': {
       const vote = action.payload
-      invariant(typeof vote === 'boolean', 'Team vote is invalid')
+      invariant(typeof vote === 'boolean', 'Mission Team vote is invalid')
       return voteResTeam(game, userID, vote)
     }
     case 'reveal_vote': {
       return revealResVote(game)
+    }
+    case 'start_mission': {
+      return startResMission(game, userID)
+    }
+    case 'support_mission': {
+      const support = action.payload
+      invariant(typeof support === 'boolean', 'Mission Team Support is invalid')
+      return supportResMission(game, userID, support)
+    }
+    case 'reveal_mission': {
+      return revealResMission(game)
     }
   }
 
