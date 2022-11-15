@@ -11,6 +11,7 @@ type Props = {
   big?: boolean
   button?: Partial<ButtonProps>
   sticky?: boolean
+  colorClass?: string
   onLogoClick?: () => void
   onTitleClick?: () => void
 }
@@ -20,6 +21,7 @@ export default function Header({
   big,
   button = {},
   sticky,
+  colorClass: rawColorClass,
   onLogoClick,
   onTitleClick,
 }: Props) {
@@ -32,19 +34,19 @@ export default function Header({
     heightClass = 'h-16'
   }
 
+  const colorClass =
+    rawColorClass ??
+    `border-b border-gray-200 dark:border-gray-900 ` +
+      `bg-white/80 dark:bg-black/80 backdrop-blur-[10px]`
+
   return (
     <header
-      className={cx(`
-        ${sticky ? 'sticky' : 'fixed'}
-        flex-center left-0 top-0 z-30 w-full flex-col
-        border-b
-        border-gray-200
-        bg-white/80
-        backdrop-blur-[10px]
-        dark:border-gray-900
-        dark:bg-black/80
-        ${heightClass}
-      `)}
+      className={cx(
+        sticky ? 'sticky' : 'fixed',
+        'flex-center left-0 top-0 z-30 w-full flex-col',
+        colorClass,
+        heightClass
+      )}
     >
       {showDebug && <DebugBar />}
 
