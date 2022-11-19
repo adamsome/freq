@@ -7,10 +7,13 @@ import {
   ResRound,
   ResMissionStatus,
   ResVoteStatus,
+  ResPlayerProps,
+  ResStepSection,
 } from '../types/res.types'
 import { User } from '../types/user.types'
 import { partition, range } from '../util/array'
 import { shuffle } from '../util/random'
+import { RES_CARDS } from './res-card-def'
 
 // Required counts/sizes
 
@@ -86,7 +89,7 @@ function getPlayerCount(game: ResGame): number {
   return game.players.length
 }
 
-function getPlayerIndex(
+export function getResPlayerIndex(
   game: ResGame,
   userOrID: string | Player | User
 ): number {
@@ -98,6 +101,17 @@ function getPlayerIndex(
 
 export function getResPlayersInOrder(game: ResGame): Player[] {
   return game.player_order.map((i) => game.players[i])
+}
+
+export function getPlayerCardSrc(
+  game: ResGame,
+  userOrID: string | Player | User
+): string | undefined {
+  const playerIndex = getResPlayerIndex(game, userOrID)
+  const cardIndex = game.cards?.[playerIndex]
+  if (cardIndex != null) {
+    return `/res/${RES_CARDS[cardIndex]}.jpg`
+  }
 }
 
 export function getResLead(game: ResGame): Player {
@@ -134,6 +148,14 @@ export function isResSpy(
   return game.spies.map((i) => game.players[i]).some((p) => p.id === userID)
 }
 
+export function shouldRevealResSpies(game: ResGameView): boolean {
+  return (
+    game.phase === 'guess' &&
+    game.step === 'spy_reveal' &&
+    isResSpy(game, game.currentPlayer)
+  )
+}
+
 function getNextResLeadIndex(game: ResGame): number {
   const round = getResRound(game)
   const leadIndex = round.lead
@@ -149,6 +171,89 @@ export function getNextResLead(game: ResGame): Player {
   const player = game.players[nextLeadIndex]
   invariant(player, 'Next Lead is not in match')
   return player
+}
+
+export function isResPlayerActive(
+  game: ResGame,
+  userOrID?: string | Player | User
+): boolean {
+  if (game.phase !== 'guess') {
+    return false
+  }
+  switch (game.step) {
+    case 'spy_reveal':
+    case 'team_vote_reveal':
+    case 'mission_reveal':
+      return false
+    case 'team_select':
+      return isResLead(game, userOrID)
+    case 'team_vote':
+      return getResPlayerVoteStatus(game, userOrID) === 'notVoted'
+    case 'mission':
+      return (
+        isResTeamMember(game, userOrID) &&
+        getResPlayerMissionResult(game, userOrID) === null
+      )
+  }
+}
+
+function getResStepSection(game: ResGame): ResStepSection {
+  switch (game.phase) {
+    case 'prep':
+      return 'prep'
+    case 'guess': {
+      switch (game.step) {
+        case 'spy_reveal':
+          return 'spy'
+        case 'team_select':
+          return 'select'
+        case 'team_vote':
+        case 'team_vote_reveal':
+          return 'vote'
+        case 'mission':
+        case 'mission_reveal':
+          return 'mission'
+      }
+    }
+    case 'win':
+      return 'win'
+  }
+}
+
+export function getResPlayerProps(
+  game: ResGame,
+  player: Player
+): ResPlayerProps {
+  const playerIndex = getResPlayerIndex(game, player)
+  const orderIndex = game.player_order.findIndex((i) => i === playerIndex)
+  invariant(orderIndex >= 0, 'Player not found in player order')
+  const spy = isResSpy(game, player)
+  const isTeamRequiredSize = isResTeamRequiredSize(game)
+  const selected = isResTeamMember(game, player)
+  const missionIndex = getResMissionIndex(game)
+  const missionStatus = getResMissionStatus(game, missionIndex)
+  const props: ResPlayerProps = {
+    section: getResStepSection(game),
+    orderIndex,
+    name: player.name ?? 'Unnamed',
+    you: player.id === game.currentPlayer?.id,
+    lead: isResLead(game, player),
+    spy,
+    active: isResPlayerActive(game, player),
+    selected,
+    selectable:
+      game.step === 'team_select' && (selected || !isTeamRequiredSize),
+    benched: !selected && isTeamRequiredSize,
+    missionNumber: selected ? missionIndex + 1 : undefined,
+    missionFailure: missionStatus === 'failure',
+    voteStatus: getResPlayerVoteStatus(game, player),
+    missionResultStatus: getResPlayerMissionResult(game, player),
+    cardSrc: getPlayerCardSrc(game, player),
+  }
+  if (game.phase === 'win') {
+    props.winner = spy && missionStatus === 'failure'
+  }
+  return props
 }
 
 // Team
@@ -269,7 +374,7 @@ export function getResPlayerVote(
   if (userOrID == null) {
     return null
   }
-  const playerIndex = getPlayerIndex(game, userOrID)
+  const playerIndex = getResPlayerIndex(game, userOrID)
   const votes = getResVotes(game)
   const playerVote = votes[playerIndex]
   invariant(playerVote !== undefined, 'Player vote invalid')
@@ -320,7 +425,7 @@ export function getResPlayerMissionResult(
   if (userOrID == null || game.step !== 'mission') {
     return null
   }
-  const playerIndex = getPlayerIndex(game, userOrID)
+  const playerIndex = getResPlayerIndex(game, userOrID)
   const teamIndices = getResTeamMemberIndices(game)
   const teamIndex = teamIndices.findIndex((i) => i === playerIndex)
   if (teamIndex >= 0) {
@@ -407,6 +512,12 @@ export function generateResSpies(game: ResGame): number[] {
   const playerIndices = game.players.map((_, i) => i)
   const shuffledPlayerIndices = shuffle(playerIndices)
   return shuffledPlayerIndices.slice(0, count)
+}
+
+export function generateResCards(game: ResGame): number[] {
+  const playerCount = getPlayerCount(game)
+  const shuffledCardIndices = shuffle(range(RES_CARDS.length))
+  return shuffledCardIndices.slice(0, playerCount)
 }
 
 export function startResTeamSelect(
@@ -498,7 +609,7 @@ export function selectResTeamMember(
 
   const missionIndex = getResMissionIndex(game)
   const roundIndex = getResRoundIndex(game)
-  const playerIndex = getPlayerIndex(game, teamMemberID)
+  const playerIndex = getResPlayerIndex(game, teamMemberID)
   return {
     [isTeamMember ? '$pull' : '$push']: {
       [`missions.${missionIndex}.${roundIndex}.team`]: playerIndex,
@@ -546,7 +657,7 @@ export function voteResTeam(
 
   const missionIndex = getResMissionIndex(game)
   const roundIndex = getResRoundIndex(game)
-  const playerIndex = getPlayerIndex(game, userID)
+  const playerIndex = getResPlayerIndex(game, userID)
   return {
     $set: {
       [`missions.${missionIndex}.${roundIndex}.votes.${playerIndex}`]: vote,

@@ -38,5 +38,8 @@ export default async function prepNewMatch(
     ],
   }
 
-  await fromResGames(db).updateOne(filter, { $set: changes })
+  await fromResGames(db).updateOne(filter, {
+    $set: changes,
+    $unset: { cards: '' },
+  })
 }

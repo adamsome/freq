@@ -108,6 +108,14 @@ export const RES_ACTIONS_ID = [
 ] as const
 export type ResActionID = typeof RES_ACTIONS_ID[number]
 
+export type ResStepSection =
+  | 'prep'
+  | 'spy'
+  | 'select'
+  | 'vote'
+  | 'mission'
+  | 'win'
+
 export type ResMissionStatus = 'success' | 'failure' | 'current' | 'unplayed'
 export type ResVoteStatus = 'approve' | 'reject' | 'voted' | 'notVoted'
 
@@ -160,6 +168,8 @@ export type ResGame = BaseGame & {
    * Mission or Rejected Mission Team vote round.
    **/
   player_order: number[]
+  /** By player index, the card index assigned. */
+  cards?: number[]
   /**
    * List of player indices determining which players are Spies (as opposed
    * to Resistance members). Set at the beginning of the match.
@@ -179,4 +189,23 @@ export type ResGame = BaseGame & {
 export type ResGameView = ResGame & {
   type: GameType
   commands: Command[]
+}
+
+export interface ResPlayerProps {
+  section: ResStepSection
+  orderIndex: number
+  name: string
+  you: boolean
+  lead: boolean
+  spy: boolean
+  active: boolean
+  selected: boolean
+  selectable: boolean
+  benched: boolean
+  missionNumber?: number
+  missionFailure?: boolean
+  voteStatus?: ResVoteStatus
+  missionResultStatus: boolean | null
+  cardSrc?: string
+  winner?: boolean
 }

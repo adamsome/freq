@@ -1,69 +1,39 @@
-import {
-  getResPlayersInOrder,
-  isResTeamMember,
-  isResLead,
-  isResSpy,
-  isResTeamRequiredSize,
-  getResPlayerVoteStatus,
-  getResPlayerMissionResult,
-} from '../../lib/res/res-engine'
+import { useRef } from 'react'
+import { isResPlayerActive } from '../../lib/res/res-engine'
 import { Player } from '../../lib/types/game.types'
 import { useResGame } from '../../lib/util/use-game'
-import CommandPanel from '../command-panel'
-import HeaderMessage from '../header-message'
-import ResPlayerCard from './res-player-card'
+import useSize from '../../lib/util/use-size'
+import Fixed from '../layout/fixed'
+import ResCardGrid from './res-card-grid'
+import ResControlPanel from './res-control-panel'
+import ResOrb from './res-orb'
 import ResRoundTracker from './res-round-tracker'
 
 type Props = {
   onPlayerSelect: (player: Player) => void
 }
 
-// TODO: Disable select if team size is reached (and ignore on server side) and
-//       enable start_vote button
 export default function ResBoard({ onPlayerSelect }: Props) {
   const { game } = useResGame()
-  if (!game) return null
+  const panelRef = useRef<HTMLDivElement>(null)
+  const [, panelHeight] = useSize(panelRef)
 
-  const isTeamSelect = game.step === 'team_select'
-  const isTeamRequiredSize = isResTeamRequiredSize(game)
+  const spacer = panelHeight + 48 // panel height + bottom-12
+  const active = game != null && isResPlayerActive(game, game.currentPlayer)
 
   return (
-    <div className="p-4">
-      <ResRoundTracker />
-      <div>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </div>
-      <div>{game.phase === 'guess' ? game.step : game.phase}</div>
+    <>
+      <Fixed className="top-16 flex items-center space-x-3 pr-4">
+        <ResRoundTracker className="flex-1" />
+        <ResOrb className="relative -top-px w-4" disabled={!active} />
+      </Fixed>
 
-      <div className="grid grid-flow-row-dense grid-cols-3 grid-rows-3 gap-4">
-        {getResPlayersInOrder(game).map((player) => {
-          const selected = isResTeamMember(game, player)
-          const selectable = isTeamSelect && (selected || !isTeamRequiredSize)
-          return (
-            <ResPlayerCard
-              key={player.id}
-              player={player}
-              lead={isResLead(game, player)}
-              current={player.id === game.currentPlayer?.id}
-              spy={isResSpy(game, player)}
-              selectable={selectable}
-              selected={selected}
-              voteStatus={getResPlayerVoteStatus(game, player)}
-              missionResultStatus={getResPlayerMissionResult(game, player)}
-              onSelect={onPlayerSelect}
-            />
-          )
-        })}
-      </div>
+      <ResCardGrid className="mt-10" onPlayerSelect={onPlayerSelect} />
+      <div style={{ height: `${spacer}px` }}></div>
 
-      <HeaderMessage />
-      <CommandPanel />
-    </div>
+      <Fixed className="bottom-12">
+        <ResControlPanel panelRef={panelRef} />
+      </Fixed>
+    </>
   )
 }

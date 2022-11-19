@@ -61,6 +61,7 @@ module.exports = {
         'fade-in': 'fade-in 1s ease-in-out',
         'fade-in-slow': 'fade-in-slow 4s ease-in-out',
         pulse: 'pulse 1s ease-in-out 5',
+        'pulse-infinite': 'pulse 4s ease-in-out infinite',
         shift: 'shift 30s ease-in-out infinite',
         shake: 'shift 30s ease-in-out infinite, 0.8s shake',
         shine: 'shine 1.4s ease-in-out infinite ',

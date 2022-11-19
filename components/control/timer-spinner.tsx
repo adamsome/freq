@@ -2,7 +2,7 @@ import { cx } from '../../lib/util/dom'
 import {
   UseAnimatedTimerSpinnerProps,
   useTimerSpinnerAnimation,
-} from '../../lib/util/use-animtated-timer-spinner'
+} from '../../lib/util/use-animated-timer-spinner'
 
 type Props = UseAnimatedTimerSpinnerProps & {
   ariaLabel?: string

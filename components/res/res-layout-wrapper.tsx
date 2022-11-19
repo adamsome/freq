@@ -8,7 +8,7 @@ export default function ResLayoutWrapper({ children }: Props) {
   return (
     <div
       className={cx(
-        'relative max-h-screen overflow-hidden',
+        'relative max-h-screen min-h-screen overflow-hidden',
         'bg-phosphorus-950 text-white'
       )}
     >

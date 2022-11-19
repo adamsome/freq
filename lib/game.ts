@@ -22,7 +22,7 @@ export function getGameTitle(
     case 'blow':
       return 'Blow'
     case 'res':
-      return 'Res'
+      return 'Unter'
   }
 }
 

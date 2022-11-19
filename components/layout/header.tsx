@@ -45,7 +45,8 @@ export default function Header({
         sticky ? 'sticky' : 'fixed',
         'flex-center left-0 top-0 z-30 w-full flex-col',
         colorClass,
-        heightClass
+        heightClass,
+        'shadow-md shadow-black/20'
       )}
     >
       {showDebug && <DebugBar />}

@@ -2,11 +2,10 @@ import produce from 'immer'
 import { useState } from 'react'
 import { Player } from '../../lib/types/game.types'
 import { ResAction } from '../../lib/types/res.types'
-import { cx } from '../../lib/util/dom'
 import { postCommand } from '../../lib/util/fetch-json'
 import { useResGame } from '../../lib/util/use-game'
-import GameJoinButtons from '../game-join-buttons'
 import ResBoard from './res-board'
+import ResBoardPrep from './res-board-prep'
 import ResLayout from './res-layout'
 
 export default function ResContainer() {
@@ -14,9 +13,13 @@ export default function ResContainer() {
   const [rawFetching, setFetching] = useState(false)
   const fetching = game?.fetching != null || rawFetching
 
+  if (!game) return <div>Loading...</div>
+
+  const prep = game.phase === 'prep'
+  const roomUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/res/${game.room}`
+
   async function handlePlayerSelect(player: Player): Promise<void> {
     if (fetching || !game) return
-    console.log('select', player)
     setFetching(true)
     try {
       const payload = player.id
@@ -36,27 +39,11 @@ export default function ResContainer() {
 
   return (
     <ResLayout>
-      <div
-        className={cx(`
-          mx-auto w-full
-          max-w-screen-md
-          space-y-1.5 pt-1.5
-          xs:space-y-2 xs:pt-2
-          sm:space-y-4 sm:pt-4
-          md:px-2
-        `)}
-      >
+      {prep ? (
+        <ResBoardPrep roomUrl={roomUrl} />
+      ) : (
         <ResBoard onPlayerSelect={handlePlayerSelect} />
-
-        {!game?.currentPlayer && game?.room && (
-          <GameJoinButtons
-            room={game.room}
-            className=""
-            button={{}}
-            fullHeight
-          />
-        )}
-      </div>
+      )}
     </ResLayout>
   )
 }

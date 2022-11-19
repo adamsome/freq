@@ -25,7 +25,9 @@ export default function ResLayout({ children }: Props) {
     <ResLayoutWrapper>
       <Helmet title={title} room={game?.room} />
       <Header type="res" button={buttonProps} colorClass={colorClass} sticky />
-      <div className="[--freq-button-weight:600]">{children}</div>
+      <div className="absolute inset-0 mx-auto h-full w-full max-w-screen-md p-4 pt-16">
+        {children}
+      </div>
     </ResLayoutWrapper>
   )
 }

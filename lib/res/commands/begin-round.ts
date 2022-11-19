@@ -1,7 +1,7 @@
 import { doesGameHaveEnoughPlayers } from '../../game'
 import { ResGame } from '../../types/res.types'
 import { connectToDatabase } from '../../util/mongodb'
-import { generateResSpies } from '../res-engine'
+import { generateResCards, generateResSpies } from '../res-engine'
 import { fromResGames } from '../res-game-store'
 
 export default async function beginRound(game: ResGame) {
@@ -26,6 +26,7 @@ export default async function beginRound(game: ResGame) {
   }
   changes.round_started_at = now
   changes.phase = 'guess'
+  changes.cards = generateResCards(game)
   changes.spies = generateResSpies(game)
 
   await fromResGames(db).updateOne(filter, { $set: changes })
