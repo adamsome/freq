@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { ResPlayerProps, ResVoteStatus } from '../../lib/types/res.types'
 import { cx } from '../../lib/util/dom'
+import IconSvg from '../control/icon-svg'
 import ResCardBorder from './res-card-border'
 import ResCardSticker from './res-card-sticker'
 import ResOrb from './res-orb'
@@ -31,7 +32,6 @@ export default function ResCardBody({
   missionFailure,
   benched,
   voteStatus,
-  missionResultStatus,
   winner,
 }: Props) {
   return (
@@ -58,15 +58,19 @@ export default function ResCardBody({
             <ResCardSticker
               className="absolute bottom-4 right-4"
               rotateIndex={orderIndex}
-              green={voteStatus === 'approve'}
-              red={voteStatus === 'reject'}
+              positive={voteStatus === 'approve'}
+              negative={voteStatus === 'reject'}
               disabled={section === 'mission'}
             >
               {getVoteText(voteStatus)}
             </ResCardSticker>
           )}
 
-        {missionResultStatus != null && <div>acted</div>}
+        {winner === false && (
+          <div className="h-full w-full p-4">
+            <IconSvg name="skull" className="h-full w-full text-gray-900/60" />
+          </div>
+        )}
       </ResCardBorder>
 
       {missionNumber != null && (

@@ -45,7 +45,8 @@ export default function createResCommandView(
 
   switch (game.phase) {
     case 'prep': {
-      header.text = 'Welcome to the Underground, comrade!'
+      header.positive = true
+      header.heading = 'Welcome to the Underground, comrade!'
       header.colorLit = 0.25
 
       if (!player) return view
@@ -84,14 +85,20 @@ export default function createResCommandView(
         case 'spy_reveal': {
           const spyCount = getResSpyCountRequired(playerCount)
           const spyCountWord = toNumberWord(spyCount)
+          header.positive = true
+          header.lead = 'The Underground is rising.'
           header.text =
-            `The Underground is rising. ` +
             `Successfully complete three Missions to achieve Victory ` +
             `for the cause! But be warned: Intelligence has comfirmed that ` +
             `${spyCountWord} Enemy Agents have infiltrated. If they ` +
             `Sabotage three Missions, the Underground will be destroyed!`
           // TODO: Add copy indicating that only spies know the identity
           // of other spies
+
+          if (isResSpy(game, player)) {
+            header.positive = false
+            header.heading = 'You are an Enemy!'
+          }
 
           const action: ResAction = { type: 'start_team_select' }
           cmd.type = 'action'
@@ -112,9 +119,11 @@ export default function createResCommandView(
           return view
         }
         case 'team_select': {
-          header.text =
+          header.lead =
             `The Mission Commander is putting together a Team to go on ` +
-            `Mission ${roundIndex + 1}. Once proposed, all Partisans will ` +
+            `Mission ${roundIndex + 1}.`
+          header.text =
+            `Once proposed, all Partisans will ` +
             `Vote to Approve or Reject the Mission Team. `
 
           const size = getResTeamSize(game)
@@ -130,10 +139,12 @@ export default function createResCommandView(
           cmd.disabled = true
 
           if (isResLead(game, player)) {
+            header.lead = `You are the Mission Commander.`
+            header.positive = true
             header.text =
-              `You are the Mission Commander. Propose a Team to go on ` +
-              `Mission ${roundIndex + 1}. Once submitted, all Partisans will ` +
-              `Vote to Approve or Reject the Mission Team. `
+              `Propose a Team to go on Mission ${roundIndex + 1}. Once ` +
+              `submitted, all Partisans will Vote to Approve or Reject the ` +
+              `Mission Team. `
 
             cmd.info =
               `Select ${sizeRequiredWord} comrades for the Mission Team. ` +
@@ -156,10 +167,11 @@ export default function createResCommandView(
                 : 'proposals remain'
             remainingText = ` Only ${voteRoundsRemainingWord} Team ${proposalWord}!`
           }
+          header.lead = `All Partisans must vote.`
           header.text =
-            `All Partisans must vote to Approve or Reject the Mission ` +
-            `Commander's proposed Team. The Underground has five chances to ` +
-            `Approve a Team for this Mission or else the Enemy wins.` +
+            `Approve or Reject the Mission Commander's proposed Team. ` +
+            `The Underground has five chances to Approve a Team for this ` +
+            `Mission or else the Enemy wins.` +
             remainingText
 
           if (isResVoteComplete(game)) {
@@ -195,10 +207,11 @@ export default function createResCommandView(
           const [approved, rejected] = getResVotesApprovedAndRejected(game)
           const voteSucceeded = approved > rejected
           if (voteSucceeded) {
-            const approvedWord = toNumberWord(approved)
+            const approvedWord = toNumberWord(approved, true)
             const rejectedWord = toNumberWord(rejected)
-            const resultText = `with ${approvedWord} votes for, ${rejectedWord} against.`
-            header.text = `Mission Team is Approved ${resultText}`
+            header.positive = true
+            header.lead = `Mission Team Approved.`
+            header.text = `${approvedWord} votes for, ${rejectedWord} against.`
 
             const action: ResAction = { type: 'start_mission' }
             cmd.type = 'action'
@@ -212,9 +225,11 @@ export default function createResCommandView(
               cmd.disabled = false
             }
           } else {
+            header.positive = false
+            header.lead = `Mission Team Rejected!`
             header.text =
-              `Mission Team was Rejected! Mission Command will pass to the ` +
-              `next Partisan in order to propose the next Mission Team.`
+              `Mission Command will pass to the next Partisan in order to ` +
+              `propose the next Mission Team.`
 
             const nextLead = getNextResLead(game)
 
@@ -238,10 +253,11 @@ export default function createResCommandView(
           return view
         }
         case 'mission': {
+          header.lead = 'Mission is in progress.'
           header.text =
-            `Mission is in progress. True Partisans will Support the ` +
-            `Mission. But, Beware! Enemy Agents on the Mission Team have the ` +
-            `option to Sabotage causing the Mission to Fail.`
+            `True Partisans will Support the Mission. But, Beware! Enemy ` +
+            `Agents on the Mission Team have the option to Sabotage causing ` +
+            `the Mission to Fail.`
 
           if (isResMissionResultComplete(game)) {
             const action: ResAction = { type: 'reveal_mission' }
@@ -310,11 +326,13 @@ export default function createResCommandView(
             const remainingWord = toNumberWord(remaining)
             let missionWord = 'Mission'
             if (remaining !== 1) missionWord += 's'
+            header.heading = 'Mission was successful!'
+            header.positive = true
             header.text =
-              `The Mission was successfull! The Underground needs to ` +
-              `successfully complete just ${remainingWord} more ` +
-              `${missionWord} to defeat the Enemy. Mission Command will pass ` +
-              `to the next Partisan in order to propose the next Mission Team.`
+              `The Underground needs to successfully complete just ` +
+              `${remainingWord} more ${missionWord} to defeat the Enemy. ` +
+              `Mission Command will pass to the next Partisan in order to ` +
+              `propose the next Mission Team.`
           } else {
             const sabotageCount = getResMissionSabotageCount(game)
             const sabotageCountWord = toNumberWord(sabotageCount)
@@ -325,6 +343,8 @@ export default function createResCommandView(
             const remainingWord = toNumberWord(remaining)
             let missionWord = 'Mission'
             if (remaining !== 1) missionWord += 's'
+            header.heading = 'Mission was sabotageCountWord!'
+            header.positive = false
             header.text =
               `Sabotage by ${sabotageCountWord} of the Mission Team members! ` +
               `The Enemy needs to Sabotage just ${remainingWord} more ` +
@@ -358,23 +378,29 @@ export default function createResCommandView(
     }
     case 'win': {
       if (game.step === 'team_vote_reveal') {
+        header.positive = false
+        header.heading = 'Enemy has won!'
         header.text =
-          `The Enemy has won! Enemy Agents were able to sow discord amongst ` +
+          `Enemy Agents were able to sow discord amongst ` +
           `the Partisans, immobilizing and preventing them from putting ` +
           `together a Mission Team. The Underground disbanded and has been ` +
           `relegated to the dust bin of history.`
       } else {
         const status = getResMissionStatus(game)
         if (status === 'success') {
+          header.positive = true
+          header.heading = 'Underground has won!'
           header.text =
-            `The Underground has won! The Mission was a resounding success ` +
+            `The Mission was a resounding success ` +
             `causing irreparable damage to the Enemy and giving the ` +
             `Partisans the upper hand. Long live the revolution!`
         } else {
           const sabotageCount = getResMissionSabotageCount(game)
           const sabotageCountWord = toNumberWord(sabotageCount)
+          header.positive = false
+          header.heading = 'Enemy has won!'
           header.text =
-            `The Enemy has won! Total sabotage by ${sabotageCountWord} of ` +
+            `Total sabotage by ${sabotageCountWord} of ` +
             `the Mission Team members! The Underground has been completely ` +
             `discredited and its Partisans are being hunted down.`
         }

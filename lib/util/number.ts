@@ -43,9 +43,12 @@ const NUMBER_WORDS: string[] = [
   'twenty',
 ]
 
-export const toNumberWord = (val: number): string => {
+export const toNumberWord = (val: number, capitalize?: boolean): string => {
   const word = NUMBER_WORDS[val]
   if (word != null) {
+    if (capitalize) {
+      return word.charAt(0).toUpperCase() + word.slice(1)
+    }
     return word
   }
   return String(val)

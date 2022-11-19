@@ -40,7 +40,7 @@ module.exports = {
       cyan: { ...colors.cyan, 925: '#133b4b', 950: '#0d2832', 975: '#061419' },
       blue: { ...colors.blue, 950: '#101831' },
       violet: colors.violet,
-      purple: colors.purple,
+      purple: { ...colors.purple, 950: '#1b1028' },
       fuchsia: colors.fuchsia,
       rose: colors.rose,
       taupe: { DEFAULT: '#655d63', dark: '#AEA4B9' },

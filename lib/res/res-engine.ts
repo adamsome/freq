@@ -247,11 +247,12 @@ export function getResPlayerProps(
     missionNumber: selected ? missionIndex + 1 : undefined,
     missionFailure: missionStatus === 'failure',
     voteStatus: getResPlayerVoteStatus(game, player),
-    missionResultStatus: getResPlayerMissionResult(game, player),
     cardSrc: getPlayerCardSrc(game, player),
   }
   if (game.phase === 'win') {
-    props.winner = spy && missionStatus === 'failure'
+    props.winner = spy
+      ? missionStatus === 'failure'
+      : missionStatus === 'success'
   }
   return props
 }

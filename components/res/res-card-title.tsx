@@ -20,7 +20,7 @@ export default function ResCardTitle(props: Props) {
         {name}
       </div>
       {you && <Tag className="relative -top-0.5 ml-1 bg-purple-400">YOU</Tag>}
-      {spy && <Tag className="relative -top-0.5 ml-1 bg-rose-500">SPY</Tag>}
+      {spy && <Tag className="relative -top-0.5 ml-1 bg-rose-500">ENEMY</Tag>}
     </div>
   )
 }

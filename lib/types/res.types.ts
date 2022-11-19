@@ -1,4 +1,4 @@
-import { BaseGame, Command, GameType, PlayerView } from './game.types'
+import { BaseGame, Command, GameType, Header, PlayerView } from './game.types'
 
 /**
  ```md
@@ -189,6 +189,7 @@ export type ResGame = BaseGame & {
 export type ResGameView = ResGame & {
   type: GameType
   commands: Command[]
+  headers: Header[]
 }
 
 export interface ResPlayerProps {
@@ -205,7 +206,6 @@ export interface ResPlayerProps {
   missionNumber?: number
   missionFailure?: boolean
   voteStatus?: ResVoteStatus
-  missionResultStatus: boolean | null
   cardSrc?: string
   winner?: boolean
 }

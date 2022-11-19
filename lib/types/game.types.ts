@@ -129,6 +129,9 @@ export interface Header {
   text: string
   color?: string
   colorLit?: number
+  lead?: string
+  heading?: string
+  positive?: boolean
 }
 
 export interface Command {

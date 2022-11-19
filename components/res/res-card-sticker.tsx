@@ -5,8 +5,8 @@ type Props = {
   children: React.ReactNode
   className?: string
   rotateIndex?: number
-  green?: boolean
-  red?: boolean
+  positive?: boolean
+  negative?: boolean
   disabled?: boolean
 }
 
@@ -30,8 +30,8 @@ export default function ResCardSticker({
   children,
   className,
   rotateIndex,
-  green,
-  red,
+  positive,
+  negative,
   disabled,
 }: Props) {
   const textLength = children?.toString()?.length ?? 0
@@ -42,11 +42,11 @@ export default function ResCardSticker({
         'text-center font-sans font-extrabold tracking-[0.125em]',
         'animate-fade-in overflow-hidden rounded-full border',
         'border-gray-300/10 shadow-xl backdrop-blur-sm',
-        !green &&
-          !red &&
+        !positive &&
+          !negative &&
           'bg-purple-900/50 text-phosphorus-500 shadow-purple-900/40',
-        green && 'bg-phosphorus-500/75 text-black shadow-phosphorus-700/60',
-        red && 'bg-rose-500/75 text-black shadow-rose-700/60',
+        positive && 'bg-phosphorus-500/75 text-black shadow-phosphorus-700/60',
+        negative && 'bg-rose-500/75 text-black shadow-rose-700/60',
         textLength != null && textLength > 3 ? 'text-sm' : 'text-xl',
         getRotateClass(rotateIndex),
         disabled && 'opacity-70',
@@ -57,10 +57,10 @@ export default function ResCardSticker({
         className={cx(
           'flex-center h-12 w-full border-y-2 border-gray-300/10',
           'px-2 shadow-sm',
-          !green && !red && 'bg-black/30 shadow-purple-900/20',
-          (green || red) && 'bg-black/90 shadow-black/10',
-          green && 'text-phosphorus-500',
-          red && 'text-rose-500'
+          !positive && !negative && 'bg-black/30 shadow-purple-900/20',
+          (positive || negative) && 'bg-black/90 shadow-black/10',
+          positive && 'text-phosphorus-500',
+          negative && 'text-rose-500'
         )}
       >
         {children}
