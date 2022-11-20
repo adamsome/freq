@@ -43,6 +43,7 @@ export default async function changePlayerTeam(
   }
 
   await fromCwdGames(db).updateOne(filter, {
-    $set: changes,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    $set: changes as any,
   })
 }

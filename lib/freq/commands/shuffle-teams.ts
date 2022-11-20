@@ -89,7 +89,8 @@ export default async function shuffleTeams(game: CurrentFreqGameView) {
 
   await fromGames(db).updateOne(filter, {
     $set: changes,
-  })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any)
 }
 
 const hasEqualPlayers = (playerCount: number) => (combo: number) => {

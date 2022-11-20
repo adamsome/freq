@@ -20,7 +20,8 @@ export default async function lockDirection(game: CurrentFreqGameView) {
   const filter = { room: game.room.toLowerCase() }
 
   await fromGames(db).updateOne(filter, {
-    $set: { [`directions.${player.id}.locked`]: true },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    $set: { [`directions.${player.id}.locked`]: true } as any,
   })
 
   const updatedGame = await fetchCurrentFreqGameView(game.room, player.id)

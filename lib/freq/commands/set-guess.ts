@@ -24,6 +24,7 @@ export default async function setGuess(
   const filter = { room: game.room.toLowerCase() }
 
   await fromGames(db).updateOne(filter, {
-    $set: { [`guesses.${player.id}.value`]: guess },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    $set: { [`guesses.${player.id}.value`]: guess } as any,
   })
 }

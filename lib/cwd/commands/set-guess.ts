@@ -21,6 +21,7 @@ export default async function setGuess(game: FullCwdGameView, guess: unknown) {
   const filter = { room: game.room.toLowerCase() }
 
   await fromCwdGames(db).updateOne(filter, {
-    $set: { [`guesses.${player.id}.value`]: guess },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    $set: { [`guesses.${player.id}.value`]: guess } as any,
   })
 }

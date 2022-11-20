@@ -30,6 +30,7 @@ export default async function changePlayerTeam(
     $set: {
       [`players.${index}.team`]: newTeam,
       [`players.${index}.color`]: color,
-    },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any,
   })
 }

@@ -11,7 +11,7 @@ export function randomHourlyItem<T>(
   return items[(index + cycle) % items.length]
 }
 
-export function randomHourlyProp<T>(
+export function randomHourlyProp<T extends object>(
   obj: T,
   index = 0,
   changePerHour = 1
@@ -26,7 +26,7 @@ export function randomItem<T>(arr: T[]): T {
   return arr[index]
 }
 
-export function randomProp<T>(obj: T): T[keyof T] {
+export function randomProp<T extends object>(obj: T): T[keyof T] {
   const keys = objectKeys(obj)
   const key = randomItem(keys)
   return obj[key]

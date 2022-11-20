@@ -22,5 +22,6 @@ export default async function setDifficulty(
     ['settings.difficulty']: value,
   }
 
-  await fromGames(db).updateOne(filter, { $set: changes })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await fromGames(db).updateOne(filter, { $set: changes } as any)
 }

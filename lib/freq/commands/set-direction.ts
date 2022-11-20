@@ -23,6 +23,7 @@ export default async function setDirection(
   const filter = { room: game.room.toLowerCase() }
 
   await fromGames(db).updateOne(filter, {
-    $set: { [`directions.${player.id}.value`]: guess },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    $set: { [`directions.${player.id}.value`]: guess } as any,
   })
 }

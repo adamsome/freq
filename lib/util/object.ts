@@ -25,7 +25,7 @@ export const omit: OmitFn = (obj, ...keys) => {
   return ret
 }
 
-export const objectKeys = <T>(obj: T): (keyof T)[] =>
+export const objectKeys = <T extends object>(obj: T): (keyof T)[] =>
   Object.keys(obj) as unknown as (keyof T)[]
 
 export function toIDMap<T, TKey extends string | number | symbol = string>(

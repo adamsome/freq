@@ -23,6 +23,7 @@ export default async function togglePlayerLeader(
   const filter = { room: game.room.toLowerCase() }
 
   await fromGames(db).updateOne(filter, {
-    $set: { [`players.${index}.leader`]: !player.leader },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    $set: { [`players.${index}.leader`]: !player.leader } as any,
   })
 }

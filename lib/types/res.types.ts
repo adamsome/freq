@@ -189,7 +189,7 @@ export type ResGame = BaseGame & {
 export type ResGameView = ResGame & {
   type: GameType
   commands: Command[]
-  headers: Header[]
+  headers?: Header[]
 }
 
 export interface ResPlayerProps {

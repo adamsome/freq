@@ -22,5 +22,6 @@ export default async function setDesignatedPsychicMode(
     ['settings.designated_psychic']: value,
   }
 
-  await fromGames(db).updateOne(filter, { $set: changes })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await fromGames(db).updateOne(filter, { $set: changes } as any)
 }

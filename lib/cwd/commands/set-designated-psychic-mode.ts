@@ -50,5 +50,6 @@ export default async function setDesignatedPsychicMode(
     changes = { ...changes, ...info }
   }
 
-  await fromCwdGames(db).updateOne(filter, { $set: changes })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await fromCwdGames(db).updateOne(filter, { $set: changes } as any)
 }

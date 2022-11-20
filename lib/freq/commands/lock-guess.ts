@@ -19,7 +19,8 @@ export default async function lockGuess(game: CurrentFreqGameView) {
   const filter = { room: game.room.toLowerCase() }
 
   await fromGames(db).updateOne(filter, {
-    $set: { [`guesses.${player.id}.locked`]: true },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    $set: { [`guesses.${player.id}.locked`]: true } as any,
   })
 
   if (areAllNeedleGuessesLocked(game, player))

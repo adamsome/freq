@@ -25,7 +25,8 @@ export default async function editPlayer(
   const nextPlayer = { ...game.currentPlayer, ...changes }
 
   await fromGames(db).updateOne(filter, {
-    $set: { [`players.${index}`]: nextPlayer },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    $set: { [`players.${index}`]: nextPlayer } as any,
   })
   await fromUsers(db).updateOne({ id: player.id }, { $set: changes })
 }

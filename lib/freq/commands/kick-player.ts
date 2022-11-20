@@ -23,6 +23,7 @@ export default async function kickPlayer(
   await fromGames(db).updateOne(filter, {
     $set: {
       [`kicked.${player.id}`]: true,
-    },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any,
   })
 }
