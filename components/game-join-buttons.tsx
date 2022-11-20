@@ -29,6 +29,7 @@ type Props = {
   button?: ButtonProps
   rightButton?: ButtonProps
   fullHeight?: boolean
+  styleTextColor?: string
 }
 
 export default function GameJoinButtons({
@@ -36,6 +37,7 @@ export default function GameJoinButtons({
   room,
   commandDefaults = {},
   fullHeight,
+  styleTextColor,
   ...props
 }: Props) {
   const router = useRouter()
@@ -125,6 +127,7 @@ export default function GameJoinButtons({
           command={command}
           currentPlayer={game.currentPlayer}
           fullHeight={fullHeight}
+          styleTextColor={styleTextColor}
           fetching={fetching}
           onClick={handleJoinClick}
           {...props}

@@ -1,10 +1,10 @@
 import type { CSSProperties, MouseEvent } from 'react'
-import { Command, Player } from '../lib/types/game.types'
-import { cx } from '../lib/util/dom'
-import { styleColor } from '../lib/util/dom-style'
-import Button, { ButtonProps } from './control/button'
-import IconSvg from './control/icon-svg'
-import TimerSpinner from './control/timer-spinner'
+import { Command, Player } from '../../lib/types/game.types'
+import { cx } from '../../lib/util/dom'
+import { styleColor } from '../../lib/util/dom-style'
+import Button, { ButtonProps } from '../control/button'
+import IconSvg from '../control/icon-svg'
+import TimerSpinner from '../control/timer-spinner'
 
 type Props = {
   command: Command
@@ -13,7 +13,6 @@ type Props = {
   rightButton?: ButtonProps
   spacingClassName?: string
   fullHeight?: boolean
-  styleTextColor?: string
   fetching?: boolean
   onClick?: (e: MouseEvent, cmd: Command, colIndex?: number) => Promise<void>
   onTimerFinish?: (colIndex?: number) => void
@@ -21,7 +20,7 @@ type Props = {
 
 export type CommandButtonProps = Props
 
-export default function CommandButton(props: Props) {
+export default function ResCommandButton(props: Props) {
   const cmd = props.command
 
   return (
@@ -65,7 +64,6 @@ function SideButton(props: SubProps) {
     rightButton = {},
     spacingClassName = 'm-0 px-2 py-2',
     fullHeight,
-    styleTextColor,
     fetching = false,
     onClick,
   } = props
@@ -95,9 +93,8 @@ function SideButton(props: SubProps) {
     cmd.fetching ||
     (right ? cmd.rightDisabled ?? cmd.disabled ?? false : cmd.disabled)
 
-  if (style) {
-    if (right) style.flex = flex
-    if (styleTextColor) style.color = styleTextColor
+  if (style && right) {
+    style.flex = flex
   }
 
   return (

@@ -28,8 +28,7 @@ import {
   isResVoteComplete,
 } from './res-engine'
 
-const COLOR_GRAY = 'Gray'
-const COLOR_BLUE = 'Cerulean'
+const COLOR_PURPLE = 'Purple'
 const COLOR_GREEN = 'Phosphorus'
 const COLOR_RED = 'Scarlet'
 
@@ -38,23 +37,23 @@ export default function createResCommandView(
   player?: Player
 ): CommandsView {
   const header: Header = { text: '', color: player?.color }
-  const cmd: Command = { text: '', color: COLOR_BLUE }
+  const cmd: Command = { text: '', color: COLOR_GREEN }
   const view: CommandsView = { headers: [header], commands: [cmd] }
 
   const playerCount = game.players.length
 
   switch (game.phase) {
     case 'prep': {
+      if (!player) return view
+
       header.positive = true
       header.heading = 'Welcome to the Underground, comrade!'
       header.colorLit = 0.25
 
-      if (!player) return view
-
       const shuffleCmd: Command = {
         text: 'Shuffle Teams',
         type: 'shuffle_teams',
-        color: COLOR_GRAY,
+        color: COLOR_PURPLE,
       }
 
       const enoughPlayers = doesGameHaveEnoughPlayers(game, 'res')
@@ -180,7 +179,7 @@ export default function createResCommandView(
             cmd.value = action
             cmd.text = `Reveal Votes`
             cmd.info = `Tallying votes (${castVotes.length} of ${playerCount} cast)`
-            cmd.color = COLOR_GRAY
+            cmd.color = COLOR_PURPLE
             return view
           }
 
@@ -265,7 +264,7 @@ export default function createResCommandView(
             cmd.value = action
             cmd.text = `Reveal Mission Result`
             cmd.info = `Mission is complete; continue to reveal the result.`
-            cmd.color = COLOR_GRAY
+            cmd.color = COLOR_PURPLE
             return view
           }
 
@@ -343,7 +342,7 @@ export default function createResCommandView(
             const remainingWord = toNumberWord(remaining)
             let missionWord = 'Mission'
             if (remaining !== 1) missionWord += 's'
-            header.heading = 'Mission was sabotageCountWord!'
+            header.heading = 'Mission was Sabotaged!'
             header.positive = false
             header.text =
               `Sabotage by ${sabotageCountWord} of the Mission Team members! ` +

@@ -378,7 +378,10 @@ export function getResPlayerVote(
   const playerIndex = getResPlayerIndex(game, userOrID)
   const votes = getResVotes(game)
   const playerVote = votes[playerIndex]
-  invariant(playerVote !== undefined, 'Player vote invalid')
+  if (playerVote === undefined) {
+    const missionIndex = getResMissionIndex(game)
+    console.error('Player vote invalid', game.missions[missionIndex])
+  }
   return playerVote
 }
 

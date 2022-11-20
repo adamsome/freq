@@ -15,6 +15,7 @@ type Props = {
   button?: Partial<ButtonProps>
   spacingClassName?: string
   fullHeight?: boolean
+  styleTextColor?: string
   hideError?: boolean
   onCommandError?: (error: CommandError) => void
 }
@@ -34,6 +35,7 @@ export default function CommandPanel({
   spacingClassName,
   fullHeight,
   hideError,
+  styleTextColor,
   onCommandError,
 }: Props) {
   const { game, mutate } = useGame()
@@ -124,6 +126,7 @@ export default function CommandPanel({
             rightButton={button}
             spacingClassName={spacingClassName}
             fullHeight={fullHeight}
+            styleTextColor={styleTextColor}
             onClick={(event, cmd, colIndex) =>
               handleCommandClick(event, cmd, rowIndex, colIndex)
             }

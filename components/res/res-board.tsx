@@ -5,7 +5,7 @@ import { useResGame } from '../../lib/util/use-game'
 import useSize from '../../lib/util/use-size'
 import Fixed from '../layout/fixed'
 import ResCardGrid from './res-card-grid'
-import ResControlPanel from './res-control-panel'
+import ResCommandPanel from './res-command-panel'
 import ResOrb from './res-orb'
 import ResRoundTracker from './res-round-tracker'
 
@@ -32,7 +32,7 @@ export default function ResBoard({ onPlayerSelect }: Props) {
       <div style={{ height: `${spacer}px` }}></div>
 
       <Fixed className="bottom-12">
-        <ResControlPanel panelRef={panelRef} />
+        <ResCommandPanel panelRef={panelRef} />
       </Fixed>
     </>
   )

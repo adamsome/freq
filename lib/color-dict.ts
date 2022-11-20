@@ -71,6 +71,7 @@ const colorDict: Dict<ColorDef> = {
   TaupeDark: { hex: '#655d63' },
   CodeSuccess: { hex: '#00d28e' },
   Phosphorus: { hex: '#3ae73a' },
+  Purple: { hex: '#a855f7' },
 }
 
 export default colorDict

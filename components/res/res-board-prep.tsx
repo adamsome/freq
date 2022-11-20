@@ -1,5 +1,5 @@
 import GameLink from '../game-link'
-import ResControlPanel from './res-control-panel'
+import ResCommandPanel from './res-command-panel'
 import ResScoreboard from './res-scoreboard'
 
 type Props = {
@@ -16,7 +16,7 @@ export default function ResBoardPrep({ roomUrl }: Props) {
         <ResScoreboard />
       </div>
       <div className="fixed bottom-12 left-0 right-0 z-40 px-2">
-        <ResControlPanel />
+        <ResCommandPanel />
       </div>
     </>
   )

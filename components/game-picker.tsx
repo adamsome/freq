@@ -15,12 +15,17 @@ export default function GamePicker({ horizontal, onClick }: Props) {
       className={cx(
         'flex items-center',
         horizontal
-          ? 'flex-col space-y-4 md:flex-row md:space-x-2 md:space-y-0'
+          ? 'flex-row flex-wrap items-center justify-center'
           : 'flex-col space-y-4'
       )}
     >
       {GAME_TYPES.map((type) => (
-        <GameButton key={type} type={type} onClick={onClick} />
+        <GameButton
+          key={type}
+          className={horizontal ? 'm-2' : ''}
+          type={type}
+          onClick={onClick}
+        />
       ))}
     </div>
   )

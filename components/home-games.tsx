@@ -20,10 +20,12 @@ export default function HomeGames({
   onGameChange,
 }: Props) {
   return (
-    <div className="flex h-80 flex-col justify-center">
+    <div className="flex h-full flex-col justify-center">
       {!loading && !gameType && (
         <div className="mb-3.5 flex flex-col items-center justify-center pt-12">
-          <Heading className="hidden md:block">Choose Game</Heading>
+          <Heading className="flex-center pl-0 text-center">
+            Choose Game
+          </Heading>
           <GamePicker horizontal onClick={onGameChange} />
         </div>
       )}

@@ -32,6 +32,7 @@ export default function Title({
     'font-mono': type === 'cwd',
     'font-narrow font-light tracking-[0.2em] pl-3': type === 'blow',
     'font-sans font-medium tracking-[0.125em] pl-3': type === 'res',
+    'text-6xl': !small && type === 'res',
     'cursor-pointer opacity-80 hover:opacity-100 transition-opacity':
       onClick != null,
   })
@@ -45,7 +46,10 @@ export default function Title({
   }
 
   return (
-    <h1 style={styles} className={cx('m-0 text-center text-7xl', classes)}>
+    <h1
+      style={styles}
+      className={cx('flex-center m-0 h-20 text-center text-7xl', classes)}
+    >
       {label}
     </h1>
   )

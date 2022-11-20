@@ -28,7 +28,7 @@ export default function RoomList({
 }: Props) {
   return (
     <>
-      <Heading className={classNames}>
+      <Heading className={classNames + ' pl-4'}>
         <span>Recent Games</span>
         <span className="flex-1"></span>
         <Button

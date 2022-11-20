@@ -11,7 +11,6 @@ export default function Heading({ children, className }: Props) {
     <h1
       className={cx(`
         mb-6 flex w-full items-center
-        pl-4
         text-3xl font-semibold
         md:mb-8 md:pl-0
         ${className}
