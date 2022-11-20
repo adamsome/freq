@@ -368,6 +368,11 @@ export function isResVoteRejected(game: ResGame): boolean {
   return !isResVoteApproved(game)
 }
 
+export function getResVoteStatus(game: ResGame): boolean | undefined {
+  if (isResVoteApproved(game)) return true
+  if (isResVoteRejected(game)) return false
+}
+
 export function getResPlayerVote(
   game: ResGame,
   userOrID?: string | Player | User

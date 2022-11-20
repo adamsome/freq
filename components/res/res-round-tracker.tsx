@@ -1,7 +1,8 @@
 import {
-  getResRejectedVoteRounds,
-  getResMissionStatus,
   getResMissionIndex,
+  getResMissionStatus,
+  getResRoundIndex,
+  getResVoteStatus,
 } from '../../lib/res/res-engine'
 import { range } from '../../lib/util/array'
 import { cx } from '../../lib/util/dom'
@@ -19,23 +20,40 @@ export default function ResRoundTracker({ className }: Props) {
   return (
     <div
       className={cx(
-        'flow-root rounded border shadow-xl shadow-black/60',
+        'flow-root rounded border shadow-xl shadow-black/60 transition-all',
         'border-gray-400/10 bg-black/70 backdrop-blur-sm',
         className
       )}
     >
-      <ul className="flex items-center divide-x divide-gray-300/10">
+      <ul className="flex-center h-7 divide-x divide-gray-300/10">
         {range(5).map((i) => {
           const status = getResMissionStatus(game, i)
           const current = getResMissionIndex(game) === i
+          const positive =
+            status === 'success' &&
+            (!current || game.phase === 'win' || game.step === 'mission_reveal')
+          const negative =
+            status === 'failure' ||
+            (current &&
+              game.phase === 'win' &&
+              game.step === 'team_vote_reveal')
+          const neutral =
+            current && status === 'success' && game.step === 'mission'
           return (
-            <li className={cx('px-2', current && 'flex-auto')} key={i}>
+            <li
+              className={cx('flex-center h-full', current && 'flex-1')}
+              key={i}
+            >
               <ResRoundIndicator
                 index={i}
                 current={current}
-                status={status}
-                rejectedVoteRounds={getResRejectedVoteRounds(game, i)}
+                positive={positive}
+                negative={negative}
+                neutral={neutral}
+                disabled={status === 'unplayed'}
                 step={game.step}
+                roundIndex={getResRoundIndex(game)}
+                voteStatus={getResVoteStatus(game)}
               />
             </li>
           )
