@@ -18,7 +18,8 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:smoke": "playwright test"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.33.0",
@@ -37,6 +38,7 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",

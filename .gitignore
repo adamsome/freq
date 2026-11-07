@@ -40,3 +40,9 @@ yarn-error.log*
 
 # next.js generated types (rewritten by next dev / next build)
 next-env.d.ts
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

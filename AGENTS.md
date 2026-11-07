@@ -24,6 +24,11 @@ Tailwind 3. Deployed on Vercel: pushes to `main` go to production.
   `eslint.config.mjs`), `npm run build`. `next build` does not lint.
 - Git hooks (husky): pre-commit runs lint-staged (eslint --fix + prettier),
   pre-push runs `npm run type-check`. `npm run format:check` checks formatting.
+- CI (`.github/workflows`): `ci.yml` runs type-check, lint, format:check and
+  build on push/PR; `smoke.yml` runs the read-only Playwright tests in `e2e/`
+  against each successful Vercel deployment. Run them locally with
+  `npm run test:smoke` (dev server) or `BASE_URL=<url> npm run test:smoke`.
+  Smoke tests must never write data.
 - Follow-ups live in `todo.md` (Bugs / Chores); `todo.local.md` is untracked
   personal notes.
 - Don't write to the production database, or change Vercel or Auth0 settings,
