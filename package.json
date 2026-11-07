@@ -27,7 +27,7 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.33.0",
     "@reduxjs/toolkit": "^1.9.7",
-    "date-fns": "^2.30.0",
+    "date-fns": "^4.4.0",
     "immer": "^9.0.21",
     "mongodb": "^7.8.0",
     "next": "^16.4.5",
