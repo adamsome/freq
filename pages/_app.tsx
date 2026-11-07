@@ -1,4 +1,3 @@
-import { UserProvider } from '@auth0/nextjs-auth0'
 import { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
 import { ThemeProvider } from '../lib/util/use-theme'
@@ -25,9 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
         attribute="class"
         storageKey={KEY_THEME}
       >
-        <UserProvider>
-          <Component {...pageProps} />
-        </UserProvider>
+        <Component {...pageProps} />
       </ThemeProvider>
     </SWRConfig>
   )

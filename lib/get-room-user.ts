@@ -1,6 +1,7 @@
-import { getSession, UserProfile } from '@auth0/nextjs-auth0'
+import type { User as AuthUser } from '@auth0/nextjs-auth0/types'
+import { auth0 } from './auth0'
 import { OptionalUnlessRequiredId } from 'mongodb'
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest } from 'next'
 import { isRoomValid } from './room'
 import { User } from './types/user.types'
 import { fetchUser } from './user-store'
@@ -20,11 +21,10 @@ interface RoomUserError {
 type RoomUser = RoomUserSuccess | RoomUserError
 
 export default async function getRoomUser(
-  req: NextApiRequest,
-  res: NextApiResponse<unknown>
+  req: NextApiRequest
 ): Promise<RoomUser> {
-  const session = getSession(req, res)
-  const userProfile: UserProfile | undefined = session?.user
+  const session = await auth0.getSession(req)
+  const userProfile: AuthUser | undefined = session?.user
 
   if (!userProfile?.sub) {
     return { status: 'error', error: 'No auth user ID found.' }

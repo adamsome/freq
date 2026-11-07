@@ -1,4 +1,4 @@
-import { AfterCallback, UserProfile } from '@auth0/nextjs-auth0'
+import type { SessionData } from '@auth0/nextjs-auth0/types'
 import { Db, MatchKeysAndValues, OptionalUnlessRequiredId } from 'mongodb'
 import { randomIcon } from './icon'
 import { randomName } from './name'
@@ -41,13 +41,12 @@ export async function removeUserRoom(id: string, room: string): Promise<void> {
   await fromUsers(db).updateOne(filter, { $unset: changes })
 }
 
-export const handleAfterUserLogin: AfterCallback = async (
-  _req,
-  _res,
-  session
-) => {
-  const userProfile = session.user as UserProfile
-  if (!userProfile?.email || !userProfile.sub) return session
+/** Creates the user record on first login; records last_login_at. */
+export async function handleAfterUserLogin(
+  session: SessionData
+): Promise<void> {
+  const userProfile = session.user
+  if (!userProfile?.email || !userProfile.sub) return
 
   const id = userProfile.sub
   const email = userProfile.email
@@ -61,8 +60,8 @@ export const handleAfterUserLogin: AfterCallback = async (
 
   if (user) {
     const changes: Partial<User> = { last_login_at }
-    users.updateOne({ id }, { $set: changes })
-    return session
+    await users.updateOne({ id }, { $set: changes })
+    return
   }
 
   const newUser: User = {
@@ -75,6 +74,4 @@ export const handleAfterUserLogin: AfterCallback = async (
     last_login_at,
   }
   await users.insertOne(newUser)
-
-  return session
 }

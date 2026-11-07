@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { API_LOGIN } from '../../lib/consts'
 import { useFetchUser } from '../../lib/util/use-fetch-user'
@@ -12,7 +11,6 @@ type Props = {
 }
 
 export default function HeaderActions({ button, onDebugToggle }: Props) {
-  const router = useRouter()
   const { user, isLoading, error } = useFetchUser()
   const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme()
@@ -25,7 +23,7 @@ export default function HeaderActions({ button, onDebugToggle }: Props) {
   }
 
   const handleLogin = () => {
-    router.push(API_LOGIN)
+    window.location.assign(API_LOGIN)
   }
 
   if (error) {

@@ -1,5 +1,4 @@
-import { useUser } from '@auth0/nextjs-auth0'
-import { useRouter } from 'next/router'
+import { useUser } from '@auth0/nextjs-auth0/client'
 import { useState } from 'react'
 import { useSWRConfig } from 'swr'
 import { getTeamColor } from '../lib/color-dict'
@@ -40,7 +39,6 @@ export default function GameJoinButtons({
   styleTextColor,
   ...props
 }: Props) {
-  const router = useRouter()
   const { user } = useUser()
   const { game } = useGame()
   const { mutate } = useSWRConfig()
@@ -69,7 +67,7 @@ export default function GameJoinButtons({
       localStorage[KEY_ROOM_REDIRECT] = true
       localStorage[KEY_ROOM] = room
       localStorage[KEY_ROOM_TYPE] = game.type
-      await router.push(API_LOGIN)
+      window.location.assign(API_LOGIN)
       setError(null)
       setFetching(false)
       return

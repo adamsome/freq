@@ -1,4 +1,5 @@
-import { getSession, UserProfile } from '@auth0/nextjs-auth0'
+import type { User as AuthUser } from '@auth0/nextjs-auth0/types'
+import { auth0 } from '../../../../lib/auth0'
 import { OptionalUnlessRequiredId } from 'mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { fetchCwdGame, joinCwdGame } from '../../../../lib/cwd/cwd-game-store'
@@ -21,8 +22,8 @@ export default async function getCwdRoom(
         return res.status(500).json({ message })
       }
 
-      const session = getSession(req, res)
-      const userProfile: UserProfile | undefined = session?.user
+      const session = await auth0.getSession(req)
+      const userProfile: AuthUser | undefined = session?.user
 
       let user: OptionalUnlessRequiredId<User> | null = null
       if (userProfile?.sub) {

@@ -50,7 +50,7 @@ export default function PlayerButtonContainer({
   const Settings = getSettingsComponent()
 
   const handleLogout = async () => {
-    router.push(API_LOGOUT)
+    window.location.assign(API_LOGOUT)
   }
 
   const handleLeave = async (room: string) => {
