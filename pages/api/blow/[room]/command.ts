@@ -3,6 +3,7 @@ import { auth0 } from '../../../../lib/auth0'
 import { fetchBlowGame } from '../../../../lib/blow/blow-game-store'
 import handleBlowCommand from '../../../../lib/blow/handle-blow-command'
 import getRoomUser from '../../../../lib/get-room-user'
+import { hasPlayer } from '../../../../lib/player'
 
 export default auth0.withApiAuthRequired(
   async (req: NextApiRequest, res: NextApiResponse) => {
@@ -27,6 +28,13 @@ export default auth0.withApiAuthRequired(
         if (!game) {
           const message = `Cannot command non-existant game (room '${room}').`
           return res.status(500).json({ message })
+        }
+
+        // user.rooms is keyed by room name only and isn't cleared on kick, so
+        // check the game itself.
+        if (!hasPlayer(game.players, user.id)) {
+          const message = `Not a player in room (${room}).`
+          return res.status(403).json({ message })
         }
 
         await handleBlowCommand(game, user.id, type, value)

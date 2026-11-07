@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { auth0 } from '../../../../lib/auth0'
 import { OptionalId, WithId } from 'mongodb'
 import getRoomUser from '../../../../lib/get-room-user'
+import { hasPlayer } from '../../../../lib/player'
 import handleResCommand from '../../../../lib/res/handle-res-command'
 import { fetchResGame } from '../../../../lib/res/res-game-store'
 import { ResGame } from '../../../../lib/types/res.types'
@@ -38,6 +39,13 @@ export default auth0.withApiAuthRequired(
         if (user.type === 'admin') {
           userID = asUser ?? user.as_user ?? userID
         }
+        // user.rooms is keyed by room name only and isn't cleared on kick, so
+        // check the game itself.
+        if (!hasPlayer(game.players, userID)) {
+          const message = `Not a player in room (${room}).`
+          return res.status(403).json({ message })
+        }
+
         await handleResCommand(game, userID, type, value)
 
         return res.json(true)
