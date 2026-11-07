@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.33.0",
-    "@reduxjs/toolkit": "^1.9.7",
+    "@reduxjs/toolkit": "^2.14.0",
     "date-fns": "^4.4.0",
     "immer": "^11.2.9",
     "mongodb": "^7.8.0",
@@ -54,10 +54,5 @@
     "prettier-plugin-tailwindcss": "^0.1.13",
     "tailwindcss": "^3.4.19",
     "typescript": "~5.9.3"
-  },
-  "overrides": {
-    "@reduxjs/toolkit": {
-      "react": "$react"
-    }
   }
 }

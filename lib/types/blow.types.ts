@@ -14,7 +14,7 @@ export interface BlowPlayerStats {
 
 export const BLOW_PHASES = ['prep', 'guess', 'win'] as const
 
-export type BlowPhase = typeof BLOW_PHASES[number]
+export type BlowPhase = (typeof BLOW_PHASES)[number]
 
 interface BlowTokenBase {
   className?: string
@@ -77,7 +77,7 @@ export const BLOW_ROLE_ACTION_IDS = [
   'counter_raid_explore',
 ] as const
 
-export type BlowRoleActionID = typeof BLOW_ROLE_ACTION_IDS[number]
+export type BlowRoleActionID = (typeof BLOW_ROLE_ACTION_IDS)[number]
 
 export function isBlowRoleActionID(id: unknown): id is BlowRoleActionID {
   return (
@@ -113,7 +113,7 @@ export const BLOW_CORE_ACTION_IDS = [
   'next_turn',
 ] as const
 
-export type BlowCoreActionID = typeof BLOW_CORE_ACTION_IDS[number]
+export type BlowCoreActionID = (typeof BLOW_CORE_ACTION_IDS)[number]
 
 export type BlowTimerType = Exclude<
   BlowCoreActionID,
@@ -143,7 +143,7 @@ export const BLOW_ROLE_IDS = [
   'common',
 ] as const
 
-export type BlowRoleID = typeof BLOW_ROLE_IDS[number]
+export type BlowRoleID = (typeof BLOW_ROLE_IDS)[number]
 
 export interface BlowRoleClasses {
   text?: string[]
@@ -176,13 +176,13 @@ export type BlowRoleActionPair = [role: BlowRoleDef, action: BlowRoleActionDef]
 
 const BLOW_VARIANT_IDS = ['basic'] as const
 
-export type BlowVariantID = typeof BLOW_VARIANT_IDS[number]
+export type BlowVariantID = (typeof BLOW_VARIANT_IDS)[number]
 
 const _BLOW_THEME_IDS = ['classic', 'magic', 'physical'] as const
 // Blow 'classic' theme not currently supported
 export const BLOW_THEME_IDS = _BLOW_THEME_IDS.slice(1)
 
-export type BlowThemeID = typeof _BLOW_THEME_IDS[number]
+export type BlowThemeID = (typeof _BLOW_THEME_IDS)[number]
 
 export function isBlowThemeID(id: unknown): id is BlowThemeID {
   return BLOW_THEME_IDS.includes(id as BlowThemeID)
@@ -204,10 +204,8 @@ export interface BlowActionPayload {
 
 export type BlowRoleAction = PayloadAction<BlowActionPayload, BlowRoleActionID>
 
-export interface BlowAction extends PayloadAction<BlowActionPayload> {
-  type: BlowActionID
-  payload: BlowActionPayload
-}
+// A type alias (not an interface) so it satisfies RTK 2's UnknownAction.
+export type BlowAction = PayloadAction<BlowActionPayload, BlowActionID>
 
 export interface BlowMessage {
   text: BlowLabelDef
