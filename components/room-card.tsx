@@ -1,4 +1,9 @@
-import { formatDistanceWithOptions, formatISO9075, parseISO } from 'date-fns/fp'
+import {
+  formatDistanceWithOptions,
+  formatISO9075,
+  isValid,
+  parseISO,
+} from 'date-fns/fp'
 import type { MouseEvent as ReactMouseEvent } from 'react'
 import { isTeamGuessGame } from '../lib/game'
 import { BaseGameView } from '../lib/types/game.types'
@@ -39,8 +44,10 @@ export default function RoomCard({
   let lastUpdatedISO = ''
   let lastUpdated = ''
 
-  if (timestamp) {
-    const date = parseISO(timestamp)
+  // A malformed timestamp parses to an Invalid Date, which the formatters
+  // throw on; skip it rather than crash the room list.
+  const date = typeof timestamp === 'string' ? parseISO(timestamp) : null
+  if (date && isValid(date)) {
     lastUpdated = formatDateDistance(new Date(), date)
     lastUpdatedISO = formatISO9075(date)
   }
