@@ -57,7 +57,7 @@ export default function BlowPlayerSeatOutline(props: Props) {
       })}
       onClick={(e) => {
         e.preventDefault()
-        player != null && onClick?.(player)
+        if (player != null) onClick?.(player)
       }}
     >
       {children}

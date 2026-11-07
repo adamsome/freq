@@ -5,7 +5,7 @@ import type {
 } from 'react'
 import { cx } from '../../lib/util/dom'
 
-const InputHTMLType = [
+export const InputHTMLType = [
   'button',
   'checkbox',
   'color',

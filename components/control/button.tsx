@@ -20,7 +20,7 @@ interface ButtonColorOptions {
   bgHover?: boolean
 }
 
-const ButtonHTMLTypes = ['submit', 'button', 'reset'] as const
+export const ButtonHTMLTypes = ['submit', 'button', 'reset'] as const
 export type ButtonHTMLType = (typeof ButtonHTMLTypes)[number]
 
 type BaseProps = ButtonColorOptions & {

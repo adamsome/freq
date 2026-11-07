@@ -21,7 +21,6 @@ interface UseThemeProps {
 }
 
 const ThemeContext = createContext<UseThemeProps>({
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setTheme: (_) => {},
   themes: [],
 })
@@ -66,7 +65,7 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({
     if (updateStorage) {
       try {
         localStorage.setItem(storageKey, theme)
-      } catch (e) {
+      } catch {
         // Unsupported
       }
     }
@@ -249,7 +248,7 @@ const getTheme = (key: string) => {
   let theme
   try {
     theme = localStorage.getItem(key) || undefined
-  } catch (e) {
+  } catch {
     // Unsupported
   }
   return theme

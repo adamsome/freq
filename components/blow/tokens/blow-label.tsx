@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import type { HTMLAttributes } from 'react'
 import {
   BlowLabelDef,

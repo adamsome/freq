@@ -122,13 +122,9 @@ export default function RoomCard({
   )
 }
 
-type SkeletonProps = typeof defaultSkeletonProps
+type SkeletonProps = { className?: string }
 
-const defaultSkeletonProps = {
-  className: '',
-}
-
-export function RoomCardSkeleton({ className }: SkeletonProps) {
+export function RoomCardSkeleton({ className = '' }: SkeletonProps) {
   return (
     <button
       type="button"

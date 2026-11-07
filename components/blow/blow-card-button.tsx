@@ -70,7 +70,7 @@ export default function BlowCardButton(props: Props) {
         })}
         onClick={(e) => {
           e.preventDefault()
-          id != null && onClick?.(id, index ?? 0)
+          if (id != null) onClick?.(id, index ?? 0)
         }}
       >
         {children}

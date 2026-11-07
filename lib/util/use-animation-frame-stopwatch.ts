@@ -68,8 +68,9 @@ export const useAnimationFrameStopwatch = ({
   }
 
   const cleanup = () => {
-    animationFrameRef.current && cancelAnimationFrame(animationFrameRef.current)
-    repeatTimeoutRef.current && clearTimeout(repeatTimeoutRef.current)
+    if (animationFrameRef.current)
+      cancelAnimationFrame(animationFrameRef.current)
+    if (repeatTimeoutRef.current) clearTimeout(repeatTimeoutRef.current)
     prevTimeRef.current = null
   }
 

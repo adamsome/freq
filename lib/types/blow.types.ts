@@ -174,7 +174,7 @@ export interface BlowRoleDef {
 
 export type BlowRoleActionPair = [role: BlowRoleDef, action: BlowRoleActionDef]
 
-const BLOW_VARIANT_IDS = ['basic'] as const
+export const BLOW_VARIANT_IDS = ['basic'] as const
 
 export type BlowVariantID = (typeof BLOW_VARIANT_IDS)[number]
 

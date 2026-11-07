@@ -1,6 +1,7 @@
 /*! chakra-ui v1.2.3 | MIT License | https://github.com/chakra-ui/chakra-ui/blob/4478509039b4ed9df8a7710f49b12588e1202de2/packages/utils/src/assertion.ts */
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function isFunction(value: unknown): value is Function {
+export function isFunction(
+  value: unknown
+): value is (...args: unknown[]) => unknown {
   return typeof value === 'function'
 }
 
@@ -9,7 +10,7 @@ export const isNil = <T = unknown>(
 ): value is null | undefined => value == null
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+
 export function isNumeric(value: any): boolean {
   return value != null && value - parseFloat(value) + 1 >= 0
 }

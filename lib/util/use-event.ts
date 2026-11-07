@@ -34,7 +34,7 @@ function useEvent<
   listener: ElementEventListener<K>,
   cleanup?: (...args: unknown[]) => void
 ): void
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+
 function useEvent(target: any, type: any, listener: any, cleanup: any): void {
   const storedListener = useRef(listener)
   const storedCleanup = useRef(cleanup)
@@ -60,7 +60,7 @@ function useEvent(target: any, type: any, listener: any, cleanup: any): void {
     return () => {
       didUnsubscribe = 1
       targetEl.removeEventListener(type, listener)
-      cleanup && cleanup()
+      cleanup?.()
     }
   }, [target, type])
 }

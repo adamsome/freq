@@ -12,7 +12,7 @@ export const useDebounceCallback = <CallbackArgs extends unknown[]>(
   // Cleans up pending timeouts when the deps change
   useEffect(
     () => () => {
-      timeout.current && clearTimeout(timeout.current)
+      if (timeout.current) clearTimeout(timeout.current)
       timeout.current = void 0
     },
     [wait, leading, storedCallback]
@@ -28,11 +28,11 @@ export const useDebounceCallback = <CallbackArgs extends unknown[]>(
         timeout.current = setTimeout(() => {
           timeout.current = void 0
         }, wait)
-        // eslint-disable-next-line prefer-spread
+
         return storedCallback.current.apply(null, args as unknown)
       }
       // Clear the timeout every call and start waiting again
-      current && clearTimeout(current)
+      if (current) clearTimeout(current)
       // Waits for `wait` before invoking the callback
       timeout.current = setTimeout(() => {
         timeout.current = void 0

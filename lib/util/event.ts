@@ -2,8 +2,7 @@ type El = Window | Document | HTMLElement | EventTarget
 
 type Args<T extends El> =
   | Parameters<T['addEventListener']>
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  | [string, Function | null, ...unknown[]]
+  | [string, ((...args: never[]) => unknown) | null, ...unknown[]]
 
 export function on<T extends El>(obj: T | null, ...args: Args<T>): void {
   if (obj && obj.addEventListener) {

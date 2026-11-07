@@ -16,5 +16,10 @@ export default defineConfig([
       ],
     },
   },
+  {
+    // CommonJS config files loaded by their tools with require().
+    files: ['*.js'],
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
+  },
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
 ])

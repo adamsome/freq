@@ -19,7 +19,7 @@ export default function HeaderActions({ button, onDebugToggle }: Props) {
   useEffect(() => setMounted(true), [])
 
   const handleThemeToggle = () => {
-    theme === 'dark' ? setTheme('light') : setTheme('dark')
+    setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
   const handleLogin = () => {

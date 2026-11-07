@@ -42,7 +42,6 @@ export async function connectToDatabase(): Promise<MongoClientDb> {
   }
 
   if (!cached.promise) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     cached.promise = MongoClient.connect(MONGODB_URI!).then(
       (client): MongoClientDb => {
         return {
