@@ -2,12 +2,10 @@ import { PlayerWithGuess } from '../../lib/types/game.types'
 import { partition } from '../../lib/util/array'
 import { cx } from '../../lib/util/dom'
 
-type Props = typeof defaultProps & {
+type Props = {
   directions: PlayerWithGuess[]
   hasSlider: boolean
 }
-
-const defaultProps = {}
 
 const ClueDirections = ({ directions, hasSlider }: Props) => {
   const [leftDirections, rest] = partition((d) => d.value === -1, directions)
@@ -34,7 +32,5 @@ const ClueDirections = ({ directions, hasSlider }: Props) => {
     </div>
   )
 }
-
-ClueDirections.defaultProps = defaultProps
 
 export default ClueDirections

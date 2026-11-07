@@ -1,22 +1,20 @@
 import { cx } from '../../lib/util/dom'
 import IconSvg from '../control/icon-svg'
 
-type Props = typeof defaultProps & {
+type Props = {
   transform: string
 }
-
-const defaultProps = {}
 
 export default function NeedleAverage({ transform }: Props) {
   return (
     <div
-      className="absolute top-0 left-0 bottom-8 select-none transition-transform"
+      className="absolute bottom-8 left-0 top-0 select-none transition-transform"
       style={{ transform }}
     >
       <div
         className={cx(`
           vertical-rl
-          absolute top-0 left-[calc(50%-1px)] h-20 w-0.5
+          absolute left-[calc(50%-1px)] top-0 h-20 w-0.5
           bg-white text-right text-xs leading-[0.5rem]
           text-white/60 dark:bg-black dark:text-black/60
           sm:h-28
@@ -31,5 +29,3 @@ export default function NeedleAverage({ transform }: Props) {
     </div>
   )
 }
-
-NeedleAverage.defaultProps = defaultProps

@@ -12,7 +12,7 @@ import useConditionalDebounce from '../../lib/util/use-conditional-debounce'
 import { useTheme } from '../../lib/util/use-theme'
 import SkeletonBox from '../layout/skeleton-box'
 
-type Props = typeof defaultProps & {
+type Props = {
   code?: CwdCodeView
   guess?: CwdLastAct
   currentPlayer?: PlayerView
@@ -20,8 +20,6 @@ type Props = typeof defaultProps & {
   psychic2?: PlayerView
   onClick: () => void
 }
-
-const defaultProps = {}
 
 const isRevealed = (
   prev?: CwdCodeView,
@@ -137,8 +135,6 @@ export default function CodeButton({
     </div>
   )
 }
-
-CodeButton.defaultProps = defaultProps
 
 function getTextSize(n: number) {
   return n < 4

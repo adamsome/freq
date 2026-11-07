@@ -4,14 +4,12 @@ import { FreqClue } from '../../lib/types/freq.types'
 import { cx } from '../../lib/util/dom'
 import { styleLinearGradient } from '../../lib/util/dom-style'
 
-type Props = typeof defaultProps & {
+type Props = {
   children: ReactNode
   clue: FreqClue
   label?: number
   hasSlider: boolean
 }
-
-const defaultProps = {}
 
 const ClueCard = ({ children, clue, label, hasSlider }: Props) => {
   const [lightLeft, lightRight] = gradientLightTextDict[clue.gradient] ?? []
@@ -21,7 +19,7 @@ const ClueCard = ({ children, clue, label, hasSlider }: Props) => {
   return (
     <div
       className={cx(`
-        absolute top-0 bottom-0 left-4 right-4
+        absolute bottom-0 left-4 right-4 top-0
         flex items-start justify-between overflow-hidden
         rounded-md border border-transparent
         bg-gray-100 bg-[length:125%] bg-center
@@ -48,7 +46,7 @@ const ClueCard = ({ children, clue, label, hasSlider }: Props) => {
       {label != null && (
         <div
           className={cx(`
-            flex-center absolute top-0 bottom-0 left-0 right-0
+            flex-center absolute bottom-0 left-0 right-0 top-0
             text-8xl text-black/20 dark:text-white/20
           `)}
         >
@@ -58,7 +56,5 @@ const ClueCard = ({ children, clue, label, hasSlider }: Props) => {
     </div>
   )
 }
-
-ClueCard.defaultProps = defaultProps
 
 export default ClueCard

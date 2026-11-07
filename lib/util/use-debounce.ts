@@ -8,7 +8,7 @@ export const useDebounceCallback = <CallbackArgs extends unknown[]>(
   leading = false
 ): ((...args: CallbackArgs) => void) => {
   const storedCallback = useLatest(callback)
-  const timeout = useRef<ReturnType<typeof setTimeout>>()
+  const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   // Cleans up pending timeouts when the deps change
   useEffect(
     () => () => {

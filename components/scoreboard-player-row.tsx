@@ -3,7 +3,7 @@ import { Player } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
 import { styleColor } from '../lib/util/dom-style'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   children: ReactNode
   player: Player
   onClick?: () => void
@@ -20,11 +20,11 @@ const defaultProps = {
 export default function ScoreboardPlayerRow({
   children,
   player,
-  right,
-  active,
-  current,
-  leader,
-  readonly,
+  right = defaultProps.right,
+  active = defaultProps.active,
+  current = defaultProps.current,
+  leader = defaultProps.leader,
+  readonly = defaultProps.readonly,
   onClick,
 }: Props) {
   return (
@@ -52,5 +52,3 @@ export default function ScoreboardPlayerRow({
     </div>
   )
 }
-
-ScoreboardPlayerRow.defaultProps = defaultProps

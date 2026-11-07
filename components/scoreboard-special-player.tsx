@@ -3,7 +3,7 @@ import { cx } from '../lib/util/dom'
 import ScoreboardIcon from './scoreboard-icon'
 import ScoreboardPlayerName from './scoreboard-player-name'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   player: PlayerView
   label?: string
 }
@@ -15,7 +15,7 @@ const defaultProps = {
 export default function ScoreboardSpecialPlayer({
   player,
   label,
-  readonly,
+  readonly = defaultProps.readonly,
 }: Props) {
   return (
     <div className={cx('flex-center flex flex-col', { 'mb-4': !readonly })}>
@@ -35,5 +35,3 @@ export default function ScoreboardSpecialPlayer({
     </div>
   )
 }
-
-ScoreboardSpecialPlayer.defaultProps = defaultProps

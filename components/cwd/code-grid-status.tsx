@@ -8,13 +8,11 @@ import { styleColor } from '../../lib/util/dom-style'
 import useConditionalDebounce from '../../lib/util/use-conditional-debounce'
 import SkeletonBox from '../layout/skeleton-box'
 
-type Props = typeof defaultProps & {
+type Props = {
   winner?: 1 | 2
   turn?: 1 | 2
   guess?: CwdLastAct
 }
-
-const defaultProps = {}
 
 export default function CodeGridStatus({
   winner: rawWinner,
@@ -56,5 +54,3 @@ export default function CodeGridStatus({
     </div>
   )
 }
-
-CodeGridStatus.defaultProps = defaultProps

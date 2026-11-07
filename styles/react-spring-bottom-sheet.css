@@ -162,7 +162,7 @@ html.dark {
   padding-bottom: calc(16px + env(safe-area-inset-bottom));
 }
 
-[data-rsbs-is-dismissable="true"] :matches([data-rsbs-header], [data-rsbs-scroll], [data-rsbs-footer]) > * {
+[data-rsbs-is-dismissable="true"] :is([data-rsbs-header], [data-rsbs-scroll], [data-rsbs-footer]) > * {
   opacity: var(--rsbs-content-opacity);
 }
 
@@ -170,11 +170,11 @@ html.dark {
   opacity: var(--rsbs-backdrop-opacity);
 }
 
-[data-rsbs-is-dismissable="false"]:matches([data-rsbs-state="opening"], [data-rsbs-state="closing"]) :matches([data-rsbs-header], [data-rsbs-scroll], [data-rsbs-footer]) > * {
+[data-rsbs-is-dismissable="false"]:is([data-rsbs-state="opening"], [data-rsbs-state="closing"]) :is([data-rsbs-header], [data-rsbs-scroll], [data-rsbs-footer]) > * {
   opacity: var(--rsbs-content-opacity);
 }
 
-[data-rsbs-is-dismissable="false"]:matches([data-rsbs-state="opening"], [data-rsbs-state="closing"]) [data-rsbs-backdrop] {
+[data-rsbs-is-dismissable="false"]:is([data-rsbs-state="opening"], [data-rsbs-state="closing"]) [data-rsbs-backdrop] {
   opacity: var(--rsbs-backdrop-opacity);
 }
 

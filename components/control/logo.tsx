@@ -1,6 +1,6 @@
 import { cx } from '../../lib/util/dom'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   big?: boolean
   color?: string
 }
@@ -12,7 +12,14 @@ const defaultProps = {
   invert: false,
 }
 
-export default function Logo({ color, body, line, inner, invert, big }: Props) {
+export default function Logo({
+  color,
+  body = defaultProps.body,
+  line = defaultProps.line,
+  inner = defaultProps.inner,
+  invert = defaultProps.invert,
+  big,
+}: Props) {
   const _body = color ?? (invert ? inner : body)
   const _line = color ?? (invert ? inner : line)
   const _inner = color ? inner : invert ? body : inner
@@ -45,5 +52,3 @@ export default function Logo({ color, body, line, inner, invert, big }: Props) {
     </svg>
   )
 }
-
-Logo.defaultProps = defaultProps

@@ -10,7 +10,7 @@ import useResizeObserver from './use-resize-observer'
  * @param options Configures the initial width and initial height of the hook's state
  */
 const useSize = <T extends HTMLElement>(
-  target: React.RefObject<T> | T | null,
+  target: React.RefObject<T | null> | T | null,
   options?: UseSizeOptions
 ): [number, number] => {
   const [size, setSize] = useState<[number, number]>(() => {

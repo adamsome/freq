@@ -7,7 +7,7 @@ import Button from './control/button'
 import Input from './control/input'
 import SkeletonBox from './layout/skeleton-box'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   type?: GameType
   generatedRoom?: string
   error?: string | null
@@ -29,7 +29,7 @@ export default function RoomForm({
   generatedRoom,
   fetching,
   animate,
-  classNames,
+  classNames = defaultProps.classNames,
 }: Props) {
   const [room, setRoom] = useState<string | null>(null)
 
@@ -98,5 +98,3 @@ export default function RoomForm({
     </>
   )
 }
-
-RoomForm.defaultProps = defaultProps

@@ -3,7 +3,7 @@ import { getTeamIcon } from '../lib/icon'
 import { cx } from '../lib/util/dom'
 import ScoreboardIcon from './scoreboard-icon'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   scores?: readonly [number, number]
 }
 
@@ -11,7 +11,10 @@ const defaultProps = {
   readonly: false,
 }
 
-export default function ScoreboardHeader({ scores, readonly }: Props) {
+export default function ScoreboardHeader({
+  scores,
+  readonly = defaultProps.readonly,
+}: Props) {
   if (!scores) return null
 
   const [score1, score2] = scores
@@ -44,5 +47,3 @@ export default function ScoreboardHeader({ scores, readonly }: Props) {
     </div>
   )
 }
-
-ScoreboardHeader.defaultProps = defaultProps

@@ -1,7 +1,7 @@
 import { ScoreType } from '../lib/types/game.types'
 import Button from './control/button'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   onTypeToggle: (scoreType: ScoreType) => void
 }
 
@@ -9,7 +9,10 @@ const defaultProps = {
   scoreType: 'wins' as ScoreType,
 }
 
-export default function ScoreboardSettings({ scoreType, onTypeToggle }: Props) {
+export default function ScoreboardSettings({
+  scoreType = defaultProps.scoreType,
+  onTypeToggle,
+}: Props) {
   const isWins = scoreType === 'wins'
   return (
     <div className="flex-center my-3 w-full sm:text-lg">
@@ -34,5 +37,3 @@ export default function ScoreboardSettings({ scoreType, onTypeToggle }: Props) {
     </div>
   )
 }
-
-ScoreboardSettings.defaultProps = defaultProps

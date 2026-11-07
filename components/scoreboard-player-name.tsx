@@ -1,7 +1,7 @@
 import { GameType, Player } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   type?: GameType
   player: Player
 }
@@ -15,9 +15,9 @@ const defaultProps = {
 export default function ScoreboardPlayerName({
   type,
   player,
-  right,
-  psychic,
-  nextPsychic,
+  right = defaultProps.right,
+  psychic = defaultProps.psychic,
+  nextPsychic = defaultProps.nextPsychic,
 }: Props) {
   const icon = type === 'cwd' ? '👁' : '🧠'
   return (
@@ -33,8 +33,8 @@ export default function ScoreboardPlayerName({
           className={cx(
             'flex-initial overflow-hidden text-ellipsis whitespace-nowrap',
             right
-              ? 'mr-0 ml-1 text-right sm:ml-2'
-              : 'mr-1 ml-0 text-left sm:mr-2',
+              ? 'ml-1 mr-0 text-right sm:ml-2'
+              : 'ml-0 mr-1 text-left sm:mr-2',
             { 'font-semibold': player.leader }
           )}
         >
@@ -47,5 +47,3 @@ export default function ScoreboardPlayerName({
     </>
   )
 }
-
-ScoreboardPlayerName.defaultProps = defaultProps

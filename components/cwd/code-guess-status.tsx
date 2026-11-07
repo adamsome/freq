@@ -11,12 +11,10 @@ import useTerminalAnimation, {
   TypedTerminalLine,
 } from '../../lib/util/use-terminal-animation'
 
-type Props = typeof defaultProps & {
+type Props = {
   guess?: CwdLastAct
   turn?: 1 | 2
 }
-
-const defaultProps = {}
 
 export interface Word {
   text: string
@@ -142,5 +140,3 @@ export default function CodeGuessStatus({ guess, turn }: Props) {
     </div>
   )
 }
-
-CodeGuessStatus.defaultProps = defaultProps

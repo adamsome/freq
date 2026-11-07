@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import type { FC, ReactNode } from 'react'
 /*! pacocoursey/next-themes v0.0.12 | MIT License | https://github.com/pacocoursey/next-themes/blob/master/index.tsx */
 import {
   createContext,
@@ -40,6 +40,7 @@ export interface ThemeProviderProps {
   defaultTheme?: string
   attribute?: string
   value?: ValueObject
+  children?: ReactNode
 }
 
 export const ThemeProvider: FC<ThemeProviderProps> = ({
@@ -57,7 +58,7 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({
   const [resolvedTheme, setResolvedTheme] = useState(() => getTheme(storageKey))
   const attrs = !value ? themes : Object.values(value)
 
-  const changeTheme = useCallback((theme, updateStorage = true) => {
+  const changeTheme = useCallback((theme: string, updateStorage = true) => {
     const name = value?.[theme] || theme
 
     const enable = disableTransitionOnChange ? disableAnimation() : null
@@ -83,7 +84,7 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({
   }, []) // eslint-disable-line
 
   const handleMediaQuery = useCallback(
-    (e) => {
+    (e: MediaQueryList | MediaQueryListEvent) => {
       const isDark = e.matches
       const systemTheme = isDark ? 'dark' : 'light'
       setResolvedTheme(systemTheme)
@@ -107,7 +108,7 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({
   }, [handleMediaQuery]) // eslint-disable-line
 
   const setTheme = useCallback(
-    (newTheme) => {
+    (newTheme: string) => {
       if (forcedTheme) {
         return
       }
@@ -125,8 +126,7 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({
         return
       }
 
-      const theme = e.newValue
-      setTheme(theme)
+      setTheme(e.newValue || defaultTheme)
     }
 
     window.addEventListener('storage', handleStorage)

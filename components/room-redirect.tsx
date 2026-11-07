@@ -10,11 +10,9 @@ import {
 import { isRoomValid } from '../lib/room'
 import { isBrowser } from '../lib/util/dom'
 
-type Props = typeof defaultProps & {
+type Props = {
   children: ReactNode
 }
-
-const defaultProps = {}
 
 export default function RoomRedirect({ children }: Props) {
   const router = useRouter()
@@ -37,5 +35,3 @@ export default function RoomRedirect({ children }: Props) {
 
   return <>{children}</>
 }
-
-RoomRedirect.defaultProps = defaultProps

@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import React from 'react'
 import { cx } from '../../lib/util/dom'
 import IconSvg from '../control/icon-svg'
 import { BlowCardProps } from './blow-card'
@@ -82,7 +81,7 @@ export default function BlowCardButton(props: Props) {
           type={asButton ? 'button' : undefined}
           className={cx(`
             pointer-events-none
-            absolute top-2 right-2
+            absolute right-2 top-2
             ${!asButton ? 'flex-center flex-col' : ''}
             h-8 w-8
             touch-manipulation select-none
@@ -106,7 +105,7 @@ export default function BlowCardButton(props: Props) {
             {selected && (
               <IconSvg
                 className={cx(`
-                  absolute top-2/4 left-2/4
+                  absolute left-2/4 top-2/4
                   -translate-x-2/4 -translate-y-2/4
                   overflow-hidden
                 `)}

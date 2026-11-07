@@ -28,7 +28,7 @@ const defaultOptions: UseDrag1DOptions = {
 }
 
 export const useDrag1D = <T extends HTMLElement>(
-  target: React.RefObject<T>,
+  target: React.RefObject<T | null>,
   /** 'x' is an alias of 'horizontal'; same for 'y' & 'vertical' */
   orientation: 'horizontal' | 'x' | 'vertical' | 'y',
   options?: Partial<UseDrag1DOptions>

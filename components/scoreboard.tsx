@@ -18,7 +18,7 @@ interface HasScoreboardProps {
   players: PlayerView[]
 }
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   game?: HasScoreboardProps
 }
 
@@ -26,7 +26,10 @@ const defaultProps = {
   readonly: false,
 }
 
-export default function Scoreboard({ game, readonly }: Props) {
+export default function Scoreboard({
+  game,
+  readonly = defaultProps.readonly,
+}: Props) {
   const [playerOpen, setPlayerOpen] = useState<PlayerView | null>(null)
   const [scoreType, setScoreType] = useState<ScoreType>('wins')
 
@@ -68,5 +71,3 @@ export default function Scoreboard({ game, readonly }: Props) {
     </div>
   )
 }
-
-Scoreboard.defaultProps = defaultProps

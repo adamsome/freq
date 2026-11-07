@@ -4,14 +4,12 @@ import Title from './control/title'
 import GamePicker from './game-picker'
 import RoomFormContainer from './room-form-container'
 
-type Props = typeof defaultProps & {
+type Props = {
   gameType?: GameType
   loading?: boolean
   generatedRoom?: string
   onGameChange: (gameType?: GameType) => void
 }
-
-const defaultProps = {}
 
 export default function HomeGames({
   gameType,
@@ -56,5 +54,3 @@ export default function HomeGames({
     </div>
   )
 }
-
-HomeGames.defaultProps = defaultProps

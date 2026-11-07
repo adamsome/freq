@@ -1,4 +1,3 @@
-import React from 'react'
 import { getResPlayersInOrder } from '../../lib/res/res-engine'
 import { range } from '../../lib/util/array'
 import { useResGame } from '../../lib/util/use-game'

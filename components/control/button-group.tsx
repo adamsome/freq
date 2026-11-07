@@ -1,7 +1,7 @@
 import { cx } from '../../lib/util/dom'
 import Button from './button'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   buttons: string[]
   onClick: (text: string, i: number) => void
 }
@@ -15,9 +15,9 @@ const defaultProps = {
 
 export default function ButtonGroup({
   buttons,
-  selected,
-  width,
-  disabled,
+  selected = defaultProps.selected,
+  width = defaultProps.width,
+  disabled = defaultProps.disabled,
   onClick,
 }: Props) {
   return (
@@ -40,5 +40,3 @@ export default function ButtonGroup({
     </div>
   )
 }
-
-ButtonGroup.defaultProps = defaultProps

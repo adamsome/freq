@@ -11,7 +11,7 @@ import ActionModalOptions from './control/action-modal-options'
 import IconSvg from './control/icon-svg'
 import PlayerOptionButton from './player-option-button'
 
-type Props = typeof defaultProps & {
+type Props = {
   user: User
   theme?: string
   onThemeToggle?: () => void
@@ -22,8 +22,6 @@ type Props = typeof defaultProps & {
   onLeave?: (room: string) => void
   onClose?: () => void
 }
-
-const defaultProps = {}
 
 const Opt = PlayerOptionButton
 
@@ -120,7 +118,5 @@ const PlayerOptions = ({
     </>
   )
 }
-
-PlayerOptions.defaultProps = defaultProps
 
 export default PlayerOptions

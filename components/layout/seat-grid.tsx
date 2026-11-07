@@ -1,4 +1,4 @@
-import { Children, ReactNode } from 'react'
+import { Children, ReactNode, type JSX } from 'react'
 import { cx } from '../../lib/util/dom'
 import Arrow from '../control/arrow'
 

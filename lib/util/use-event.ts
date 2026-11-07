@@ -29,7 +29,7 @@ function useEvent<
   T extends HTMLElement = HTMLElement,
   K extends keyof HTMLElementEventMap = keyof HTMLElementEventMap
 >(
-  target: RefObject<T> | T | null,
+  target: RefObject<T | null> | T | null,
   type: K,
   listener: ElementEventListener<K>,
   cleanup?: (...args: unknown[]) => void

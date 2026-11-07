@@ -1,5 +1,5 @@
 import produce from 'immer'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { revealCard } from '../../lib/blow/blow-action-creators'
 import {
   BlowLabelDef,

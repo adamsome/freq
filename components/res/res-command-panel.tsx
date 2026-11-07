@@ -10,7 +10,7 @@ import ResCommandInfo from './res-command-info'
 import ResResultCard from './res-result-card'
 
 type Props = {
-  panelRef?: RefObject<HTMLDivElement>
+  panelRef?: RefObject<HTMLDivElement | null>
 }
 
 export default function ResCommandPanel({ panelRef }: Props) {

@@ -1,4 +1,3 @@
-import React from 'react'
 import { cx } from '../../lib/util/dom'
 import { useBlowGame } from '../../lib/util/use-game'
 import BlowBoardTitle from './blow-board-title'

@@ -7,7 +7,7 @@ const TARGET_BANDS: Array<[number, number]> = [
   [4, 0.7],
 ]
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   /** Position of target as a percent of the meter, e.g. `75` = 75%. */
   position: number
 }
@@ -17,13 +17,13 @@ const defaultProps = {
   width: 22.5,
 }
 
-const ClueTarget = ({ position, width }: Props) => {
+const ClueTarget = ({ position, width = defaultProps.width }: Props) => {
   const bands = TARGET_BANDS.concat(tail(reverse(TARGET_BANDS)))
 
   return (
     <div
       className={cx(`
-        absolute top-0 left-0 flex h-full w-1/6
+        absolute left-0 top-0 flex h-full w-1/6
         animate-fade-in-slow overflow-hidden
       `)}
       style={{ left: `${position - width / 2}%`, width: `${width}%` }}
@@ -53,7 +53,5 @@ const ClueTarget = ({ position, width }: Props) => {
     </div>
   )
 }
-
-ClueTarget.defaultProps = defaultProps
 
 export default ClueTarget

@@ -15,11 +15,9 @@ import SkeletonBox from './layout/skeleton-box'
 import PlayerHero from './player-hero'
 import Scoreboard from './scoreboard'
 
-type Props = typeof defaultProps & {
+type Props = {
   type?: GameType
 }
-
-const defaultProps = {}
 
 export default function TeamGameBoard({ type }: Props) {
   const { game } = useGame()
@@ -35,7 +33,7 @@ export default function TeamGameBoard({ type }: Props) {
 
         {game?.phase === 'prep' && (
           <>
-            <GameLink className="mt-6 mb-6" url={roomUrl} />
+            <GameLink className="mb-6 mt-6" url={roomUrl} />
 
             {game.currentPlayer && (
               <>
@@ -74,5 +72,3 @@ export default function TeamGameBoard({ type }: Props) {
     </Layout>
   )
 }
-
-TeamGameBoard.defaultProps = defaultProps

@@ -11,11 +11,9 @@ import useLayoutEffect from '../lib/util/use-passive-layout-effect'
 import IconSvg from './control/icon-svg'
 import PlayerOptionButton from './player-option-button'
 
-type Props = typeof defaultProps & {
+type Props = {
   onClose?: () => void
 }
-
-const defaultProps = {}
 
 const PlayerEdit = ({ onClose }: Props) => {
   const { game, mutate } = useGame()
@@ -73,7 +71,7 @@ const PlayerEdit = ({ onClose }: Props) => {
           value={name}
           onChange={(e) => setName(e.currentTarget.value.substr(0, 16))}
         />
-        <div className="absolute top-2 left-2.5">{icon}</div>
+        <div className="absolute left-2.5 top-2">{icon}</div>
       </h2>
 
       <div className="flex-start max-h-[28rem] w-full flex-col overflow-hidden p-0">
@@ -120,7 +118,5 @@ const PlayerEdit = ({ onClose }: Props) => {
     </>
   )
 }
-
-PlayerEdit.defaultProps = defaultProps
 
 export default PlayerEdit

@@ -7,12 +7,10 @@ import { useThrottle } from '../../lib/util/use-throttle'
 import Needle from './needle'
 import NeedleAverage from './needle-average'
 
-type Props = typeof defaultProps & {
+type Props = {
   children: ReactNode
   onGuessChange: (guess: number) => void
 }
-
-const defaultProps = {}
 
 const NEEDLE_WIDTH = 32
 const NEEDLE_TEAMMATE_WIDTH = 24
@@ -107,7 +105,5 @@ const ClueNeedleContainer = ({ children, onGuessChange }: Props) => {
     </>
   )
 }
-
-ClueNeedleContainer.defaultProps = defaultProps
 
 export default ClueNeedleContainer

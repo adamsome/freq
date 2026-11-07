@@ -5,13 +5,11 @@ import { isObject } from '../lib/util/object'
 import useGame from '../lib/util/use-game'
 import TitleMessage from './control/title-message'
 
-type Props = typeof defaultProps & {
+type Props = {
   children: ReactNode
   type?: GameType
   room?: string
 }
-
-const defaultProps = {}
 
 export default function GameGuard({ children, type, room }: Props) {
   const { error } = useGame()
@@ -45,5 +43,3 @@ export default function GameGuard({ children, type, room }: Props) {
 
   return <>{children}</>
 }
-
-GameGuard.defaultProps = defaultProps

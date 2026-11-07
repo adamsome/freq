@@ -8,7 +8,7 @@ import ScoreboardPlayerRow from './scoreboard-player-row'
 import ScoreboardPlayerScore from './scoreboard-player-score'
 import SkeletonBox from './layout/skeleton-box'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   type?: GameType
   currentPlayer?: PlayerView
   players?: PlayerView[]
@@ -28,7 +28,7 @@ export default function ScoreboardGrid({
   currentPlayer,
   players,
   scoreType,
-  readonly,
+  readonly = defaultProps.readonly,
   onPlayerClick,
 }: Props) {
   const teams: readonly [
@@ -83,5 +83,3 @@ export default function ScoreboardGrid({
 
   return <div className="grid w-full grid-cols-2">{teams.map(Team)}</div>
 }
-
-ScoreboardGrid.defaultProps = defaultProps

@@ -1,4 +1,3 @@
-import React from 'react'
 import { range } from '../../lib/util/array'
 
 type Props = {

@@ -2,12 +2,10 @@ import { GameType, GAME_TYPES } from '../lib/types/game.types'
 import { cx } from '../lib/util/dom'
 import GameButton from './control/game-button'
 
-type Props = typeof defaultProps & {
+type Props = {
   horizontal?: boolean
   onClick: (gameType: GameType) => void
 }
-
-const defaultProps = {}
 
 export default function GamePicker({ horizontal, onClick }: Props) {
   return (
@@ -30,5 +28,3 @@ export default function GamePicker({ horizontal, onClick }: Props) {
     </div>
   )
 }
-
-GamePicker.defaultProps = defaultProps

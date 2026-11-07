@@ -29,9 +29,9 @@ const InputHTMLType = [
   'url',
   'week',
 ] as const
-export type InputHTMLType = typeof InputHTMLType[number]
+export type InputHTMLType = (typeof InputHTMLType)[number]
 
-type BaseProps = typeof defaultProps & {
+type BaseProps = Partial<typeof defaultProps> & {
   htmlType?: string
   onChange?: ChangeEventHandler<HTMLInputElement>
 }
@@ -48,8 +48,8 @@ type Props = {
   Omit<InputHTMLAttributes<unknown>, 'type' | 'onChange'>
 
 export default function Input({
-  className,
-  selectOnFocus,
+  className = defaultProps.className,
+  selectOnFocus = defaultProps.selectOnFocus,
   htmlType = 'text' as Props['htmlType'],
   ...props
 }: Props) {
@@ -99,5 +99,3 @@ export default function Input({
     />
   )
 }
-
-Input.defaultProps = defaultProps

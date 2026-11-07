@@ -16,9 +16,7 @@ import { isBrowser } from '../lib/util/dom'
 import Home from './home'
 import RoomRedirect from './room-redirect'
 
-type Props = typeof defaultProps
-
-const defaultProps = {}
+type Props = Record<string, never>
 
 export default function HomeContainer(_: Props) {
   const [type, setType] = useState<GameType | undefined>()
@@ -90,5 +88,3 @@ export default function HomeContainer(_: Props) {
     </RoomRedirect>
   )
 }
-
-HomeContainer.defaultProps = defaultProps

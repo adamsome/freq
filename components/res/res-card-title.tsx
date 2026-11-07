@@ -1,4 +1,3 @@
-import React from 'react'
 import { ResPlayerProps } from '../../lib/types/res.types'
 import IconSvg from '../control/icon-svg'
 import Tag from '../control/tag'

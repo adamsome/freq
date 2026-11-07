@@ -2,13 +2,15 @@ import { cx } from '../../lib/util/dom'
 import Button from './button'
 import Logo from './logo'
 
-type Props = typeof defaultProps
+type Props = Partial<typeof defaultProps>
 
 const defaultProps = {
   classNames: '',
 }
 
-export default function RepoLink({ classNames }: Props) {
+export default function RepoLink({
+  classNames = defaultProps.classNames,
+}: Props) {
   return (
     <Button
       className={cx('group flex items-center text-center text-xl', classNames)}
@@ -24,5 +26,3 @@ export default function RepoLink({ classNames }: Props) {
     </Button>
   )
 }
-
-RepoLink.defaultProps = defaultProps

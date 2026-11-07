@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { cx } from '../lib/util/dom'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   children: ReactNode
 }
 
@@ -12,10 +12,10 @@ const defaultProps = {
 }
 
 export default function ScoreboardIcon({
-  className,
+  className = defaultProps.className,
   children,
-  xl,
-  right,
+  xl = defaultProps.xl,
+  right = defaultProps.right,
 }: Props) {
   return (
     <div
@@ -30,5 +30,3 @@ export default function ScoreboardIcon({
     </div>
   )
 }
-
-ScoreboardIcon.defaultProps = defaultProps

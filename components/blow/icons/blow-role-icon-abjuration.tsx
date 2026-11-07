@@ -1,4 +1,3 @@
-import React from 'react'
 import { cx } from '../../../lib/util/dom'
 
 type Props = {

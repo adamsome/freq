@@ -33,7 +33,7 @@ export const cx = (...classNames: (CxParam | CxParam[])[]): string => {
         }
       } else if (typeof c === 'object') {
         if (c.toString !== Object.prototype.toString) {
-          acc.push(c.toString())
+          acc.push(String(c))
         } else {
           for (const prop in c) {
             if ({}.hasOwnProperty.call(c, prop) && c[prop]) {

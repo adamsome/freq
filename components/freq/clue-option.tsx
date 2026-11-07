@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { cx } from '../../lib/util/dom'
 import useGame from '../../lib/util/use-game'
 
-type Props = typeof defaultProps & {
+type Props = {
   children: ReactNode
   hasSlider: boolean
   selectable: boolean
@@ -11,8 +11,6 @@ type Props = typeof defaultProps & {
   notSelected: boolean
   onSelect: () => void
 }
-
-const defaultProps = {}
 
 export default function ClueOption({
   children,
@@ -42,5 +40,3 @@ export default function ClueOption({
     </div>
   )
 }
-
-ClueOption.defaultProps = defaultProps

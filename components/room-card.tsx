@@ -8,7 +8,7 @@ import Title from './control/title'
 import BlowPlayerSeatsGrid from './blow/blow-player-seats-grid'
 import { BlowGameView } from '../lib/types/blow.types'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   game: BaseGameView
   onClick: (game: BaseGameView) => void
 }
@@ -23,7 +23,11 @@ function isBlowGameView(game: BaseGameView): game is BlowGameView {
   return game?.type === 'blow'
 }
 
-export default function RoomCard({ game, className, onClick }: Props) {
+export default function RoomCard({
+  game,
+  className = defaultProps.className,
+  onClick,
+}: Props) {
   const handleClick = (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     onClick?.(game)
@@ -49,8 +53,8 @@ export default function RoomCard({ game, className, onClick }: Props) {
       type="button"
       className={cx(`
         group flex w-full cursor-pointer flex-col items-center
-        border-t border-b border-gray-200 bg-gray-100
-        px-0 ${isBlowGame ? 'pt-3 pb-1' : 'py-3'}
+        border-b border-t border-gray-200 bg-gray-100
+        px-0 ${isBlowGame ? 'pb-1 pt-3' : 'py-3'}
         transition
         hover:border-blue-400
         hover:bg-blue-100
@@ -167,7 +171,7 @@ export function RoomCardSkeleton({ className }: SkeletonProps) {
       className={cx(`
         h-40 w-full
         animate-shine cursor-default
-        border-t border-b border-transparent
+        border-b border-t border-transparent
         bg-gray-50 bg-gradient-to-r from-gray-50 via-white to-gray-50
         bg-skeleton bg-no-repeat
         focus:outline-none
@@ -179,5 +183,3 @@ export function RoomCardSkeleton({ className }: SkeletonProps) {
     ></button>
   )
 }
-
-RoomCard.defaultProps = defaultProps

@@ -3,7 +3,7 @@ import { GameType } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'
 import { styleLinearGradientText } from '../../lib/util/dom-style'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   type?: string | GameType | null
   title?: string
   animate?: boolean
@@ -16,7 +16,7 @@ const defaultProps = {
 }
 
 export default function Title({
-  classNames,
+  classNames = defaultProps.classNames,
   type,
   title,
   animate,
@@ -57,5 +57,3 @@ export default function Title({
     </h1>
   )
 }
-
-Title.defaultProps = defaultProps

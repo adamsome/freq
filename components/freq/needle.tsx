@@ -2,7 +2,7 @@ import colorDict from '../../lib/color-dict'
 import { PlayerWithGuess } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   player: PlayerWithGuess
 }
 
@@ -10,7 +10,7 @@ const defaultProps = {
   size: 'md' as 'md' | 'lg',
 }
 
-const Needle = ({ player, size }: Props) => {
+const Needle = ({ player, size = defaultProps.size }: Props) => {
   const { color = 'Taupe', icon = '😃', locked } = player
   const hex = colorDict[color]?.hex
   const lg = size === 'lg'
@@ -46,7 +46,5 @@ const Needle = ({ player, size }: Props) => {
     </div>
   )
 }
-
-Needle.defaultProps = defaultProps
 
 export default Needle

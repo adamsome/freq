@@ -6,14 +6,12 @@ import useGame from '../../lib/util/use-game'
 import Logo from '../control/logo'
 import Title from '../control/title'
 
-type Props = typeof defaultProps & {
+type Props = {
   type?: GameType
   big?: boolean
   onLogoClick?: () => void
   onTitleClick?: () => void
 }
-
-const defaultProps = {}
 
 export default function HeaderTitle({
   type,
@@ -101,5 +99,3 @@ export default function HeaderTitle({
     </h1>
   )
 }
-
-HeaderTitle.defaultProps = defaultProps

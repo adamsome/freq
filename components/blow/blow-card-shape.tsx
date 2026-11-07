@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import React from 'react'
 import { cx } from '../../lib/util/dom'
 import { BlowCardProps } from './blow-card'
 

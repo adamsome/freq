@@ -4,12 +4,10 @@ import CodeButton from './code-button'
 import CodeGridStatus from './code-grid-status'
 import CodeGuessStatus from './code-guess-status'
 
-type Props = typeof defaultProps & {
+type Props = {
   game?: CwdGameView
   onCodeClick: (index: number) => void
 }
-
-const defaultProps = {}
 
 export default function CodeGrid({ game, onCodeClick }: Props) {
   if (game?.phase === 'prep') return null
@@ -47,5 +45,3 @@ export default function CodeGrid({ game, onCodeClick }: Props) {
     </div>
   )
 }
-
-CodeGrid.defaultProps = defaultProps

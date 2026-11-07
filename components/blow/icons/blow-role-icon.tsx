@@ -1,4 +1,3 @@
-import React from 'react'
 import { BlowRoleActionID, BlowRoleID } from '../../../lib/types/blow.types'
 import BlowRoleIconAbjuration from './blow-role-icon-abjuration'
 import BlowRoleIconConjuration from './blow-role-icon-conjuration'

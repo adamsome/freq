@@ -8,9 +8,7 @@ import ClueNeedleContainer from './clue-needle-container'
 import ClueOption from './clue-option'
 import ClueTarget from './clue-target'
 
-type Props = typeof defaultProps
-
-const defaultProps = {}
+type Props = Record<string, never>
 
 export default function CluesContainer(_: Props) {
   const { game, mutate } = useFreqGame()
@@ -78,5 +76,3 @@ export default function CluesContainer(_: Props) {
 
   return <>{clues}</>
 }
-
-CluesContainer.defaultProps = defaultProps

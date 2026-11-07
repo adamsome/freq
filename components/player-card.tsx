@@ -11,12 +11,10 @@ import ActionModalOptions from './control/action-modal-options'
 import IconSvg from './control/icon-svg'
 import PlayerOptionButton from './player-option-button'
 
-type Props = typeof defaultProps & {
+type Props = {
   player?: PlayerView | null
   onClose?: () => void
 }
-
-const defaultProps = {}
 
 const PlayerCard = ({ player, onClose }: Props) => {
   const [fetching, setFetching] = useState(false)
@@ -104,7 +102,5 @@ const PlayerCard = ({ player, onClose }: Props) => {
     </>
   )
 }
-
-PlayerCard.defaultProps = defaultProps
 
 export default PlayerCard

@@ -4,9 +4,7 @@ import { useDebounceCallback } from '../../lib/util/use-debounce'
 import { useCwdGame } from '../../lib/util/use-game'
 import CodeGrid from './code-grid'
 
-type Props = typeof defaultProps
-
-const defaultProps = {}
+type Props = Record<string, never>
 
 export default function CodesContainer(_: Props) {
   const { game, mutate } = useCwdGame()
@@ -34,5 +32,3 @@ export default function CodesContainer(_: Props) {
 
   return <CodeGrid game={game} onCodeClick={handleCodeClick} />
 }
-
-CodesContainer.defaultProps = defaultProps

@@ -6,7 +6,7 @@ import Layout from './layout/layout'
 import LayoutMain from './layout/layout-main'
 import RoomList from './room-list'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   gameType?: GameType
   gameTypeLoading?: boolean
   userLoading?: boolean
@@ -28,8 +28,8 @@ export default function Home({
   userLoading,
   generatedRoom,
   rooms,
-  roomsLoading,
-  roomsError,
+  roomsLoading = defaultProps.roomsLoading,
+  roomsError = defaultProps.roomsError,
   onGameChange,
   onRoomClick,
   onRoomsRefresh,
@@ -66,5 +66,3 @@ export default function Home({
     </Layout>
   )
 }
-
-Home.defaultProps = defaultProps

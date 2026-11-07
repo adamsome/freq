@@ -5,7 +5,7 @@ import Layout from '../layout/layout'
 import RepoLink from './repo-link'
 import Title from './title'
 
-type Props = typeof defaultProps & {
+type Props = {
   children: ReactNode
   type?: GameType
   message?: string
@@ -13,8 +13,6 @@ type Props = typeof defaultProps & {
   subtle?: boolean
   error?: boolean
 }
-
-const defaultProps = {}
 
 export default function TitleMessage({
   children,
@@ -41,7 +39,7 @@ export default function TitleMessage({
             'text-red-700': error,
           })}
         >
-          <p className="mt-6 mb-8 text-xl">{message ? message : children}</p>
+          <p className="mb-8 mt-6 text-xl">{message ? message : children}</p>
 
           {message && children}
 
@@ -51,5 +49,3 @@ export default function TitleMessage({
     </Layout>
   )
 }
-
-TitleMessage.defaultProps = defaultProps

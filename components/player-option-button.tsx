@@ -4,7 +4,7 @@ import { cx } from '../lib/util/dom'
 import { styleColor } from '../lib/util/dom-style'
 import Button from './control/button'
 
-type Props = typeof defaultProps &
+type Props = Partial<typeof defaultProps> &
   Omit<ButtonHTMLAttributes<unknown>, 'color'> & {
     player?: Player | null
   }
@@ -19,10 +19,10 @@ const defaultProps = {
 export default function PlayerOptionButton({
   children,
   player,
-  className,
-  close,
-  leave,
-  noDivider,
+  className = defaultProps.className,
+  close = defaultProps.close,
+  leave = defaultProps.leave,
+  noDivider = defaultProps.noDivider,
   disabled,
   ...props
 }: Props) {
@@ -52,5 +52,3 @@ export default function PlayerOptionButton({
     </Button>
   )
 }
-
-PlayerOptionButton.defaultProps = defaultProps

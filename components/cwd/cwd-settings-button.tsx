@@ -4,9 +4,7 @@ import ActionModal from '../control/action-modal'
 import Button from '../control/button'
 import CwdSettings from './cwd-settings'
 
-type Props = typeof defaultProps
-
-const defaultProps = {}
+type Props = Record<string, never>
 
 export default function CwdSettingsButton(_: Props) {
   const { game } = useCwdGame()
@@ -28,5 +26,3 @@ export default function CwdSettingsButton(_: Props) {
     </>
   )
 }
-
-CwdSettingsButton.defaultProps = defaultProps

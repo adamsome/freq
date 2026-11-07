@@ -8,7 +8,7 @@ import { head } from '../lib/util/array'
 import { useDebounce } from '../lib/util/use-debounce'
 import RoomForm from './room-form'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   type?: GameType
   generatedRoom?: string
   onChangeGameClick: () => void
@@ -21,7 +21,7 @@ const defaultProps = {
 export default function RoomFormContainer({
   generatedRoom,
   type,
-  classNames,
+  classNames = defaultProps.classNames,
   onChangeGameClick,
 }: Props) {
   const router = useRouter()
@@ -70,5 +70,3 @@ export default function RoomFormContainer({
     ></RoomForm>
   )
 }
-
-RoomFormContainer.defaultProps = defaultProps

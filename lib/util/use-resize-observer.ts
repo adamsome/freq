@@ -12,7 +12,7 @@ import useLayoutEffect from './use-passive-layout-effect'
  *   the `target` resizes
  */
 const useResizeObserver = <T extends HTMLElement>(
-  target: RefObject<T> | T | null,
+  target: RefObject<T | null> | T | null,
   callback: UseResizeObserverCallback
 ): ResizeObserver => {
   const resizeObserver = getResizeObserver()

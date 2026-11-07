@@ -20,7 +20,9 @@ export function useThrottleCallback<CallbackArguments extends unknown[]>(
   const storedCallback = useLatest(callback)
   const ms = 1000 / fps
   const prev = useRef(0)
-  const trailingTimeout = useRef<ReturnType<typeof setTimeout>>()
+  const trailingTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  )
   const clearTrailing = () =>
     trailingTimeout.current && clearTimeout(trailingTimeout.current)
 

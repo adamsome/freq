@@ -3,9 +3,7 @@ import ActionModal from './control/action-modal'
 import PlayerButton from './player-button'
 import PlayerEdit from './player-edit'
 
-type Props = typeof defaultProps
-
-const defaultProps = {}
+type Props = Record<string, never>
 
 const PlayerHero = (_: Props) => {
   const [modelOpen, setModelOpen] = useState(false)
@@ -24,7 +22,5 @@ const PlayerHero = (_: Props) => {
     </>
   )
 }
-
-PlayerHero.defaultProps = defaultProps
 
 export default PlayerHero

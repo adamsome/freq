@@ -4,8 +4,6 @@ import useGame from '../../lib/util/use-game'
 import ResDebugBar from './res-debug-bar'
 import TeamDebugBar from './team-debug-bar'
 
-const defaultProps = {}
-
 const DebugBar = () => {
   const { game } = useGame()
   if (!game) return null
@@ -20,7 +18,5 @@ const DebugBar = () => {
 
   return null
 }
-
-DebugBar.defaultProps = defaultProps
 
 export default DebugBar

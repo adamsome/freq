@@ -6,7 +6,7 @@ import Heading from './control/heading'
 import IconSvg from './control/icon-svg'
 import RoomCard, { RoomCardSkeleton } from './room-card'
 
-type Props = typeof defaultProps & {
+type Props = Partial<typeof defaultProps> & {
   rooms?: BaseGameView[]
   onRoomClick: (game: BaseGameView) => void
   onRefresh?: () => void
@@ -20,9 +20,9 @@ const defaultProps = {
 
 export default function RoomList({
   rooms,
-  loading,
-  error,
-  classNames,
+  loading = defaultProps.loading,
+  error = defaultProps.error,
+  classNames = defaultProps.classNames,
   onRoomClick,
   onRefresh,
 }: Props) {
@@ -85,5 +85,3 @@ export default function RoomList({
     </>
   )
 }
-
-RoomList.defaultProps = defaultProps
