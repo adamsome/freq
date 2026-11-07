@@ -12,6 +12,38 @@ export function isPlayer(player: unknown): player is Player {
   return isObject(player) && isNotEmpty(player.id, player.name)
 }
 
+/** Same limits as the name input in `components/player-edit.tsx`. */
+const PLAYER_NAME_MIN = 2
+const PLAYER_NAME_MAX = 16
+const PLAYER_ICON_MAX = 16
+
+/**
+ * Validates the editable fields of an `edit_player` command. Returns only
+ * those fields so nothing else from the request body is written.
+ */
+export function parsePlayerEdit(value: unknown): {
+  name: string
+  icon?: string
+} {
+  if (!isObject(value)) throw new TypeError('Player edit requires an object.')
+  const { name, icon } = value
+  if (
+    typeof name !== 'string' ||
+    name.trim().length < PLAYER_NAME_MIN ||
+    name.length > PLAYER_NAME_MAX
+  ) {
+    const range = `${PLAYER_NAME_MIN}–${PLAYER_NAME_MAX}`
+    throw new TypeError(`Player name must be ${range} characters.`)
+  }
+  if (
+    icon != null &&
+    (typeof icon !== 'string' || icon.length > PLAYER_ICON_MAX)
+  ) {
+    throw new TypeError('Player icon must be a short string.')
+  }
+  return icon == null ? { name } : { name, icon }
+}
+
 interface CreatePlayerOptions {
   team?: 1 | 2
   leader?: boolean
