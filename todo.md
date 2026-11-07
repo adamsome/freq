@@ -27,9 +27,9 @@ Feature ideas and game notes live in `todo.local.md` (untracked).
 
 - Fix the 40 ESLint errors surfaced by `eslint-config-next` 16 (mostly the new
   `react-hooks` rules: `set-state-in-effect`, `static-components`, `refs`).
-- `@reduxjs/toolkit` 1.9 has an optional React ≤18 peer, handled with an npm
-  `overrides` entry.
-  Upgrade to RTK 2 and drop that override.
+- Deferred majors: ESLint 10 (wait for `eslint-config-next` support),
+  TypeScript 7 (native compiler; check Next 16 support), Tailwind 4 (own
+  step). `@types/node` stays on 24 to match the Node 24 runtime.
 - Remaining `npm audit` findings:
   `lint-staged` (`micromatch`, `yaml`) → 17; `minimatch` via
   `eslint-config-next`'s typescript-eslint (dev only).
