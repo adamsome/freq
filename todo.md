@@ -18,11 +18,8 @@ Feature ideas and game notes live in `todo.local.md` (untracked).
 
 - Fix the 40 ESLint errors surfaced by `eslint-config-next` 16 (mostly the new
   `react-hooks` rules: `set-state-in-effect`, `static-components`, `refs`).
-- `react-spring-bottom-sheet` (blow players sheet) is unmaintained and only
-  supports React ≤18; it runs via an npm `overrides` entry. Replace it (e.g.
-  with `vaul`) and drop the overrides for it, `@reach/portal` and
-  `@xstate/react`.
-- `@reduxjs/toolkit` 1.9 has an optional React ≤18 peer, also overridden.
+- `@reduxjs/toolkit` 1.9 has an optional React ≤18 peer, handled with an npm
+  `overrides` entry.
   Upgrade to RTK 2 and drop that override.
 - Remaining `npm audit` findings: `@auth0/nextjs-auth0`/`cookie` → v4;
   `lint-staged` (`micromatch`, `yaml`) → 17; `minimatch` via

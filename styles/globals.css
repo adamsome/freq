@@ -149,7 +149,3 @@ html.dark {
     text-orientation: mixed;
   }
 }
-
-.freq-disable-scroll [data-rsbs-scroll] {
-  overflow: hidden;
-}
