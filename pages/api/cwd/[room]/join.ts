@@ -15,6 +15,9 @@ export default auth0.withApiAuthRequired(
 
         const { room, user } = roomUser
         const { team } = await req.body
+        if (team != null && team !== 1 && team !== 2) {
+          return res.status(400).json({ message: 'Team must be 1 or 2.' })
+        }
 
         const game = await joinCwdGame(room, user, team)
 
