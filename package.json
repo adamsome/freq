@@ -8,7 +8,7 @@
     "url": "https://github.com/adamsome/freq"
   },
   "engines": {
-    "node": ">=14.19.1"
+    "node": "24.x"
   },
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
