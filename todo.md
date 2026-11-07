@@ -14,6 +14,15 @@ Feature ideas and game notes live in `todo.local.md` (untracked).
   anti-flash `<script>` via `next/head`, which Next warns about. Replace with
   the `next-themes` package.
 
+- Game writes are read-modify-write with no concurrency guard. Freq's round
+  reveal is now conditional on phase, but Cwd `lock_guess` and Blow `action`
+  can still double-count lifetime stats when two calls race (the phase
+  doesn't change between turns). Add a revision counter to game documents
+  and make updates conditional on it.
+- Game views expose players' Auth0 IDs (`auth0|…`) to anyone who views a
+  room. Harmless now that writes use the session user, but an opaque
+  per-player ID would hide them (refactor).
+
 ## Chores
 
 - Fix the 40 ESLint errors surfaced by `eslint-config-next` 16 (mostly the new
