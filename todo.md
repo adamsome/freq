@@ -30,5 +30,5 @@ Feature ideas and game notes live in `todo.local.md` (untracked).
 - Husky hooks are configured in `package.json` (husky 4 format), which husky
   8 ignores, so pre-commit lint-staged and pre-push type-check never run.
   Migrate to `.husky/` or drop husky.
-- `next-env.d.ts` now imports `.next/types/*`, so a fresh checkout needs
-  `next build` or `next typegen` before `tsc` (matters for CI).
+- `next-env.d.ts` is gitignored (dev and build rewrite it), so CI must run
+  `next typegen` before `tsc`.

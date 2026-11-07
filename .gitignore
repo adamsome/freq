@@ -37,3 +37,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# next.js generated types (rewritten by next dev / next build)
+next-env.d.ts
