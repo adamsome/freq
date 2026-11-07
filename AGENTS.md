@@ -31,6 +31,9 @@ Tailwind 3. Deployed on Vercel: pushes to `main` go to production.
 
 - `pages/[game]/[room].tsx` renders a game by type; `pages/api/<game>/[room]/*`
   are the game API routes (GET of a missing room creates and joins it).
+- Auth: Auth0 v4 client in `lib/auth0.ts`; `proxy.ts` serves `/auth/*`.
+  API routes check the session themselves (`auth0.withApiAuthRequired`,
+  `await auth0.getSession(req)`). Session cookie is `freq_session`.
 - `lib/<game>/` holds game logic and Mongo stores; `lib/util/mongodb.ts` is the
   shared connection.
 - `components/control/` holds shared UI (`Button`, `Title`, ...); `cx` in

@@ -21,7 +21,7 @@ Feature ideas and game notes live in `todo.local.md` (untracked).
 - `@reduxjs/toolkit` 1.9 has an optional React ≤18 peer, handled with an npm
   `overrides` entry.
   Upgrade to RTK 2 and drop that override.
-- Remaining `npm audit` findings: `@auth0/nextjs-auth0`/`cookie` → v4;
+- Remaining `npm audit` findings:
   `lint-staged` (`micromatch`, `yaml`) → 17; `minimatch` via
   `eslint-config-next`'s typescript-eslint (dev only).
 - Husky hooks are configured in `package.json` (husky 4 format), which husky
@@ -29,3 +29,9 @@ Feature ideas and game notes live in `todo.local.md` (untracked).
   Migrate to `.husky/` or drop husky.
 - `next-env.d.ts` is gitignored (dev and build rewrite it), so CI must run
   `next typegen` before `tsc`.
+- Vercel env: add `APP_BASE_URL=https://freq-nine.vercel.app` and
+  `AUTH0_DOMAIN=dev-q-0rj9cc.us.auth0.com`, then delete `AUTH0_BASE_URL`,
+  `AUTH0_ISSUER_BASE_URL` and the v1 fallback in `lib/auth0.ts`. Check
+  whether `SECRET_COOKIE_PASSWORD` is still used.
+- Auth0 dashboard: remove the old `/api/auth/callback` URLs once production
+  runs v4.
