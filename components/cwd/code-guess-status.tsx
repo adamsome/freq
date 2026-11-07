@@ -1,11 +1,10 @@
 import type { Key } from 'react'
-import { useEffect } from 'react'
+import { useState } from 'react'
 import { getTeamColor } from '../../lib/color-dict'
 import { getTeamName } from '../../lib/game'
 import { CwdLastAct } from '../../lib/types/cwd.types'
 import { styleColor } from '../../lib/util/dom-style'
 import { toTitleCase } from '../../lib/util/string'
-import usePrevious from '../../lib/util/use-previous'
 import useTerminalAnimation, {
   TerminalLine,
   TypedTerminalLine,
@@ -103,14 +102,13 @@ export default function CodeGuessStatus({ guess, turn }: Props) {
   )
 
   // Only set the status lines (thus triggering the terminal typing
-  // animation) when the guess timestamp changes
-  const prevGuess = usePrevious(guess)
-  useEffect(() => {
-    if (prevGuess?.at === guess?.at) return
-
-    const lines = createLines(guess)
-    setLines(lines)
-  }, [prevGuess, guess, setLines])
+  // animation) when the guess timestamp changes. Adjusted during render
+  // rather than in an effect.
+  const [shownGuessAt, setShownGuessAt] = useState<string | undefined>()
+  if (guess?.at !== shownGuessAt) {
+    setShownGuessAt(guess?.at)
+    setLines(createLines(guess))
+  }
 
   const toWord = (key: Key, word: Word) => (
     <span

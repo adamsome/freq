@@ -86,13 +86,14 @@ export default function useTerminalAnimation<T>(
     const index = lineIndices[lineIndex]
     const line = lines[lineIndex]
 
-    // If end of line is reached, move to next line if there is one
+    // If end of line is reached, move to next line if there is one (from a
+    // timeout, not synchronously in the effect); after the last line, stop.
     const charCount =
       line?.words.reduce((acc, w) => acc + txt(w).length, 0) ?? -1
     if (index >= charCount) {
-      if (lineIndex < lines.length - 1) {
-        setLineIndex((prev) => prev + 1)
-      }
+      if (lineIndex >= lines.length - 1) return
+      const timeout = setTimeout(() => setLineIndex((prev) => prev + 1))
+      return () => clearTimeout(timeout)
     }
 
     // Delay keystrokes b/w 20-80 ms; unless its the 1st char of

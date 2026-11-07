@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useMemo, useState } from 'react'
 import { convertHexToRGB, createRGBStyle, RGBColor } from './dom-style'
 import {
   AnimationFrameStopwatchFinishOptions,
@@ -55,7 +55,8 @@ export const useTimerSpinnerAnimation = ({
   colors = DEFAULT_COLOR_OPTS,
   onFinish,
 }: UseAnimatedTimerSpinnerProps): UseAnimatedTimerSpinnerResult => {
-  const { duration } = useRef({ duration: rawDuration }).current
+  // The duration is fixed at mount.
+  const [duration] = useState(rawDuration)
 
   const { path, circumference } = useMemo(
     () => buildCirclePath(size, strokeWidth),

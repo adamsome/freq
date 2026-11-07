@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useDebounceCallback } from './use-debounce'
-import usePrevious from './use-previous'
 import { resolveValueFn, ValueFn } from './value-fn'
 
 export interface UseConditionalDebounceOptions<T> {
@@ -42,32 +40,30 @@ export default function useConditionalDebounce<T>(
     debounceTime = 2000,
   } = options
 
-  const [nextValue, setNextValue] = useState<T | undefined>()
-  const prevValue = usePrevious(nextValue)
+  const [prevValue, setPrevValue] = useState<T | undefined>()
+  const [debouncedValue, setDebouncedValue] = useState<T | undefined>()
+  /** A change waiting out the debounce time (boxed so undefined can pend). */
+  const [pending, setPending] = useState<{ value: T } | null>(null)
 
-  const [debouncedValue, rawSetDebouncedValue] = useState<T | undefined>()
-
-  const setDebouncedValue = useDebounceCallback(
-    rawSetDebouncedValue,
-    resolveValueFn(debounceTime)
-  )
-
-  // Update internal/next value when the input changes
-  useEffect(() => {
-    setNextValue(value)
-  }, [value])
-
-  // Update the output value when the next value is changed from the previous
-  // and debounce the change if the condition is met
-  useEffect(() => {
-    if (equalsFn(prevValue, nextValue)) return
-
-    if (conditionFn(prevValue, nextValue)) {
-      setDebouncedValue(nextValue)
+  // When the input changes, output it now or (if the condition is met) after
+  // the debounce time. Adjusted during render rather than in an effect.
+  if (!equalsFn(prevValue, value)) {
+    setPrevValue(value)
+    if (conditionFn(prevValue, value)) {
+      setPending({ value })
     } else {
-      rawSetDebouncedValue(nextValue)
+      setPending(null)
+      setDebouncedValue(value)
     }
-  }, [prevValue, nextValue, conditionFn, equalsFn, setDebouncedValue])
+  }
+
+  // A newer change (or unmount) cancels the pending one.
+  const delay = resolveValueFn(debounceTime)
+  useEffect(() => {
+    if (!pending) return
+    const timeout = setTimeout(() => setDebouncedValue(pending.value), delay)
+    return () => clearTimeout(timeout)
+  }, [pending, delay])
 
   return debouncedValue
 }
