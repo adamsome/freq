@@ -11,9 +11,9 @@
     "node": "24.x"
   },
   "scripts": {
-    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "dev": "NODE_OPTIONS='--inspect=9230' next dev -p 3001",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3001",
     "type-check": "tsc --pretty --noEmit",
     "format": "prettier --write .",
     "lint": "next lint"
