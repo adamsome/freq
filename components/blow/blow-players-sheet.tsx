@@ -61,7 +61,11 @@ export default function BlowPlayersSheet({ onCommandError }: Props) {
         >
           <Drawer.Title className="sr-only">Players</Drawer.Title>
           <div className="flex h-8 flex-shrink-0 justify-center pt-2">
-            <Drawer.Handle className="!m-0 !h-1 !w-9 !bg-black/15 dark:!bg-white/15" />
+            <Drawer.Handle
+              // A tap shouldn't jump between snap points (the old sheet didn't).
+              preventCycle
+              className="!m-0 !h-1 !w-9 !bg-black/15 dark:!bg-white/15"
+            />
           </div>
           <div ref={setBody} className="flex-center overflow-hidden px-2 pb-2">
             <BlowPlayerSeatsContainer onCommandError={onCommandError} />
