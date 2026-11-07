@@ -26,12 +26,8 @@ Feature ideas and game notes live in `todo.local.md` (untracked).
 - Deferred majors: ESLint 10 (wait for `eslint-config-next` support),
   TypeScript 7 (native compiler; check Next 16 support), Tailwind 4 (own
   step). `@types/node` stays on 24 to match the Node 24 runtime.
-- Remaining `npm audit` findings:
-  `lint-staged` (`micromatch`, `yaml`) → 17; `minimatch` via
-  `eslint-config-next`'s typescript-eslint (dev only).
-- Husky hooks are configured in `package.json` (husky 4 format), which husky
-  8 ignores, so pre-commit lint-staged and pre-push type-check never run.
-  Migrate to `.husky/` or drop husky.
+- Remaining `npm audit` findings (8 moderate, dev only): `minimatch` via
+  `eslint-config-next`'s typescript-eslint.
 - `next-env.d.ts` is gitignored (dev and build rewrite it), so CI must run
   `next typegen` before `tsc`.
 - Vercel env: add `APP_BASE_URL=https://freq-nine.vercel.app` and

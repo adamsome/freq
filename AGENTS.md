@@ -22,6 +22,8 @@ Tailwind 3. Deployed on Vercel: pushes to `main` go to production.
   avoid clashing with the sibling `lqr` project on 3000/9229.
 - Checks: `npx tsc --noEmit`, `npm run lint` (ESLint 9 flat config in
   `eslint.config.mjs`), `npm run build`. `next build` does not lint.
+- Git hooks (husky): pre-commit runs lint-staged (eslint --fix + prettier),
+  pre-push runs `npm run type-check`. `npm run format:check` checks formatting.
 - Follow-ups live in `todo.md` (Bugs / Chores); `todo.local.md` is untracked
   personal notes.
 - Don't write to the production database, or change Vercel or Auth0 settings,
