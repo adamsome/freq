@@ -16,7 +16,8 @@
     "start": "next start -p 3001",
     "type-check": "tsc --pretty --noEmit",
     "format": "prettier --write .",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "format:check": "prettier --check ."
   },
   "husky": {
     "hooks": {
@@ -50,8 +51,8 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.3.0",
     "postcss": "^8.5.32",
-    "prettier": "^2.8.8",
-    "prettier-plugin-tailwindcss": "^0.1.13",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^3.4.19",
     "typescript": "~5.9.3"
   }
