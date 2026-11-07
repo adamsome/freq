@@ -82,7 +82,14 @@ export default async function revealRoundResults(game: CurrentFreqGameView) {
   changes.stats = room
   changes.round_finished_at = new Date().toISOString()
 
-  await fromGames(db).updateOne(filter, { $set: changes })
+  // Only the first concurrent reveal may apply (e.g. two players locking the
+  // last directions at once both trigger it via lock_direction): require the
+  // phase we read, so a second call can't add this round's stats again.
+  const { modifiedCount } = await fromGames(db).updateOne(
+    { ...filter, phase: game.phase },
+    { $set: changes }
+  )
+  if (modifiedCount === 0) return
 
   await upsertManyFreqPlayerStatsByID(total)
 
