@@ -14,7 +14,7 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html className="dark bg-black">
+      <Html className="dark bg-black" suppressHydrationWarning>
         <Head>
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link

@@ -9,7 +9,7 @@ import { PlayerView } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'
 import { styleBorder, styleColor } from '../../lib/util/dom-style'
 import useConditionalDebounce from '../../lib/util/use-conditional-debounce'
-import { useTheme } from '../../lib/util/use-theme'
+import { useTheme } from 'next-themes'
 import SkeletonBox from '../layout/skeleton-box'
 
 type Props = {

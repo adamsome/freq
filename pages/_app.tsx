@@ -1,6 +1,6 @@
 import { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
-import { ThemeProvider } from '../lib/util/use-theme'
+import { ThemeProvider } from 'next-themes'
 import { KEY_THEME } from '../lib/consts'
 import fetch from '../lib/util/fetch-json'
 

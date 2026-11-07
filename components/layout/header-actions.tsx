@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { API_LOGIN } from '../../lib/consts'
 import { useFetchUser } from '../../lib/util/use-fetch-user'
-import { useTheme } from '../../lib/util/use-theme'
+import { useTheme } from 'next-themes'
 import Button, { ButtonProps } from '../control/button'
 import PlayerButtonContainer from '../player-button-container'
 

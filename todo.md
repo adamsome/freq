@@ -10,10 +10,6 @@ Feature ideas and game notes live in `todo.local.md` (untracked).
   `Title` font size was one (fixed). Mostly in `components/control/button.tsx`
   (variant classes plus a `className` override) and the blow components.
   Consider `tailwind-merge` in `cx`.
-- `lib/util/use-theme.tsx` is a vendored next-themes 0.0.12 that injects its
-  anti-flash `<script>` via `next/head`, which Next warns about. Replace with
-  the `next-themes` package.
-
 - Game writes are read-modify-write with no concurrency guard. Freq's round
   reveal is now conditional on phase, but Cwd `lock_guess` and Blow `action`
   can still double-count lifetime stats when two calls race (the phase
