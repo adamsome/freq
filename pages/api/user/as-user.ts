@@ -20,6 +20,7 @@ export default withApiAuthRequired(async function getUser(req, res) {
       const user = await fetchUser(userProfile.sub)
       if (user?.type !== 'admin') {
         res.status(403).end('User must be an admin to set as-user.')
+        return
       }
 
       const { asUser } = await req.body
