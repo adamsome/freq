@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "freq-dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "source \"$HOME/.nvm/nvm.sh\" && nvm use >/dev/null && npm run dev"
+      ],
+      "port": 3001,
+      "autoPort": false
+    }
+  ]
+}
