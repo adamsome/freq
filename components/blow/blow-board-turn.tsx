@@ -77,28 +77,16 @@ export default function BlowBoardTurn(props: Props) {
   const showResolution =
     resolution != null && (!showDrawCards || game.drawCards?.selected)
 
-  const Label = ({ children, className }: LabelProps) => (
-    <TurnLabel {...game} className={cx(className, LABEL_CLASSES)}>
-      {children}
-    </TurnLabel>
-  )
-
-  const Focus = ({ children, className, lit, ...props }: FocusBoxProps) => (
-    <FocusBox
-      {...props}
-      className={cx(
-        className,
-        lit ? view.classes.button : 'bg-black/10 dark:bg-white/25'
-      )}
-    >
-      {children}
-    </FocusBox>
-  )
-
   return (
     <div className="px-2.5 xs:px-5">
-      <Focus lit={activeStep} innerClassName="px-2 pt-3 pb-2">
-        <Label className="absolute top-1 text-sm">{activeLabel}</Label>
+      <StepFocus
+        litClassName={view.classes.button}
+        lit={activeStep}
+        innerClassName="px-2 pt-3 pb-2"
+      >
+        <StepLabel game={game} className="absolute top-1 text-sm">
+          {activeLabel}
+        </StepLabel>
 
         <div className={cx('flex items-center gap-2', !targetable && 'mt-4')}>
           <Card
@@ -123,25 +111,28 @@ export default function BlowBoardTurn(props: Props) {
                 theme={theme}
                 card={{ color: 'gray' }}
                 emptyContent={
-                  <Label className="text-center">
+                  <StepLabel game={game} className="text-center">
                     {getActiveTargetLabel(game)}
-                  </Label>
+                  </StepLabel>
                 }
               />
             </>
           )}
         </div>
-      </Focus>
+      </StepFocus>
 
       <Cmd {...props} command={activeCmd} show={activeStep} />
 
       {showCounter && (
-        <Focus
+        <StepFocus
+          litClassName={view.classes.button}
           lit={counterStep}
           className={cx(`mt-4 ${activeStep ? 'opacity-50' : ''}`)}
           innerClassName="px-2 pt-1 pb-2 space-y-1 "
         >
-          <Label className="text-sm">{counterLabel}</Label>
+          <StepLabel game={game} className="text-sm">
+            {counterLabel}
+          </StepLabel>
 
           <div className="flex gap-1.5 xs:gap-2 sm:gap-4">
             {counters.map((counter) => (
@@ -173,13 +164,14 @@ export default function BlowBoardTurn(props: Props) {
               />
             )}
           </div>
-        </Focus>
+        </StepFocus>
       )}
 
       <Cmd {...props} command={counterCmd} show={showCounterCmd} />
 
       {showDrawCards && (
-        <Focus
+        <StepFocus
+          litClassName={view.classes.button}
           className="mt-4"
           innerClassName="px-2 pb-2"
           lit={!game.drawCards?.selected}
@@ -188,17 +180,20 @@ export default function BlowBoardTurn(props: Props) {
             className="w-full"
             onCommandError={onCommandError}
           />
-        </Focus>
+        </StepFocus>
       )}
 
       {showResolution && (
-        <Focus
+        <StepFocus
+          litClassName={view.classes.button}
           className="mt-4"
           innerClassName="px-2 flex-center space-x-1 "
           lit
         >
           <div className={cx(`flex-center flex-1 leading-tight`)}>
-            <Label className="flex-1">{resolution}</Label>
+            <StepLabel game={game} className="flex-1">
+              {resolution}
+            </StepLabel>
           </div>
 
           {nextCmd && (
@@ -210,7 +205,7 @@ export default function BlowBoardTurn(props: Props) {
               position="grid-item"
             />
           )}
-        </Focus>
+        </StepFocus>
       )}
     </div>
   )
@@ -299,6 +294,40 @@ function Cmd(props: Props & CmdProps) {
         onCommandError={onCommandError}
       />
     </div>
+  )
+}
+
+// Module-level (not defined inside BlowBoardTurn) so React keeps their
+// identity across renders instead of remounting them each time.
+function StepLabel({
+  game,
+  children,
+  className,
+}: LabelProps & { game: ActiveTurnGame }) {
+  return (
+    <TurnLabel {...game} className={cx(className, LABEL_CLASSES)}>
+      {children}
+    </TurnLabel>
+  )
+}
+
+function StepFocus({
+  children,
+  className,
+  lit,
+  litClassName,
+  ...props
+}: FocusBoxProps & { litClassName?: string | string[] }) {
+  return (
+    <FocusBox
+      {...props}
+      className={cx(
+        className,
+        lit ? litClassName : 'bg-black/10 dark:bg-white/25'
+      )}
+    >
+      {children}
+    </FocusBox>
   )
 }
 

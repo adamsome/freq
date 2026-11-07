@@ -47,8 +47,6 @@ export default function PlayerButtonContainer({
   const [modelEditOpen, setModelEditOpen] = useState(false)
   const [modelRoomSettingsOpen, setModelRoomSettingsOpen] = useState(false)
 
-  const Settings = getSettingsComponent()
-
   const handleLogout = async () => {
     window.location.assign(API_LOGOUT)
   }
@@ -101,23 +99,33 @@ export default function PlayerButtonContainer({
         open={modelRoomSettingsOpen}
         onClose={() => setModelRoomSettingsOpen(false)}
       >
-        {Settings && (
-          <Settings onClose={() => setModelRoomSettingsOpen(false)} />
-        )}
+        <RoomSettings
+          type={type}
+          onClose={() => setModelRoomSettingsOpen(false)}
+        />
       </ActionModal>
     </>
   )
 }
 
-function getSettingsComponent(type?: GameType) {
+/** The room settings panel for the current game type, if it has one. */
+function RoomSettings({
+  type,
+  onClose,
+}: {
+  type?: GameType
+  onClose: () => void
+}) {
   switch (type) {
     case 'freq':
-      return FreqSettings
+      return <FreqSettings onClose={onClose} />
     case 'cwd':
-      return CwdSettings
+      return <CwdSettings onClose={onClose} />
     case 'blow':
-      return BlowSettings
+      return <BlowSettings onClose={onClose} />
     case 'res':
-      return ResSettings
+      return <ResSettings onClose={onClose} />
+    default:
+      return null
   }
 }
