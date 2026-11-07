@@ -170,9 +170,10 @@ export default class BlowState {
   get roleActionPairs(): BlowRoleActionPair[] {
     return this.s.roles.flatMap((rid) => {
       const role = this.toRole(rid)
-      return role.actions.map(
-        (xid): BlowRoleActionPair => [role, this.toAction(xid)]
-      )
+      return role.actions.map((xid): BlowRoleActionPair => [
+        role,
+        this.toAction(xid),
+      ])
     })
   }
 
@@ -209,8 +210,8 @@ export default class BlowState {
       typeof idOrIdx === 'number'
         ? this.s.players[idOrIdx]
         : typeof idOrIdx === 'string'
-        ? this.s.players.find((p) => p.id === idOrIdx)
-        : idOrIdx
+          ? this.s.players.find((p) => p.id === idOrIdx)
+          : idOrIdx
     invariant(isPlayer(p), `'getPlayer': No player found for '${idOrIdx}'`)
     return p
   }
@@ -383,7 +384,9 @@ export default class BlowState {
     type: BlowTimerType,
     { disabled }: { disabled?: boolean } = {}
   ): Command {
-    const timer = disabled ? undefined : this.s.game.settings.timer[type] ?? 10
+    const timer = disabled
+      ? undefined
+      : (this.s.game.settings.timer[type] ?? 10)
 
     switch (type) {
       case 'challenge': {

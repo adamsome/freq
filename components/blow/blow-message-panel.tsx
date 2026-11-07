@@ -44,24 +44,16 @@ export default function BlowMessagePanel(props: Props) {
   return (
     <div
       {...divProps}
-      className={cx(`
-        relative w-full
-        border-b border-black/20
-        bg-white/50
-        p-0
-        backdrop-blur-[10px]
-        dark:border-white/20 dark:bg-black/50
-        ${className}
-      `)}
+      className={cx(
+        `relative w-full border-b border-black/20 bg-white/50 p-0 backdrop-blur-[10px] dark:border-white/20 dark:bg-black/50 ${className} `
+      )}
       data-body-scroll-lock-ignore
     >
       <div
         ref={ref}
-        className={cx(`
-          full m-auto block max-h-full
-          overflow-y-auto pt-2 pb-1
-          text-sm text-gray-500
-        `)}
+        className={cx(
+          `full m-auto block max-h-full overflow-y-auto pb-1 pt-2 text-sm text-gray-500`
+        )}
       >
         <GameLink
           className="mt-1"
@@ -100,14 +92,9 @@ export default function BlowMessagePanel(props: Props) {
 
       {hasMessages && (
         <div
-          className={cx(`
-            pointer-events-none
-            absolute top-0 left-0 right-3.5
-            h-6
-            bg-gradient-to-b
-            from-white dark:from-black
-            md:h-8
-          `)}
+          className={cx(
+            `pointer-events-none absolute left-0 right-3.5 top-0 h-6 bg-gradient-to-b from-white dark:from-black md:h-8`
+          )}
         ></div>
       )}
     </div>

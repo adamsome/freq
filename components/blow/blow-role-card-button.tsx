@@ -22,20 +22,9 @@ export default function BlowRoleCardButton(props: Props) {
         id != null && variant !== 'empty' && view.classes.button,
         !id ? 'border-transparent' : 'px-0.5 pb-0.5 pt-0 xs:pt-0.5',
         variant === 'empty' && {
-          'h-12 border-2 border-dashed border-black/10 dark:border-white/10':
-            true,
+          'h-12 border-2 border-dashed border-black/10 dark:border-white/10': true,
         },
-        `group
-        w-full
-        select-none
-        rounded-md
-        border
-        font-narrow
-        text-black
-        shadow
-        focus:outline-none
-        dark:text-white
-        focus:dark:outline-none`
+        `group w-full select-none rounded-md border font-narrow text-black shadow focus:outline-none dark:text-white focus:dark:outline-none`
       )}
       onClick={(e) => {
         e.preventDefault()

@@ -38,8 +38,8 @@ export function buildCounterBoxLabel(
   const targetToken: BlowLabelDef = !targetable
     ? 'Any player'
     : target
-    ? { type: 'player', value: target }
-    : 'Target'
+      ? { type: 'player', value: target }
+      : 'Target'
 
   const className = 'text-black/80 dark:text-white/80'
   const roleToken: BlowToken =

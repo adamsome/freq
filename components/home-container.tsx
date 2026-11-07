@@ -39,8 +39,7 @@ export default function HomeContainer(_: Props) {
   useEffect(() => {
     if (isBrowser) {
       const _type = (head(gameType) ?? localStorage[KEY_ROOM_TYPE]) as
-        | GameType
-        | undefined
+        GameType | undefined
       if (_type) setType(_type)
       setLoading(false)
     }

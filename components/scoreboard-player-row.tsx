@@ -30,14 +30,7 @@ export default function ScoreboardPlayerRow({
   return (
     <div
       className={cx(
-        `flex items-center justify-between
-        overflow-hidden whitespace-nowrap
-        py-1
-        text-base
-        text-black
-        transition-colors
-        dark:text-white
-        sm:text-lg`,
+        `flex items-center justify-between overflow-hidden whitespace-nowrap py-1 text-base text-black transition-colors dark:text-white sm:text-lg`,
         {
           'ml-0 mr-1 flex-row pl-2 pr-3': !right,
           'ml-1 mr-0 flex-row-reverse pl-3 pr-2': right,

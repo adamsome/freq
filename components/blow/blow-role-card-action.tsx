@@ -35,14 +35,13 @@ export default function BlowRoleCardAction(props: Props) {
   }
 
   const label = counter
-    ? action?.counterLabel ?? counter?.name ?? action.label
+    ? (action?.counterLabel ?? counter?.name ?? action.label)
     : action.label
 
   return (
     <div
       className={cx(
-        `flex-center group relative w-full py-0
-        align-baseline tracking-normal transition`,
+        `flex-center group relative w-full py-0 align-baseline tracking-normal transition`,
         sizeClassName,
         heightCx,
         classes.text,

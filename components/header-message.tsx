@@ -28,30 +28,15 @@ const HeaderMessage = () => {
 
   return (
     <div
-      className={cx(`
-        flex-center
-        mt-0 mb-6
-        h-20 w-full
-        flex-col flex-wrap content-center
-        px-0 py-0
-        font-semibold
-        md:mt-2 md:px-4
-        ${textSize}
-      `)}
+      className={cx(
+        `flex-center mb-6 mt-0 h-20 w-full flex-col flex-wrap content-center px-0 py-0 font-semibold md:mt-2 md:px-4 ${textSize} `
+      )}
     >
       {headers.map((h, i) => (
         <div
-          className={cx(`
-            flex-center
-            h-full w-full
-            flex-1
-            rounded-none
-            bg-gray-100
-            text-center
-            first:rounded-none last:rounded-none
-            dark:bg-gray-900
-            md:rounded-md md:first:rounded-t-md md:last:rounded-b-md
-          `)}
+          className={cx(
+            `flex-center h-full w-full flex-1 rounded-none bg-gray-100 text-center first:rounded-none last:rounded-none dark:bg-gray-900 md:rounded-md md:first:rounded-t-md md:last:rounded-b-md`
+          )}
           key={h.text + i}
           style={styleColor(h.color, h.colorLit)}
         >

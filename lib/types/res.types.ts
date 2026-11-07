@@ -84,7 +84,7 @@ Win
  */
 
 export const RES_PHASES = ['prep', 'guess', 'win'] as const
-export type ResPhase = typeof RES_PHASES[number]
+export type ResPhase = (typeof RES_PHASES)[number]
 
 export const RES_STEPS = [
   'spy_reveal',
@@ -94,7 +94,7 @@ export const RES_STEPS = [
   'mission',
   'mission_reveal',
 ] as const
-export type ResStep = typeof RES_STEPS[number]
+export type ResStep = (typeof RES_STEPS)[number]
 
 export const RES_ACTIONS_ID = [
   'start_team_select',
@@ -106,15 +106,10 @@ export const RES_ACTIONS_ID = [
   'support_mission',
   'reveal_mission',
 ] as const
-export type ResActionID = typeof RES_ACTIONS_ID[number]
+export type ResActionID = (typeof RES_ACTIONS_ID)[number]
 
 export type ResStepSection =
-  | 'prep'
-  | 'spy'
-  | 'select'
-  | 'vote'
-  | 'mission'
-  | 'win'
+  'prep' | 'spy' | 'select' | 'vote' | 'mission' | 'win'
 
 export type ResMissionStatus = 'success' | 'failure' | 'current' | 'unplayed'
 export type ResVoteStatus = 'approve' | 'reject' | 'voted' | 'notVoted'

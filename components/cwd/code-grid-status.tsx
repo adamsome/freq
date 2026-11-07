@@ -36,16 +36,9 @@ export default function CodeGridStatus({
 
   return (
     <div
-      className={cx(`
-        w-full
-        bg-gray-100
-        px-2 py-0.5
-        font-mono text-base font-bold
-        dark:bg-gray-950
-        sm:px-4 sm:py-1
-        sm:text-lg
-        ${winner ? 'text-center' : ''}
-      `)}
+      className={cx(
+        `w-full bg-gray-100 px-2 py-0.5 font-mono text-base font-bold dark:bg-gray-950 sm:px-4 sm:py-1 sm:text-lg ${winner ? 'text-center' : ''} `
+      )}
       style={styleColor(color, winner ? 1 : 0)}
     >
       {winner && range(0, 3).map((_, i) => <span key={i}>{icon}</span>)}

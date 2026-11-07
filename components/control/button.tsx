@@ -10,12 +10,7 @@ import { cx } from '../../lib/util/dom'
 import { omit } from '../../lib/util/object'
 
 export type ButtonColor =
-  | 'blue'
-  | 'cyan'
-  | 'phosphorus'
-  | 'red'
-  | 'gray'
-  | 'none'
+  'blue' | 'cyan' | 'phosphorus' | 'red' | 'gray' | 'none'
 export type ButtonVariant = 'link' | 'dim' | 'solid'
 
 interface ButtonColorOptions {
@@ -26,7 +21,7 @@ interface ButtonColorOptions {
 }
 
 const ButtonHTMLTypes = ['submit', 'button', 'reset'] as const
-export type ButtonHTMLType = typeof ButtonHTMLTypes[number]
+export type ButtonHTMLType = (typeof ButtonHTMLTypes)[number]
 
 type BaseProps = ButtonColorOptions & {
   children: ReactNode

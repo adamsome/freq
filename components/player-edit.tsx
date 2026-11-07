@@ -55,17 +55,15 @@ const PlayerEdit = ({ onClose }: Props) => {
   return (
     <>
       <h2
-        className={cx(`
-          bg-gray-400
-          text-3xl font-semibold text-white
-          dark:bg-gray-700
-        `)}
+        className={cx(
+          `bg-gray-400 text-3xl font-semibold text-white dark:bg-gray-700`
+        )}
         style={styleColor(player, 1)}
       >
         <input
-          className={cx(`
-            w-full bg-transparent px-12 py-2 font-semibold focus:outline-none
-          `)}
+          className={cx(
+            `w-full bg-transparent px-12 py-2 font-semibold focus:outline-none`
+          )}
           ref={inputRef}
           type="text"
           value={name}
@@ -79,19 +77,9 @@ const PlayerEdit = ({ onClose }: Props) => {
           {iconSet.map((i) => (
             <div
               key={i}
-              className={cx(`
-                flex-center
-                h-11
-                cursor-pointer
-                rounded-lg border border-transparent
-                px-1.5
-                align-middle text-3xl
-                transition-colors
-                hover:border-blue-700
-                hover:bg-gray-200
-                dark:hover:bg-black
-                ${i === icon ? 'bg-gray-200 dark:bg-black' : ''}
-              `)}
+              className={cx(
+                `flex-center h-11 cursor-pointer rounded-lg border border-transparent px-1.5 align-middle text-3xl transition-colors hover:border-blue-700 hover:bg-gray-200 dark:hover:bg-black ${i === icon ? 'bg-gray-200 dark:bg-black' : ''} `
+              )}
               onClick={() => setIcon(i)}
             >
               {i}
@@ -102,11 +90,9 @@ const PlayerEdit = ({ onClose }: Props) => {
 
       <PlayerOptionButton
         noDivider
-        className={cx(`
-          inline-flex items-center
-          bg-blue-700 text-2xl text-white
-          hover:bg-blue-900 dark:hover:bg-blue-600
-        `)}
+        className={cx(
+          `inline-flex items-center bg-blue-700 text-2xl text-white hover:bg-blue-900 dark:hover:bg-blue-600`
+        )}
         disabled={fetching || player.fetching}
         onClick={handleSave}
       >

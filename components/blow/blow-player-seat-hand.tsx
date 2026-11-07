@@ -36,8 +36,8 @@ export default function BlowPlayerSeatHand(props: BlowPlayerSeatProps) {
     cards?.[i] === undefined
       ? 'empty'
       : cards?.[i] === null
-      ? 'facedown'
-      : 'faceup'
+        ? 'facedown'
+        : 'faceup'
 
   const getCardDefaults = (
     i: number,
@@ -88,7 +88,7 @@ export default function BlowPlayerSeatHand(props: BlowPlayerSeatProps) {
       {hasDrawn && (
         <div
           className={cx(
-            'mt-0.5 mb-3',
+            'mb-3 mt-0.5',
             'text-xs font-normal text-gray-400 dark:text-gray-600'
           )}
         >

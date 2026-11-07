@@ -23,11 +23,9 @@ export default function ScoreboardPlayerName({
   return (
     <>
       <div
-        className={cx(`
-          flex flex-1 items-center
-          overflow-hidden text-ellipsis whitespace-nowrap text-center
-          ${right ? 'flex-row-reverse' : ''}
-        `)}
+        className={cx(
+          `flex flex-1 items-center overflow-hidden text-ellipsis whitespace-nowrap text-center ${right ? 'flex-row-reverse' : ''} `
+        )}
       >
         <div
           className={cx(

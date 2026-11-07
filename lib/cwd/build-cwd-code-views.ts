@@ -39,14 +39,17 @@ export default function buildCwdCodeViews(
   const lastRevealed = game.code_reveals[game.code_reveals.length - 1]
 
   const team = getTeamPlayers(game.players, player?.team)
-  const visitedCountByIndex = team.reduce((acc, p) => {
-    const visitedIndices = game.visited?.[p.id] ?? []
-    visitedIndices.forEach((i) => {
-      if (acc[i] == null) acc[i] = 0
-      acc[i]++
-    })
-    return acc
-  }, {} as Record<number, number>)
+  const visitedCountByIndex = team.reduce(
+    (acc, p) => {
+      const visitedIndices = game.visited?.[p.id] ?? []
+      visitedIndices.forEach((i) => {
+        if (acc[i] == null) acc[i] = 0
+        acc[i]++
+      })
+      return acc
+    },
+    {} as Record<number, number>
+  )
 
   return game.code_words.map((rawWord, i) => {
     const word = toTitleCase(rawWord)

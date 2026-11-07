@@ -12,13 +12,9 @@ export default function NeedleAverage({ transform }: Props) {
       style={{ transform }}
     >
       <div
-        className={cx(`
-          vertical-rl
-          absolute left-[calc(50%-1px)] top-0 h-20 w-0.5
-          bg-white text-right text-xs leading-[0.5rem]
-          text-white/60 dark:bg-black dark:text-black/60
-          sm:h-28
-        `)}
+        className={cx(
+          `vertical-rl absolute left-[calc(50%-1px)] top-0 h-20 w-0.5 bg-white text-right text-xs leading-[0.5rem] text-white/60 dark:bg-black dark:text-black/60 sm:h-28`
+        )}
       >
         <span className="relative left-2.5 cursor-default">AVERAGE</span>
       </div>

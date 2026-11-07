@@ -40,8 +40,8 @@ export default function BlowBoardCommand(props: Props) {
       position === 'grid-item'
         ? 'font-narrow text-lg'
         : position === 'bottom'
-        ? 'font-spaced-narrow'
-        : 'font-spaced-narrow text-base',
+          ? 'font-spaced-narrow'
+          : 'font-spaced-narrow text-base',
     color: (cmd?.color as ButtonColor) ?? (cmd?.disabled ? 'gray' : 'cyan'),
     variant: 'dim',
     border: true,

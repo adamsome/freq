@@ -100,8 +100,8 @@ function BlowBoardChallengeContent(
   const msgResult = !challengerLoss
     ? winner
     : challengerCardIndex == null
-    ? 'target'
-    : undefined
+      ? 'target'
+      : undefined
   const targetMsg = getTargetMessage(player, msgResult, challengerLoss)
   const label: BlowLabelDef = [
     { type: 'player', value: target },
@@ -138,11 +138,9 @@ function BlowBoardChallengeContent(
 
       {!winner && (
         <div
-          className={cx(`
-            max-w-xs
-            text-center font-narrow text-sm
-            text-gray-400 dark:text-gray-500
-          `)}
+          className={cx(
+            `max-w-xs text-center font-narrow text-sm text-gray-400 dark:text-gray-500`
+          )}
         >
           <BlowLabel label={label} theme={theme} />
         </div>

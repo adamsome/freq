@@ -27,13 +27,9 @@ export default function BlowBoardCommandArea(props: Props) {
     const { pickTarget, settings } = game
     return (
       <div
-        className={cx(`
-          ${className}
-          ${position === 'bottom' ? 'h-12 px-6' : 'flex-center px-1'}
-          max-w-xs
-          text-center font-narrow text-lg
-          text-gray-400 dark:text-gray-500
-        `)}
+        className={cx(
+          ` ${className} ${position === 'bottom' ? 'h-12 px-6' : 'flex-center px-1'} max-w-xs text-center font-narrow text-lg text-gray-400 dark:text-gray-500`
+        )}
       >
         {!pickTarget.fetching ? (
           <BlowLabel label={pickTarget.description} theme={settings.theme} />
@@ -50,7 +46,7 @@ export default function BlowBoardCommandArea(props: Props) {
   return (
     <div
       className={cx(className, {
-        'pt-0 pl-0': position === 'grid-item',
+        'pl-0 pt-0': position === 'grid-item',
         'h-12 w-full px-6': position === 'bottom',
       })}
     >

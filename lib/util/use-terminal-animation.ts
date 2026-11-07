@@ -33,7 +33,7 @@ export interface UseTerminalAnimationOptions<T> {
 type UseTerminalAnimationResult<T> = readonly [
   TypedTerminalLine<T>[],
   boolean,
-  (newLines: TerminalLine<T>[]) => void
+  (newLines: TerminalLine<T>[]) => void,
 ]
 
 const defaultAccessor = <T>(t: T) =>

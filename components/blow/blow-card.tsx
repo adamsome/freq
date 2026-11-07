@@ -168,8 +168,8 @@ function BlowCardContentWrapper(props: ContentWrapperProps) {
       className={cx(view.classes.button, {
         'full flex flex-col': true,
         'justify-center': center,
-        'px-0.5 pt-0 pb-0.5': sm,
-        'px-1.5 pt-0.5 pb-1.5': !sm && !center,
+        'px-0.5 pb-0.5 pt-0': sm,
+        'px-1.5 pb-1.5 pt-0.5': !sm && !center,
         'p-1.5': !sm && center,
         border: true,
         'transition-colors': !sm && selectable,

@@ -26,10 +26,9 @@ export default function ScoreboardHeader({
 
   return (
     <div
-      className={cx(`
-        flex w-full items-baseline justify-between whitespace-nowrap
-        border-b border-black px-2 text-2xl font-black dark:border-white
-      `)}
+      className={cx(
+        `flex w-full items-baseline justify-between whitespace-nowrap border-b border-black px-2 text-2xl font-black dark:border-white`
+      )}
     >
       {!readonly && <ScoreboardIcon xl>{icon1}</ScoreboardIcon>}
       {!readonly && <div className="w-20 whitespace-nowrap">{team1}</div>}

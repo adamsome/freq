@@ -60,10 +60,10 @@ export const FREQ_PHASES: readonly CommonPhase[] = [
   'win',
 ] as const
 
-export type FreqPhase = typeof FREQ_PHASES[number]
+export type FreqPhase = (typeof FREQ_PHASES)[number]
 
 export const freqClueDifficulties = ['easy', 'hard']
-export type FreqClueDifficulty = typeof freqClueDifficulties[number]
+export type FreqClueDifficulty = (typeof freqClueDifficulties)[number]
 export type FreqClueDifficultyOrAll = FreqClueDifficulty | 'all'
 
 export interface FreqSettings {
@@ -89,8 +89,7 @@ export interface FreqGame extends TeamGuessGame {
 }
 
 export interface FreqGameView
-  extends TeamGuessGameView,
-    Omit<FreqGame, 'players'> {
+  extends TeamGuessGameView, Omit<FreqGame, 'players'> {
   cluesToShow: FreqClue[]
   playerGuesses: PlayerWithGuess[]
   playerDirections: PlayerWithGuess[]

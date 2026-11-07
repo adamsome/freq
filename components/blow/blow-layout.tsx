@@ -69,14 +69,9 @@ export default function BlowLayout(props: Props) {
       />
 
       <div
-        className={cx(`
-          mx-auto w-full
-          max-w-screen-md
-          space-y-1.5 pt-1.5
-          xs:space-y-2 xs:pt-2
-          sm:space-y-4 sm:pt-4
-          md:px-2
-        `)}
+        className={cx(
+          `mx-auto w-full max-w-screen-md space-y-1.5 pt-1.5 xs:space-y-2 xs:pt-2 sm:space-y-4 sm:pt-4 md:px-2`
+        )}
       >
         <BlowBoardContent onCommandError={onCommandError} />
 

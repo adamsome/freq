@@ -79,36 +79,22 @@ export default function BlowCardButton(props: Props) {
       {(selectable || selected != null) && !killed && (
         <Component
           type={asButton ? 'button' : undefined}
-          className={cx(`
-            pointer-events-none
-            absolute right-2 top-2
-            ${!asButton ? 'flex-center flex-col' : ''}
-            h-8 w-8
-            touch-manipulation select-none
-            bg-none
-            text-center leading-none no-underline outline-none
-            transition-all
-          `)}
+          className={cx(
+            `pointer-events-none absolute right-2 top-2 ${!asButton ? 'flex-center flex-col' : ''} h-8 w-8 touch-manipulation select-none bg-none text-center leading-none no-underline outline-none transition-all`
+          )}
         >
           <div
-            className={cx(`
-              ${
+            className={cx(
+              ` ${
                 selected ? 'scale-150 bg-cyan-500 shadow' : 'border-cyan-500/70'
-              }
-              relative inline-block
-              h-4 w-4
-              rounded-full border-2 border-cyan-500
-              text-center text-[9px] leading-none text-black/75
-              transition-all
-            `)}
+              } relative inline-block h-4 w-4 rounded-full border-2 border-cyan-500 text-center text-[9px] leading-none text-black/75 transition-all`
+            )}
           >
             {selected && (
               <IconSvg
-                className={cx(`
-                  absolute left-2/4 top-2/4
-                  -translate-x-2/4 -translate-y-2/4
-                  overflow-hidden
-                `)}
+                className={cx(
+                  `absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 overflow-hidden`
+                )}
                 name="checkbox"
               />
             )}

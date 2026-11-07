@@ -292,7 +292,7 @@ function Cmd(props: Props & CmdProps) {
       <BlowBoardCommand
         className={cx(
           innerClassName ?? 'w-full px-4',
-          show ?? true ? 'h-full' : 'h-0 overflow-hidden'
+          (show ?? true) ? 'h-full' : 'h-0 overflow-hidden'
         )}
         command={command}
         position={position ?? 'action-bottom'}
@@ -312,11 +312,11 @@ interface FocusBoxProps {
 function FocusBox(props: FocusBoxProps) {
   const { children, className, innerClassName } = props
   return (
-    <div className={cx(className, `relative z-10 rounded-xl p-0.5 `)}>
+    <div className={cx(className, `relative z-10 rounded-xl p-0.5`)}>
       <div
         className={cx(
           innerClassName,
-          `relative rounded-[0.625rem] bg-white dark:bg-black `
+          `relative rounded-[0.625rem] bg-white dark:bg-black`
         )}
       >
         {children}
@@ -365,18 +365,24 @@ const asActiveActionState = (
   role: BlowRoleDef,
   actionState: Partial<Record<BlowRoleActionID, BlowActionState>>
 ) =>
-  Object.keys(actionState).reduce((acc, key) => {
-    const actionID = key as BlowRoleActionID
-    acc[actionID] = role.actions.includes(actionID) ? 'active' : 'clickable'
-    return acc
-  }, {} as Partial<Record<BlowRoleActionID, BlowActionState>>)
+  Object.keys(actionState).reduce(
+    (acc, key) => {
+      const actionID = key as BlowRoleActionID
+      acc[actionID] = role.actions.includes(actionID) ? 'active' : 'clickable'
+      return acc
+    },
+    {} as Partial<Record<BlowRoleActionID, BlowActionState>>
+  )
 
 const asCounterActionState = (game: ActiveTurnGame) =>
-  Object.keys(game.actionState).reduce((acc, key) => {
-    const actionID = key as BlowRoleActionID
-    const state = game.actionState[actionID]
-    if (state !== 'active') {
-      acc[actionID] = state
-    }
-    return acc
-  }, {} as Partial<Record<BlowRoleActionID, BlowActionState>>)
+  Object.keys(game.actionState).reduce(
+    (acc, key) => {
+      const actionID = key as BlowRoleActionID
+      const state = game.actionState[actionID]
+      if (state !== 'active') {
+        acc[actionID] = state
+      }
+      return acc
+    },
+    {} as Partial<Record<BlowRoleActionID, BlowActionState>>
+  )

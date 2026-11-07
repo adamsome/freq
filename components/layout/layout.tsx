@@ -70,13 +70,9 @@ function Wrapper(props: Props) {
   }
   return (
     <div
-      className={cx(`
-        flex-center min-h-screen min-w-min flex-col overflow-hidden
-        bg-white text-black
-        transition
-        dark:bg-black dark:text-white
-        ${className}
-      `)}
+      className={cx(
+        `flex-center min-h-screen min-w-min flex-col overflow-hidden bg-white text-black transition dark:bg-black dark:text-white ${className} `
+      )}
     >
       {children}
     </div>

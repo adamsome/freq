@@ -65,8 +65,8 @@ export default function BlowActionButton({
   const heightCx = sm
     ? 'h-1'
     : md
-    ? 'h-4'
-    : `h-[var(--blow-action-button-min-height)]
+      ? 'h-4'
+      : `h-[var(--blow-action-button-min-height)]
        min-h-[var(--blow-action-button-min-height)]`
 
   if (!id) {
@@ -112,8 +112,8 @@ export default function BlowActionButton({
         sm
           ? 'text-[2.25px] leading-normal'
           : md
-          ? 'text-[0.6288625rem]'
-          : 'text-sm',
+            ? 'text-[0.6288625rem]'
+            : 'text-sm',
         !sm && 'rounded-sm',
         heightCx,
         'tracking-normal',
@@ -175,8 +175,8 @@ export default function BlowActionButton({
                   'transition-all',
                 ]
               : invert
-              ? TEXT.black
-              : TEXT.body,
+                ? TEXT.black
+                : TEXT.body,
             invert || state === 'clickable'
               ? TEXT_OPACITY[100]
               : TEXT_OPACITY[80],

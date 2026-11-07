@@ -91,7 +91,7 @@ function SideButton(props: SubProps) {
   const disabled =
     fetching ||
     cmd.fetching ||
-    (right ? cmd.rightDisabled ?? cmd.disabled ?? false : cmd.disabled)
+    (right ? (cmd.rightDisabled ?? cmd.disabled ?? false) : cmd.disabled)
 
   if (style && right) {
     style.flex = flex
@@ -100,8 +100,7 @@ function SideButton(props: SubProps) {
   return (
     <Button
       className={cx(
-        `inline-flex w-full flex-1 items-center justify-center
-        text-xl opacity-80 transition-opacity hover:opacity-100`,
+        `inline-flex w-full flex-1 items-center justify-center text-xl opacity-80 transition-opacity hover:opacity-100`,
         { 'ml-2': right, 'h-full': fullHeight },
         className
       )}

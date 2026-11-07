@@ -57,7 +57,7 @@ export default async function lockGuess(game: FullCwdGameView) {
   }
 
   // Get the corresponding code state of the guess
-  const state = guess != null ? game.code_states[guess] ?? 0 : 0
+  const state = guess != null ? (game.code_states[guess] ?? 0) : 0
 
   let repeatTurn = false
   const pts = { 1: 0, 2: 0 }

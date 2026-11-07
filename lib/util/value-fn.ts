@@ -1,8 +1,7 @@
 import { type } from './assertion'
 
 export type ValueAccessor<T, TDatum, TOut = T | undefined> =
-  | T
-  | ((d: TDatum, i?: number) => TOut)
+  T | ((d: TDatum, i?: number) => TOut)
 
 export function resolveValueAccessor<TDatum>(
   numberValueOrFunction: ValueAccessor<number, TDatum>,

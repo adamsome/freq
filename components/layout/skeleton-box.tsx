@@ -47,13 +47,7 @@ export default function SkeletonBox({
     <div className={className}>
       <div
         className={cx(
-          `h-full w-full
-          animate-shine
-          cursor-default
-          border-t border-b border-transparent
-          bg-gradient-to-r bg-skeleton bg-no-repeat
-          focus:outline-none
-          md:border-l md:border-r`,
+          `h-full w-full animate-shine cursor-default border-b border-t border-transparent bg-gradient-to-r bg-skeleton bg-no-repeat focus:outline-none md:border-l md:border-r`,
           getColorClasses(color),
           rounded && (roundedClassName ? roundedClassName : 'md:rounded-lg'),
           innerClassName

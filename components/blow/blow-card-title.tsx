@@ -30,7 +30,7 @@ export default function BlowCardTitle(props: Props) {
         'flex-center space-x-1': true,
         'w-full overflow-hidden whitespace-nowrap font-semibold': true,
         'text-[3.5px] leading-normal': sm,
-        'mt-1.5 ml-0 text-xs': md && orientation === 'vertical',
+        'ml-0 mt-1.5 text-xs': md && orientation === 'vertical',
         'tracking-normal': theme !== 'classic',
         'ml-1 text-lg': lg && orientation === 'vertical',
       })}

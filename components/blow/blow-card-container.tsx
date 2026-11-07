@@ -58,8 +58,8 @@ export default function BlowCardContainer({ onCommandError, ...props }: Props) {
     type === 'role' && theme !== 'classic'
       ? BlowRoleCard
       : type === 'role-common' && theme !== 'classic'
-      ? BlowRoleCardCommon
-      : BlowCard
+        ? BlowRoleCardCommon
+        : BlowCard
 
   return (
     <Card

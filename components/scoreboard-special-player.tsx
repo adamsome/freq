@@ -21,11 +21,9 @@ export default function ScoreboardSpecialPlayer({
     <div className={cx('flex-center flex flex-col', { 'mb-4': !readonly })}>
       <div className="flex-center flex w-full">
         <div
-          className={cx(`
-            flex items-center justify-between
-            overflow-hidden whitespace-nowrap
-            text-base text-amber-600 dark:text-amber-400 sm:text-lg
-          `)}
+          className={cx(
+            `flex items-center justify-between overflow-hidden whitespace-nowrap text-base text-amber-600 dark:text-amber-400 sm:text-lg`
+          )}
         >
           <ScoreboardIcon>{player.icon}</ScoreboardIcon>
           <ScoreboardPlayerName player={player} />

@@ -49,8 +49,8 @@ export default function createCwdCommandView(
         shuffleCmd.info = !enoughPlayers
           ? 'You can begin the game once at least 2 players are on each team.'
           : !game.psychic_1
-          ? 'Red team needs a psychic before the match can start.'
-          : 'Blue team needs a psychic before the match can start.'
+            ? 'Red team needs a psychic before the match can start.'
+            : 'Blue team needs a psychic before the match can start.'
       }
 
       const [teamPlayers] = partition((p) => p.team != null, game.players)

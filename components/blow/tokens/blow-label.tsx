@@ -65,7 +65,9 @@ function Part(props: Props & PartProps) {
     }
     case 'player': {
       const value =
-        typeof p.value !== 'number' ? p.value : players?.[p.value] ?? 'Unnamed'
+        typeof p.value !== 'number'
+          ? p.value
+          : (players?.[p.value] ?? 'Unnamed')
       return <BlowPlayerLabel className={p.className} value={value} />
     }
     case 'role': {

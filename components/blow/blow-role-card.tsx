@@ -155,7 +155,7 @@ function BlowRoleCardContent(props: Props & { view: BlowRoleView }) {
         {!showOnly && (
           <div
             className={cx(
-              'mt-0.5 mb-px mr-1 h-px border-t border-b-0 border-l-0 border-r-0 xs:my-1 xs:mb-0.5',
+              'mb-px mr-1 mt-0.5 h-px border-b-0 border-l-0 border-r-0 border-t xs:my-1 xs:mb-0.5',
               view.classes.separator
             )}
           ></div>

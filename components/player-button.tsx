@@ -28,12 +28,7 @@ export default function PlayerButton({
       className={cx(
         'flex text-center',
         hero
-          ? `border-gray-30 border
-            pt-1.5 pr-0.5 pb-1 pl-3.5
-            text-3xl
-            focus:border-blue-700
-            dark:border-gray-700
-            dark:focus:border-blue-700`
+          ? `border-gray-30 border pb-1 pl-3.5 pr-0.5 pt-1.5 text-3xl focus:border-blue-700 dark:border-gray-700 dark:focus:border-blue-700`
           : `pl-1 pr-0 text-xl sm:pl-3 sm:pr-2`
       )}
       color={player?.team != null ? 'none' : 'blue'}

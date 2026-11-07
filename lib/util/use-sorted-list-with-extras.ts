@@ -6,7 +6,7 @@ import { withIndex } from './object'
 type UseSortedListWithExtrasResult<T> = [
   sortedList: WithIndex<T>[],
   addExtra: (extraItem: T) => void,
-  resetExtras: () => void
+  resetExtras: () => void,
 ]
 
 export function useSortedListWithExtras<T extends object>(

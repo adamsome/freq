@@ -33,7 +33,7 @@ export default function ScoreboardGrid({
 }: Props) {
   const teams: readonly [
     (PlayerView | undefined)[],
-    (PlayerView | undefined)[]
+    (PlayerView | undefined)[],
   ] = players
     ? getPlayersPerTeam(players.filter((p) => !p.designatedPsychic))
     : skeletonTeams

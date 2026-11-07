@@ -9,7 +9,7 @@ export default function createNewCwdGame(
   team?: 1 | 2
 ): CwdGame {
   // Assign player to random team
-  const team_turn = team ?? Math.random() < 0.5 ? 1 : 2
+  const team_turn = (team ?? Math.random() < 0.5) ? 1 : 2
   // Since new game, player gets made leader
   const player = createPlayer(user, { team: team_turn })
 

@@ -125,10 +125,10 @@ export default function BlowCoin({
     size === 'xs'
       ? 'w-0.5 h-0.5'
       : size === 'sm'
-      ? 'w-3 h-3'
-      : size === 'md'
-      ? 'w-4 h-3.5'
-      : 'w-6 h-6'
+        ? 'w-3 h-3'
+        : size === 'md'
+          ? 'w-4 h-3.5'
+          : 'w-6 h-6'
 
   const dim = dimLabelWhenOne && children === 1
 
@@ -140,10 +140,10 @@ export default function BlowCoin({
           size === 'xs'
             ? '-top-0.5 left-0 h-0.5 w-0.5'
             : size === 'sm'
-            ? '-top-px -left-0.5 h-4 w-4'
-            : size === 'md'
-            ? '-top-[3px] -left-0.5 h-5 w-5'
-            : '-top-0.5 -left-0.5 h-7 w-7',
+              ? '-left-0.5 -top-px h-4 w-4'
+              : size === 'md'
+                ? '-left-0.5 -top-[3px] h-5 w-5'
+                : '-left-0.5 -top-0.5 h-7 w-7',
           'tracking-normal',
           '[background-image:radial-gradient(ellipse_at_center,var(--tw-gradient-from)_0%,var(--tw-gradient-from)_35%,rgb(0_0_0_/_0%)_65%,rgb(0_0_0_/_0%)_100%)]',
           getCoinColor(color, lit),

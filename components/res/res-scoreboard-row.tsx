@@ -17,7 +17,7 @@ export default function ResScoreboardRow({ index, player }: Props) {
 
   return (
     <div className="flex w-full items-center">
-      <div className="min-w-4 flex-center mr-4 w-4 tracking-normal">
+      <div className="flex-center mr-4 w-4 min-w-4 tracking-normal">
         {lead || index === 0 ? (
           <IconSvg
             name="chevron"

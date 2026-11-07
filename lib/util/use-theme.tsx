@@ -143,9 +143,7 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({
         resolvedTheme: theme === 'system' ? resolvedTheme : theme,
         themes: enableSystem ? [...themes, 'system'] : themes,
         systemTheme: (enableSystem ? resolvedTheme : undefined) as
-          | 'light'
-          | 'dark'
-          | undefined,
+          'light' | 'dark' | undefined,
       }}
     >
       <ThemeScript

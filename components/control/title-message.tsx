@@ -25,10 +25,9 @@ export default function TitleMessage({
   return (
     <Layout type={type}>
       <main
-        className={cx(`
-          flex-center flex-1 flex-col px-6 py-4
-          text-black dark:text-white
-        `)}
+        className={cx(
+          `flex-center flex-1 flex-col px-6 py-4 text-black dark:text-white`
+        )}
       >
         <Title type={type} animate={true} />
 

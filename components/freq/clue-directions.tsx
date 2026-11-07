@@ -21,10 +21,9 @@ const ClueDirections = ({ directions, hasSlider }: Props) => {
 
   return (
     <div
-      className={cx(`
-        flex-center absolute top-0 w-full
-        ${hasSlider ? 'bottom-8' : 'bottom-0'}
-      `)}
+      className={cx(
+        `flex-center absolute top-0 w-full ${hasSlider ? 'bottom-8' : 'bottom-0'} `
+      )}
     >
       {column(leftDirections)}
       <div className="flex-auto"></div>

@@ -22,7 +22,7 @@ export default function ResCardBorder({ children, title, lit }: Props) {
       {title && (
         <div
           className={cx(
-            'rounded-b  px-2 pb-0.5',
+            'rounded-b px-2 pb-0.5',
             'text-center text-xs font-semibold',
             lit == null && 'bg-gray-300/10 text-white',
             lit != null &&

@@ -63,11 +63,9 @@ export default function RoomList({
 
       {rooms && rooms.length === 0 && (
         <p
-          className={cx(`
-            w-full rounded bg-gray-100 p-8
-            text-center text-xl text-gray-400
-            dark:bg-gray-950 dark:text-gray-600
-          `)}
+          className={cx(
+            `w-full rounded bg-gray-100 p-8 text-center text-xl text-gray-400 dark:bg-gray-950 dark:text-gray-600`
+          )}
         >
           No recents games available &mdash; start a new game above!
         </p>

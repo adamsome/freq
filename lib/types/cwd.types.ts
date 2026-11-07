@@ -21,7 +21,7 @@ export interface CwdPlayerStats {
 
 export const CWD_PHASES = ['prep', 'guess', 'win'] as const
 
-export type CwdPhase = typeof CWD_PHASES[number]
+export type CwdPhase = (typeof CWD_PHASES)[number]
 
 export type CwdCodeState =
   /** Black ball (auto-lose) */
@@ -88,7 +88,8 @@ export interface CwdGame extends TeamGuessGame, CwdCodesInfo {
 }
 
 export interface CwdGameView
-  extends Omit<TeamGuessGameView, 'phase'>,
+  extends
+    Omit<TeamGuessGameView, 'phase'>,
     Omit<CwdGame, keyof CwdCodesInfo | 'players'> {
   codes: CwdCodeView[]
   winner?: 1 | 2

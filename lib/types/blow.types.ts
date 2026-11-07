@@ -217,12 +217,7 @@ export interface BlowMessage {
 
 export type BlowActionState = 'normal' | 'active' | 'counter' | 'clickable'
 export type BlowActionButtonColor =
-  | 'gray'
-  | 'black'
-  | 'cyan'
-  | 'body'
-  | string
-  | string[]
+  'gray' | 'black' | 'cyan' | 'body' | string | string[]
 
 export type BlowCardVariant = 'empty' | 'facedown' | 'faceup'
 export type BlowCardSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'

@@ -28,7 +28,7 @@ export default function BlowPlayerSeatOutline(props: Props) {
         'px-1.5 pt-0.5': size !== 'lg' && player && !player.current,
         'px-1 pt-0.5': size !== 'lg' && player && player.current,
         'pb-px': size !== 'lg' && player,
-        'px-3 pt-1 xs:pt-2 xs:pb-3': player && size === 'lg',
+        'px-3 pt-1 xs:pb-3 xs:pt-2': player && size === 'lg',
         'font-narrow tracking-widest': true,
         'text-sm': true,
         'text-left': true,

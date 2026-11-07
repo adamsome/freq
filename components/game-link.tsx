@@ -15,9 +15,9 @@ export default function GameLink({ url, button = {}, className = '' }: Props) {
 
   return (
     <div
-      className={cx(`
-        flex-center w-full flex-col text-sm font-light ${className}
-      `)}
+      className={cx(
+        `flex-center w-full flex-col text-sm font-light ${className} `
+      )}
     >
       <div className="text-gray-500">
         Other players can use this link to join:

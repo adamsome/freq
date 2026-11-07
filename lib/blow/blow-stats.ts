@@ -29,7 +29,7 @@ export function sumBlowPlayerStats(
 
 type BlowPlayerStatsPair = [
   room: Dict<BlowPlayerStats>,
-  total: Dict<BlowPlayerStats>
+  total: Dict<BlowPlayerStats>,
 ]
 
 export async function updateBlowPlayerStats(

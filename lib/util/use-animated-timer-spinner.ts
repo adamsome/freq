@@ -24,7 +24,7 @@ export interface UseAnimatedTimerSpinnerProps {
 type UseAnimatedTimerSpinnerResult = [
   elapsed: number,
   svgProps: UseAnimatedTimerSpinnerSvgProps,
-  reset: () => void
+  reset: () => void,
 ]
 
 interface UseAnimatedTimerSpinnerSvgProps {

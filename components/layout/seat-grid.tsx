@@ -99,13 +99,9 @@ export default function SeatGrid({ children, className }: Props) {
 
   return (
     <div
-      className={cx(`
-        grid
-        grid-cols-[repeat(2,minmax(0,1fr)_1.5rem)_minmax(0,1fr)]
-        grid-rows-[minmax(4.5rem,1fr)_1rem_minmax(4.5rem,1fr)]
-        items-center
-        ${className}
-      `)}
+      className={cx(
+        `grid grid-cols-[repeat(2,minmax(0,1fr)_1.5rem)_minmax(0,1fr)] grid-rows-[minmax(4.5rem,1fr)_1rem_minmax(4.5rem,1fr)] items-center ${className} `
+      )}
     >
       {Children.map(children, (child, i) => {
         const classesPerItem = classesPerItemByCount[count] ?? []

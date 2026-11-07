@@ -82,7 +82,7 @@ export default function CommandPanel({
       return
     }
 
-    const cmdType = isRight ? cmd.rightType ?? cmd.type : cmd.type
+    const cmdType = isRight ? (cmd.rightType ?? cmd.type) : cmd.type
     let value = isRight ? cmd.rightValue : cmd.value
 
     // If the timer expired, add a 1s delay to give other players a change

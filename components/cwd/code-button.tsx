@@ -77,14 +77,7 @@ export default function CodeButton({
   return (
     <div
       className={cx(
-        `flex-center relative flex h-16 w-full
-        select-none break-normal
-        border border-transparent
-        bg-gray-100
-        px-4
-        text-center font-semibold
-        dark:bg-gray-900
-        sm:h-24 md:h-28`,
+        `flex-center relative flex h-16 w-full select-none break-normal border border-transparent bg-gray-100 px-4 text-center font-semibold dark:bg-gray-900 sm:h-24 md:h-28`,
         textSize,
         {
           'text-amber-400': code.state === -1,
@@ -140,12 +133,12 @@ function getTextSize(n: number) {
   return n < 4
     ? 'text-3xl sm:text-4xl'
     : n < 5
-    ? 'text-2xl sm:text-4xl'
-    : n < 6
-    ? 'text-xl sm:text-3xl'
-    : n < 7
-    ? 'text-lg sm:text-2xl md:text-3xl'
-    : n < 8
-    ? 'text-base sm:text-xl md:text-2xl'
-    : 'text-sm sm:text-xl md:text-xl'
+      ? 'text-2xl sm:text-4xl'
+      : n < 6
+        ? 'text-xl sm:text-3xl'
+        : n < 7
+          ? 'text-lg sm:text-2xl md:text-3xl'
+          : n < 8
+            ? 'text-base sm:text-xl md:text-2xl'
+            : 'text-sm sm:text-xl md:text-xl'
 }

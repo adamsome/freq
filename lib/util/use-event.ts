@@ -8,7 +8,7 @@ import useLayoutEffect from './use-passive-layout-effect'
 function useEvent<
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   T extends Window = Window,
-  K extends keyof WindowEventMap = keyof WindowEventMap
+  K extends keyof WindowEventMap = keyof WindowEventMap,
 >(
   target: Window | null,
   type: K,
@@ -18,7 +18,7 @@ function useEvent<
 function useEvent<
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   T extends Document = Document,
-  K extends keyof DocumentEventMap = keyof DocumentEventMap
+  K extends keyof DocumentEventMap = keyof DocumentEventMap,
 >(
   target: Document | null,
   type: K,
@@ -27,7 +27,7 @@ function useEvent<
 ): void
 function useEvent<
   T extends HTMLElement = HTMLElement,
-  K extends keyof HTMLElementEventMap = keyof HTMLElementEventMap
+  K extends keyof HTMLElementEventMap = keyof HTMLElementEventMap,
 >(
   target: RefObject<T | null> | T | null,
   type: K,
@@ -66,15 +66,15 @@ function useEvent(target: any, type: any, listener: any, cleanup: any): void {
 }
 
 export type ElementEventListener<
-  K extends keyof HTMLElementEventMap = keyof HTMLElementEventMap
+  K extends keyof HTMLElementEventMap = keyof HTMLElementEventMap,
 > = (this: HTMLElement, ev: HTMLElementEventMap[K]) => unknown
 
 export type DocumentEventListener<
-  K extends keyof DocumentEventMap = keyof DocumentEventMap
+  K extends keyof DocumentEventMap = keyof DocumentEventMap,
 > = (this: Document, ev: DocumentEventMap[K]) => unknown
 
 export type WindowEventListener<
-  K extends keyof WindowEventMap = keyof WindowEventMap
+  K extends keyof WindowEventMap = keyof WindowEventMap,
 > = (this: Document, ev: WindowEventMap[K]) => unknown
 
 export default useEvent

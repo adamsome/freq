@@ -43,10 +43,10 @@ export const COMMON_PHASES = [
   'win',
 ] as const
 
-export type CommonPhase = typeof COMMON_PHASES[number]
+export type CommonPhase = (typeof COMMON_PHASES)[number]
 
 export const GAME_TYPES = ['freq', 'cwd', 'blow', 'res'] as const
-export type GameType = typeof GAME_TYPES[number]
+export type GameType = (typeof GAME_TYPES)[number]
 
 export interface BaseGame {
   /** Room code. */
@@ -182,9 +182,7 @@ export interface BaseGameView extends Omit<BaseGame, 'players'>, CommandsView {
 }
 
 export interface TeamGuessGameView
-  extends Omit<TeamGuessGame, 'players'>,
-    BaseGameView,
-    CommandsView {
+  extends Omit<TeamGuessGame, 'players'>, BaseGameView, CommandsView {
   canChangePsychicTo: CanChangePsychicTo
 }
 

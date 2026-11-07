@@ -185,9 +185,9 @@ function validateCoreAction(view: BlowGameView, action: BlowAction): boolean {
       const msg = !allowedTypes.includes(action.type)
         ? 'Action no longer available.'
         : cmd?.disabled &&
-          (!cmd.allowExpiredWhenDisabled || !action.payload.expired)
-        ? 'Action is disabled.'
-        : null
+            (!cmd.allowExpiredWhenDisabled || !action.payload.expired)
+          ? 'Action is disabled.'
+          : null
       if (msg) {
         // If auto-generated action indicating that a timer expired, ignore;
         // otherwise throw to let frontend know that an invalid action was sent

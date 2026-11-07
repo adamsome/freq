@@ -51,7 +51,7 @@ export default function ResCardBody({
       </div>
 
       <ResCardBorder>
-        {active && <ResOrb className="absolute top-5 right-5" />}
+        {active && <ResOrb className="absolute right-5 top-5" />}
 
         {voteStatus !== 'notVoted' &&
           (section === 'vote' || section === 'mission') && (

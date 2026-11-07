@@ -60,13 +60,9 @@ const PlayerCard = ({ player, onClose }: Props) => {
   return (
     <>
       <h2
-        className={cx(`
-          m-0
-          bg-gray-400
-          px-4 py-2
-          text-3xl font-semibold text-white
-          dark:bg-gray-700
-        `)}
+        className={cx(
+          `m-0 bg-gray-400 px-4 py-2 text-3xl font-semibold text-white dark:bg-gray-700`
+        )}
         style={styleColor(player, 1)}
       >
         {player.name}

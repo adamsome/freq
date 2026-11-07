@@ -56,9 +56,9 @@ export const useAnimationFrameStopwatch = ({
       finished
         ? duration
         : // Result in seconds elapsed, restricted by the update interval
-        updateInterval === 0
-        ? rawElapsed
-        : ((rawElapsed / updateInterval) | 0) * updateInterval
+          updateInterval === 0
+          ? rawElapsed
+          : ((rawElapsed / updateInterval) | 0) * updateInterval
     )
 
     // repeat animation if not completed

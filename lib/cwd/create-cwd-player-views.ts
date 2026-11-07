@@ -11,21 +11,19 @@ export default function createCwdPlayerViews(
   const activeByPlayerID = toTruthMap(getActivePlayers(game))
   const isPrep = game.phase === 'prep'
 
-  return game.players.map(
-    (p): PlayerView => ({
-      ...p,
-      active: activeByPlayerID[p.id],
-      current: p.id === currentID,
-      psychic: game.psychic_1 === p.id || game.psychic_2 === p.id,
-      designatedPsychic:
-        game.settings?.designated_psychic === true && game.psychic_1 === p.id,
-      showPsychic: game.psychic_1 === p.id || game.psychic_2 === p.id,
-      canSetPsychic: isPrep,
-      canChangeTeam: isPrep,
-      points: calculateCwdPlayerPoints(game.stats?.[p.id]),
-      wins: game.stats?.[p.id]?.w,
-    })
-  )
+  return game.players.map((p): PlayerView => ({
+    ...p,
+    active: activeByPlayerID[p.id],
+    current: p.id === currentID,
+    psychic: game.psychic_1 === p.id || game.psychic_2 === p.id,
+    designatedPsychic:
+      game.settings?.designated_psychic === true && game.psychic_1 === p.id,
+    showPsychic: game.psychic_1 === p.id || game.psychic_2 === p.id,
+    canSetPsychic: isPrep,
+    canChangeTeam: isPrep,
+    points: calculateCwdPlayerPoints(game.stats?.[p.id]),
+    wins: game.stats?.[p.id]?.w,
+  }))
 }
 
 function getActivePlayers(game: CwdGame): string[] {

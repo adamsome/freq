@@ -19,12 +19,12 @@ function getOpacityClass(color?: BlowActionButtonColor) {
   return color === 'black'
     ? 'text-opacity-70 dark:text-opacity-70'
     : color === 'cyan'
-    ? [
-        'text-opacity-50 dark:text-opacity-50',
-        'group-hover:text-opacity-70 dark:group-hover:text-opacity-70',
-        'transition-opacity',
-      ]
-    : 'text-opacity-30 dark:text-opacity-30'
+      ? [
+          'text-opacity-50 dark:text-opacity-50',
+          'group-hover:text-opacity-70 dark:group-hover:text-opacity-70',
+          'transition-opacity',
+        ]
+      : 'text-opacity-30 dark:text-opacity-30'
 }
 
 function getColorClass(
@@ -84,8 +84,8 @@ export default function BlowActionButtonIcon({
           sm
             ? 'ml-0 h-0.5 w-0.5'
             : md
-            ? 'ml-0.5 h-2.5 w-2.5'
-            : 'ml-0.5 h-5 w-3',
+              ? 'ml-0.5 h-2.5 w-2.5'
+              : 'ml-0.5 h-5 w-3',
           getColorClass(action, color),
           getOpacityClass(color)
         )}
@@ -102,8 +102,8 @@ export default function BlowActionButtonIcon({
         sm
           ? 'ml-0 leading-tight'
           : md
-          ? 'ml-0.5 leading-normal'
-          : 'ml-0.5 leading-tight',
+            ? 'ml-0.5 leading-normal'
+            : 'ml-0.5 leading-tight',
         getColorClass(action, color),
         getOpacityClass(color)
       )}
