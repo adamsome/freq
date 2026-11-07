@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { API_GAME_JOIN, API_USER_AS_USER } from '../../lib/consts'
 import { createMockUser } from '../../lib/mock-users'
 import { ResAction, ResGameView } from '../../lib/types/res.types'
@@ -13,12 +13,15 @@ type Props = {
 }
 
 export default function ResDebugBar({ game }: Props) {
-  const [asUser, setAsUser] = useState<string | null>(null)
   const { user } = useFetchUser()
-
-  useEffect(() => {
-    setAsUser(user?.as_user ?? null)
-  }, [user])
+  const serverAsUser = user?.as_user ?? null
+  const [asUser, setAsUser] = useState<string | null>(serverAsUser)
+  // Resync when the saved value changes (adjusted during render).
+  const [syncedAsUser, setSyncedAsUser] = useState(serverAsUser)
+  if (serverAsUser !== syncedAsUser) {
+    setSyncedAsUser(serverAsUser)
+    setAsUser(serverAsUser)
+  }
 
   const handleAddTestUsers = async (e: React.MouseEvent) => {
     e.preventDefault()

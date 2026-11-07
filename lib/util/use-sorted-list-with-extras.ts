@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { WithIndex } from '../types/object.types'
 import { withIndexComparer } from './array'
 import { withIndex } from './object'
@@ -12,12 +12,12 @@ type UseSortedListWithExtrasResult<T> = [
 export function useSortedListWithExtras<T extends object>(
   list: T[] = []
 ): UseSortedListWithExtrasResult<T> {
-  const [sortedList, setSortedList] = useState<WithIndex<T>[]>([])
   const [extras, setExtras] = useState<WithIndex<T>[]>([])
 
-  useEffect(() => {
-    setSortedList(list.map(withIndex).concat(extras).sort(withIndexComparer))
-  }, [setSortedList, list, extras])
+  const sortedList = useMemo(
+    () => list.map(withIndex).concat(extras).sort(withIndexComparer),
+    [list, extras]
+  )
 
   function addExtra(extraItem: T): void {
     const length = list.length ?? 0

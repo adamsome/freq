@@ -1,9 +1,8 @@
 import { useUser } from '@auth0/nextjs-auth0/client'
-import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { API_USER } from '../consts'
 import { User } from '../types/user.types'
-import { isBrowser } from './dom'
+import useIsClient from './use-is-client'
 
 export function useFetchUser() {
   const { user: authUser, error: authError, isLoading: authLoading } = useUser()
@@ -13,15 +12,9 @@ export function useFetchUser() {
 
   const isLoading = authLoading || (authUser && !_user && !userError)
 
-  const [isLoggedOut, setIsLoggedOut] = useState(false)
-
-  useEffect(() => {
-    if ((authUser && !authError) || authLoading || !isBrowser) {
-      setIsLoggedOut(false)
-    } else {
-      setIsLoggedOut(true)
-    }
-  }, [authUser, authError, authLoading])
+  // Logged out once auth has settled on the client with no user.
+  const isClient = useIsClient()
+  const isLoggedOut = isClient && !authLoading && !(authUser && !authError)
 
   let user: User | undefined
   let error = authError

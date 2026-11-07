@@ -1,6 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useSWR from 'swr'
 import {
   API_ROOM_CODE,
@@ -12,7 +12,7 @@ import {
 } from '../lib/consts'
 import { BaseGameView, GameType } from '../lib/types/game.types'
 import { head } from '../lib/util/array'
-import { isBrowser } from '../lib/util/dom'
+import useIsClient from '../lib/util/use-is-client'
 import Home from './home'
 import RoomRedirect from './room-redirect'
 
@@ -20,7 +20,9 @@ type Props = Record<string, never>
 
 export default function HomeContainer(_: Props) {
   const [type, setType] = useState<GameType | undefined>()
-  const [loading, setLoading] = useState(true)
+  // localStorage is client-only, so the game type is unknown until then.
+  const isClient = useIsClient()
+  const loading = !isClient
 
   const router = useRouter()
 
@@ -36,14 +38,16 @@ export default function HomeContainer(_: Props) {
 
   const gameType = router.query?.game
 
-  useEffect(() => {
-    if (isBrowser) {
-      const _type = (head(gameType) ?? localStorage[KEY_ROOM_TYPE]) as
-        GameType | undefined
-      if (_type) setType(_type)
-      setLoading(false)
-    }
-  }, [gameType])
+  // On the client, and whenever the URL's game changes, take the type from
+  // the URL or the last one picked (adjusted during render).
+  const typeSource = isClient ? (head(gameType) ?? '') : null
+  const [syncedTypeSource, setSyncedTypeSource] = useState<string | null>(null)
+  if (typeSource !== null && typeSource !== syncedTypeSource) {
+    setSyncedTypeSource(typeSource)
+    const _type = (head(gameType) ?? localStorage[KEY_ROOM_TYPE]) as
+      GameType | undefined
+    if (_type) setType(_type)
+  }
 
   const handleGameClick = (changedType?: GameType) => {
     if (changedType) {

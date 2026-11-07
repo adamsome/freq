@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
 import { API_LOGIN } from '../../lib/consts'
 import { useFetchUser } from '../../lib/util/use-fetch-user'
+import useIsClient from '../../lib/util/use-is-client'
 import { useTheme } from 'next-themes'
 import Button, { ButtonProps } from '../control/button'
 import PlayerButtonContainer from '../player-button-container'
@@ -12,11 +12,9 @@ type Props = {
 
 export default function HeaderActions({ button, onDebugToggle }: Props) {
   const { user, isLoading, error } = useFetchUser()
-  const [mounted, setMounted] = useState(false)
+  // Only show theme switcher on the client to prevent rehydrate mismatch
+  const mounted = useIsClient()
   const { theme, setTheme } = useTheme()
-
-  // Only show theme switcher after mounted to prevent rehydrate mismatch
-  useEffect(() => setMounted(true), [])
 
   const handleThemeToggle = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark')

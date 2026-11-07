@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
 import type { FormEvent } from 'react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ROUTE_GAME_ROOM } from '../lib/consts'
 import { isRoomValid } from '../lib/room'
 import { GameType } from '../lib/types/game.types'
 import { head } from '../lib/util/array'
-import { useDebounce } from '../lib/util/use-debounce'
+import { useDebounceCallback } from '../lib/util/use-debounce'
 import RoomForm from './room-form'
 
 type Props = Partial<typeof defaultProps> & {
@@ -30,16 +30,8 @@ export default function RoomFormContainer({
   const [error, setError] = useState<string | null>(head(queryError) ?? null)
 
   const [fetching, setFetching] = useState(false)
-  const [debouncedFetching, setDebouncedFetching] = useDebounce<boolean | null>(
-    null,
-    4000
-  )
-
-  useEffect(() => {
-    if (debouncedFetching != null) {
-      setFetching(debouncedFetching)
-    }
-  }, [debouncedFetching])
+  // Clear the fetching state a while after navigating away.
+  const setFetchingLater = useDebounceCallback(setFetching, 4000)
 
   const handleStart = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -54,7 +46,7 @@ export default function RoomFormContainer({
     }
 
     router.push(ROUTE_GAME_ROOM.replace('%0', type).replace('%1', targetRoom))
-    setDebouncedFetching(false)
+    setFetchingLater(false)
   }
 
   return (
