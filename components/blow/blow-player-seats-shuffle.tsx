@@ -1,4 +1,4 @@
-import produce from 'immer'
+import { produce } from 'immer'
 import { MouseEvent, useState } from 'react'
 import { Command, CommandError } from '../../lib/types/game.types'
 import { cx } from '../../lib/util/dom'

@@ -1,4 +1,4 @@
-import produce from 'immer'
+import { produce } from 'immer'
 import { useState } from 'react'
 import invariant from 'tiny-invariant'
 import { revealCard } from '../../lib/blow/blow-action-creators'

@@ -1,4 +1,4 @@
-import produce from 'immer'
+import { produce } from 'immer'
 import { useState } from 'react'
 import { revealCard } from '../../lib/blow/blow-action-creators'
 import {

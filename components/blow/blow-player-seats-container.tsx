@@ -1,4 +1,4 @@
-import produce from 'immer'
+import { produce } from 'immer'
 import { BlowAction, BlowPlayerView } from '../../lib/types/blow.types'
 import { Command, CommandError } from '../../lib/types/game.types'
 import { postCommand } from '../../lib/util/fetch-json'

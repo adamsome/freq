@@ -1,4 +1,4 @@
-import produce from 'immer'
+import { produce } from 'immer'
 import { useState } from 'react'
 import { BLOW_THEME_IDS } from '../../lib/types/blow.types'
 import { CommandType } from '../../lib/types/game.types'

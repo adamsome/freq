@@ -1,4 +1,4 @@
-import produce from 'immer'
+import { produce } from 'immer'
 import type { MouseEvent } from 'react'
 import { useRef, useState } from 'react'
 import iconSet from '../lib/icon'

@@ -1,4 +1,4 @@
-import produce from 'immer'
+import { produce } from 'immer'
 import { OptionalId, WithId } from 'mongodb'
 import { findCurrentPlayer } from '../player'
 import { ResGame, ResGameView } from '../types/res.types'

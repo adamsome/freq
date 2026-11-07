@@ -1,4 +1,4 @@
-import produce from 'immer'
+import { produce } from 'immer'
 import { postCommand } from '../../lib/util/fetch-json'
 import { useDebounceCallback } from '../../lib/util/use-debounce'
 import { useCwdGame } from '../../lib/util/use-game'
